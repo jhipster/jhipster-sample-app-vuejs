@@ -1,42 +1,50 @@
 {
-  "generator-jhipster": {
-    "baseName": "jhipsterSampleApplication",
-    "packageName": "io.github.jhipster.sample",
-    "packageFolder": "io/github/jhipster/sample",
-    "authenticationType": "jwt",
-    "hibernateCache": "ehcache",
-    "clusteredHttpSession": false,
-    "websocket": false,
-    "databaseType": "sql",
-    "devDatabaseType": "h2Memory",
-    "prodDatabaseType": "mysql",
-    "useCompass": false,
-    "buildTool": "maven",
-    "searchEngine": false,
-    "enableTranslation": true,
-    "applicationType": "monolith",
-    "testFrameworks": [
-      "gatling",
-      "protractor"
-    ],
-    "languages": [
-      "en"
-    ],
-    "serverPort": 8080,
-    "jhipsterVersion": "5.8.2",
-    "enableSocialSignIn": false,
-    "useSass": false,
-    "jhiPrefix": "jhi",
-    "messageBroker": false,
-    "serviceDiscoveryType": false,
-    "clientPackageManager": "npm",
-    "clientFramework": "angularX",
-    "jwtSecretKey": "bXktc2VjcmV0LWtleS13aGljaC1zaG91bGQtYmUtY2hhbmdlZC1pbi1wcm9kdWN0aW9uLWFuZC1iZS1iYXNlNjQtZW5jb2RlZAo=",
-    "cacheProvider": "ehcache",
-    "enableHibernateCache": true,
-    "reactive": false,
-    "otherModules": [],
-    "entitySuffix": "",
-    "dtoSuffix": "DTO"
+    "generator-jhipster": {
+      "jhipsterVersion": "5.8.1",
+      "applicationType": "monolith",
+      "baseName": "jhipsterSampleApplicationVue",
+      "packageName": "io.github.jhipster.sample",
+      "packageFolder": "io/github/jhipster/sample",
+      "serverPort": "8080",
+      "authenticationType": "jwt",
+      "cacheProvider": "ehcache",
+      "enableHibernateCache": true,
+      "websocket": false,
+      "databaseType": "sql",
+      "devDatabaseType": "h2Disk",
+      "prodDatabaseType": "mysql",
+      "searchEngine": false,
+      "messageBroker": false,
+      "serviceDiscoveryType": false,
+      "buildTool": "maven",
+      "enableSwaggerCodegen": false,
+      "jwtSecretKey": "YjczMzEwM2ViN2RkZmUyZmQ0NzkxOWE3MmM2NzdmYjY5MWU5NDRkODY3MGRhMjA0NDcxNTBmYzU0NDg0NjVhZmFkNzA2ZjA0NTk5ZjFmM2MzZTNiYjdlMjRmMDdiOWFiYmU1OWM5NjZjZGNhODYzMDM3NjNkYTYyMmViYWE5YmQ=",
+      "testFrameworks": ["gatling", "protractor"],
+      "jhiPrefix": "jhi",
+      "entitySuffix": "",
+      "dtoSuffix": "DTO",
+      "otherModules": [
+        {
+          "name": "generator-jhipster-vuejs",
+          "version": "1.0.0-beta.1"
+        }
+      ],
+      "enableTranslation": true,
+      "clientPackageManager": "npm",
+      "nativeLanguage": "en",
+      "languages": ["fr"],
+      "blueprint": "generator-jhipster-vuejs",
+      "blueprintVersion": "1.0.0-beta.1"
+    },
+    "generator-jhipster-vuejs": {
+      "clientTheme": "none",
+      "clientThemeVariant": "",
+      "jhipsterVersion": "5.8.1",
+      "applicationType": "monolith",
+      "baseName": "jhipster",
+      "clientFramework": "vue",
+      "useSass": true,
+      "clientPackageManager": "npm"
+    }
   }
-}
+  
