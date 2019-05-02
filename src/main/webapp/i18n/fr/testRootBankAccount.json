@@ -1,0 +1,34 @@
+{
+  "jhipsterApp": {
+    "testRootBankAccount": {
+      "home": {
+        "title": "BankAccounts",
+        "createLabel": "Créer un nouveau Bank Account",
+        "createOrEditLabel": "Créer ou éditer un Bank Account"
+      },
+      "created": "Un nouveau Bank Account a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Bank Account avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Bank Account avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Etes-vous certain de vouloir supprimer le Bank Account {{ id }} ?"
+      },
+      "detail": {
+        "title": "Bank Account"
+      },
+      "name": "Name",
+      "bankNumber": "Bank Number",
+      "agencyNumber": "Agency Number",
+      "lastOperationDuration": "Last Operation Duration",
+      "meanOperationDuration": "Mean Operation Duration",
+      "balance": "Balance",
+      "openingDay": "Opening Day",
+      "lastOperationDate": "Last Operation Date",
+      "active": "Active",
+      "accountType": "Account Type",
+      "attachment": "Attachment",
+      "description": "Description",
+      "user": "User",
+      "operation": "Operation"
+    }
+  }
+}
