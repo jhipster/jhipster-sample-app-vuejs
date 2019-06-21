@@ -85,6 +85,17 @@ public class LabelResourceIT {
             .labelName(DEFAULT_LABEL_NAME);
         return label;
     }
+    /**
+     * Create an updated entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static Label createUpdatedEntity(EntityManager em) {
+        Label label = new Label()
+            .labelName(UPDATED_LABEL_NAME);
+        return label;
+    }
 
     @BeforeEach
     public void initTest() {
@@ -241,7 +252,7 @@ public class LabelResourceIT {
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isNoContent());
 
-        // Validate the database is empty
+        // Validate the database contains one less item
         List<Label> labelList = labelRepository.findAll();
         assertThat(labelList).hasSize(databaseSizeBeforeDelete - 1);
     }

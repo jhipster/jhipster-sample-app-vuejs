@@ -1,11 +1,11 @@
-id;jhi_date;description;amount
-1;2019-05-02T17:59:48;Customer Human deposit;33902
-2;2019-05-02T13:32:18;Saint Helena Pound programming;85632
-3;2019-05-01T22:56:29;optical invoice;8413
-4;2019-05-01T21:46:34;solid state;66898
-5;2019-05-02T05:40:37;Tools Unbranded;66350
-6;2019-05-01T20:51:49;clear-thinking;30536
-7;2019-05-02T07:03:42;Cayman Islands Dollar invoice;22426
-8;2019-05-02T16:00:32;Computers Bedfordshire Fish;36646
-9;2019-05-02T04:38:25;calculating withdrawal Nevada;9367
-10;2019-05-02T08:01:11;withdrawal Ergonomic;58987
+id;date;description;amount
+1;2019-06-20T11:43:44;Ghana back-end National;31800
+2;2019-06-20T11:23:11;contextually-based;64769
+3;2019-06-20T22:53:59;copying;86073
+4;2019-06-21T01:50:08;Hat;53408
+5;2019-06-20T23:07:57;magenta Concrete;33761
+6;2019-06-21T03:17:28;Gloves sky blue Oklahoma;40383
+7;2019-06-21T00:25:23;Engineer;96244
+8;2019-06-21T03:13:31;Moroccan Dirham;71227
+9;2019-06-21T01:55:45;zero tolerance;3688
+10;2019-06-21T02:44:51;Analyst paradigms;3305

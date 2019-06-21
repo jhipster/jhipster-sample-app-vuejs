@@ -1,6 +1,6 @@
 {
   "generator-jhipster": {
-    "jhipsterVersion": "6.0.0",
+    "jhipsterVersion": "6.1.1",
     "applicationType": "monolith",
     "baseName": "jhipsterSampleApplicationVue",
     "packageName": "io.github.jhipster.sample",

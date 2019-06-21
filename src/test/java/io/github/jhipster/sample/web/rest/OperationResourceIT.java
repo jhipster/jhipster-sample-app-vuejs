@@ -100,6 +100,19 @@ public class OperationResourceIT {
             .amount(DEFAULT_AMOUNT);
         return operation;
     }
+    /**
+     * Create an updated entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static Operation createUpdatedEntity(EntityManager em) {
+        Operation operation = new Operation()
+            .date(UPDATED_DATE)
+            .description(UPDATED_DESCRIPTION)
+            .amount(UPDATED_AMOUNT);
+        return operation;
+    }
 
     @BeforeEach
     public void initTest() {
@@ -317,7 +330,7 @@ public class OperationResourceIT {
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isNoContent());
 
-        // Validate the database is empty
+        // Validate the database contains one less item
         List<Operation> operationList = operationRepository.findAll();
         assertThat(operationList).hasSize(databaseSizeBeforeDelete - 1);
     }

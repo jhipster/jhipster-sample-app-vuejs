@@ -90,6 +90,8 @@ public class LabelResource {
      * {@code GET  /labels} : get all the labels.
      *
      * @param pageable the pagination information.
+     * @param queryParams a {@link MultiValueMap} query parameters.
+     * @param uriBuilder a {@link UriComponentsBuilder} URI builder.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of labels in body.
      */
     @GetMapping("/labels")

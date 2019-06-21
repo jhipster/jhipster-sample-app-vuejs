@@ -4,7 +4,8 @@
       "home": {
         "title": "BankAccounts",
         "createLabel": "Créer un nouveau Bank Account",
-        "createOrEditLabel": "Créer ou éditer un Bank Account"
+        "createOrEditLabel": "Créer ou éditer un Bank Account",
+        "notFound": "Aucun Bank Account trouvé"
       },
       "created": "Un nouveau Bank Account a été créé avec l'identifiant {{ param }}",
       "updated": "Le Bank Account avec l'identifiant {{ param }} a été mis à jour",

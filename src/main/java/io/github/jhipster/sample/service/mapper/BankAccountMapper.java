@@ -17,6 +17,7 @@ public interface BankAccountMapper extends EntityMapper<BankAccountDTO, BankAcco
 
     @Mapping(source = "userId", target = "user")
     @Mapping(target = "operations", ignore = true)
+    @Mapping(target = "removeOperation", ignore = true)
     BankAccount toEntity(BankAccountDTO bankAccountDTO);
 
     default BankAccount fromId(Long id) {

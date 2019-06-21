@@ -6,13 +6,7 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <property name="now" value="now()" dbms="h2"/>
-    
-    <property name="now" value="now()" dbms="mysql"/>
     <property name="autoIncrement" value="true"/>
-
-    <property name="floatType" value="float4" dbms="postgresql, h2"/>
-    <property name="floatType" value="float" dbms="mysql, oracle, mssql, mariadb"/>
 
     <!--
         Added the entity BankAccount.
@@ -69,7 +63,7 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="description" type="clob">
+            <column name="description" type="${clobType}">
                 <constraints nullable="true" />
             </column>
 
@@ -83,6 +77,11 @@
         <dropDefaultValue tableName="bank_account" columnName="last_operation_date" columnDataType="datetime"/>
     </changeSet>
 
+    <changeSet id="20150805124838-1-relations" author="jhipster">
+
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+
     <!--
         Load sample data generated with Faker.js
         - This data can be easily edited using a CSV editor (or even MS Excel) and
@@ -95,8 +94,7 @@
         <loadData
                   file="config/liquibase/data/bank_account.csv"
                   separator=";"
-                  tableName="bank_account"
-                  context="dev">
+                  tableName="bank_account">
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
             <column name="bank_number" type="numeric"/>
@@ -105,17 +103,14 @@
             <column name="mean_operation_duration" type="numeric"/>
             <column name="balance" type="numeric"/>
             <column name="opening_day" type="date"/>
-            <column name="last_operation_date" type="date"/>
+            <column name="last_operation_date" type="datetime"/>
             <column name="active" type="boolean"/>
             <column name="account_type" type="string"/>
-            <column name="attachment" type="string"/>
+            <column name="attachment" type="blob"/>
             <column name="attachment_content_type" type="string"/>
-            <column name="description" type="string"/>
+            <column name="description" type="clob"/>
+            <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>
     </changeSet>
 
-    <changeSet id="20150805124838-1-relations" author="jhipster">
-
-    </changeSet>
-    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
 </databaseChangeLog>
