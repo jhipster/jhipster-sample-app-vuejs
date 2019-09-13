@@ -118,7 +118,6 @@ jhipster:
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
   mail: # specific JHipster mail property, for standard properties see MailProperties
-    from: jhipster@localhost
     base-url: http://my-server-url-to-change # Modify according to your server's URL
   metrics:
     logs: # Reports metrics in the logs
@@ -131,6 +130,9 @@ jhipster:
       host: localhost
       port: 5000
       queue-size: 512
+  audit-events:
+    retention-period: 30 # Number of days before audit events are deleted.
+
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class

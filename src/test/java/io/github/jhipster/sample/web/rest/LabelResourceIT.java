@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Integration tests for the {@Link LabelResource} REST controller.
+ * Integration tests for the {@link LabelResource} REST controller.
  */
 @SpringBootTest(classes = JhipsterApp.class)
 public class LabelResourceIT {

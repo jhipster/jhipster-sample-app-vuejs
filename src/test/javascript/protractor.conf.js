@@ -1,4 +1,3 @@
-
 exports.config = {
     allScriptsTimeout: 20000,
 
@@ -35,7 +34,7 @@ exports.config = {
 
     beforeLaunch: function() {
         require('ts-node').register({
-            project: ''
+            project: 'tsconfig.e2e.json'
         });
     },
 

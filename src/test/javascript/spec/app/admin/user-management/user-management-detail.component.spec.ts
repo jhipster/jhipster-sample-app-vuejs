@@ -4,7 +4,7 @@ import { of } from 'rxjs';
 
 import { JhipsterTestModule } from '../../../test.module';
 import { UserMgmtDetailComponent } from 'app/admin/user-management/user-management-detail.component';
-import { User } from 'app/core';
+import { User } from 'app/core/user/user.model';
 
 describe('Component Tests', () => {
   describe('User Management Detail Component', () => {

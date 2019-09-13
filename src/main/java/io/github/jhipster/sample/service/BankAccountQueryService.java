@@ -85,7 +85,7 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching {@link Specification} of the entity.
      */    
-    private Specification<BankAccount> createSpecification(BankAccountCriteria criteria) {
+    protected Specification<BankAccount> createSpecification(BankAccountCriteria criteria) {
         Specification<BankAccount> specification = Specification.where(null);
         if (criteria != null) {
             if (criteria.getId() != null) {

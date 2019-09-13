@@ -6,7 +6,8 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <property name="autoIncrement" value="true"/>
+    <property name="now" value="now()" dbms="h2"/>
+        <property name="autoIncrement" value="true"/>
 
     <!--
         Added the entity Label.
@@ -40,7 +41,7 @@
     -->
     <changeSet id="20150805124936-1-data" author="jhipster" context="faker">
         <loadData
-                  file="config/liquibase/data/label.csv"
+                  file="config/liquibase/fake-data/label.csv"
                   separator=";"
                   tableName="label">
             <column name="id" type="numeric"/>

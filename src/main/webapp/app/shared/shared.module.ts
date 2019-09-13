@@ -1,17 +1,22 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { JhipsterSharedCommonModule, JhiLoginModalComponent, HasAnyAuthorityDirective } from './';
+import { NgModule } from '@angular/core';
+import { JhipsterSharedLibsModule } from './shared-libs.module';
+import { FindLanguageFromKeyPipe } from './language/find-language-from-key.pipe';
+import { JhiAlertComponent } from './alert/alert.component';
+import { JhiAlertErrorComponent } from './alert/alert-error.component';
+import { JhiLoginModalComponent } from './login/login.component';
+import { HasAnyAuthorityDirective } from './auth/has-any-authority.directive';
 
 @NgModule({
-  imports: [JhipsterSharedCommonModule],
-  declarations: [JhiLoginModalComponent, HasAnyAuthorityDirective],
+  imports: [JhipsterSharedLibsModule],
+  declarations: [FindLanguageFromKeyPipe, JhiAlertComponent, JhiAlertErrorComponent, JhiLoginModalComponent, HasAnyAuthorityDirective],
   entryComponents: [JhiLoginModalComponent],
-  exports: [JhipsterSharedCommonModule, JhiLoginModalComponent, HasAnyAuthorityDirective],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  exports: [
+    JhipsterSharedLibsModule,
+    FindLanguageFromKeyPipe,
+    JhiAlertComponent,
+    JhiAlertErrorComponent,
+    JhiLoginModalComponent,
+    HasAnyAuthorityDirective
+  ]
 })
-export class JhipsterSharedModule {
-  static forRoot() {
-    return {
-      ngModule: JhipsterSharedModule
-    };
-  }
-}
+export class JhipsterSharedModule {}
