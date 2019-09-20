@@ -6,7 +6,6 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <property name="now" value="now()" dbms="h2"/>
         <property name="autoIncrement" value="true"/>
 
     <!--
@@ -20,61 +19,47 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-
             <column name="bank_number" type="integer">
                 <constraints nullable="true" />
             </column>
-
             <column name="agency_number" type="bigint">
                 <constraints nullable="true" />
             </column>
-
             <column name="last_operation_duration" type="${floatType}">
                 <constraints nullable="true" />
             </column>
-
             <column name="mean_operation_duration" type="double">
                 <constraints nullable="true" />
             </column>
-
             <column name="balance" type="decimal(21,2)">
                 <constraints nullable="false" />
             </column>
-
             <column name="opening_day" type="date">
                 <constraints nullable="true" />
             </column>
-
             <column name="last_operation_date" type="datetime">
                 <constraints nullable="true" />
             </column>
-
             <column name="active" type="boolean">
                 <constraints nullable="true" />
             </column>
-
             <column name="account_type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-
             <column name="attachment" type="longblob">
                 <constraints nullable="true" />
             </column>
             <column name="attachment_content_type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-
             <column name="description" type="${clobType}">
                 <constraints nullable="true" />
             </column>
-
             <column name="user_id" type="bigint">
                 <constraints nullable="true" />
             </column>
-
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
-
         <dropDefaultValue tableName="bank_account" columnName="last_operation_date" columnDataType="datetime"/>
     </changeSet>
 

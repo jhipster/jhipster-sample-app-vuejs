@@ -6,9 +6,6 @@ import { RouterModule } from '@angular/router';
     RouterModule.forChild([
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ])
-  ],
-  declarations: [],
-  entryComponents: [],
-  providers: []
+  ]
 })
 export class JhipsterEntityModule {}

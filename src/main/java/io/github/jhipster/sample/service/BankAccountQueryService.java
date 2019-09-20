@@ -81,10 +81,10 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
     }
 
     /**
-     * Function to convert ConsumerCriteria to a {@link Specification}
+     * Function to convert {@link BankAccountCriteria} to a {@link Specification}
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching {@link Specification} of the entity.
-     */    
+     */
     protected Specification<BankAccount> createSpecification(BankAccountCriteria criteria) {
         Specification<BankAccount> specification = Specification.where(null);
         if (criteria != null) {
