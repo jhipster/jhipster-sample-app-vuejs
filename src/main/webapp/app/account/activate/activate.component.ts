@@ -1,37 +1,41 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { ActivatedRoute } from '@angular/router';
+import Component from 'vue-class-component';
+import { Vue, Inject } from 'vue-property-decorator';
+import LoginService from '@/account/login.service';
+import ActivateService from './activate.service';
 
-import { LoginModalService } from 'app/core/login/login-modal.service';
-import { ActivateService } from './activate.service';
+@Component
+export default class Activate extends Vue {
+  @Inject('activateService')
+  private activateService: () => ActivateService;
+  @Inject('loginService')
+  private loginService: () => LoginService;
+  success = false;
+  error = false;
 
-@Component({
-  selector: 'jhi-activate',
-  templateUrl: './activate.component.html'
-})
-export class ActivateComponent implements OnInit {
-  error: string;
-  success: string;
-  modalRef: NgbModalRef;
-
-  constructor(private activateService: ActivateService, private loginModalService: LoginModalService, private route: ActivatedRoute) {}
-
-  ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      this.activateService.get(params['key']).subscribe(
-        () => {
-          this.error = null;
-          this.success = 'OK';
-        },
-        () => {
-          this.success = null;
-          this.error = 'ERROR';
-        }
-      );
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      if (to.query.key) {
+        vm.init(to.query.key);
+      }
     });
   }
 
-  login() {
-    this.modalRef = this.loginModalService.open();
+  public init(key: string): void {
+    this.activateService()
+      .activateAccount(key)
+      .then(
+        res => {
+          this.success = true;
+          this.error = false;
+        },
+        err => {
+          this.error = true;
+          this.success = false;
+        }
+      );
+  }
+
+  public openLogin(): void {
+    this.loginService().openLogin((<any>this).$root);
   }
 }

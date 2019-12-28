@@ -1,43 +1,48 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject } from 'vue-property-decorator';
+import { mixins } from 'vue-class-component';
+import Vue2Filters from 'vue2-filters';
+import ConfigurationService from './configuration.service';
 
-import { JhiConfigurationService } from './configuration.service';
+@Component
+export default class JhiConfiguration extends mixins(Vue2Filters.mixin) {
+  public orderProp = 'prefix';
+  public reverse = false;
+  public allConfiguration: any = false;
+  public configuration: any = false;
+  public configKeys: any[] = [];
+  public filtered = '';
+  @Inject('configurationService') private configurationService: () => ConfigurationService;
 
-@Component({
-  selector: 'jhi-configuration',
-  templateUrl: './configuration.component.html'
-})
-export class JhiConfigurationComponent implements OnInit {
-  allConfiguration: any = null;
-  configuration: any = null;
-  configKeys: any[];
-  filter: string;
-  orderProp: string;
-  reverse: boolean;
-
-  constructor(private configurationService: JhiConfigurationService) {
-    this.configKeys = [];
-    this.filter = '';
-    this.orderProp = 'prefix';
-    this.reverse = false;
+  public mounted(): void {
+    this.init();
   }
 
-  keys(dict): string[] {
-    return dict === undefined ? [] : Object.keys(dict);
-  }
+  public init(): void {
+    this.configurationService()
+      .loadConfiguration()
+      .then(res => {
+        this.configuration = res;
 
-  ngOnInit() {
-    this.configurationService.get().subscribe(configuration => {
-      this.configuration = configuration;
-
-      for (const config of configuration) {
-        if (config.properties !== undefined) {
-          this.configKeys.push(Object.keys(config.properties));
+        for (const config of this.configuration) {
+          if (config.properties !== undefined) {
+            this.configKeys.push(Object.keys(config.properties));
+          }
         }
-      }
-    });
+      });
 
-    this.configurationService.getEnv().subscribe(configuration => {
-      this.allConfiguration = configuration;
-    });
+    this.configurationService()
+      .loadEnvConfiguration()
+      .then(res => {
+        this.allConfiguration = res;
+      });
+  }
+
+  public changeOrder(prop): void {
+    this.orderProp = prop;
+    this.reverse = !this.reverse;
+  }
+
+  public keys(dict: any): string[] {
+    return dict === undefined ? [] : Object.keys(dict);
   }
 }

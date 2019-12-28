@@ -1,18 +1,14 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import axios, { AxiosPromise } from 'axios';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 
-import { SERVER_API_URL } from 'app/app.constants';
-
-@Injectable({ providedIn: 'root' })
-export class LogsService {
-  constructor(private http: HttpClient) {}
-
-  changeLevel(name: string, configuredLevel: string): Observable<HttpResponse<any>> {
-    return this.http.post(SERVER_API_URL + 'management/loggers/' + name, { configuredLevel }, { observe: 'response' });
+@Component
+export default class LogsService extends Vue {
+  public changeLevel(name: string, configuredLevel: string): AxiosPromise<any> {
+    return axios.post('management/loggers/' + name, { configuredLevel });
   }
 
-  findAll(): Observable<HttpResponse<any>> {
-    return this.http.get<any>(SERVER_API_URL + 'management/loggers', { observe: 'response' });
+  public findAll(): AxiosPromise<any> {
+    return axios.get('management/loggers');
   }
 }

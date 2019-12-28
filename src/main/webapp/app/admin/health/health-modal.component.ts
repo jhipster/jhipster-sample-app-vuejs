@@ -1,26 +1,20 @@
-import { Component } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import HealthService from './health.service';
+import { Component, Inject, Prop, Vue } from 'vue-property-decorator';
 
-import { JhiHealthService } from './health.service';
+@Component
+export default class JhiHealthModal extends Vue {
+  @Prop() currentHealth!: any;
+  @Inject('healthService') private healthService: () => HealthService;
 
-@Component({
-  selector: 'jhi-health-modal',
-  templateUrl: './health-modal.component.html'
-})
-export class JhiHealthModalComponent {
-  currentHealth: any;
-
-  constructor(private healthService: JhiHealthService, public activeModal: NgbActiveModal) {}
-
-  baseName(name) {
-    return this.healthService.getBaseName(name);
+  public baseName(name: string): any {
+    return this.healthService().getBaseName(name);
   }
 
-  subSystemName(name) {
-    return this.healthService.getSubSystemName(name);
+  public subSystemName(name: string): any {
+    return this.healthService().getSubSystemName(name);
   }
 
-  readableValue(value: number) {
+  public readableValue(value: any): string {
     if (this.currentHealth.name === 'diskSpace') {
       // Should display storage space in an human readable unit
       const val = value / 1073741824;

@@ -1,18 +1,17 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import axios, { AxiosInstance, AxiosPromise } from 'axios';
 
-import { SERVER_API_URL } from 'app/app.constants';
+export default class MetricsService {
+  private axios: AxiosInstance;
 
-@Injectable({ providedIn: 'root' })
-export class JhiMetricsService {
-  constructor(private http: HttpClient) {}
-
-  getMetrics(): Observable<any> {
-    return this.http.get(SERVER_API_URL + 'management/jhimetrics');
+  constructor() {
+    this.axios = axios;
   }
 
-  threadDump(): Observable<any> {
-    return this.http.get(SERVER_API_URL + 'management/threaddump');
+  public getMetrics(): AxiosPromise<any> {
+    return axios.get('management/jhimetrics');
+  }
+
+  public retrieveThreadDump(): AxiosPromise<any> {
+    return axios.get('management/threaddump');
   }
 }

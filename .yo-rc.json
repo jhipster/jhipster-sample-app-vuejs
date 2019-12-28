@@ -1,6 +1,6 @@
 {
   "generator-jhipster": {
-    "jhipsterVersion": "6.3.1",
+    "jhipsterVersion": "6.5.1",
     "applicationType": "monolith",
     "baseName": "jhipsterSampleApplicationVue",
     "packageName": "io.github.jhipster.sample",
@@ -19,20 +19,26 @@
     "buildTool": "maven",
     "enableSwaggerCodegen": false,
     "jwtSecretKey": "YjczMzEwM2ViN2RkZmUyZmQ0NzkxOWE3MmM2NzdmYjY5MWU5NDRkODY3MGRhMjA0NDcxNTBmYzU0NDg0NjVhZmFkNzA2ZjA0NTk5ZjFmM2MzZTNiYjdlMjRmMDdiOWFiYmU1OWM5NjZjZGNhODYzMDM3NjNkYTYyMmViYWE5YmQ=",
-    "testFrameworks": ["gatling", "protractor"],
+    "testFrameworks": [
+      "gatling",
+      "protractor"
+    ],
     "jhiPrefix": "jhi",
     "entitySuffix": "",
     "dtoSuffix": "DTO",
     "otherModules": [
       {
         "name": "generator-jhipster-vuejs",
-        "version": "latest"
+        "version": "1.3.0"
       }
     ],
     "enableTranslation": true,
     "clientPackageManager": "npm",
     "nativeLanguage": "en",
-    "languages": ["fr"],
+    "languages": [
+      "en",
+      "fr"
+    ],
     "clientFramework": "vue",
     "clientTheme": "none",
     "clientThemeVariant": "",
@@ -41,18 +47,23 @@
     "blueprints": [
       {
         "name": "generator-jhipster-vuejs",
-        "version": "latest"
+        "version": "1.3.0"
       }
     ]
   },
   "generator-jhipster-vuejs": {
     "clientTheme": "none",
     "clientThemeVariant": "",
-    "jhipsterVersion": "5.8.1",
+    "jhipsterVersion": "6.5.1",
     "applicationType": "monolith",
     "baseName": "jhipster",
     "clientFramework": "vue",
     "useSass": true,
-    "clientPackageManager": "npm"
+    "clientPackageManager": "npm",
+    "enableTranslation": true,
+    "languages": [
+      "en",
+      "fr"
+    ]
   }
 }

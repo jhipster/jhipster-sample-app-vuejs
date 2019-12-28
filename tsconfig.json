@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es5",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "module": "esnext",
     "moduleResolution": "node",
     "sourceMap": true,
@@ -15,11 +17,11 @@
     "typeRoots": ["node_modules/@types"],
     "baseUrl": "./",
     "paths": {
-      "app/*": ["src/main/webapp/app/*"]
+      "@/*": ["src/main/webapp/app/*"]
     },
     "importHelpers": true,
     "allowJs": true
   },
-  "include": ["src/main/webapp/app", "src/test/javascript/"],
+  "include": ["src/main/webapp/app", "src/test/javascript/spec"],
   "exclude": ["node_modules"]
 }

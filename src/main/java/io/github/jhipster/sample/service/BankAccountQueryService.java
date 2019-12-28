@@ -89,7 +89,7 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
         Specification<BankAccount> specification = Specification.where(null);
         if (criteria != null) {
             if (criteria.getId() != null) {
-                specification = specification.and(buildSpecification(criteria.getId(), BankAccount_.id));
+                specification = specification.and(buildRangeSpecification(criteria.getId(), BankAccount_.id));
             }
             if (criteria.getName() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getName(), BankAccount_.name));

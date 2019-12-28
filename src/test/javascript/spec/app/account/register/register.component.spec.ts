@@ -1,138 +1,160 @@
-import { ComponentFixture, TestBed, async, inject, tick, fakeAsync } from '@angular/core/testing';
-import { FormBuilder } from '@angular/forms';
-import { of, throwError } from 'rxjs';
+import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import axios from 'axios';
 
-import { JhiLanguageService } from 'ng-jhipster';
-import { MockLanguageService } from '../../../helpers/mock-language.service';
-import { JhipsterTestModule } from '../../../test.module';
-import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from 'app/shared/constants/error.constants';
-import { Register } from 'app/account/register/register.service';
-import { RegisterComponent } from 'app/account/register/register.component';
+import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from '@/constants';
+import * as config from '@/shared/config/config';
+import Register from '@/account/register/register.vue';
+import RegisterClass from '@/account/register/register.component';
+import RegisterService from '@/account/register/register.service';
+import LoginService from '@/account/login.service';
 
-describe('Component Tests', () => {
-  describe('RegisterComponent', () => {
-    let fixture: ComponentFixture<RegisterComponent>;
-    let comp: RegisterComponent;
+const localVue = createLocalVue();
+const mockedAxios: any = axios;
 
-    beforeEach(async(() => {
-      TestBed.configureTestingModule({
-        imports: [JhipsterTestModule],
-        declarations: [RegisterComponent],
-        providers: [FormBuilder]
-      })
-        .overrideTemplate(RegisterComponent, '')
-        .compileComponents();
-    }));
+config.initVueApp(localVue);
+const i18n = config.initI18N(localVue);
+const store = config.initVueXStore(localVue);
 
-    beforeEach(() => {
-      fixture = TestBed.createComponent(RegisterComponent);
-      comp = fixture.componentInstance;
-      comp.ngOnInit();
+jest.mock('axios', () => ({
+  get: jest.fn(),
+  post: jest.fn()
+}));
+
+describe('Register Component', () => {
+  let wrapper: Wrapper<RegisterClass>;
+  let register: RegisterClass;
+  const filledRegisterAccount = { email: 'jhi@pster.net', langKey: 'en', login: 'jhi', password: 'jhipster' };
+
+  beforeEach(() => {
+    mockedAxios.get.mockReset();
+    mockedAxios.get.mockReturnValue(Promise.resolve({}));
+    mockedAxios.post.mockReset();
+
+    wrapper = shallowMount<RegisterClass>(Register, {
+      store,
+      i18n,
+      localVue,
+      provide: {
+        registerService: () => new RegisterService(),
+        loginService: () => new LoginService()
+      }
     });
+    register = wrapper.vm;
+  });
 
-    it('should ensure the two passwords entered match', () => {
-      comp.registerForm.patchValue({
-        password: 'password',
-        confirmPassword: 'non-matching'
-      });
+  it('should be a Vue instance', () => {
+    expect(wrapper.isVueInstance()).toBeTruthy();
+  });
 
-      comp.register();
+  it('should set all default values correctly', () => {
+    expect(register.success).toBe(false);
+    expect(register.doNotMatch).toBe('');
+    expect(register.error).toBe('');
+    expect(register.errorEmailExists).toBe('');
+    expect(register.errorUserExists).toBe('');
+    expect(register.confirmPassword).toBe(null);
+    expect(register.registerAccount.login).toBe(undefined);
+    expect(register.registerAccount.password).toBe(undefined);
+    expect(register.registerAccount.email).toBe(undefined);
+  });
 
-      expect(comp.doNotMatch).toEqual('ERROR');
+  it('should open login modal when asked to', () => {
+    let called = false;
+    register.$root.$on('bv::show::modal', function() {
+      called = true;
     });
+    register.openLogin();
+    expect(called).toBe(true);
+  });
 
-    it('should update success to OK after creating an account', inject(
-      [Register, JhiLanguageService],
-      fakeAsync((service: Register, mockTranslate: MockLanguageService) => {
-        spyOn(service, 'save').and.returnValue(of({}));
-        comp.registerForm.patchValue({
-          password: 'password',
-          confirmPassword: 'password'
-        });
+  it('should set error when passwords do no match', () => {
+    register.registerAccount.password = filledRegisterAccount.password;
+    register.confirmPassword = 'not-jhipster';
+    register.register();
 
-        comp.register();
-        tick();
+    expect(register.doNotMatch).toBe('ERROR');
+  });
 
-        expect(service.save).toHaveBeenCalledWith({
-          email: '',
-          password: 'password',
-          login: '',
-          langKey: 'en'
-        });
-        expect(comp.success).toEqual(true);
-        expect(mockTranslate.getCurrentSpy).toHaveBeenCalled();
-        expect(comp.errorUserExists).toBeNull();
-        expect(comp.errorEmailExists).toBeNull();
-        expect(comp.error).toBeNull();
-      })
-    ));
+  it('should register when password match', async () => {
+    mockedAxios.post.mockReturnValue(Promise.resolve());
+    register.registerAccount = filledRegisterAccount;
+    register.confirmPassword = filledRegisterAccount.password;
+    register.register();
+    await register.$nextTick();
 
-    it('should notify of user existence upon 400/login already in use', inject(
-      [Register],
-      fakeAsync((service: Register) => {
-        spyOn(service, 'save').and.returnValue(
-          throwError({
-            status: 400,
-            error: { type: LOGIN_ALREADY_USED_TYPE }
-          })
-        );
-        comp.registerForm.patchValue({
-          password: 'password',
-          confirmPassword: 'password'
-        });
+    expect(mockedAxios.post).toHaveBeenCalledWith('api/register', {
+      email: 'jhi@pster.net',
+      langKey: 'en',
+      login: 'jhi',
+      password: 'jhipster'
+    });
+    expect(register.success).toBe(true);
+    expect(register.doNotMatch).toBe(null);
+    expect(register.error).toBe(null);
+    expect(register.errorEmailExists).toBe(null);
+    expect(register.errorUserExists).toBe(null);
+  });
 
-        comp.register();
-        tick();
+  it('should register when password match but throw error when login already exist', async () => {
+    const error = { response: { status: 400, data: { type: LOGIN_ALREADY_USED_TYPE } } };
+    mockedAxios.post.mockReturnValue(Promise.reject(error));
+    register.registerAccount = filledRegisterAccount;
+    register.confirmPassword = filledRegisterAccount.password;
+    register.register();
+    await register.$nextTick();
 
-        expect(comp.errorUserExists).toEqual('ERROR');
-        expect(comp.errorEmailExists).toBeNull();
-        expect(comp.error).toBeNull();
-      })
-    ));
+    expect(mockedAxios.post).toHaveBeenCalledWith('api/register', {
+      email: 'jhi@pster.net',
+      langKey: 'en',
+      login: 'jhi',
+      password: 'jhipster'
+    });
+    expect(register.success).toBe(null);
+    expect(register.doNotMatch).toBe(null);
+    expect(register.error).toBe(null);
+    expect(register.errorEmailExists).toBe(null);
+    expect(register.errorUserExists).toBe('ERROR');
+  });
 
-    it('should notify of email existence upon 400/email address already in use', inject(
-      [Register],
-      fakeAsync((service: Register) => {
-        spyOn(service, 'save').and.returnValue(
-          throwError({
-            status: 400,
-            error: { type: EMAIL_ALREADY_USED_TYPE }
-          })
-        );
-        comp.registerForm.patchValue({
-          password: 'password',
-          confirmPassword: 'password'
-        });
+  it('should register when password match but throw error when email already used', async () => {
+    const error = { response: { status: 400, data: { type: EMAIL_ALREADY_USED_TYPE } } };
+    mockedAxios.post.mockReturnValue(Promise.reject(error));
+    register.registerAccount = filledRegisterAccount;
+    register.confirmPassword = filledRegisterAccount.password;
+    register.register();
+    await register.$nextTick();
 
-        comp.register();
-        tick();
+    expect(mockedAxios.post).toHaveBeenCalledWith('api/register', {
+      email: 'jhi@pster.net',
+      langKey: 'en',
+      login: 'jhi',
+      password: 'jhipster'
+    });
+    expect(register.success).toBe(null);
+    expect(register.doNotMatch).toBe(null);
+    expect(register.error).toBe(null);
+    expect(register.errorEmailExists).toBe('ERROR');
+    expect(register.errorUserExists).toBe(null);
+  });
 
-        expect(comp.errorEmailExists).toEqual('ERROR');
-        expect(comp.errorUserExists).toBeNull();
-        expect(comp.error).toBeNull();
-      })
-    ));
+  it('should register when password match but throw error', async () => {
+    const error = { response: { status: 400, data: { type: 'unknown' } } };
+    mockedAxios.post.mockReturnValue(Promise.reject(error));
+    register.registerAccount = filledRegisterAccount;
+    register.confirmPassword = filledRegisterAccount.password;
+    register.register();
+    await register.$nextTick();
 
-    it('should notify of generic error', inject(
-      [Register],
-      fakeAsync((service: Register) => {
-        spyOn(service, 'save').and.returnValue(
-          throwError({
-            status: 503
-          })
-        );
-        comp.registerForm.patchValue({
-          password: 'password',
-          confirmPassword: 'password'
-        });
-
-        comp.register();
-        tick();
-
-        expect(comp.errorUserExists).toBeNull();
-        expect(comp.errorEmailExists).toBeNull();
-        expect(comp.error).toEqual('ERROR');
-      })
-    ));
+    expect(mockedAxios.post).toHaveBeenCalledWith('api/register', {
+      email: 'jhi@pster.net',
+      langKey: 'en',
+      login: 'jhi',
+      password: 'jhipster'
+    });
+    expect(register.success).toBe(null);
+    expect(register.doNotMatch).toBe(null);
+    expect(register.errorEmailExists).toBe(null);
+    expect(register.errorUserExists).toBe(null);
+    expect(register.error).toBe('ERROR');
   });
 });

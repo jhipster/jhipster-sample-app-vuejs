@@ -169,7 +169,7 @@ public class LabelResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(label.getId().intValue())))
-            .andExpect(jsonPath("$.[*].labelName").value(hasItem(DEFAULT_LABEL_NAME.toString())));
+            .andExpect(jsonPath("$.[*].labelName").value(hasItem(DEFAULT_LABEL_NAME)));
     }
     
     @Test
@@ -183,7 +183,7 @@ public class LabelResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(label.getId().intValue()))
-            .andExpect(jsonPath("$.labelName").value(DEFAULT_LABEL_NAME.toString()));
+            .andExpect(jsonPath("$.labelName").value(DEFAULT_LABEL_NAME));
     }
 
     @Test
@@ -255,20 +255,5 @@ public class LabelResourceIT {
         // Validate the database contains one less item
         List<Label> labelList = labelRepository.findAll();
         assertThat(labelList).hasSize(databaseSizeBeforeDelete - 1);
-    }
-
-    @Test
-    @Transactional
-    public void equalsVerifier() throws Exception {
-        TestUtil.equalsVerifier(Label.class);
-        Label label1 = new Label();
-        label1.setId(1L);
-        Label label2 = new Label();
-        label2.setId(label1.getId());
-        assertThat(label1).isEqualTo(label2);
-        label2.setId(2L);
-        assertThat(label1).isNotEqualTo(label2);
-        label1.setId(null);
-        assertThat(label1).isNotEqualTo(label2);
     }
 }

@@ -1,6 +1,6 @@
 # jhipsterSampleApplicationVue
 
-This application was generated using JHipster 6.3.1, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.3.1](https://www.jhipster.tech/documentation-archive/v6.3.1).
+This application was generated using JHipster 6.5.1, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.5.1](https://www.jhipster.tech/documentation-archive/v6.5.1).
 
 ## Development
 
@@ -28,11 +28,11 @@ Add the `help` flag on any command to see how you can use it. For example, `npm 
 
 The `npm run` command will list all of the scripts available to run for this project.
 
-### PWA Support
+### Service workers
 
-JHipster ships with PWA (Progressive Web App) support, and it's disabled by default. One of the main components of a PWA is a service worker.
+Service workers are commented by default, to enable them please uncomment the following code.
 
-The service worker initialization code is commented out by default. To enable it, uncomment the following code in `src/main/webapp/index.html`:
+- The service worker registering script in index.html
 
 ```html
 <script>
@@ -44,7 +44,7 @@ The service worker initialization code is commented out by default. To enable it
 </script>
 ```
 
-Note: [Workbox](https://developers.google.com/web/tools/workbox/) powers JHipster's service worker. It dynamically generates the `service-worker.js` file.
+Note: workbox creates the respective service worker and dynamically generate the `service-worker.js`
 
 ### Managing dependencies
 
@@ -57,9 +57,31 @@ To benefit from TypeScript type definitions from [DefinitelyTyped][] repository 
     npm install --save-dev --save-exact @types/leaflet
 
 Then you would import the JS and CSS files specified in library's installation instructions so that [Webpack][] knows about them:
-Note: There are still a few other things remaining to do for Leaflet that we won't detail here.
+Edit [src/main/webapp/app/main.ts](src/main/webapp/app/main.ts) file:
+
+```
+import 'leaflet/dist/leaflet.js';
+```
+
+Edit [src/main/webapp/content/scss/vendor.scss](src/main/webapp/content/scss/vendor.scss) file:
+
+```
+@import '~leaflet/dist/leaflet.scss';
+```
+
+Note: there are still few other things remaining to do for Leaflet that we won't detail here.
 
 For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].
+
+### Using vue-cli
+
+You can also use [Vue CLI][] to display the project using vue UI.
+
+For example, the following command:
+
+    vue ui
+
+will generate open Vue Project Manager. From there, you'll be able to manage your project as any other Vue.js projects.
 
 ## Building for production
 
@@ -87,14 +109,12 @@ To package your application as a war in order to deploy it to an application ser
 ## Testing
 
 To launch your application's tests, run:
-
-    ./mvnw verify
+./mvnw verify
 
 ### Client tests
 
 Unit tests are run by [Jest][] and written with [Jasmine][]. They're located in [src/test/javascript/](src/test/javascript/) and can be run with:
-
-    npm test
+npm test
 
 For more information, refer to the [Running tests page][].
 
@@ -107,7 +127,6 @@ docker-compose -f src/main/docker/sonar.yml up -d
 ```
 
 You can run a Sonar analysis with using the [sonar-scanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner) or by using the maven plugin.
-
 Then, run a Sonar analysis:
 
 ```
@@ -121,7 +140,6 @@ If you need to re-run the Sonar phase, please be sure to specify at least the `i
 ```
 
 or
-
 For more information, refer to the [Code quality page][].
 
 ## Using Docker to simplify development (optional)
@@ -129,22 +147,15 @@ For more information, refer to the [Code quality page][].
 You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [src/main/docker](src/main/docker) folder to launch required third party services.
 
 For example, to start a mysql database in a docker container, run:
-
-    docker-compose -f src/main/docker/mysql.yml up -d
-
+docker-compose -f src/main/docker/mysql.yml up -d
 To stop it and remove the container, run:
-
-    docker-compose -f src/main/docker/mysql.yml down
+docker-compose -f src/main/docker/mysql.yml down
 
 You can also fully dockerize your application and all the services that it depends on.
 To achieve this, first build a docker image of your app by running:
-
-    ./mvnw -Pprod verify jib:dockerBuild
-
+./mvnw -Pprod verify jib:dockerBuild
 Then run:
-
-    docker-compose -f src/main/docker/app.yml up -d
-
+docker-compose -f src/main/docker/app.yml up -d
 For more information refer to [Using Docker and Docker-Compose][], this page also contains information on the docker-compose sub-generator (`jhipster docker-compose`), which is able to generate docker configurations for one or several JHipster applications.
 
 ## Continuous Integration (optional)
@@ -152,20 +163,20 @@ For more information refer to [Using Docker and Docker-Compose][], this page als
 To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
 
 [jhipster homepage and latest documentation]: https://www.jhipster.tech
-[jhipster 6.3.1 archive]: https://www.jhipster.tech/documentation-archive/v6.3.1
-[using jhipster in development]: https://www.jhipster.tech/documentation-archive/v6.3.1/development/
-[using docker and docker-compose]: https://www.jhipster.tech/documentation-archive/v6.3.1/docker-compose
-[using jhipster in production]: https://www.jhipster.tech/documentation-archive/v6.3.1/production/
-[running tests page]: https://www.jhipster.tech/documentation-archive/v6.3.1/running-tests/
-[code quality page]: https://www.jhipster.tech/documentation-archive/v6.3.1/code-quality/
-[setting up continuous integration]: https://www.jhipster.tech/documentation-archive/v6.3.1/setting-up-ci/
+[jhipster 6.5.1 archive]: https://www.jhipster.tech/documentation-archive/v6.5.1
+[using jhipster in development]: https://www.jhipster.tech/documentation-archive/v6.5.1/development/
+[using docker and docker-compose]: https://www.jhipster.tech/documentation-archive/v6.5.1/docker-compose
+[using jhipster in production]: https://www.jhipster.tech/documentation-archive/v6.5.1/production/
+[running tests page]: https://www.jhipster.tech/documentation-archive/v6.5.1/running-tests/
+[code quality page]: https://www.jhipster.tech/documentation-archive/v6.5.1/code-quality/
+[setting up continuous integration]: https://www.jhipster.tech/documentation-archive/v6.5.1/setting-up-ci/
 [node.js]: https://nodejs.org/
 [yarn]: https://yarnpkg.org/
 [webpack]: https://webpack.github.io/
-[angular cli]: https://cli.angular.io/
+[vue cli]: https://cli.vuejs.org/
 [browsersync]: https://www.browsersync.io/
 [jest]: https://facebook.github.io/jest/
 [jasmine]: https://jasmine.github.io/2.0/introduction.html
-[protractor]: https://angular.github.io/protractor/
+[protractor]: https://www.protractortest.org/
 [leaflet]: https://leafletjs.com/
 [definitelytyped]: https://definitelytyped.org/

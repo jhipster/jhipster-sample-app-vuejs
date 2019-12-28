@@ -1,92 +1,63 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { JhiLanguageService } from 'ng-jhipster';
+import { email, maxLength, minLength, required } from 'vuelidate/lib/validators';
+import axios from 'axios';
+import { EMAIL_ALREADY_USED_TYPE } from '@/constants';
+import { Vue, Component, Inject } from 'vue-property-decorator';
 
-import { AccountService } from 'app/core/auth/account.service';
-import { JhiLanguageHelper } from 'app/core/language/language.helper';
+const validations = {
+  settingsAccount: {
+    firstName: {
+      required,
+      minLength: minLength(1),
+      maxLength: maxLength(50)
+    },
+    lastName: {
+      required,
+      minLength: minLength(1),
+      maxLength: maxLength(50)
+    },
+    email: {
+      required,
+      email,
+      minLength: minLength(5),
+      maxLength: maxLength(254)
+    }
+  }
+};
 
 @Component({
-  selector: 'jhi-settings',
-  templateUrl: './settings.component.html'
+  validations
 })
-export class SettingsComponent implements OnInit {
-  error: string;
-  success: string;
-  languages: any[];
-  settingsForm = this.fb.group({
-    firstName: [undefined, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
-    lastName: [undefined, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
-    email: [undefined, [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email]],
-    activated: [false],
-    authorities: [[]],
-    langKey: ['en'],
-    login: [],
-    imageUrl: []
-  });
+export default class Settings extends Vue {
+  public success: string = null;
+  public error: string = null;
+  public errorEmailExists: string = null;
+  public languages: any = this.$store.getters.languages || [];
 
-  constructor(
-    private accountService: AccountService,
-    private fb: FormBuilder,
-    private languageService: JhiLanguageService,
-    private languageHelper: JhiLanguageHelper
-  ) {}
-
-  ngOnInit() {
-    this.accountService.identity().then(account => {
-      this.updateForm(account);
-    });
-    this.languageHelper.getAll().then(languages => {
-      this.languages = languages;
-    });
-  }
-
-  save() {
-    const settingsAccount = this.accountFromForm();
-    this.accountService.save(settingsAccount).subscribe(
-      () => {
+  public save(): void {
+    this.error = null;
+    this.errorEmailExists = null;
+    axios
+      .post('api/account', this.settingsAccount)
+      .then(() => {
         this.error = null;
         this.success = 'OK';
-        this.accountService.identity(true).then(account => {
-          this.updateForm(account);
-        });
-        this.languageService.getCurrent().then(current => {
-          if (settingsAccount.langKey !== current) {
-            this.languageService.changeLanguage(settingsAccount.langKey);
-          }
-        });
-      },
-      () => {
+        this.errorEmailExists = null;
+      })
+      .catch(error => {
         this.success = null;
         this.error = 'ERROR';
-      }
-    );
+        if (error.response.status === 400 && error.response.data.type === EMAIL_ALREADY_USED_TYPE) {
+          this.errorEmailExists = 'ERROR';
+          this.error = null;
+        }
+      });
   }
 
-  private accountFromForm(): any {
-    const account = {};
-    return {
-      ...account,
-      firstName: this.settingsForm.get('firstName').value,
-      lastName: this.settingsForm.get('lastName').value,
-      email: this.settingsForm.get('email').value,
-      activated: this.settingsForm.get('activated').value,
-      authorities: this.settingsForm.get('authorities').value,
-      langKey: this.settingsForm.get('langKey').value,
-      login: this.settingsForm.get('login').value,
-      imageUrl: this.settingsForm.get('imageUrl').value
-    };
+  public get settingsAccount(): any {
+    return this.$store.getters.account;
   }
 
-  updateForm(account: any): void {
-    this.settingsForm.patchValue({
-      firstName: account.firstName,
-      lastName: account.lastName,
-      email: account.email,
-      activated: account.activated,
-      authorities: account.authorities,
-      langKey: account.langKey,
-      login: account.login,
-      imageUrl: account.imageUrl
-    });
+  public get username(): string {
+    return this.$store.getters.account ? this.$store.getters.account.login : '';
   }
 }

@@ -1,86 +1,117 @@
-import { ComponentFixture, TestBed, async, inject, fakeAsync, tick } from '@angular/core/testing';
-import { of } from 'rxjs';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
+import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-import { JhipsterTestModule } from '../../../test.module';
-import { UserMgmtComponent } from 'app/admin/user-management/user-management.component';
-import { UserService } from 'app/core/user/user.service';
-import { User } from 'app/core/user/user.model';
+import AlertService from '@/shared/alert/alert.service';
+import * as config from '@/shared/config/config';
+import UserManagement from '@/admin/user-management/user-management.vue';
+import UserManagementClass from '@/admin/user-management/user-management.component';
+import UserManagementService from '@/admin/user-management/user-management.service';
 
-describe('Component Tests', () => {
-  describe('User Management Component', () => {
-    let comp: UserMgmtComponent;
-    let fixture: ComponentFixture<UserMgmtComponent>;
-    let service: UserService;
+const localVue = createLocalVue();
+const mockedAxios: any = axios;
 
-    beforeEach(async(() => {
-      TestBed.configureTestingModule({
-        imports: [JhipsterTestModule],
-        declarations: [UserMgmtComponent]
-      })
-        .overrideTemplate(UserMgmtComponent, '')
-        .compileComponents();
-    }));
+config.initVueApp(localVue);
+const i18n = config.initI18N(localVue);
+const store = config.initVueXStore(localVue);
+localVue.component('font-awesome-icon', FontAwesomeIcon);
+localVue.component('b-alert', {});
+localVue.component('router-link', {});
+localVue.directive('b-modal', {});
 
-    beforeEach(() => {
-      fixture = TestBed.createComponent(UserMgmtComponent);
-      comp = fixture.componentInstance;
-      service = fixture.debugElement.injector.get(UserService);
+jest.mock('axios', () => ({
+  get: jest.fn(),
+  put: jest.fn(),
+  delete: jest.fn()
+}));
+
+describe('UserManagement Component', () => {
+  let wrapper: Wrapper<UserManagementClass>;
+  let userManagement: UserManagementClass;
+
+  const account = {
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@jhipster.org'
+  };
+
+  beforeEach(() => {
+    mockedAxios.put.mockReset();
+    mockedAxios.get.mockReset();
+    mockedAxios.get.mockReturnValue(Promise.resolve({ headers: {} }));
+
+    store.commit('authenticated', account);
+    wrapper = shallowMount<UserManagementClass>(UserManagement, {
+      store,
+      i18n,
+      localVue,
+      stubs: {
+        bPagination: true,
+        jhiItemCount: true,
+        bModal: true
+      },
+      provide: {
+        alertService: () => new AlertService(store),
+        userService: () => new UserManagementService()
+      }
     });
+    userManagement = wrapper.vm;
+  });
 
-    describe('OnInit', () => {
-      it('Should call load all on init', inject(
-        [],
-        fakeAsync(() => {
-          // GIVEN
-          const headers = new HttpHeaders().append('link', 'link;link');
-          spyOn(service, 'query').and.returnValue(
-            of(
-              new HttpResponse({
-                body: [new User(123)],
-                headers
-              })
-            )
-          );
+  it('should be a Vue instance', () => {
+    expect(wrapper.isVueInstance()).toBeTruthy();
+  });
 
-          // WHEN
-          comp.ngOnInit();
-          tick(); // simulate async
+  describe('OnInit', () => {
+    it('Should call load all on init', async () => {
+      // WHEN
+      userManagement.loadAll();
+      await userManagement.$nextTick();
 
-          // THEN
-          expect(service.query).toHaveBeenCalled();
-          expect(comp.users[0]).toEqual(jasmine.objectContaining({ id: 123 }));
-        })
-      ));
+      // THEN
+      expect(mockedAxios.get).toHaveBeenCalledWith(`api/users?sort=id,desc&page=0&size=20`);
     });
+  });
 
-    describe('setActive', () => {
-      it('Should update user and call load all', inject(
-        [],
-        fakeAsync(() => {
-          // GIVEN
-          const headers = new HttpHeaders().append('link', 'link;link');
-          const user = new User(123);
-          spyOn(service, 'query').and.returnValue(
-            of(
-              new HttpResponse({
-                body: [user],
-                headers
-              })
-            )
-          );
-          spyOn(service, 'update').and.returnValue(of(new HttpResponse({ status: 200 })));
+  describe('setActive', () => {
+    it('Should update user and call load all', async () => {
+      // GIVEN
+      mockedAxios.put.mockReturnValue(Promise.resolve({}));
 
-          // WHEN
-          comp.setActive(user, true);
-          tick(); // simulate async
+      // WHEN
+      userManagement.setActive({ id: 123 }, true);
+      await userManagement.$nextTick();
 
-          // THEN
-          expect(service.update).toHaveBeenCalledWith(user);
-          expect(service.query).toHaveBeenCalled();
-          expect(comp.users[0]).toEqual(jasmine.objectContaining({ id: 123 }));
-        })
-      ));
+      // THEN
+      expect(mockedAxios.put).toHaveBeenCalledWith(`api/users`, { id: 123, activated: true });
+      expect(mockedAxios.get).toHaveBeenCalledWith(`api/users?sort=id,desc&page=0&size=20`);
+    });
+  });
+
+  describe('confirmDelete', () => {
+    it('Should call delete service on confirmDelete', async () => {
+      // GIVEN
+      mockedAxios.delete.mockReturnValue(Promise.resolve({ headers: {} }));
+
+      // WHEN
+      userManagement.prepareRemove({ login: 123 });
+      userManagement.deleteUser();
+      await userManagement.$nextTick();
+
+      // THEN
+      expect(mockedAxios.delete).toHaveBeenCalledWith('api/users/' + 123);
+      expect(mockedAxios.get).toHaveBeenCalledWith(`api/users?sort=id,desc&page=0&size=20`);
+    });
+  });
+
+  describe('change order', () => {
+    it('should change order and invert reverse', () => {
+      // WHEN
+      userManagement.changeOrder('dummy-order');
+
+      // THEN
+      expect(userManagement.propOrder).toEqual('dummy-order');
+      expect(userManagement.reverse).toBe(true);
     });
   });
 });

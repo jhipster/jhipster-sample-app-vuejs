@@ -1,68 +1,74 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import axios from 'axios';
 
-import { JhipsterTestModule } from '../../../test.module';
-import { JhiConfigurationComponent } from 'app/admin/configuration/configuration.component';
-import { JhiConfigurationService } from 'app/admin/configuration/configuration.service';
+import * as config from '@/shared/config/config';
+import Configuration from '@/admin/configuration/configuration.vue';
+import ConfigurationClass from '@/admin/configuration/configuration.component';
+import ConfigurationService from '@/admin/configuration/configuration.service';
 
-describe('Component Tests', () => {
-  describe('JhiConfigurationComponent', () => {
-    let comp: JhiConfigurationComponent;
-    let fixture: ComponentFixture<JhiConfigurationComponent>;
-    let service: JhiConfigurationService;
+const localVue = createLocalVue();
+const mockedAxios: any = axios;
 
-    beforeEach(async(() => {
-      TestBed.configureTestingModule({
-        imports: [JhipsterTestModule],
-        declarations: [JhiConfigurationComponent],
-        providers: [JhiConfigurationService]
+config.initVueApp(localVue);
+const i18n = config.initI18N(localVue);
+const store = config.initVueXStore(localVue);
+
+jest.mock('axios', () => ({
+  get: jest.fn()
+}));
+
+describe('Configuration Component', () => {
+  let wrapper: Wrapper<ConfigurationClass>;
+  let configuration: ConfigurationClass;
+
+  beforeEach(() => {
+    mockedAxios.get.mockReset();
+    mockedAxios.get.mockReturnValue(
+      Promise.resolve({
+        data: { contexts: [{ beans: [{ prefix: 'A' }, { prefix: 'B' }] }], propertySources: [{ properties: { key1: { value: 'value' } } }] }
       })
-        .overrideTemplate(JhiConfigurationComponent, '')
-        .compileComponents();
-    }));
-
-    beforeEach(() => {
-      fixture = TestBed.createComponent(JhiConfigurationComponent);
-      comp = fixture.componentInstance;
-      service = fixture.debugElement.injector.get(JhiConfigurationService);
+    );
+    wrapper = shallowMount<ConfigurationClass>(Configuration, {
+      store,
+      i18n,
+      localVue,
+      provide: { configurationService: () => new ConfigurationService() }
     });
+    configuration = wrapper.vm;
+  });
 
-    describe('OnInit', () => {
-      it('should set all default values correctly', () => {
-        expect(comp.configKeys).toEqual([]);
-        expect(comp.filter).toBe('');
-        expect(comp.orderProp).toBe('prefix');
-        expect(comp.reverse).toBe(false);
-      });
-      it('Should call load all on init', () => {
-        // GIVEN
-        const body = [{ config: 'test', properties: 'test' }, { config: 'test2' }];
-        const envConfig = { envConfig: 'test' };
-        spyOn(service, 'get').and.returnValue(of(body));
-        spyOn(service, 'getEnv').and.returnValue(of(envConfig));
+  it('should be a Vue instance', () => {
+    expect(wrapper.isVueInstance()).toBeTruthy();
+  });
 
-        // WHEN
-        comp.ngOnInit();
-
-        // THEN
-        expect(service.get).toHaveBeenCalled();
-        expect(service.getEnv).toHaveBeenCalled();
-        expect(comp.configKeys).toEqual([['0', '1', '2', '3']]);
-        expect(comp.allConfiguration).toEqual(envConfig);
-      });
+  describe('OnRouteEnter', () => {
+    it('should set all default values correctly', () => {
+      expect(configuration.configKeys).toEqual([]);
+      expect(configuration.filtered).toBe('');
+      expect(configuration.orderProp).toBe('prefix');
+      expect(configuration.reverse).toBe(false);
     });
-    describe('keys method', () => {
-      it('should return the keys of an Object', () => {
-        // GIVEN
-        const data = {
-          key1: 'test',
-          key2: 'test2'
-        };
+    it('Should call load all on init', async () => {
+      // WHEN
+      configuration.init();
+      await configuration.$nextTick();
 
-        // THEN
-        expect(comp.keys(data)).toEqual(['key1', 'key2']);
-        expect(comp.keys(undefined)).toEqual([]);
-      });
+      // THEN
+      expect(mockedAxios.get).toHaveBeenCalledWith('management/env');
+      expect(mockedAxios.get).toHaveBeenCalledWith('management/configprops');
+    });
+  });
+  describe('keys method', () => {
+    it('should return the keys of an Object', () => {
+      // GIVEN
+      const data = {
+        key1: 'test',
+        key2: 'test2'
+      };
+
+      // THEN
+      expect(configuration.keys(data)).toEqual(['key1', 'key2']);
+      expect(configuration.keys(undefined)).toEqual([]);
     });
   });
 });

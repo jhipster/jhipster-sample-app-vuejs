@@ -1,16 +1,13 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import axios, { AxiosInstance } from 'axios';
 
-import { SERVER_API_URL } from 'app/app.constants';
+export default class ActivateService {
+  private axios: AxiosInstance;
 
-@Injectable({ providedIn: 'root' })
-export class ActivateService {
-  constructor(private http: HttpClient) {}
+  constructor() {
+    this.axios = axios;
+  }
 
-  get(key: string): Observable<any> {
-    return this.http.get(SERVER_API_URL + 'api/activate', {
-      params: new HttpParams().set('key', key)
-    });
+  public activateAccount(key: string): Promise<any> {
+    return this.axios.get(`api/activate?key=${key}`);
   }
 }

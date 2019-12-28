@@ -29,8 +29,6 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,8 +43,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(classes = JhipsterApp.class)
 public class MailServiceIT {
 
-    private static String languages[] = {
-        "fr"
+    private static String[] languages = {
         // jhipster-needle-i18n-language-constant - JHipster will add/remove languages in this array
     };
     private static final Pattern PATTERN_LOCALE_3 = Pattern.compile("([a-z]{2})-([a-zA-Z]{4})-([a-z]{2})");
