@@ -43,6 +43,9 @@ export default class BankAccountMySuffix extends mixins(JhiDataUtils, Vue2Filter
 
   public prepareRemove(instance: IBankAccountMySuffix): void {
     this.removeId = instance.id;
+    if (<any>this.$refs.removeEntity) {
+      (<any>this.$refs.removeEntity).show();
+    }
   }
 
   public removeBankAccountMySuffix(): void {

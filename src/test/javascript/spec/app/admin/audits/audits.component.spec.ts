@@ -14,6 +14,7 @@ config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
 const store = config.initVueXStore(localVue);
 localVue.component('font-awesome-icon', FontAwesomeIcon);
+localVue.component('jhi-sort-indicator', {});
 
 jest.mock('axios', () => ({
   get: jest.fn(),

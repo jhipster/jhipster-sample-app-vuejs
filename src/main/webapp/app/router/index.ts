@@ -6,6 +6,7 @@ Component.registerHooks([
   'beforeRouteUpdate' // for vue-router 2.2+
 ]);
 import Router from 'vue-router';
+import { Authority } from '@/shared/security/authority';
 const Home = () => import('../core/home/home.vue');
 const Error = () => import('../core/error/error.vue');
 const Register = () => import('../account/register/register.vue');
@@ -73,17 +74,17 @@ export default new Router({
       component: Register
     },
     {
-      path: '/activate',
+      path: '/account/activate',
       name: 'Activate',
       component: Activate
     },
     {
-      path: '/reset/request',
+      path: '/account/reset/request',
       name: 'ResetPasswordInit',
       component: ResetPasswordInit
     },
     {
-      path: '/reset/finish',
+      path: '/account/reset/finish',
       name: 'ResetPasswordFinish',
       component: ResetPasswordFinish
     },
@@ -91,148 +92,148 @@ export default new Router({
       path: '/account/password',
       name: 'ChangePassword',
       component: ChangePassword,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: [Authority.USER] }
     },
     {
       path: '/account/settings',
       name: 'Settings',
       component: Settings,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: [Authority.USER] }
     },
     {
       path: '/admin/user-management',
       name: 'JhiUser',
       component: JhiUserManagementComponent,
-      meta: { authorities: ['ROLE_ADMIN'] }
+      meta: { authorities: [Authority.ADMIN] }
     },
     {
       path: '/admin/user-management/new',
       name: 'JhiUserCreate',
       component: JhiUserManagementEditComponent,
-      meta: { authorities: ['ROLE_ADMIN'] }
+      meta: { authorities: [Authority.ADMIN] }
     },
     {
       path: '/admin/user-management/:userId/edit',
       name: 'JhiUserEdit',
       component: JhiUserManagementEditComponent,
-      meta: { authorities: ['ROLE_ADMIN'] }
+      meta: { authorities: [Authority.ADMIN] }
     },
     {
       path: '/admin/user-management/:userId/view',
       name: 'JhiUserView',
       component: JhiUserManagementViewComponent,
-      meta: { authorities: ['ROLE_ADMIN'] }
+      meta: { authorities: [Authority.ADMIN] }
     },
     {
       path: '/admin/docs',
       name: 'JhiDocsComponent',
       component: JhiDocsComponent,
-      meta: { authorities: ['ROLE_ADMIN'] }
+      meta: { authorities: [Authority.ADMIN] }
     },
     {
       path: '/admin/audits',
       name: 'JhiAuditsComponent',
       component: JhiAuditsComponent,
-      meta: { authorities: ['ROLE_ADMIN'] }
+      meta: { authorities: [Authority.ADMIN] }
     },
     {
       path: '/admin/jhi-health',
       name: 'JhiHealthComponent',
       component: JhiHealthComponent,
-      meta: { authorities: ['ROLE_ADMIN'] }
+      meta: { authorities: [Authority.ADMIN] }
     },
     {
       path: '/admin/logs',
       name: 'JhiLogsComponent',
       component: JhiLogsComponent,
-      meta: { authorities: ['ROLE_ADMIN'] }
+      meta: { authorities: [Authority.ADMIN] }
     },
     {
       path: '/admin/jhi-metrics',
       name: 'JhiMetricsComponent',
       component: JhiMetricsComponent,
-      meta: { authorities: ['ROLE_ADMIN'] }
+      meta: { authorities: [Authority.ADMIN] }
     },
     {
       path: '/admin/jhi-configuration',
       name: 'JhiConfigurationComponent',
       component: JhiConfigurationComponent,
-      meta: { authorities: ['ROLE_ADMIN'] }
+      meta: { authorities: [Authority.ADMIN] }
     }
     ,
     {
       path: '/bank-account-my-suffix',
       name: 'BankAccountMySuffix',
       component: BankAccountMySuffix,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: [Authority.USER] }
     },
     {
       path: '/bank-account-my-suffix/new',
       name: 'BankAccountMySuffixCreate',
       component: BankAccountMySuffixUpdate,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: [Authority.USER] }
     },
     {
       path: '/bank-account-my-suffix/:bankAccountId/edit',
       name: 'BankAccountMySuffixEdit',
       component: BankAccountMySuffixUpdate,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: [Authority.USER] }
     },
     {
       path: '/bank-account-my-suffix/:bankAccountId/view',
       name: 'BankAccountMySuffixView',
       component: BankAccountMySuffixDetails,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: [Authority.USER] }
     }
     ,
     {
       path: '/label',
       name: 'Label',
       component: Label,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: [Authority.USER] }
     },
     {
       path: '/label/new',
       name: 'LabelCreate',
       component: LabelUpdate,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: [Authority.USER] }
     },
     {
       path: '/label/:labelId/edit',
       name: 'LabelEdit',
       component: LabelUpdate,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: [Authority.USER] }
     },
     {
       path: '/label/:labelId/view',
       name: 'LabelView',
       component: LabelDetails,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: [Authority.USER] }
     }
     ,
     {
       path: '/operation',
       name: 'Operation',
       component: Operation,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: [Authority.USER] }
     },
     {
       path: '/operation/new',
       name: 'OperationCreate',
       component: OperationUpdate,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: [Authority.USER] }
     },
     {
       path: '/operation/:operationId/edit',
       name: 'OperationEdit',
       component: OperationUpdate,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: [Authority.USER] }
     },
     {
       path: '/operation/:operationId/view',
       name: 'OperationView',
       component: OperationDetails,
-      meta: { authorities: ['ROLE_USER'] }
+      meta: { authorities: [Authority.USER] }
     }
     // jhipster-needle-add-entity-to-router - JHipster will add entities to the router here
   ]

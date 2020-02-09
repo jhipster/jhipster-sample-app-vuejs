@@ -17,16 +17,16 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')">ID</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('login')"><span v-text="$t('userManagement.login')">Login</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('email')"><span v-text="$t('userManagement.email')">Email</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th></th>
-                        <th v-on:click="changeOrder('langKey')"> <span v-text="$t('userManagement.langKey')">Lang Key</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th><span v-text="$t('userManagement.profiles')">Profiles</span></th>
-                    <th v-on:click="changeOrder('createdDate')"><span v-text="$t('userManagement.createdDate')">Created Date</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('lastModifiedBy')"><span v-text="$t('userManagement.lastModifiedBy')">Last Modified By</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th id="modified-date-sort" v-on:click="changeOrder('lastModifiedDate')"><span v-text="$t('userManagement.lastModifiedDate')">Last Modified Date</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th></th>
+                  <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')">ID</span> <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'id'"></jhi-sort-indicator></th>
+                  <th v-on:click="changeOrder('login')"><span v-text="$t('userManagement.login')">Login</span> <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'login'"></jhi-sort-indicator></th>
+                  <th v-on:click="changeOrder('email')"><span v-text="$t('userManagement.email')">Email</span> <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'email'"></jhi-sort-indicator></th>
+                  <th></th>
+                  <th v-on:click="changeOrder('langKey')"> <span v-text="$t('userManagement.langKey')">Lang Key</span> <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'langKey'"></jhi-sort-indicator></th>
+                  <th><span v-text="$t('userManagement.profiles')">Profiles</span></th>
+                  <th v-on:click="changeOrder('createdDate')"><span v-text="$t('userManagement.createdDate')">Created Date</span> <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'createdDate'"></jhi-sort-indicator></th>
+                  <th v-on:click="changeOrder('lastModifiedBy')"><span v-text="$t('userManagement.lastModifiedBy')">Last Modified By</span> <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'lastModifiedBy'"></jhi-sort-indicator></th>
+                  <th id="modified-date-sort" v-on:click="changeOrder('lastModifiedDate')"><span v-text="$t('userManagement.lastModifiedDate')">Last Modified Date</span> <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'lastModifiedDate'"></jhi-sort-indicator></th>
+                  <th></th>
                 </tr>
                 </thead>
                 <tbody v-if ="users">

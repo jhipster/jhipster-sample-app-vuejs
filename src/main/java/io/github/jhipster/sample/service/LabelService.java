@@ -50,7 +50,6 @@ public class LabelService {
         return labelRepository.findAll(pageable);
     }
 
-
     /**
      * Get one label by id.
      *

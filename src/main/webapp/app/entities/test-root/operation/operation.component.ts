@@ -56,6 +56,9 @@ export default class Operation extends mixins(Vue2Filters.mixin, AlertMixin) {
 
   public prepareRemove(instance: IOperation): void {
     this.removeId = instance.id;
+    if (<any>this.$refs.removeEntity) {
+      (<any>this.$refs.removeEntity).show();
+    }
   }
 
   public removeOperation(): void {

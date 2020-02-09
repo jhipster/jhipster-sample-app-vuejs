@@ -24,11 +24,11 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')">ID</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('date')"><span v-text="$t('jhipsterApp.testRootOperation.date')">Date</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('description')"><span v-text="$t('jhipsterApp.testRootOperation.description')">Description</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('amount')"><span v-text="$t('jhipsterApp.testRootOperation.amount')">Amount</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
-                    <th v-on:click="changeOrder('bankAccount.name')"><span v-text="$t('jhipsterApp.testRootOperation.bankAccount')">Bank Account</span> <font-awesome-icon icon="sort"></font-awesome-icon></th>
+                    <th v-on:click="changeOrder('id')"><span v-text="$t('global.field.id')">ID</span> <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'id'"></jhi-sort-indicator></th>
+                    <th v-on:click="changeOrder('date')"><span v-text="$t('jhipsterApp.testRootOperation.date')">Date</span> <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'date'"></jhi-sort-indicator></th>
+                    <th v-on:click="changeOrder('description')"><span v-text="$t('jhipsterApp.testRootOperation.description')">Description</span> <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'description'"></jhi-sort-indicator></th>
+                    <th v-on:click="changeOrder('amount')"><span v-text="$t('jhipsterApp.testRootOperation.amount')">Amount</span> <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'amount'"></jhi-sort-indicator></th>
+                    <th v-on:click="changeOrder('bankAccount.name')"><span v-text="$t('jhipsterApp.testRootOperation.bankAccount')">Bank Account</span> <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'bankAccount.name'"></jhi-sort-indicator></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -72,7 +72,7 @@
         <b-modal ref="removeEntity" id="removeEntity" >
             <span slot="modal-title"><span id="jhipsterApp.testRootOperation.delete.question" v-text="$t('entity.delete.title')">Confirm delete operation</span></span>
             <div class="modal-body">
-                <p id="jhi-delete-operation-heading" v-bind:title="$t('jhipsterApp.testRootOperation.delete.question')">Are you sure you want to delete this Operation?</p>
+                <p id="jhi-delete-operation-heading" v-text="$t('jhipsterApp.testRootOperation.delete.question', {'id': removeId})">Are you sure you want to delete this Operation?</p>
             </div>
             <div slot="modal-footer">
                 <button type="button" class="btn btn-secondary" v-text="$t('entity.action.cancel')" v-on:click="closeDialog()">Cancel</button>

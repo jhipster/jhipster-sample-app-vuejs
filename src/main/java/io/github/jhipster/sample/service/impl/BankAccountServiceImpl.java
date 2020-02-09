@@ -62,7 +62,6 @@ public class BankAccountServiceImpl implements BankAccountService {
             .collect(Collectors.toCollection(LinkedList::new));
     }
 
-
     /**
      * Get one bankAccount by id.
      *

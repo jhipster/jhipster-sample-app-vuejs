@@ -23,7 +23,8 @@ localVue.component('router-link', {});
 const bModalStub = {
   render: () => {},
   methods: {
-    hide: () => {}
+    hide: () => {},
+    show: () => {}
   }
 };
 

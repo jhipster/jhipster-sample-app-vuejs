@@ -91,7 +91,7 @@
         <b-modal ref="removeEntity" id="removeEntity" >
             <span slot="modal-title"><span id="jhipsterApp.testRootBankAccount.delete.question" v-text="$t('entity.delete.title')">Confirm delete operation</span></span>
             <div class="modal-body">
-                <p id="jhi-delete-bankAccount-heading" v-bind:title="$t('jhipsterApp.testRootBankAccount.delete.question')">Are you sure you want to delete this Bank Account?</p>
+                <p id="jhi-delete-bankAccount-heading" v-text="$t('jhipsterApp.testRootBankAccount.delete.question', {'id': removeId})">Are you sure you want to delete this Bank Account?</p>
             </div>
             <div slot="modal-footer">
                 <button type="button" class="btn btn-secondary" v-text="$t('entity.action.cancel')" v-on:click="closeDialog()">Cancel</button>

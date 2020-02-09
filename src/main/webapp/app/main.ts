@@ -8,6 +8,7 @@ import router from './router';
 import * as config from './shared/config/config';
 import * as bootstrapVueConfig from './shared/config/config-bootstrap-vue';
 import JhiItemCountComponent from './shared/jhi-item-count.vue';
+import JhiSortIndicatorComponent from './shared/sort/jhi-sort-indicator.vue';
 import AuditsService from './admin/audits/audits.service';
 
 import HealthService from './admin/health/health.service';
@@ -37,6 +38,7 @@ bootstrapVueConfig.initBootstrapVue(Vue);
 Vue.use(Vue2Filters);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.component('jhi-item-count', JhiItemCountComponent);
+Vue.component('jhi-sort-indicator', JhiSortIndicatorComponent);
 
 const i18n = config.initI18N(Vue);
 const store = config.initVueXStore(Vue);

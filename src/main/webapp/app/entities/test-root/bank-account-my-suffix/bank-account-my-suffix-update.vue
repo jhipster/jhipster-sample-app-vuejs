@@ -105,7 +105,7 @@
                             :class="{'valid': !$v.bankAccount.description.$invalid, 'invalid': $v.bankAccount.description.$invalid }" v-model="$v.bankAccount.description.$model" ></textarea>
                     </div>
                     <div class="form-group">
-                        <label class="form-control-label" v-bind:value="$t('jhipsterApp.testRootBankAccount.user')" for="bank-account-my-suffix-user">User</label>
+                        <label class="form-control-label" v-text="$t('jhipsterApp.testRootBankAccount.user')" for="bank-account-my-suffix-user">User</label>
                         <select class="form-control" id="bank-account-my-suffix-user" name="user" v-model="bankAccount.userId">
                             <option v-bind:value="null"></option>
                             <option v-bind:value="userOption.id" v-for="userOption in users" :key="userOption.id">{{userOption.login}}</option>

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -87,7 +86,6 @@ public class BankAccountResource {
     /**
      * {@code GET  /bank-accounts} : get all the bankAccounts.
      *
-
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of bankAccounts in body.
      */
@@ -99,11 +97,11 @@ public class BankAccountResource {
     }
 
     /**
-    * {@code GET  /bank-accounts/count} : count all the bankAccounts.
-    *
-    * @param criteria the criteria which the requested entities should match.
-    * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
-    */
+     * {@code GET  /bank-accounts/count} : count all the bankAccounts.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
     @GetMapping("/bank-accounts/count")
     public ResponseEntity<Long> countBankAccounts(BankAccountCriteria criteria) {
         log.debug("REST request to count BankAccounts by criteria: {}", criteria);

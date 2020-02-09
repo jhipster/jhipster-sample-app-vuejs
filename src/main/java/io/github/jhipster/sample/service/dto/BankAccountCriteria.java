@@ -72,10 +72,10 @@ public class BankAccountCriteria implements Serializable, Criteria {
 
     private LongFilter operationId;
 
-    public BankAccountCriteria(){
+    public BankAccountCriteria() {
     }
 
-    public BankAccountCriteria(BankAccountCriteria other){
+    public BankAccountCriteria(BankAccountCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
         this.name = other.name == null ? null : other.name.copy();
         this.bankNumber = other.bankNumber == null ? null : other.bankNumber.copy();

@@ -1,4 +1,5 @@
 package io.github.jhipster.sample.service.dto;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import javax.validation.constraints.*;
@@ -214,8 +215,8 @@ public class BankAccountDTO implements Serializable {
             ", accountType='" + getAccountType() + "'" +
             ", attachment='" + getAttachment() + "'" +
             ", description='" + getDescription() + "'" +
-            ", user=" + getUserId() +
-            ", user='" + getUserLogin() + "'" +
+            ", userId=" + getUserId() +
+            ", userLogin='" + getUserLogin() + "'" +
             "}";
     }
 }

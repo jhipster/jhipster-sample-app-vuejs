@@ -45,7 +45,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-control-label" v-bind:value="$t('jhipsterApp.testRootOperation.bankAccount')" for="operation-bankAccount">Bank Account</label>
+                        <label class="form-control-label" v-text="$t('jhipsterApp.testRootOperation.bankAccount')" for="operation-bankAccount">Bank Account</label>
                         <select class="form-control" id="operation-bankAccount" name="bankAccount" v-model="operation.bankAccount">
                             <option v-bind:value="null"></option>
                             <option v-bind:value="operation.bankAccount && bankAccountOption.id === operation.bankAccount.id ? operation.bankAccount : bankAccountOption" v-for="bankAccountOption in bankAccounts" :key="bankAccountOption.id">{{bankAccountOption.name}}</option>
