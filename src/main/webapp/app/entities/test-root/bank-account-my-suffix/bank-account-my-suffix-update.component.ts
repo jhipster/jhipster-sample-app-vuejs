@@ -3,7 +3,7 @@ import { Component, Inject } from 'vue-property-decorator';
 import { mixins } from 'vue-class-component';
 import JhiDataUtils from '@/shared/data/data-utils.service';
 
-import { numeric, required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { numeric, required, minLength, maxLength, minValue, maxValue } from 'vuelidate/lib/validators';
 import format from 'date-fns/format';
 import parse from 'date-fns/parse';
 import parseISO from 'date-fns/parseISO';

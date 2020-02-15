@@ -39,7 +39,7 @@
                             <small class="form-text text-danger" v-if="!$v.operation.amount.required" v-text="$t('entity.validation.required')">
                                 This field is required.
                             </small>
-                            <small class="form-text text-danger" v-if="!$v.operation.amount.number" v-text="$t('entity.validation.number')">
+                            <small class="form-text text-danger" v-if="!$v.operation.amount.numeric" v-text="$t('entity.validation.number')">
                                 This field should be a number.
                             </small>
                         </div>

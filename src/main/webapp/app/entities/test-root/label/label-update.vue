@@ -17,7 +17,7 @@
                             <small class="form-text text-danger" v-if="!$v.label.labelName.required" v-text="$t('entity.validation.required')">
                                 This field is required.
                             </small>
-                            <small class="form-text text-danger" v-if="!$v.label.labelName.minLength" v-bind:value="$t('entity.validation.minlength')">
+                            <small class="form-text text-danger" v-if="!$v.label.labelName.minLength" v-text="$t('entity.validation.minlength', {min: 3})">
                                 This field is required to be at least 3 characters.
                             </small>
                         </div>
