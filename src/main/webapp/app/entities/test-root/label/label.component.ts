@@ -18,6 +18,7 @@ export default class Label extends mixins(Vue2Filters.mixin, AlertMixin) {
   public propOrder = 'id';
   public reverse = false;
   public totalItems = 0;
+
   public labels: ILabel[] = [];
 
   public isFetching = false;
@@ -68,7 +69,6 @@ export default class Label extends mixins(Vue2Filters.mixin, AlertMixin) {
         const message = this.$t('jhipsterApp.testRootLabel.deleted', { param: this.removeId });
         this.alertService().showAlert(message, 'danger');
         this.getAlertFromStore();
-
         this.removeId = null;
         this.retrieveAllLabels();
         this.closeDialog();

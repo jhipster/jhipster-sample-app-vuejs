@@ -13,6 +13,7 @@ import BankAccountMySuffixService from './bank-account-my-suffix.service';
 export default class BankAccountMySuffix extends mixins(JhiDataUtils, Vue2Filters.mixin, AlertMixin) {
   @Inject('bankAccountService') private bankAccountService: () => BankAccountMySuffixService;
   private removeId: number = null;
+
   public bankAccounts: IBankAccountMySuffix[] = [];
 
   public isFetching = false;
@@ -55,7 +56,6 @@ export default class BankAccountMySuffix extends mixins(JhiDataUtils, Vue2Filter
         const message = this.$t('jhipsterApp.testRootBankAccount.deleted', { param: this.removeId });
         this.alertService().showAlert(message, 'danger');
         this.getAlertFromStore();
-
         this.removeId = null;
         this.retrieveAllBankAccountMySuffixs();
         this.closeDialog();

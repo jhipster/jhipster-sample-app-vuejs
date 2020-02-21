@@ -5,10 +5,12 @@ import Vue2Filters from 'vue2-filters';
 import { IOperation } from '@/shared/model/test-root/operation.model';
 import AlertMixin from '@/shared/alert/alert.mixin';
 
+import JhiDataUtils from '@/shared/data/data-utils.service';
+
 import OperationService from './operation.service';
 
 @Component
-export default class Operation extends mixins(Vue2Filters.mixin, AlertMixin) {
+export default class Operation extends mixins(JhiDataUtils, Vue2Filters.mixin, AlertMixin) {
   @Inject('operationService') private operationService: () => OperationService;
   private removeId: number = null;
   public itemsPerPage = 20;
@@ -18,6 +20,9 @@ export default class Operation extends mixins(Vue2Filters.mixin, AlertMixin) {
   public propOrder = 'id';
   public reverse = true;
   public totalItems = 0;
+  public infiniteId = +new Date();
+  public links = {};
+
   public operations: IOperation[] = [];
 
   public isFetching = false;
@@ -28,6 +33,16 @@ export default class Operation extends mixins(Vue2Filters.mixin, AlertMixin) {
 
   public clear(): void {
     this.page = 1;
+    this.links = {};
+    this.infiniteId += 1;
+    this.operations = [];
+    this.retrieveAllOperations();
+  }
+
+  public reset(): void {
+    this.page = 1;
+    this.infiniteId += 1;
+    this.operations = [];
     this.retrieveAllOperations();
   }
 
@@ -43,10 +58,23 @@ export default class Operation extends mixins(Vue2Filters.mixin, AlertMixin) {
       .retrieve(paginationQuery)
       .then(
         res => {
-          this.operations = res.data;
+          if (res.data && res.data.length > 0) {
+            for (let i = 0; i < res.data.length; i++) {
+              this.operations.push(res.data[i]);
+            }
+            if (res.headers && res.headers['link']) {
+              this.links = this.parseLinks(res.headers['link']);
+            }
+          }
           this.totalItems = Number(res.headers['x-total-count']);
           this.queryCount = this.totalItems;
           this.isFetching = false;
+          if (<any>this.$refs.infiniteLoading) {
+            (<any>this.$refs.infiniteLoading).stateChanger.loaded();
+            if (this.links !== {} && this.page > this.links['last']) {
+              (<any>this.$refs.infiniteLoading).stateChanger.complete();
+            }
+          }
         },
         err => {
           this.isFetching = false;
@@ -68,11 +96,17 @@ export default class Operation extends mixins(Vue2Filters.mixin, AlertMixin) {
         const message = this.$t('jhipsterApp.testRootOperation.deleted', { param: this.removeId });
         this.alertService().showAlert(message, 'danger');
         this.getAlertFromStore();
-
         this.removeId = null;
-        this.retrieveAllOperations();
+        this.reset();
         this.closeDialog();
       });
+  }
+
+  public loadMore($state): void {
+    if (!this.isFetching) {
+      this.page++;
+      this.transition();
+    }
   }
 
   public sort(): Array<any> {
@@ -97,7 +131,7 @@ export default class Operation extends mixins(Vue2Filters.mixin, AlertMixin) {
   public changeOrder(propOrder): void {
     this.propOrder = propOrder;
     this.reverse = !this.reverse;
-    this.transition();
+    this.reset();
   }
 
   public closeDialog(): void {

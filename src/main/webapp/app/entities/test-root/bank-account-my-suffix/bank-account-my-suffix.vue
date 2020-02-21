@@ -54,7 +54,7 @@
                     <td>{{bankAccount.meanOperationDuration}}</td>
                     <td>{{bankAccount.balance}}</td>
                     <td>{{bankAccount.openingDay}}</td>
-                    <td v-if="bankAccount.lastOperationDate"> {{$d(Date.parse(bankAccount.lastOperationDate), 'short') }}</td>
+                    <td>{{bankAccount.lastOperationDate ? $d(Date.parse(bankAccount.lastOperationDate), 'short') : ''}}</td>
                     <td>{{bankAccount.active}}</td>
                     <td v-text="$t('jhipsterApp.BankAccountType.' + bankAccount.accountType)">{{bankAccount.accountType}}</td>
                     <td>

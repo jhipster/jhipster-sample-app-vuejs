@@ -16,6 +16,7 @@ const store = config.initVueXStore(localVue);
 localVue.component('font-awesome-icon', {});
 localVue.component('b-alert', {});
 localVue.component('b-badge', {});
+localVue.component('jhi-sort-indicator', {});
 localVue.directive('b-modal', {});
 localVue.component('b-button', {});
 localVue.component('router-link', {});

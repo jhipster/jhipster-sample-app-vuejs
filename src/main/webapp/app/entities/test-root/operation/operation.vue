@@ -38,7 +38,7 @@
                     <td>
                         <router-link :to="{name: 'OperationView', params: {operationId: operation.id}}">{{operation.id}}</router-link>
                     </td>
-                    <td v-if="operation.date"> {{$d(Date.parse(operation.date), 'short') }}</td>
+                    <td>{{operation.date ? $d(Date.parse(operation.date), 'short') : ''}}</td>
                     <td>{{operation.description}}</td>
                     <td>{{operation.amount}}</td>
                     <td>
@@ -67,6 +67,15 @@
                     </td>
                 </tr>
                 </tbody>
+                <infinite-loading
+                    ref="infiniteLoading"
+                    v-if="totalItems > itemsPerPage"
+                    :identifier="infiniteId"
+                    slot="append"
+                    @infinite="loadMore"
+                    force-use-infinite-wrapper=".el-table__body-wrapper"
+                    :distance='20'>
+                </infinite-loading>
             </table>
         </div>
         <b-modal ref="removeEntity" id="removeEntity" >
