@@ -4,8 +4,10 @@ import Vue2Filters from 'vue2-filters';
 import UserManagementService from './user-management.service';
 import AlertMixin from '@/shared/alert/alert.mixin';
 
-@Component
-export default class JhiUserManagementComponent extends mixins(Vue2Filters.mixin, AlertMixin) {
+@Component({
+  mixins: [Vue2Filters.mixin],
+})
+export default class JhiUserManagementComponent extends mixins(AlertMixin) {
   @Inject('userService') private userManagementService: () => UserManagementService;
   public error = '';
   public success = '';
@@ -44,7 +46,7 @@ export default class JhiUserManagementComponent extends mixins(Vue2Filters.mixin
       .retrieve({
         page: this.page - 1,
         size: this.itemsPerPage,
-        sort: this.sort()
+        sort: this.sort(),
       })
       .then(res => {
         this.users = res.data;
@@ -83,7 +85,7 @@ export default class JhiUserManagementComponent extends mixins(Vue2Filters.mixin
       .remove(this.removeId)
       .then(res => {
         const message = this.$t(res.headers['x-jhipsterapp-alert'], {
-          param: decodeURIComponent(res.headers['x-jhipsterapp-params'].replace(/\+/g, ' '))
+          param: decodeURIComponent(res.headers['x-jhipsterapp-params'].replace(/\+/g, ' ')),
         });
         this.alertService().showAlert(message, 'danger');
         this.getAlertFromStore();

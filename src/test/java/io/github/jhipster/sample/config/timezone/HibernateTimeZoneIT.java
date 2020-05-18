@@ -1,8 +1,13 @@
 package io.github.jhipster.sample.config.timezone;
 
+import static java.lang.String.format;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.github.jhipster.sample.JhipsterApp;
 import io.github.jhipster.sample.repository.timezone.DateTimeWrapper;
 import io.github.jhipster.sample.repository.timezone.DateTimeWrapperRepository;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,20 +16,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-
-import static java.lang.String.format;
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
  * Integration tests for the UTC Hibernate configuration.
  */
 @SpringBootTest(classes = JhipsterApp.class)
 public class HibernateTimeZoneIT {
-
     @Autowired
     private DateTimeWrapperRepository dateTimeWrapperRepository;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -44,16 +43,11 @@ public class HibernateTimeZoneIT {
         dateTimeWrapper.setOffsetTime(OffsetTime.parse("14:30:00+02:00"));
         dateTimeWrapper.setLocalDate(LocalDate.parse("2016-09-10"));
 
-        dateTimeFormatter = DateTimeFormatter
-            .ofPattern("yyyy-MM-dd HH:mm:ss.S")
-            .withZone(ZoneId.of("UTC"));
+        dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S").withZone(ZoneId.of("UTC"));
 
-        timeFormatter = DateTimeFormatter
-            .ofPattern("HH:mm:ss")
-            .withZone(ZoneId.of("UTC"));
+        timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.of("UTC"));
 
-        dateFormatter = DateTimeFormatter
-            .ofPattern("yyyy-MM-dd");
+        dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     }
 
     @Test
@@ -75,10 +69,7 @@ public class HibernateTimeZoneIT {
 
         String request = generateSqlRequest("local_date_time", dateTimeWrapper.getId());
         SqlRowSet resultSet = jdbcTemplate.queryForRowSet(request);
-        String expectedValue = dateTimeWrapper
-            .getLocalDateTime()
-            .atZone(ZoneId.systemDefault())
-            .format(dateTimeFormatter);
+        String expectedValue = dateTimeWrapper.getLocalDateTime().atZone(ZoneId.systemDefault()).format(dateTimeFormatter);
 
         assertThatDateStoredValueIsEqualToInsertDateValueOnGMTTimeZone(resultSet, expectedValue);
     }
@@ -90,9 +81,7 @@ public class HibernateTimeZoneIT {
 
         String request = generateSqlRequest("offset_date_time", dateTimeWrapper.getId());
         SqlRowSet resultSet = jdbcTemplate.queryForRowSet(request);
-        String expectedValue = dateTimeWrapper
-            .getOffsetDateTime()
-            .format(dateTimeFormatter);
+        String expectedValue = dateTimeWrapper.getOffsetDateTime().format(dateTimeFormatter);
 
         assertThatDateStoredValueIsEqualToInsertDateValueOnGMTTimeZone(resultSet, expectedValue);
     }
@@ -104,9 +93,7 @@ public class HibernateTimeZoneIT {
 
         String request = generateSqlRequest("zoned_date_time", dateTimeWrapper.getId());
         SqlRowSet resultSet = jdbcTemplate.queryForRowSet(request);
-        String expectedValue = dateTimeWrapper
-            .getZonedDateTime()
-            .format(dateTimeFormatter);
+        String expectedValue = dateTimeWrapper.getZonedDateTime().format(dateTimeFormatter);
 
         assertThatDateStoredValueIsEqualToInsertDateValueOnGMTTimeZone(resultSet, expectedValue);
     }
@@ -151,9 +138,7 @@ public class HibernateTimeZoneIT {
 
         String request = generateSqlRequest("local_date", dateTimeWrapper.getId());
         SqlRowSet resultSet = jdbcTemplate.queryForRowSet(request);
-        String expectedValue = dateTimeWrapper
-            .getLocalDate()
-            .format(dateFormatter);
+        String expectedValue = dateTimeWrapper.getLocalDate().format(dateFormatter);
 
         assertThatDateStoredValueIsEqualToInsertDateValueOnGMTTimeZone(resultSet, expectedValue);
     }

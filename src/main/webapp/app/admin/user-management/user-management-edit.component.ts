@@ -8,7 +8,7 @@ const loginValidator = (value: string) => {
   if (!value) {
     return true;
   }
-  return /^[_.@A-Za-z0-9-]*$/.test(value);
+  return /^[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$|^[_.@A-Za-z0-9-]+$/.test(value);
 };
 
 const validations: any = {
@@ -16,25 +16,25 @@ const validations: any = {
     login: {
       required,
       maxLength: maxLength(254),
-      pattern: loginValidator
+      pattern: loginValidator,
     },
     firstName: {
-      maxLength: maxLength(50)
+      maxLength: maxLength(50),
     },
     lastName: {
-      maxLength: maxLength(50)
+      maxLength: maxLength(50),
     },
     email: {
       required,
       email,
       minLength: minLength(5),
-      maxLength: maxLength(50)
-    }
-  }
+      maxLength: maxLength(50),
+    },
+  },
 };
 
 @Component({
-  validations
+  validations,
 })
 export default class JhiUserManagementEdit extends Vue {
   @Inject('alertService') private alertService: () => AlertService;
@@ -105,7 +105,7 @@ export default class JhiUserManagementEdit extends Vue {
 
   private getMessageFromHeader(res: any): any {
     return this.$t(res.headers['x-jhipsterapp-alert'], {
-      param: decodeURIComponent(res.headers['x-jhipsterapp-params'].replace(/\+/g, ' '))
+      param: decodeURIComponent(res.headers['x-jhipsterapp-params'].replace(/\+/g, ' ')),
     });
   }
 }

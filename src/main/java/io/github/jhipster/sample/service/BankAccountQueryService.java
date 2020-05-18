@@ -1,9 +1,14 @@
 package io.github.jhipster.sample.service;
 
+import io.github.jhipster.sample.domain.*; // for static metamodels
+import io.github.jhipster.sample.domain.BankAccount;
+import io.github.jhipster.sample.repository.BankAccountRepository;
+import io.github.jhipster.sample.service.dto.BankAccountCriteria;
+import io.github.jhipster.sample.service.dto.BankAccountDTO;
+import io.github.jhipster.sample.service.mapper.BankAccountMapper;
+import io.github.jhipster.service.QueryService;
 import java.util.List;
-
 import javax.persistence.criteria.JoinType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,15 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import io.github.jhipster.service.QueryService;
-
-import io.github.jhipster.sample.domain.BankAccount;
-import io.github.jhipster.sample.domain.*; // for static metamodels
-import io.github.jhipster.sample.repository.BankAccountRepository;
-import io.github.jhipster.sample.service.dto.BankAccountCriteria;
-import io.github.jhipster.sample.service.dto.BankAccountDTO;
-import io.github.jhipster.sample.service.mapper.BankAccountMapper;
 
 /**
  * Service for executing complex queries for {@link BankAccount} entities in the database.
@@ -30,7 +26,6 @@ import io.github.jhipster.sample.service.mapper.BankAccountMapper;
 @Service
 @Transactional(readOnly = true)
 public class BankAccountQueryService extends QueryService<BankAccount> {
-
     private final Logger log = LoggerFactory.getLogger(BankAccountQueryService.class);
 
     private final BankAccountRepository bankAccountRepository;
@@ -64,8 +59,7 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
     public Page<BankAccountDTO> findByCriteria(BankAccountCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<BankAccount> specification = createSpecification(criteria);
-        return bankAccountRepository.findAll(specification, page)
-            .map(bankAccountMapper::toDto);
+        return bankAccountRepository.findAll(specification, page).map(bankAccountMapper::toDto);
     }
 
     /**
@@ -101,10 +95,12 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
                 specification = specification.and(buildRangeSpecification(criteria.getAgencyNumber(), BankAccount_.agencyNumber));
             }
             if (criteria.getLastOperationDuration() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getLastOperationDuration(), BankAccount_.lastOperationDuration));
+                specification =
+                    specification.and(buildRangeSpecification(criteria.getLastOperationDuration(), BankAccount_.lastOperationDuration));
             }
             if (criteria.getMeanOperationDuration() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getMeanOperationDuration(), BankAccount_.meanOperationDuration));
+                specification =
+                    specification.and(buildRangeSpecification(criteria.getMeanOperationDuration(), BankAccount_.meanOperationDuration));
             }
             if (criteria.getBalance() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getBalance(), BankAccount_.balance));
@@ -122,12 +118,19 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
                 specification = specification.and(buildSpecification(criteria.getAccountType(), BankAccount_.accountType));
             }
             if (criteria.getUserId() != null) {
-                specification = specification.and(buildSpecification(criteria.getUserId(),
-                    root -> root.join(BankAccount_.user, JoinType.LEFT).get(User_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(criteria.getUserId(), root -> root.join(BankAccount_.user, JoinType.LEFT).get(User_.id))
+                    );
             }
             if (criteria.getOperationId() != null) {
-                specification = specification.and(buildSpecification(criteria.getOperationId(),
-                    root -> root.join(BankAccount_.operations, JoinType.LEFT).get(Operation_.id)));
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getOperationId(),
+                            root -> root.join(BankAccount_.operations, JoinType.LEFT).get(Operation_.id)
+                        )
+                    );
             }
         }
         return specification;

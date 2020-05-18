@@ -27,11 +27,14 @@ import AlertService from '@/shared/alert/alert.service';
 import TranslationService from '@/locale/translation.service';
 import ConfigurationService from '@/admin/configuration/configuration.service';
 
+/* tslint:disable */
+
 import BankAccountService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
 import LabelService from '@/entities/test-root/label/label.service';
 import OperationService from '@/entities/test-root/operation/operation.service';
 // jhipster-needle-add-entity-service-to-main-import - JHipster will import entities services here
 
+/* tslint:enable */
 Vue.config.productionTip = false;
 config.initVueApp(Vue);
 config.initFortAwesome(Vue);
@@ -56,12 +59,14 @@ router.beforeEach((to, from, next) => {
   }
 
   if (to.meta && to.meta.authorities && to.meta.authorities.length > 0) {
-    if (!accountService.hasAnyAuthority(to.meta.authorities)) {
-      sessionStorage.setItem('requested-url', to.fullPath);
-      next('/forbidden');
-    } else {
-      next();
-    }
+    accountService.hasAnyAuthorityAndCheckAuth(to.meta.authorities).then(value => {
+      if (!value) {
+        sessionStorage.setItem('requested-url', to.fullPath);
+        next('/forbidden');
+      } else {
+        next();
+      }
+    });
   } else {
     // no authorities, so just proceed
     next();
@@ -93,8 +98,8 @@ new Vue({
     labelService: () => new LabelService(),
     operationService: () => new OperationService(),
     // jhipster-needle-add-entity-service-to-main - JHipster will import entities services here
-    accountService: () => accountService
+    accountService: () => accountService,
   },
   i18n,
-  store
+  store,
 });

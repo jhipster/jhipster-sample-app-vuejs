@@ -5,13 +5,13 @@ export const alertStore: Module<any, any> = {
     dismissSecs: 0,
     dismissCountDown: 0,
     alertType: '',
-    alertMessage: {}
+    alertMessage: {},
   },
   getters: {
     dismissSecs: state => state.dismissSecs,
     dismissCountDown: state => state.dismissCountDown,
     alertType: state => state.alertType,
-    alertMessage: state => state.alertMessage
+    alertMessage: state => state.alertMessage,
   },
   mutations: {
     initAlert(state) {
@@ -30,6 +30,6 @@ export const alertStore: Module<any, any> = {
     },
     countDownChanged(state, newCountDown) {
       state.dismissCountDown = newCountDown;
-    }
-  }
+    },
+  },
 };

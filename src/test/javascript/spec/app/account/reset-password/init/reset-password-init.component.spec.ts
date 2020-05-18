@@ -12,7 +12,7 @@ const i18n = config.initI18N(localVue);
 
 jest.mock('axios', () => ({
   get: jest.fn(),
-  post: jest.fn()
+  post: jest.fn(),
 }));
 
 describe('Reset Component Init', () => {
@@ -23,13 +23,9 @@ describe('Reset Component Init', () => {
     mockedAxios.post.mockReset();
     wrapper = shallowMount<ResetPasswordInitClass>(ResetPasswordInit, {
       i18n,
-      localVue
+      localVue,
     });
     resetPasswordInit = wrapper.vm;
-  });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   it('should reset request be a success', async () => {
@@ -50,9 +46,9 @@ describe('Reset Component Init', () => {
         response: {
           status: null,
           data: {
-            type: null
-          }
-        }
+            type: null,
+          },
+        },
       })
     );
 

@@ -3,7 +3,6 @@ package io.github.jhipster.sample.web.rest.errors;
 import java.io.Serializable;
 
 public class FieldErrorVM implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     private final String objectName;
@@ -29,5 +28,4 @@ public class FieldErrorVM implements Serializable {
     public String getMessage() {
         return message;
     }
-
 }

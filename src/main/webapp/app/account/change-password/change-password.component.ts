@@ -7,26 +7,26 @@ import { Vue, Inject } from 'vue-property-decorator';
 const validations = {
   resetPassword: {
     currentPassword: {
-      required
+      required,
     },
     newPassword: {
       required,
       minLength: minLength(4),
-      maxLength: maxLength(254)
+      maxLength: maxLength(254),
     },
     confirmPassword: {
       required,
       minLength: minLength(4),
-      maxLength: maxLength(254)
-    }
-  }
+      maxLength: maxLength(254),
+    },
+  },
 };
 
 @Component({
   validations,
   computed: {
-    ...mapGetters(['account'])
-  }
+    ...mapGetters(['account']),
+  },
 })
 export default class ChangePassword extends Vue {
   success: string = null;
@@ -35,7 +35,7 @@ export default class ChangePassword extends Vue {
   resetPassword: any = {
     currentPassword: null,
     newPassword: null,
-    confirmPassword: null
+    confirmPassword: null,
   };
 
   public changePassword(): void {
@@ -48,7 +48,7 @@ export default class ChangePassword extends Vue {
       axios
         .post('api/account/change-password', {
           currentPassword: this.resetPassword.currentPassword,
-          newPassword: this.resetPassword.newPassword
+          newPassword: this.resetPassword.newPassword,
         })
         .then(() => {
           this.success = 'OK';

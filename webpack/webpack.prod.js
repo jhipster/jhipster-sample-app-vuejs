@@ -7,7 +7,7 @@ const baseWebpackConfig = require('./webpack.common');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const jhiUtils = require('./utils.js');
 
 const env = require('../config/prod.env');
@@ -18,18 +18,18 @@ const webpackConfig = merge(baseWebpackConfig, {
     rules: utils.styleLoaders({
       sourceMap: config.build.productionSourceMap,
       extract: true,
-      usePostCSS: true
-    })
+      usePostCSS: true,
+    }),
   },
   devtool: config.build.productionSourceMap ? config.build.devtool : false,
   entry: {
     global: './src/main/webapp/content/scss/global.scss',
-    main: './src/main/webapp/app/main'
+    main: './src/main/webapp/app/main',
   },
   output: {
     path: jhiUtils.root('target/classes/static/'),
     filename: 'app/[name].[hash].bundle.js',
-    chunkFilename: 'app/[id].[hash].chunk.js'
+    chunkFilename: 'app/[id].[hash].chunk.js',
   },
   optimization: {
     splitChunks: {
@@ -37,27 +37,26 @@ const webpackConfig = merge(baseWebpackConfig, {
         commons: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
-          chunks: 'all'
-        }
-      }
-    }
+          chunks: 'all',
+        },
+      },
+    },
   },
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
-      'process.env': env
+      'process.env': env,
     }),
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        warnings: false
+    new TerserPlugin({
+      terserOptions: {
+        warnings: false,
       },
       sourceMap: config.build.productionSourceMap,
-      parallel: true
     }),
     // extract css into its own file
     new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css',
-      chunkFilename: '[id].css'
+      filename: 'content/[name].[contenthash].css',
+      chunkFilename: 'content/[id].css',
     }),
     // Compress extracted CSS. We are using this plugin so that possible
     // duplicated CSS from different components can be deduped.
@@ -73,16 +72,14 @@ const webpackConfig = merge(baseWebpackConfig, {
       minify: {
         removeComments: true,
         collapseWhitespace: true,
-        removeAttributeQuotes: true
+        removeAttributeQuotes: true,
         // more options:
         // https://github.com/kangax/html-minifier#options-quick-reference
       },
-      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'dependency'
     }),
     // keep module.id stable when vendor modules does not change
-    new webpack.HashedModuleIdsPlugin()
-  ]
+    new webpack.HashedModuleIdsPlugin(),
+  ],
 });
 
 if (config.build.productionGzip) {
@@ -94,7 +91,7 @@ if (config.build.productionGzip) {
       algorithm: 'gzip',
       test: new RegExp('\\.(' + config.build.productionGzipExtensions.join('|') + ')$'),
       threshold: 10240,
-      minRatio: 0.8
+      minRatio: 0.8,
     })
   );
 }

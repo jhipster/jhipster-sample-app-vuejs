@@ -39,7 +39,7 @@ export default class HealthService {
     const healthData = {
       name,
       details: undefined,
-      error: undefined
+      error: undefined,
     };
 
     const details = {};

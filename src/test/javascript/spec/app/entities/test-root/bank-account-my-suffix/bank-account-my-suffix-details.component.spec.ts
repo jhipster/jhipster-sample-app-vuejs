@@ -28,7 +28,7 @@ describe('Component Tests', () => {
         store,
         i18n,
         localVue,
-        provide: { bankAccountService: () => bankAccountServiceStub }
+        provide: { bankAccountService: () => bankAccountServiceStub },
       });
       comp = wrapper.vm;
     });

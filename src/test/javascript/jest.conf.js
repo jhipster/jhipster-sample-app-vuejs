@@ -4,15 +4,15 @@ module.exports = {
     '<rootDir>/node_modules/',
     '<rootDir>/src/test/javascript',
     '<rootDir>/src/main/webapp/app/router',
-    '.*.json'
+    '.*.json',
   ],
   moduleFileExtensions: ['js', 'json', 'ts', 'vue'],
   transform: {
     '.*\\.(vue)$': 'vue-jest',
-    '^.+\\.tsx?$': 'ts-jest'
+    '^.+\\.tsx?$': 'ts-jest',
   },
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/main/webapp/app/$1'
+    '^@/(.*)$': '<rootDir>/src/main/webapp/app/$1',
   },
   reporters: ['default', ['jest-junit', { outputDirectory: './target/test-results/', outputName: 'TESTS-results-jest.xml' }]],
   testResultsProcessor: 'jest-sonar-reporter',
@@ -24,7 +24,7 @@ module.exports = {
       statements: 80,
       branches: 60,
       functions: 70,
-      lines: 80
-    }
-  }
+      lines: 80,
+    },
+  },
 };

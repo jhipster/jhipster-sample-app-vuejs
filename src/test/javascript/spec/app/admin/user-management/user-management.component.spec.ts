@@ -23,7 +23,7 @@ localVue.directive('b-modal', {});
 jest.mock('axios', () => ({
   get: jest.fn(),
   put: jest.fn(),
-  delete: jest.fn()
+  delete: jest.fn(),
 }));
 
 describe('UserManagement Component', () => {
@@ -33,7 +33,7 @@ describe('UserManagement Component', () => {
   const account = {
     firstName: 'John',
     lastName: 'Doe',
-    email: 'john.doe@jhipster.org'
+    email: 'john.doe@jhipster.org',
   };
 
   beforeEach(() => {
@@ -49,18 +49,14 @@ describe('UserManagement Component', () => {
       stubs: {
         bPagination: true,
         jhiItemCount: true,
-        bModal: true
+        bModal: true,
       },
       provide: {
         alertService: () => new AlertService(store),
-        userService: () => new UserManagementService()
-      }
+        userService: () => new UserManagementService(),
+      },
     });
     userManagement = wrapper.vm;
-  });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   describe('OnInit', () => {

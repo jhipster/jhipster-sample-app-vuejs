@@ -1,14 +1,16 @@
 import { mixins } from 'vue-class-component';
 
-import { Component, Inject } from 'vue-property-decorator';
+import { Component, Vue, Inject } from 'vue-property-decorator';
 import Vue2Filters from 'vue2-filters';
 import { ILabel } from '@/shared/model/test-root/label.model';
 import AlertMixin from '@/shared/alert/alert.mixin';
 
 import LabelService from './label.service';
 
-@Component
-export default class Label extends mixins(Vue2Filters.mixin, AlertMixin) {
+@Component({
+  mixins: [Vue2Filters.mixin],
+})
+export default class Label extends mixins(AlertMixin) {
   @Inject('labelService') private labelService: () => LabelService;
   private removeId: number = null;
   public itemsPerPage = 20;
@@ -38,7 +40,7 @@ export default class Label extends mixins(Vue2Filters.mixin, AlertMixin) {
     const paginationQuery = {
       page: this.page - 1,
       size: this.itemsPerPage,
-      sort: this.sort()
+      sort: this.sort(),
     };
     this.labelService()
       .retrieve(paginationQuery)

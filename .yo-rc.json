@@ -1,6 +1,6 @@
 {
   "generator-jhipster": {
-    "jhipsterVersion": "6.7.1",
+    "jhipsterVersion": "6.9.0",
     "applicationType": "monolith",
     "baseName": "jhipsterSampleApplicationVue",
     "packageName": "io.github.jhipster.sample",
@@ -26,7 +26,7 @@
     "otherModules": [
       {
         "name": "generator-jhipster-vuejs",
-        "version": "1.6.0"
+        "version": "1.8.0"
       }
     ],
     "enableTranslation": true,
@@ -41,10 +41,11 @@
     "blueprints": [
       {
         "name": "generator-jhipster-vuejs",
-        "version": "1.6.0"
+        "version": "1.8.0"
       }
     ],
-    "creationTimestamp": 1581267209237
+    "creationTimestamp": 1581267209237,
+    "prettierJava": true
   },
   "generator-jhipster-vuejs": {
     "clientTheme": "none",

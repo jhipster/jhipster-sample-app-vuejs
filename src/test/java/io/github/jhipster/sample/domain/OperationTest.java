@@ -1,8 +1,9 @@
 package io.github.jhipster.sample.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+
 import io.github.jhipster.sample.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
 
 public class OperationTest {
 

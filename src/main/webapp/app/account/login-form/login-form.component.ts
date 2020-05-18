@@ -6,8 +6,8 @@ import AccountService from '@/account/account.service';
   watch: {
     $route() {
       this.$root.$emit('bv::hide::modal', 'login-page');
-    }
-  }
+    },
+  },
 })
 export default class LoginForm extends Vue {
   @Inject('accountService')

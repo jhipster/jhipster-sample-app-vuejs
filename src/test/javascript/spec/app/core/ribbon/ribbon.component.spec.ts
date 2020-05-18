@@ -18,7 +18,7 @@ describe('Ribbon', () => {
     wrapper = shallowMount<RibbonClass>(Ribbon, {
       i18n,
       store,
-      localVue
+      localVue,
     });
     ribbon = wrapper.vm;
     await ribbon.$nextTick();
@@ -26,11 +26,6 @@ describe('Ribbon', () => {
 
   beforeEach(() => {
     store.commit('setRibbonOnProfiles', null);
-  });
-
-  it('should be a Vue instance', async () => {
-    await wrap();
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   it('should not have ribbonEnabled when no data', async () => {

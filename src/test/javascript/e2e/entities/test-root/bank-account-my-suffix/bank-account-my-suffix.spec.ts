@@ -16,7 +16,7 @@ import {
   waitUntilAnyDisplayed,
   waitUntilCount,
   waitUntilDisplayed,
-  waitUntilHidden
+  waitUntilHidden,
 } from '../../../util/utils';
 
 import path from 'path';

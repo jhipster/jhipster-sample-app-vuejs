@@ -1,52 +1,46 @@
 package io.github.jhipster.sample.web.rest;
 
-import io.github.jhipster.sample.JhipsterApp;
-import io.github.jhipster.sample.domain.BankAccount;
-import io.github.jhipster.sample.domain.User;
-import io.github.jhipster.sample.domain.Operation;
-import io.github.jhipster.sample.repository.BankAccountRepository;
-import io.github.jhipster.sample.service.BankAccountService;
-import io.github.jhipster.sample.service.dto.BankAccountDTO;
-import io.github.jhipster.sample.service.mapper.BankAccountMapper;
-import io.github.jhipster.sample.web.rest.errors.ExceptionTranslator;
-import io.github.jhipster.sample.service.dto.BankAccountCriteria;
-import io.github.jhipster.sample.service.BankAccountQueryService;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
-import org.springframework.validation.Validator;
-
-import javax.persistence.EntityManager;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-
-import static io.github.jhipster.sample.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import io.github.jhipster.sample.JhipsterApp;
+import io.github.jhipster.sample.domain.BankAccount;
+import io.github.jhipster.sample.domain.Operation;
+import io.github.jhipster.sample.domain.User;
 import io.github.jhipster.sample.domain.enumeration.BankAccountType;
+import io.github.jhipster.sample.repository.BankAccountRepository;
+import io.github.jhipster.sample.service.BankAccountQueryService;
+import io.github.jhipster.sample.service.BankAccountService;
+import io.github.jhipster.sample.service.dto.BankAccountCriteria;
+import io.github.jhipster.sample.service.dto.BankAccountDTO;
+import io.github.jhipster.sample.service.mapper.BankAccountMapper;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
+
 /**
  * Integration tests for the {@link BankAccountResource} REST controller.
  */
 @SpringBootTest(classes = JhipsterApp.class)
+@AutoConfigureMockMvc
+@WithMockUser
 public class BankAccountResourceIT {
-
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
@@ -104,35 +98,12 @@ public class BankAccountResourceIT {
     private BankAccountQueryService bankAccountQueryService;
 
     @Autowired
-    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
-
-    @Autowired
-    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
-
-    @Autowired
-    private ExceptionTranslator exceptionTranslator;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
-    private Validator validator;
-
     private MockMvc restBankAccountMockMvc;
 
     private BankAccount bankAccount;
-
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
-        final BankAccountResource bankAccountResource = new BankAccountResource(bankAccountService, bankAccountQueryService);
-        this.restBankAccountMockMvc = MockMvcBuilders.standaloneSetup(bankAccountResource)
-            .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter)
-            .setValidator(validator).build();
-    }
 
     /**
      * Create an entity for this test.
@@ -157,6 +128,7 @@ public class BankAccountResourceIT {
             .description(DEFAULT_DESCRIPTION);
         return bankAccount;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -190,12 +162,14 @@ public class BankAccountResourceIT {
     @Transactional
     public void createBankAccount() throws Exception {
         int databaseSizeBeforeCreate = bankAccountRepository.findAll().size();
-
         // Create the BankAccount
         BankAccountDTO bankAccountDTO = bankAccountMapper.toDto(bankAccount);
-        restBankAccountMockMvc.perform(post("/api/bank-accounts")
-            .contentType(TestUtil.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(bankAccountDTO)))
+        restBankAccountMockMvc
+            .perform(
+                post("/api/bank-accounts")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(bankAccountDTO))
+            )
             .andExpect(status().isCreated());
 
         // Validate the BankAccount in the database
@@ -227,16 +201,18 @@ public class BankAccountResourceIT {
         BankAccountDTO bankAccountDTO = bankAccountMapper.toDto(bankAccount);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restBankAccountMockMvc.perform(post("/api/bank-accounts")
-            .contentType(TestUtil.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(bankAccountDTO)))
+        restBankAccountMockMvc
+            .perform(
+                post("/api/bank-accounts")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(bankAccountDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the BankAccount in the database
         List<BankAccount> bankAccountList = bankAccountRepository.findAll();
         assertThat(bankAccountList).hasSize(databaseSizeBeforeCreate);
     }
-
 
     @Test
     @Transactional
@@ -248,9 +224,12 @@ public class BankAccountResourceIT {
         // Create the BankAccount, which fails.
         BankAccountDTO bankAccountDTO = bankAccountMapper.toDto(bankAccount);
 
-        restBankAccountMockMvc.perform(post("/api/bank-accounts")
-            .contentType(TestUtil.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(bankAccountDTO)))
+        restBankAccountMockMvc
+            .perform(
+                post("/api/bank-accounts")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(bankAccountDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<BankAccount> bankAccountList = bankAccountRepository.findAll();
@@ -267,9 +246,12 @@ public class BankAccountResourceIT {
         // Create the BankAccount, which fails.
         BankAccountDTO bankAccountDTO = bankAccountMapper.toDto(bankAccount);
 
-        restBankAccountMockMvc.perform(post("/api/bank-accounts")
-            .contentType(TestUtil.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(bankAccountDTO)))
+        restBankAccountMockMvc
+            .perform(
+                post("/api/bank-accounts")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(bankAccountDTO))
+            )
             .andExpect(status().isBadRequest());
 
         List<BankAccount> bankAccountList = bankAccountRepository.findAll();
@@ -283,7 +265,8 @@ public class BankAccountResourceIT {
         bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList
-        restBankAccountMockMvc.perform(get("/api/bank-accounts?sort=id,desc"))
+        restBankAccountMockMvc
+            .perform(get("/api/bank-accounts?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(bankAccount.getId().intValue())))
@@ -301,7 +284,7 @@ public class BankAccountResourceIT {
             .andExpect(jsonPath("$.[*].attachment").value(hasItem(Base64Utils.encodeToString(DEFAULT_ATTACHMENT))))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getBankAccount() throws Exception {
@@ -309,7 +292,8 @@ public class BankAccountResourceIT {
         bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get the bankAccount
-        restBankAccountMockMvc.perform(get("/api/bank-accounts/{id}", bankAccount.getId()))
+        restBankAccountMockMvc
+            .perform(get("/api/bank-accounts/{id}", bankAccount.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(bankAccount.getId().intValue()))
@@ -328,7 +312,6 @@ public class BankAccountResourceIT {
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
     }
 
-
     @Test
     @Transactional
     public void getBankAccountsByIdFiltering() throws Exception {
@@ -346,7 +329,6 @@ public class BankAccountResourceIT {
         defaultBankAccountShouldBeFound("id.lessThanOrEqual=" + id);
         defaultBankAccountShouldNotBeFound("id.lessThan=" + id);
     }
-
 
     @Test
     @Transactional
@@ -399,7 +381,8 @@ public class BankAccountResourceIT {
         // Get all the bankAccountList where name is null
         defaultBankAccountShouldNotBeFound("name.specified=false");
     }
-                @Test
+
+    @Test
     @Transactional
     public void getAllBankAccountsByNameContainsSomething() throws Exception {
         // Initialize the database
@@ -424,7 +407,6 @@ public class BankAccountResourceIT {
         // Get all the bankAccountList where name does not contain UPDATED_NAME
         defaultBankAccountShouldBeFound("name.doesNotContain=" + UPDATED_NAME);
     }
-
 
     @Test
     @Transactional
@@ -530,7 +512,6 @@ public class BankAccountResourceIT {
         defaultBankAccountShouldBeFound("bankNumber.greaterThan=" + SMALLER_BANK_NUMBER);
     }
 
-
     @Test
     @Transactional
     public void getAllBankAccountsByAgencyNumberIsEqualToSomething() throws Exception {
@@ -635,7 +616,6 @@ public class BankAccountResourceIT {
         defaultBankAccountShouldBeFound("agencyNumber.greaterThan=" + SMALLER_AGENCY_NUMBER);
     }
 
-
     @Test
     @Transactional
     public void getAllBankAccountsByLastOperationDurationIsEqualToSomething() throws Exception {
@@ -669,7 +649,9 @@ public class BankAccountResourceIT {
         bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where lastOperationDuration in DEFAULT_LAST_OPERATION_DURATION or UPDATED_LAST_OPERATION_DURATION
-        defaultBankAccountShouldBeFound("lastOperationDuration.in=" + DEFAULT_LAST_OPERATION_DURATION + "," + UPDATED_LAST_OPERATION_DURATION);
+        defaultBankAccountShouldBeFound(
+            "lastOperationDuration.in=" + DEFAULT_LAST_OPERATION_DURATION + "," + UPDATED_LAST_OPERATION_DURATION
+        );
 
         // Get all the bankAccountList where lastOperationDuration equals to UPDATED_LAST_OPERATION_DURATION
         defaultBankAccountShouldNotBeFound("lastOperationDuration.in=" + UPDATED_LAST_OPERATION_DURATION);
@@ -740,7 +722,6 @@ public class BankAccountResourceIT {
         defaultBankAccountShouldBeFound("lastOperationDuration.greaterThan=" + SMALLER_LAST_OPERATION_DURATION);
     }
 
-
     @Test
     @Transactional
     public void getAllBankAccountsByMeanOperationDurationIsEqualToSomething() throws Exception {
@@ -774,7 +755,9 @@ public class BankAccountResourceIT {
         bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where meanOperationDuration in DEFAULT_MEAN_OPERATION_DURATION or UPDATED_MEAN_OPERATION_DURATION
-        defaultBankAccountShouldBeFound("meanOperationDuration.in=" + DEFAULT_MEAN_OPERATION_DURATION + "," + UPDATED_MEAN_OPERATION_DURATION);
+        defaultBankAccountShouldBeFound(
+            "meanOperationDuration.in=" + DEFAULT_MEAN_OPERATION_DURATION + "," + UPDATED_MEAN_OPERATION_DURATION
+        );
 
         // Get all the bankAccountList where meanOperationDuration equals to UPDATED_MEAN_OPERATION_DURATION
         defaultBankAccountShouldNotBeFound("meanOperationDuration.in=" + UPDATED_MEAN_OPERATION_DURATION);
@@ -844,7 +827,6 @@ public class BankAccountResourceIT {
         // Get all the bankAccountList where meanOperationDuration is greater than SMALLER_MEAN_OPERATION_DURATION
         defaultBankAccountShouldBeFound("meanOperationDuration.greaterThan=" + SMALLER_MEAN_OPERATION_DURATION);
     }
-
 
     @Test
     @Transactional
@@ -950,7 +932,6 @@ public class BankAccountResourceIT {
         defaultBankAccountShouldBeFound("balance.greaterThan=" + SMALLER_BALANCE);
     }
 
-
     @Test
     @Transactional
     public void getAllBankAccountsByOpeningDayIsEqualToSomething() throws Exception {
@@ -1054,7 +1035,6 @@ public class BankAccountResourceIT {
         // Get all the bankAccountList where openingDay is greater than SMALLER_OPENING_DAY
         defaultBankAccountShouldBeFound("openingDay.greaterThan=" + SMALLER_OPENING_DAY);
     }
-
 
     @Test
     @Transactional
@@ -1231,7 +1211,6 @@ public class BankAccountResourceIT {
         defaultBankAccountShouldNotBeFound("userId.equals=" + (userId + 1));
     }
 
-
     @Test
     @Transactional
     public void getAllBankAccountsByOperationIsEqualToSomething() throws Exception {
@@ -1255,7 +1234,8 @@ public class BankAccountResourceIT {
      * Executes the search, and checks that the default entity is returned.
      */
     private void defaultBankAccountShouldBeFound(String filter) throws Exception {
-        restBankAccountMockMvc.perform(get("/api/bank-accounts?sort=id,desc&" + filter))
+        restBankAccountMockMvc
+            .perform(get("/api/bank-accounts?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(bankAccount.getId().intValue())))
@@ -1274,7 +1254,8 @@ public class BankAccountResourceIT {
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
 
         // Check, that the count call also returns 1
-        restBankAccountMockMvc.perform(get("/api/bank-accounts/count?sort=id,desc&" + filter))
+        restBankAccountMockMvc
+            .perform(get("/api/bank-accounts/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("1"));
@@ -1284,26 +1265,26 @@ public class BankAccountResourceIT {
      * Executes the search, and checks that the default entity is not returned.
      */
     private void defaultBankAccountShouldNotBeFound(String filter) throws Exception {
-        restBankAccountMockMvc.perform(get("/api/bank-accounts?sort=id,desc&" + filter))
+        restBankAccountMockMvc
+            .perform(get("/api/bank-accounts?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$").isArray())
             .andExpect(jsonPath("$").isEmpty());
 
         // Check, that the count call also returns 0
-        restBankAccountMockMvc.perform(get("/api/bank-accounts/count?sort=id,desc&" + filter))
+        restBankAccountMockMvc
+            .perform(get("/api/bank-accounts/count?sort=id,desc&" + filter))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(content().string("0"));
     }
 
-
     @Test
     @Transactional
     public void getNonExistingBankAccount() throws Exception {
         // Get the bankAccount
-        restBankAccountMockMvc.perform(get("/api/bank-accounts/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restBankAccountMockMvc.perform(get("/api/bank-accounts/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -1334,9 +1315,10 @@ public class BankAccountResourceIT {
             .description(UPDATED_DESCRIPTION);
         BankAccountDTO bankAccountDTO = bankAccountMapper.toDto(updatedBankAccount);
 
-        restBankAccountMockMvc.perform(put("/api/bank-accounts")
-            .contentType(TestUtil.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(bankAccountDTO)))
+        restBankAccountMockMvc
+            .perform(
+                put("/api/bank-accounts").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(bankAccountDTO))
+            )
             .andExpect(status().isOk());
 
         // Validate the BankAccount in the database
@@ -1367,9 +1349,10 @@ public class BankAccountResourceIT {
         BankAccountDTO bankAccountDTO = bankAccountMapper.toDto(bankAccount);
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restBankAccountMockMvc.perform(put("/api/bank-accounts")
-            .contentType(TestUtil.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(bankAccountDTO)))
+        restBankAccountMockMvc
+            .perform(
+                put("/api/bank-accounts").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(bankAccountDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the BankAccount in the database
@@ -1386,8 +1369,8 @@ public class BankAccountResourceIT {
         int databaseSizeBeforeDelete = bankAccountRepository.findAll().size();
 
         // Delete the bankAccount
-        restBankAccountMockMvc.perform(delete("/api/bank-accounts/{id}", bankAccount.getId())
-            .accept(TestUtil.APPLICATION_JSON))
+        restBankAccountMockMvc
+            .perform(delete("/api/bank-accounts/{id}", bankAccount.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

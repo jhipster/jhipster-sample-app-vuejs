@@ -15,7 +15,7 @@ const store = config.initVueXStore(localVue);
 
 jest.mock('axios', () => ({
   get: jest.fn(),
-  post: jest.fn()
+  post: jest.fn(),
 }));
 
 describe('Logs Component', () => {
@@ -26,10 +26,6 @@ describe('Logs Component', () => {
     mockedAxios.get.mockReturnValue(Promise.resolve({}));
     wrapper = shallowMount<LogsClass>(Logs, { store, i18n, localVue, provide: { logsService: () => new LogsService() } });
     logs = wrapper.vm;
-  });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   describe('OnInit', () => {

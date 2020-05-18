@@ -1,19 +1,19 @@
 package io.github.jhipster.sample.service.dto;
 
-import java.io.Serializable;
-import java.util.Objects;
-import io.github.jhipster.service.Criteria;
 import io.github.jhipster.sample.domain.enumeration.BankAccountType;
+import io.github.jhipster.service.Criteria;
+import io.github.jhipster.service.filter.BigDecimalFilter;
 import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
 import io.github.jhipster.service.filter.FloatFilter;
+import io.github.jhipster.service.filter.InstantFilter;
 import io.github.jhipster.service.filter.IntegerFilter;
+import io.github.jhipster.service.filter.LocalDateFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
-import io.github.jhipster.service.filter.BigDecimalFilter;
-import io.github.jhipster.service.filter.InstantFilter;
-import io.github.jhipster.service.filter.LocalDateFilter;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Criteria class for the {@link io.github.jhipster.sample.domain.BankAccount} entity. This class is used
@@ -25,13 +25,13 @@ import io.github.jhipster.service.filter.LocalDateFilter;
  * fix type specific filters.
  */
 public class BankAccountCriteria implements Serializable, Criteria {
+
     /**
      * Class for filtering BankAccountType
      */
     public static class BankAccountTypeFilter extends Filter<BankAccountType> {
 
-        public BankAccountTypeFilter() {
-        }
+        public BankAccountTypeFilter() {}
 
         public BankAccountTypeFilter(BankAccountTypeFilter filter) {
             super(filter);
@@ -41,7 +41,6 @@ public class BankAccountCriteria implements Serializable, Criteria {
         public BankAccountTypeFilter copy() {
             return new BankAccountTypeFilter(this);
         }
-
     }
 
     private static final long serialVersionUID = 1L;
@@ -72,8 +71,7 @@ public class BankAccountCriteria implements Serializable, Criteria {
 
     private LongFilter operationId;
 
-    public BankAccountCriteria() {
-    }
+    public BankAccountCriteria() {}
 
     public BankAccountCriteria(BankAccountCriteria other) {
         this.id = other.id == null ? null : other.id.copy();
@@ -200,7 +198,6 @@ public class BankAccountCriteria implements Serializable, Criteria {
         this.operationId = operationId;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -210,7 +207,7 @@ public class BankAccountCriteria implements Serializable, Criteria {
             return false;
         }
         final BankAccountCriteria that = (BankAccountCriteria) o;
-        return
+        return (
             Objects.equals(id, that.id) &&
             Objects.equals(name, that.name) &&
             Objects.equals(bankNumber, that.bankNumber) &&
@@ -223,28 +220,30 @@ public class BankAccountCriteria implements Serializable, Criteria {
             Objects.equals(active, that.active) &&
             Objects.equals(accountType, that.accountType) &&
             Objects.equals(userId, that.userId) &&
-            Objects.equals(operationId, that.operationId);
+            Objects.equals(operationId, that.operationId)
+        );
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-        id,
-        name,
-        bankNumber,
-        agencyNumber,
-        lastOperationDuration,
-        meanOperationDuration,
-        balance,
-        openingDay,
-        lastOperationDate,
-        active,
-        accountType,
-        userId,
-        operationId
+            id,
+            name,
+            bankNumber,
+            agencyNumber,
+            lastOperationDuration,
+            meanOperationDuration,
+            balance,
+            openingDay,
+            lastOperationDate,
+            active,
+            accountType,
+            userId,
+            operationId
         );
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "BankAccountCriteria{" +
@@ -263,5 +262,4 @@ public class BankAccountCriteria implements Serializable, Criteria {
                 (operationId != null ? "operationId=" + operationId + ", " : "") +
             "}";
     }
-
 }

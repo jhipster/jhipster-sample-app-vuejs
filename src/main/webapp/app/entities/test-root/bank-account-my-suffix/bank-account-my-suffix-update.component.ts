@@ -21,7 +21,7 @@ import BankAccountMySuffixService from './bank-account-my-suffix.service';
 const validations: any = {
   bankAccount: {
     name: {
-      required
+      required,
     },
     bankNumber: {},
     agencyNumber: {},
@@ -29,19 +29,19 @@ const validations: any = {
     meanOperationDuration: {},
     balance: {
       required,
-      numeric
+      numeric,
     },
     openingDay: {},
     lastOperationDate: {},
     active: {},
     accountType: {},
     attachment: {},
-    description: {}
-  }
+    description: {},
+  },
 };
 
 @Component({
-  validations
+  validations,
 })
 export default class BankAccountMySuffixUpdate extends mixins(JhiDataUtils) {
   @Inject('alertService') private alertService: () => AlertService;

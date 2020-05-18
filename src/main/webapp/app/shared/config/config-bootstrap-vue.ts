@@ -20,7 +20,7 @@ import {
   BLink,
   BAlert,
   BModal,
-  VBModal
+  VBModal,
 } from 'bootstrap-vue';
 
 export function initBootstrapVue(vue) {

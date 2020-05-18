@@ -11,6 +11,7 @@ import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
 import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
 import { faBook } from '@fortawesome/free-solid-svg-icons/faBook';
 import { faCloud } from '@fortawesome/free-solid-svg-icons/faCloud';
+import { faCogs } from '@fortawesome/free-solid-svg-icons/faCogs';
 import { faEye } from '@fortawesome/free-solid-svg-icons/faEye';
 import { faFlag } from '@fortawesome/free-solid-svg-icons/faFlag';
 import { faHdd } from '@fortawesome/free-solid-svg-icons/faHdd';
@@ -55,7 +56,7 @@ const dateTimeFormats = {
       month: 'short',
       day: 'numeric',
       hour: 'numeric',
-      minute: 'numeric'
+      minute: 'numeric',
     },
     medium: {
       year: 'numeric',
@@ -63,7 +64,7 @@ const dateTimeFormats = {
       day: 'numeric',
       weekday: 'short',
       hour: 'numeric',
-      minute: 'numeric'
+      minute: 'numeric',
     },
     long: {
       year: 'numeric',
@@ -71,8 +72,8 @@ const dateTimeFormats = {
       day: 'numeric',
       weekday: 'long',
       hour: 'numeric',
-      minute: 'numeric'
-    }
+      minute: 'numeric',
+    },
   },
   fr: {
     short: {
@@ -80,7 +81,7 @@ const dateTimeFormats = {
       month: 'short',
       day: 'numeric',
       hour: 'numeric',
-      minute: 'numeric'
+      minute: 'numeric',
     },
     medium: {
       year: 'numeric',
@@ -88,7 +89,7 @@ const dateTimeFormats = {
       day: 'numeric',
       weekday: 'short',
       hour: 'numeric',
-      minute: 'numeric'
+      minute: 'numeric',
     },
     long: {
       year: 'numeric',
@@ -96,9 +97,9 @@ const dateTimeFormats = {
       day: 'numeric',
       weekday: 'long',
       hour: 'numeric',
-      minute: 'numeric'
-    }
-  }
+      minute: 'numeric',
+    },
+  },
   // jhipster-needle-i18n-language-date-time-format - JHipster will add/remove format options in this object
 };
 
@@ -119,6 +120,7 @@ export function initFortAwesome(vue) {
     faBell,
     faBook,
     faCloud,
+    faCogs,
     faEye,
     faFlag,
     faHdd,
@@ -154,7 +156,7 @@ export function initI18N(vue) {
   return new VueI18n({
     dateTimeFormats,
     silentTranslationWarn: true,
-    formatter: new JhiFormatter()
+    formatter: new JhiFormatter(),
   });
 }
 
@@ -164,7 +166,7 @@ export function initVueXStore(vue) {
     modules: {
       accountStore,
       alertStore,
-      translationStore
-    }
+      translationStore,
+    },
   });
 }

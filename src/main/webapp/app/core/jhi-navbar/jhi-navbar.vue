@@ -1,14 +1,20 @@
 <template>
     <b-navbar toggleable="md" type="dark" class="jh-navbar">
-        <div class="jh-logo-container float-left">
-            <b-navbar-toggle right class="jh-navbar-toggler d-lg-none float-right" href="javascript:void(0);"  data-toggle="collapse" target="header-tabs" aria-expanded="false" aria-label="Toggle navigation">
-                <font-awesome-icon icon="bars" />
-            </b-navbar-toggle>
-            <b-navbar-brand class="logo float-left" b-link to="/">
-                <span class="logo-img"></span>
-                <span v-text="$t('global.title')" class="navbar-title">jhipster</span> <span class="navbar-version">{{version}}</span>
-            </b-navbar-brand>
-        </div>
+        <b-navbar-brand class="logo" b-link to="/">
+            <span class="logo-img"></span>
+            <span v-text="$t('global.title')" class="navbar-title">jhipster</span> <span class="navbar-version">{{version}}</span>
+        </b-navbar-brand>      
+        <b-navbar-toggle 
+        right 
+        class="jh-navbar-toggler d-lg-none" 
+        href="javascript:void(0);"  
+        data-toggle="collapse" 
+        target="header-tabs" 
+        aria-expanded="false" 
+        aria-label="Toggle navigation">
+            <font-awesome-icon icon="bars" />
+        </b-navbar-toggle>
+           
         <b-collapse is-nav id="header-tabs">
             <b-navbar-nav class="ml-auto">
                 <b-nav-item to="/" exact>
@@ -18,6 +24,7 @@
                     </span>
                 </b-nav-item>
                 <b-nav-item-dropdown
+                    right
                     id="entity-menu"
                     v-if="authenticated"
                     active-class="active" class="pointer">
@@ -40,40 +47,41 @@
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
                 </b-nav-item-dropdown>
                 <b-nav-item-dropdown
+                    right
                     id="admin-menu"
-                    v-if="hasAnyAuthority('ROLE_ADMIN')"
+                    v-if="hasAnyAuthority('ROLE_ADMIN') && authenticated"
                     :class="{'router-link-active': subIsActive('/admin')}"
                     active-class="active"
                     class="pointer">
                     <span slot="button-content" class="navbar-dropdown-menu">
-                        <font-awesome-icon icon="user-plus" />
+                        <font-awesome-icon icon="cogs" />
                         <span v-text="$t('global.menu.admin.main')">Administration</span>
                     </span>
-                    <b-dropdown-item to="/admin/user-management">
+                    <b-dropdown-item to="/admin/user-management" active-class="active">
                         <font-awesome-icon icon="user" />
                         <span v-text="$t('global.menu.admin.userManagement')">User management</span>
                     </b-dropdown-item>
-                    <b-dropdown-item  to="/admin/jhi-metrics">
+                    <b-dropdown-item  to="/admin/jhi-metrics" active-class="active">
                         <font-awesome-icon icon="tachometer-alt" />
                         <span v-text="$t('global.menu.admin.metrics')">Metrics</span>
                     </b-dropdown-item>
-                    <b-dropdown-item to="/admin/jhi-health">
+                    <b-dropdown-item to="/admin/jhi-health" active-class="active">
                         <font-awesome-icon icon="heart" />
                         <span v-text="$t('global.menu.admin.health')">Health</span>
                     </b-dropdown-item>
-                    <b-dropdown-item  to="/admin/jhi-configuration">
+                    <b-dropdown-item  to="/admin/jhi-configuration" active-class="active">
                         <font-awesome-icon icon="list" />
                         <span v-text="$t('global.menu.admin.configuration')">Configuration</span>
                     </b-dropdown-item>
-                    <b-dropdown-item  to="/admin/audits">
+                    <b-dropdown-item  to="/admin/audits" active-class="active">
                         <font-awesome-icon icon="bell" />
                         <span v-text="$t('global.menu.admin.audits')">Audits</span>
                     </b-dropdown-item>
-                    <b-dropdown-item  to="/admin/logs">
+                    <b-dropdown-item  to="/admin/logs" active-class="active">
                         <font-awesome-icon icon="tasks" />
                         <span v-text="$t('global.menu.admin.logs')">Logs</span>
                     </b-dropdown-item>
-                    <b-dropdown-item v-if="swaggerEnabled"  to="/admin/docs">
+                    <b-dropdown-item v-if="swaggerEnabled"  to="/admin/docs" active-class="active">
                         <font-awesome-icon icon="book" />
                         <span v-text="$t('global.menu.admin.apidocs')">API</span>
                     </b-dropdown-item>
@@ -105,23 +113,23 @@
                             Account
                         </span>
                     </span>
-                    <b-dropdown-item to="/account/settings" tag="b-dropdown-item" v-if="authenticated">
+                    <b-dropdown-item to="/account/settings" tag="b-dropdown-item" v-if="authenticated" active-class="active">
                         <font-awesome-icon icon="wrench" />
                         <span v-text="$t('global.menu.account.settings')">Settings</span>
                     </b-dropdown-item>
-                    <b-dropdown-item to="/account/password" tag="b-dropdown-item" v-if="authenticated">
+                    <b-dropdown-item to="/account/password" tag="b-dropdown-item" v-if="authenticated" active-class="active">
                         <font-awesome-icon icon="lock" />
                         <span v-text="$t('global.menu.account.password')">Password</span>
                     </b-dropdown-item>
-                    <b-dropdown-item v-if="authenticated"  v-on:click="logout()" id="logout">
+                    <b-dropdown-item v-if="authenticated"  v-on:click="logout()" id="logout" active-class="active">
                         <font-awesome-icon icon="sign-out-alt" />
                         <span v-text="$t('global.menu.account.logout')">Sign out</span>
                     </b-dropdown-item>
-                    <b-dropdown-item v-if="!authenticated"  v-on:click="openLogin()" id="login">
+                    <b-dropdown-item v-if="!authenticated"  v-on:click="openLogin()" id="login" active-class="active">
                         <font-awesome-icon icon="sign-in-alt" />
                         <span v-text="$t('global.menu.account.login')">Sign in</span>
                     </b-dropdown-item>
-                    <b-dropdown-item to="/register" tag="b-dropdown-item" id="register" v-if="!authenticated">
+                    <b-dropdown-item to="/register" tag="b-dropdown-item" id="register" v-if="!authenticated" active-class="active">
                         <font-awesome-icon icon="user-plus" />
                         <span v-text="$t('global.menu.account.register')">Register</span>
                     </b-dropdown-item>
@@ -200,23 +208,10 @@
   }
 }
 
-@media screen and (max-width: 767px) {
-  .jh-logo-container {
-    width: 100%;
-  }
-}
-
 .navbar-title {
   display: inline-block;
   vertical-align: middle;
   color: white;
-}
-/* waiting for bootstrap fix bug on nav-item-dropdown a:active
-https://github.com/bootstrap-vue/bootstrap-vue/issues/2219
-*/
-nav li.router-link-active .navbar-dropdown-menu {
-  cursor: pointer;
-  color: #fff;
 }
 
 /* ==========================================================================
@@ -239,5 +234,6 @@ nav li.router-link-active .navbar-dropdown-menu {
     center;
   background-size: contain;
   width: 100%;
+  filter: drop-shadow(0 0 0.05rem white);
 }
 </style>

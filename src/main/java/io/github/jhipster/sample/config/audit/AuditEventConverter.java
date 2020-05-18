@@ -1,12 +1,10 @@
 package io.github.jhipster.sample.config.audit;
 
 import io.github.jhipster.sample.domain.PersistentAuditEvent;
-
+import java.util.*;
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
-
-import java.util.*;
 
 @Component
 public class AuditEventConverter {
@@ -38,8 +36,12 @@ public class AuditEventConverter {
         if (persistentAuditEvent == null) {
             return null;
         }
-        return new AuditEvent(persistentAuditEvent.getAuditEventDate(), persistentAuditEvent.getPrincipal(),
-            persistentAuditEvent.getAuditEventType(), convertDataToObjects(persistentAuditEvent.getData()));
+        return new AuditEvent(
+            persistentAuditEvent.getAuditEventDate(),
+            persistentAuditEvent.getPrincipal(),
+            persistentAuditEvent.getAuditEventType(),
+            convertDataToObjects(persistentAuditEvent.getData())
+        );
     }
 
     /**

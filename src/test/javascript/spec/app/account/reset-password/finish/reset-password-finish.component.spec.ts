@@ -13,7 +13,7 @@ const i18n = config.initI18N(localVue);
 
 jest.mock('axios', () => ({
   get: jest.fn(),
-  post: jest.fn()
+  post: jest.fn(),
 }));
 
 describe('Reset Component Finish', () => {
@@ -26,14 +26,10 @@ describe('Reset Component Finish', () => {
       i18n,
       localVue,
       provide: {
-        loginService: () => new LoginService()
-      }
+        loginService: () => new LoginService(),
+      },
     });
     resetPasswordFinish = wrapper.vm;
-  });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   it('should reset finish be a success', async () => {
@@ -54,9 +50,9 @@ describe('Reset Component Finish', () => {
         response: {
           status: null,
           data: {
-            type: null
-          }
-        }
+            type: null,
+          },
+        },
       })
     );
 

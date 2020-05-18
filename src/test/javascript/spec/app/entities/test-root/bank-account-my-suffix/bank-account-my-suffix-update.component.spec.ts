@@ -46,8 +46,8 @@ describe('Component Tests', () => {
 
           userService: () => new UserService(),
 
-          operationService: () => new OperationService()
-        }
+          operationService: () => new OperationService(),
+        },
       });
       comp = wrapper.vm;
     });

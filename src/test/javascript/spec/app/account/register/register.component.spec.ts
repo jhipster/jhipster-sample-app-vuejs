@@ -17,7 +17,7 @@ const store = config.initVueXStore(localVue);
 
 jest.mock('axios', () => ({
   get: jest.fn(),
-  post: jest.fn()
+  post: jest.fn(),
 }));
 
 describe('Register Component', () => {
@@ -36,14 +36,10 @@ describe('Register Component', () => {
       localVue,
       provide: {
         registerService: () => new RegisterService(),
-        loginService: () => new LoginService()
-      }
+        loginService: () => new LoginService(),
+      },
     });
     register = wrapper.vm;
-  });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   it('should set all default values correctly', () => {
@@ -60,7 +56,7 @@ describe('Register Component', () => {
 
   it('should open login modal when asked to', () => {
     let called = false;
-    register.$root.$on('bv::show::modal', function() {
+    register.$root.$on('bv::show::modal', () => {
       called = true;
     });
     register.openLogin();
@@ -86,7 +82,7 @@ describe('Register Component', () => {
       email: 'jhi@pster.net',
       langKey: 'en',
       login: 'jhi',
-      password: 'jhipster'
+      password: 'jhipster',
     });
     expect(register.success).toBe(true);
     expect(register.doNotMatch).toBe(null);
@@ -107,8 +103,9 @@ describe('Register Component', () => {
       email: 'jhi@pster.net',
       langKey: 'en',
       login: 'jhi',
-      password: 'jhipster'
+      password: 'jhipster',
     });
+    await register.$nextTick();
     expect(register.success).toBe(null);
     expect(register.doNotMatch).toBe(null);
     expect(register.error).toBe(null);
@@ -128,8 +125,9 @@ describe('Register Component', () => {
       email: 'jhi@pster.net',
       langKey: 'en',
       login: 'jhi',
-      password: 'jhipster'
+      password: 'jhipster',
     });
+    await register.$nextTick();
     expect(register.success).toBe(null);
     expect(register.doNotMatch).toBe(null);
     expect(register.error).toBe(null);
@@ -149,8 +147,9 @@ describe('Register Component', () => {
       email: 'jhi@pster.net',
       langKey: 'en',
       login: 'jhi',
-      password: 'jhipster'
+      password: 'jhipster',
     });
+    await register.$nextTick();
     expect(register.success).toBe(null);
     expect(register.doNotMatch).toBe(null);
     expect(register.errorEmailExists).toBe(null);

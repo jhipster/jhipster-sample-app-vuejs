@@ -13,13 +13,13 @@ const validations: any = {
   label: {
     labelName: {
       required,
-      minLength: minLength(3)
-    }
-  }
+      minLength: minLength(3),
+    },
+  },
 };
 
 @Component({
-  validations
+  validations,
 })
 export default class LabelUpdate extends Vue {
   @Inject('alertService') private alertService: () => AlertService;

@@ -24,8 +24,8 @@ const bModalStub = {
   render: () => {},
   methods: {
     hide: () => {},
-    show: () => {}
-  }
+    show: () => {},
+  },
 };
 
 describe('Component Tests', () => {
@@ -45,14 +45,10 @@ describe('Component Tests', () => {
         stubs: { bModal: bModalStub as any },
         provide: {
           alertService: () => new AlertService(store),
-          bankAccountService: () => bankAccountServiceStub
-        }
+          bankAccountService: () => bankAccountServiceStub,
+        },
       });
       comp = wrapper.vm;
-    });
-
-    it('should be a Vue instance', () => {
-      expect(wrapper.isVueInstance()).toBeTruthy();
     });
 
     it('Should call load all on init', async () => {

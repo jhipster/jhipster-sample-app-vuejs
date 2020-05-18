@@ -15,7 +15,7 @@ const store = config.initVueXStore(localVue);
 
 jest.mock('axios', () => ({
   get: jest.fn(),
-  post: jest.fn()
+  post: jest.fn(),
 }));
 
 describe('Settings Component', () => {
@@ -24,7 +24,7 @@ describe('Settings Component', () => {
   const account = {
     firstName: 'John',
     lastName: 'Doe',
-    email: 'john.doe@jhipster.org'
+    email: 'john.doe@jhipster.org',
   };
 
   beforeEach(() => {
@@ -36,13 +36,9 @@ describe('Settings Component', () => {
     wrapper = shallowMount<SettingsClass>(Settings, {
       store,
       i18n,
-      localVue
+      localVue,
     });
     settings = wrapper.vm;
-  });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   it('should send the current identity upon save', async () => {

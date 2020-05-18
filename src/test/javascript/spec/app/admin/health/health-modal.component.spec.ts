@@ -17,19 +17,15 @@ describe('Health Modal Component', () => {
   beforeEach(() => {
     wrapper = shallowMount<HealthModalClass>(HealthModal, {
       propsData: {
-        currentHealth: {}
+        currentHealth: {},
       },
       i18n,
       localVue,
       provide: {
-        healthService: () => healthsService
-      }
+        healthService: () => healthsService,
+      },
     });
     healthModal = wrapper.vm;
-  });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   describe('baseName and subSystemName', () => {
@@ -68,19 +64,15 @@ describe('Health Modal Component for diskSpace', () => {
   beforeEach(() => {
     wrapper = shallowMount<HealthModalClass>(HealthModal, {
       propsData: {
-        currentHealth: { name: 'diskSpace' }
+        currentHealth: { name: 'diskSpace' },
       },
       i18n,
       localVue,
       provide: {
-        healthService: () => healthsService
-      }
+        healthService: () => healthsService,
+      },
     });
     healthModal = wrapper.vm;
-  });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   describe('readableValue should transform data', () => {

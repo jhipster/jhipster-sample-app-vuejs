@@ -19,10 +19,6 @@ describe('Metrics Component', () => {
     metricsModal = wrapper.vm;
   });
 
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
-  });
-
   describe('init', () => {
     it('should count the numbers of each thread type', () => {
       wrapper.setProps({
@@ -32,8 +28,8 @@ describe('Metrics Component', () => {
           { name: 'test3', threadState: 'TIMED_WAITING' },
           { name: 'test4', threadState: 'BLOCKED' },
           { name: 'test5', threadState: 'BLOCKED' },
-          { name: 'test5', threadState: 'NONE' }
-        ]
+          { name: 'test5', threadState: 'NONE' },
+        ],
       });
 
       expect(metricsModal.threadDumpData.threadDumpRunnable).toBe(1);

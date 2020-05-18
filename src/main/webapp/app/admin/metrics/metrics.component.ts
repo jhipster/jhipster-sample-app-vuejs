@@ -5,8 +5,8 @@ import { Component, Vue, Inject } from 'vue-property-decorator';
 
 @Component({
   components: {
-    'metrics-modal': JhiMetricsModal
-  }
+    'metrics-modal': JhiMetricsModal,
+  },
 })
 export default class JhiMetrics extends Vue {
   public metrics: any = {};
@@ -36,7 +36,7 @@ export default class JhiMetrics extends Vue {
               threadDumpWaiting: 0,
               threadDumpTimedWaiting: 0,
               threadDumpBlocked: 0,
-              threadDumpAll: 0
+              threadDumpAll: 0,
             };
 
             this.threadData.forEach(value => {
@@ -96,7 +96,7 @@ export default class JhiMetrics extends Vue {
       day: 86400000,
       hour: 3600000,
       minute: 60000,
-      second: 1000
+      second: 1000,
     };
     let time_string = '';
     let plural = '';

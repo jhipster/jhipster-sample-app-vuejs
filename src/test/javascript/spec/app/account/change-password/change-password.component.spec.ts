@@ -14,7 +14,7 @@ const store = config.initVueXStore(localVue);
 
 jest.mock('axios', () => ({
   get: jest.fn(),
-  post: jest.fn()
+  post: jest.fn(),
 }));
 
 describe('ChangePassword Component', () => {
@@ -29,13 +29,9 @@ describe('ChangePassword Component', () => {
     wrapper = shallowMount<ChangePasswordClass>(ChangePassword, {
       store,
       i18n,
-      localVue
+      localVue,
     });
     changePassword = wrapper.vm;
-  });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   it('should show error if passwords do not match', () => {
@@ -61,7 +57,7 @@ describe('ChangePassword Component', () => {
     // THEN
     expect(mockedAxios.post).toHaveBeenCalledWith('api/account/change-password', {
       currentPassword: 'password1',
-      newPassword: 'password1'
+      newPassword: 'password1',
     });
 
     expect(changePassword.doNotMatch).toBeNull();
@@ -81,6 +77,7 @@ describe('ChangePassword Component', () => {
     // THEN
     expect(changePassword.doNotMatch).toBeNull();
     expect(changePassword.success).toBeNull();
+    await changePassword.$nextTick();
     expect(changePassword.error).toBe('ERROR');
   });
 });

@@ -3,7 +3,7 @@ import { IOperation } from '@/shared/model/test-root/operation.model';
 export const enum BankAccountType {
   CHECKING = 'CHECKING',
   SAVINGS = 'SAVINGS',
-  LOAN = 'LOAN'
+  LOAN = 'LOAN',
 }
 
 export interface IBankAccountMySuffix {

@@ -1,9 +1,7 @@
 package io.github.jhipster.sample.security;
 
 import io.github.jhipster.sample.config.Constants;
-
 import java.util.Optional;
-
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 

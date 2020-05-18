@@ -18,7 +18,7 @@ localVue.component('jhi-sort-indicator', {});
 
 jest.mock('axios', () => ({
   get: jest.fn(),
-  put: jest.fn()
+  put: jest.fn(),
 }));
 
 describe('Audits Component', () => {
@@ -34,23 +34,27 @@ describe('Audits Component', () => {
       localVue,
       stubs: {
         bPagination: true,
-        jhiItemCount: true
+        jhiItemCount: true,
       },
       provide: {
-        auditsService: () => new AuditsService()
-      }
+        auditsService: () => new AuditsService(),
+      },
     });
     audits = wrapper.vm;
-  });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   describe('today function ', () => {
     it('should set toDate to current date', () => {
       audits.today();
       expect(audits.toDate).toBe(getDate());
+    });
+  });
+
+  describe('changeOrder function ', () => {
+    it('should change order', () => {
+      audits.changeOrder('id', 'timestamp');
+      expect(audits.propOrder).toBe('id');
+      expect(audits.predicate).toBe('timestamp');
     });
   });
 
@@ -78,7 +82,18 @@ describe('Audits Component', () => {
   describe('OnInit', () => {
     it('Should call load all on init', async () => {
       // GIVEN
-      mockedAxios.get.mockReturnValue(Promise.resolve({ headers: {}, data: ['test'] }));
+      mockedAxios.get.mockReturnValue(
+        Promise.resolve({
+          headers: {},
+          data: [
+            {
+              timestamp: '2020-05-03T18:20:15.590684Z',
+              principal: 'admin',
+              type: 'AUTHENTICATION_SUCCESS',
+            },
+          ],
+        })
+      );
       const today = getDate();
       const fromDate = getDate(false);
       // WHEN

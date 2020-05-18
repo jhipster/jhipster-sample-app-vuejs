@@ -8,24 +8,18 @@ export class UserManagementPage extends AlertPage {
   modifiedDatSort: ElementFinder = element(by.id('modified-date-sort'));
 
   async activateUser(login: string) {
-    const deactivatedButton = element(by.css('table > tbody'))
-      .element(by.id(login))
-      .element(by.css('.btn-danger.deactivated'));
+    const deactivatedButton = element(by.css('table > tbody')).element(by.id(login)).element(by.css('.btn-danger.deactivated'));
 
     await deactivatedButton.click();
     await waitUntilHidden(deactivatedButton);
   }
 
   activatedButton(login: string) {
-    return element(by.css('table > tbody'))
-      .element(by.id(login))
-      .element(by.css('.btn-success.btn-sm'));
+    return element(by.css('table > tbody')).element(by.id(login)).element(by.css('.btn-success.btn-sm'));
   }
 
   async getDetailsPage(login: string) {
-    const detailsButton = element(by.css('table > tbody'))
-      .element(by.id(login))
-      .element(by.css('.btn-info.details'));
+    const detailsButton = element(by.css('table > tbody')).element(by.id(login)).element(by.css('.btn-info.details'));
 
     await click(detailsButton);
 
@@ -35,9 +29,7 @@ export class UserManagementPage extends AlertPage {
   }
 
   async getEditPage(login: string) {
-    const editButton = element(by.css('table > tbody'))
-      .element(by.id(login))
-      .element(by.css('.btn-primary.edit'));
+    const editButton = element(by.css('table > tbody')).element(by.id(login)).element(by.css('.btn-primary.edit'));
 
     await click(editButton);
 
@@ -47,9 +39,7 @@ export class UserManagementPage extends AlertPage {
   }
 
   async getDeletePage(login: string) {
-    const deleteButton = element(by.css('table > tbody'))
-      .element(by.id(login))
-      .element(by.css('.btn-danger.delete'));
+    const deleteButton = element(by.css('table > tbody')).element(by.id(login)).element(by.css('.btn-danger.delete'));
 
     await click(deleteButton);
 
@@ -59,9 +49,7 @@ export class UserManagementPage extends AlertPage {
   }
 
   async getEmailColumnText(login: string) {
-    const emailControl = element(by.css('table > tbody'))
-      .element(by.id(login))
-      .element(by.css('.jhi-user-email'));
+    const emailControl = element(by.css('table > tbody')).element(by.id(login)).element(by.css('.jhi-user-email'));
 
     await waitUntilDisplayed(emailControl);
     return await emailControl.getText();

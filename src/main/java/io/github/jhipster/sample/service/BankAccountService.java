@@ -1,7 +1,6 @@
 package io.github.jhipster.sample.service;
 
 import io.github.jhipster.sample.service.dto.BankAccountDTO;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +8,6 @@ import java.util.Optional;
  * Service Interface for managing {@link io.github.jhipster.sample.domain.BankAccount}.
  */
 public interface BankAccountService {
-
     /**
      * Save a bankAccount.
      *

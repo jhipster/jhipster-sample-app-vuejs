@@ -23,7 +23,7 @@ describe('JhiNavbar', () => {
   let jhiNavbar: JhiNavbarClass;
   let wrapper: Wrapper<JhiNavbarClass>;
   const loginService = { openLogin: jest.fn() };
-  const accountService = { hasAnyAuthority: jest.fn() };
+  const accountService = { hasAnyAuthorityAndCheckAuth: jest.fn().mockImplementation(() => Promise.resolve(true)) };
   const translationService = { refreshTranslation: jest.fn() };
 
   beforeEach(() => {
@@ -35,15 +35,12 @@ describe('JhiNavbar', () => {
       provide: {
         loginService: () => loginService,
         translationService: () => translationService,
-        accountService: () => accountService
-      }
+        accountService: () => accountService,
+      },
     });
     jhiNavbar = wrapper.vm;
   });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
-
+  it('should refresh translations', () => {
     expect(translationService.refreshTranslation).toHaveBeenCalled();
   });
 
@@ -74,7 +71,7 @@ describe('JhiNavbar', () => {
   it('should use account service', () => {
     jhiNavbar.hasAnyAuthority('auth');
 
-    expect(accountService.hasAnyAuthority).toHaveBeenCalled();
+    expect(accountService.hasAnyAuthorityAndCheckAuth).toHaveBeenCalled();
   });
 
   it('logout should clear credentials', () => {

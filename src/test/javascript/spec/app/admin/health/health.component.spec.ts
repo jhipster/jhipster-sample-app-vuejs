@@ -19,7 +19,7 @@ localVue.component('health-modal', HealthModal);
 localVue.directive('b-modal', {});
 
 jest.mock('axios', () => ({
-  get: jest.fn()
+  get: jest.fn(),
 }));
 
 describe('Health Component', () => {
@@ -33,17 +33,13 @@ describe('Health Component', () => {
       i18n,
       localVue,
       stubs: {
-        bModal: true
+        bModal: true,
       },
       provide: {
-        healthService: () => new HealthService()
-      }
+        healthService: () => new HealthService(),
+      },
     });
     health = wrapper.vm;
-  });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   describe('baseName and subSystemName', () => {
@@ -84,6 +80,7 @@ describe('Health Component', () => {
 
       // THEN
       expect(mockedAxios.get).toHaveBeenCalledWith('management/health');
+      await health.$nextTick();
       expect(health.updatingHealth).toEqual(false);
     });
     it('should handle a 503 on refreshing health data', async () => {
@@ -96,6 +93,7 @@ describe('Health Component', () => {
 
       // THEN
       expect(mockedAxios.get).toHaveBeenCalledWith('management/health');
+      await health.$nextTick();
       expect(health.updatingHealth).toEqual(false);
     });
   });

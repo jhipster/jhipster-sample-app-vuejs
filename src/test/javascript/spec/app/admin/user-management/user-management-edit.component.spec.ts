@@ -22,7 +22,7 @@ localVue.component('b-alert', {});
 jest.mock('axios', () => ({
   get: jest.fn(),
   post: jest.fn(),
-  put: jest.fn()
+  put: jest.fn(),
 }));
 
 describe('UserManagementEdit Component', () => {
@@ -38,14 +38,10 @@ describe('UserManagementEdit Component', () => {
       localVue,
       provide: {
         alertService: () => new AlertService(store),
-        userService: () => new UserManagementService()
-      }
+        userService: () => new UserManagementService(),
+      },
     });
     userManagementEdit = wrapper.vm;
-  });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   describe('init', () => {

@@ -107,10 +107,7 @@ export const waitUntilCount = async (elementArrayFinder: ElementArrayFinder, exp
  * Returns a void promise to select the last drop down option value.
  */
 export const selectLastOption = async (dropdown: ElementFinder) => {
-  await dropdown
-    .all(by.tagName('option'))
-    .last()
-    .click();
+  await dropdown.all(by.tagName('option')).last().click();
 };
 
 /**
@@ -120,4 +117,5 @@ export const selectLastOption = async (dropdown: ElementFinder) => {
 export const clear = async (input: ElementFinder) => {
   await input.sendKeys(protractor.Key.chord(protractor.Key.CONTROL, 'a'));
   await input.sendKeys(protractor.Key.DELETE);
+  await input.sendKeys(protractor.Key.BACK_SPACE);
 };

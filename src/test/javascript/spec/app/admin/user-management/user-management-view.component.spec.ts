@@ -20,7 +20,7 @@ localVue.component('router-link', {});
 
 jest.mock('axios', () => ({
   get: jest.fn(),
-  put: jest.fn()
+  put: jest.fn(),
 }));
 
 describe('UserManagementView Component', () => {
@@ -32,13 +32,9 @@ describe('UserManagementView Component', () => {
       store,
       i18n,
       localVue,
-      provide: { userService: () => new UserManagementService() }
+      provide: { userService: () => new UserManagementService() },
     });
     userManagementView = wrapper.vm;
-  });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   describe('OnInit', () => {
@@ -57,7 +53,7 @@ describe('UserManagementView Component', () => {
         createdDate: null,
         lastModifiedBy: null,
         lastModifiedDate: null,
-        password: null
+        password: null,
       };
       mockedAxios.get.mockReturnValue(Promise.resolve({ data: userData }));
 

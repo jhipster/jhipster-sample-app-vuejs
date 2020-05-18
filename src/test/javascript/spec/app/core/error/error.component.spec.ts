@@ -24,14 +24,10 @@ describe('Error component', () => {
       router,
       localVue,
       provide: {
-        loginService: () => loginService
-      }
+        loginService: () => loginService,
+      },
     });
     error = wrapper.vm;
-  });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   it('should have retrieve custom error on routing', () => {

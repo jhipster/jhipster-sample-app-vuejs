@@ -8,18 +8,18 @@ const validations = {
     newPassword: {
       required,
       minLength: minLength(4),
-      maxLength: maxLength(254)
+      maxLength: maxLength(254),
     },
     confirmPassword: {
       required,
       minLength: minLength(4),
-      maxLength: maxLength(254)
-    }
-  }
+      maxLength: maxLength(254),
+    },
+  },
 };
 
 @Component({
-  validations
+  validations,
 })
 export default class ResetPasswordFinish extends Vue {
   @Inject('loginService')
@@ -32,7 +32,7 @@ export default class ResetPasswordFinish extends Vue {
   public key: any;
   public resetAccount: any = {
     newPassword: null,
-    confirmPassword: null
+    confirmPassword: null,
   };
 
   created(): void {

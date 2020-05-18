@@ -49,7 +49,7 @@ export default class JhiDataUtils extends Vue {
       }
       const byteArray = new Uint8Array(byteNumbers);
       const blob = new Blob([byteArray], {
-        type: contentType
+        type: contentType,
       });
       window.navigator.msSaveOrOpenBlob(blob);
     } else {
@@ -70,7 +70,7 @@ export default class JhiDataUtils extends Vue {
   toBase64(file, cb) {
     const fileReader = new FileReader();
     fileReader.readAsDataURL(file);
-    fileReader.onload = function(e: any) {
+    fileReader.onload = (e: any) => {
       const base64Data = e.target.result.substr(e.target.result.indexOf('base64,') + 'base64,'.length);
       cb(base64Data);
     };
@@ -139,7 +139,7 @@ export default class JhiDataUtils extends Vue {
     }
     const byteArray = new Uint8Array(byteNumbers);
     const blob = new Blob([byteArray], {
-      type: contentType
+      type: contentType,
     });
     const tempLink = document.createElement('a');
     tempLink.href = window.URL.createObjectURL(blob);
@@ -168,7 +168,7 @@ export default class JhiDataUtils extends Vue {
       const section = p.split('>;');
       const url = section[0].replace(/<(.*)/, '$1').trim();
       const queryString = { page: null };
-      url.replace(new RegExp('([^?=&]+)(=([^&]*))?', 'g'), function($0, $1, $2, $3) {
+      url.replace(new RegExp('([^?=&]+)(=([^&]*))?', 'g'), ($0, $1, $2, $3) => {
         queryString[$1] = $3;
       });
       let page = queryString.page;

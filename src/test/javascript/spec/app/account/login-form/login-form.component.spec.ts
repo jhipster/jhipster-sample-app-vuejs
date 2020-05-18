@@ -24,7 +24,7 @@ const store = config.initVueXStore(localVue);
 
 jest.mock('axios', () => ({
   get: jest.fn(),
-  post: jest.fn()
+  post: jest.fn(),
 }));
 
 describe('LoginForm Component', () => {
@@ -41,14 +41,10 @@ describe('LoginForm Component', () => {
       i18n,
       localVue,
       provide: {
-        accountService: () => new AccountService(store, new TranslationService(store, i18n), router)
-      }
+        accountService: () => new AccountService(store, new TranslationService(store, i18n), router),
+      },
     });
     loginForm = wrapper.vm;
-  });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   it('should not store token if authentication is KO', async () => {
@@ -66,9 +62,9 @@ describe('LoginForm Component', () => {
     expect(mockedAxios.post).toHaveBeenCalledWith('api/authenticate', {
       username: 'login',
       password: 'pwd',
-      rememberMe: true
+      rememberMe: true,
     });
-
+    await loginForm.$nextTick();
     expect(loginForm.authenticationError).toBeTruthy();
   });
 
@@ -88,10 +84,33 @@ describe('LoginForm Component', () => {
     expect(mockedAxios.post).toHaveBeenCalledWith('api/authenticate', {
       username: 'login',
       password: 'pwd',
-      rememberMe: true
+      rememberMe: true,
     });
 
     expect(loginForm.authenticationError).toBeFalsy();
     expect(localStorage.getItem('jhi-authenticationToken')).toEqual(jwtSecret);
+  });
+
+  it('should store token if authentication is OK in session', async () => {
+    // GIVEN
+    loginForm.login = 'login';
+    loginForm.password = 'pwd';
+    loginForm.rememberMe = false;
+    const jwtSecret = 'jwt-secret';
+    mockedAxios.post.mockReturnValue(Promise.resolve({ headers: { authorization: 'Bearer ' + jwtSecret } }));
+
+    // WHEN
+    loginForm.doLogin();
+    await loginForm.$nextTick();
+
+    // THEN
+    expect(mockedAxios.post).toHaveBeenCalledWith('api/authenticate', {
+      username: 'login',
+      password: 'pwd',
+      rememberMe: false,
+    });
+
+    expect(loginForm.authenticationError).toBeFalsy();
+    expect(sessionStorage.getItem('jhi-authenticationToken')).toEqual(jwtSecret);
   });
 });

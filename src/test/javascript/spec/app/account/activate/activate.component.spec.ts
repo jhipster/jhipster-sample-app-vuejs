@@ -16,7 +16,7 @@ const store = config.initVueXStore(localVue);
 
 jest.mock('axios', () => ({
   get: jest.fn(),
-  post: jest.fn()
+  post: jest.fn(),
 }));
 
 describe('Activate Component', () => {
@@ -32,14 +32,10 @@ describe('Activate Component', () => {
       localVue,
       provide: {
         activateService: () => new ActivateService(),
-        loginService: () => new LoginService()
-      }
+        loginService: () => new LoginService(),
+      },
     });
     activate = wrapper.vm;
-  });
-
-  it('should be a Vue instance', () => {
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   it('should display error when activation fails using route', async () => {

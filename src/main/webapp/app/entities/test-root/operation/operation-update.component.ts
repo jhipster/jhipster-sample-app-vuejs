@@ -19,18 +19,18 @@ import OperationService from './operation.service';
 const validations: any = {
   operation: {
     date: {
-      required
+      required,
     },
     description: {},
     amount: {
       required,
-      numeric
-    }
-  }
+      numeric,
+    },
+  },
 };
 
 @Component({
-  validations
+  validations,
 })
 export default class OperationUpdate extends Vue {
   @Inject('alertService') private alertService: () => AlertService;

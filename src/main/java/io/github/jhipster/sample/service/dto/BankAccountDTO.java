@@ -1,19 +1,17 @@
 package io.github.jhipster.sample.service.dto;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import javax.validation.constraints.*;
+import io.github.jhipster.sample.domain.enumeration.BankAccountType;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Objects;
+import java.time.Instant;
+import java.time.LocalDate;
 import javax.persistence.Lob;
-import io.github.jhipster.sample.domain.enumeration.BankAccountType;
+import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link io.github.jhipster.sample.domain.BankAccount} entity.
  */
 public class BankAccountDTO implements Serializable {
-
     private Long id;
 
     @NotNull
@@ -42,9 +40,9 @@ public class BankAccountDTO implements Serializable {
     private byte[] attachment;
 
     private String attachmentContentType;
+
     @Lob
     private String description;
-
 
     private Long userId;
 
@@ -183,22 +181,19 @@ public class BankAccountDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof BankAccountDTO)) {
             return false;
         }
 
-        BankAccountDTO bankAccountDTO = (BankAccountDTO) o;
-        if (bankAccountDTO.getId() == null || getId() == null) {
-            return false;
-        }
-        return Objects.equals(getId(), bankAccountDTO.getId());
+        return id != null && id.equals(((BankAccountDTO) o).id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        return 31;
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "BankAccountDTO{" +

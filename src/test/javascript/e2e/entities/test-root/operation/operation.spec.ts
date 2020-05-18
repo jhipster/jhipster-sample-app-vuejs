@@ -16,7 +16,7 @@ import {
   waitUntilAnyDisplayed,
   waitUntilCount,
   waitUntilDisplayed,
-  waitUntilHidden
+  waitUntilHidden,
 } from '../../../util/utils';
 
 const expect = chai.expect;

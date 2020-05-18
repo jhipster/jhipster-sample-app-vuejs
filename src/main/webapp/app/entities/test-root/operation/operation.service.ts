@@ -11,7 +11,7 @@ export default class OperationService {
     return new Promise<IOperation>((resolve, reject) => {
       axios
         .get(`${baseApiUrl}/${id}`)
-        .then(function(res) {
+        .then(res => {
           resolve(res.data);
         })
         .catch(err => {
@@ -24,7 +24,7 @@ export default class OperationService {
     return new Promise<any>((resolve, reject) => {
       axios
         .get(baseApiUrl + `?${buildPaginationQueryOpts(paginationQuery)}`)
-        .then(function(res) {
+        .then(res => {
           resolve(res);
         })
         .catch(err => {
@@ -37,7 +37,7 @@ export default class OperationService {
     return new Promise<any>((resolve, reject) => {
       axios
         .delete(`${baseApiUrl}/${id}`)
-        .then(function(res) {
+        .then(res => {
           resolve(res);
         })
         .catch(err => {
@@ -50,7 +50,7 @@ export default class OperationService {
     return new Promise<IOperation>((resolve, reject) => {
       axios
         .post(`${baseApiUrl}`, entity)
-        .then(function(res) {
+        .then(res => {
           resolve(res.data);
         })
         .catch(err => {
@@ -63,7 +63,7 @@ export default class OperationService {
     return new Promise<IOperation>((resolve, reject) => {
       axios
         .put(`${baseApiUrl}`, entity)
-        .then(function(res) {
+        .then(res => {
           resolve(res.data);
         })
         .catch(err => {

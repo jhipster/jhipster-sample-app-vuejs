@@ -46,8 +46,8 @@ describe('Component Tests', () => {
 
           bankAccountService: () => new BankAccountMySuffixService(),
 
-          labelService: () => new LabelService()
-        }
+          labelService: () => new LabelService(),
+        },
       });
       comp = wrapper.vm;
     });

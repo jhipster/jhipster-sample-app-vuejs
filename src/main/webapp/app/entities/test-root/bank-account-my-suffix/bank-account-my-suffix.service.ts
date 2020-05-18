@@ -9,7 +9,7 @@ export default class BankAccountMySuffixService {
     return new Promise<IBankAccountMySuffix>((resolve, reject) => {
       axios
         .get(`${baseApiUrl}/${id}`)
-        .then(function(res) {
+        .then(res => {
           resolve(res.data);
         })
         .catch(err => {
@@ -22,7 +22,7 @@ export default class BankAccountMySuffixService {
     return new Promise<any>((resolve, reject) => {
       axios
         .get(baseApiUrl)
-        .then(function(res) {
+        .then(res => {
           resolve(res);
         })
         .catch(err => {
@@ -35,7 +35,7 @@ export default class BankAccountMySuffixService {
     return new Promise<any>((resolve, reject) => {
       axios
         .delete(`${baseApiUrl}/${id}`)
-        .then(function(res) {
+        .then(res => {
           resolve(res);
         })
         .catch(err => {
@@ -48,7 +48,7 @@ export default class BankAccountMySuffixService {
     return new Promise<IBankAccountMySuffix>((resolve, reject) => {
       axios
         .post(`${baseApiUrl}`, entity)
-        .then(function(res) {
+        .then(res => {
           resolve(res.data);
         })
         .catch(err => {
@@ -61,7 +61,7 @@ export default class BankAccountMySuffixService {
     return new Promise<IBankAccountMySuffix>((resolve, reject) => {
       axios
         .put(`${baseApiUrl}`, entity)
-        .then(function(res) {
+        .then(res => {
           resolve(res.data);
         })
         .catch(err => {

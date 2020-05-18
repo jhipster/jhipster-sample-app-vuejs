@@ -1,20 +1,18 @@
 package io.github.jhipster.sample.service.impl;
 
-import io.github.jhipster.sample.service.BankAccountService;
 import io.github.jhipster.sample.domain.BankAccount;
 import io.github.jhipster.sample.repository.BankAccountRepository;
+import io.github.jhipster.sample.service.BankAccountService;
 import io.github.jhipster.sample.service.dto.BankAccountDTO;
 import io.github.jhipster.sample.service.mapper.BankAccountMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link BankAccount}.
@@ -22,7 +20,6 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class BankAccountServiceImpl implements BankAccountService {
-
     private final Logger log = LoggerFactory.getLogger(BankAccountServiceImpl.class);
 
     private final BankAccountRepository bankAccountRepository;
@@ -57,9 +54,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Transactional(readOnly = true)
     public List<BankAccountDTO> findAll() {
         log.debug("Request to get all BankAccounts");
-        return bankAccountRepository.findAll().stream()
-            .map(bankAccountMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
+        return bankAccountRepository.findAll().stream().map(bankAccountMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     /**
@@ -72,8 +67,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Transactional(readOnly = true)
     public Optional<BankAccountDTO> findOne(Long id) {
         log.debug("Request to get BankAccount : {}", id);
-        return bankAccountRepository.findById(id)
-            .map(bankAccountMapper::toDto);
+        return bankAccountRepository.findById(id).map(bankAccountMapper::toDto);
     }
 
     /**
@@ -84,6 +78,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     public void delete(Long id) {
         log.debug("Request to delete BankAccount : {}", id);
+
         bankAccountRepository.deleteById(id);
     }
 }

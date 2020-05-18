@@ -1,29 +1,25 @@
 package io.github.jhipster.sample.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import io.github.jhipster.sample.domain.enumeration.BankAccountType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-
-import io.github.jhipster.sample.domain.enumeration.BankAccountType;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A BankAccount.
  */
 @Entity
 @Table(name = "bank_account")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class BankAccount implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -75,14 +71,14 @@ public class BankAccount implements Serializable {
     private String description;
 
     @ManyToOne
-    @JsonIgnoreProperties("bankAccounts")
+    @JsonIgnoreProperties(value = "bankAccounts", allowSetters = true)
     private User user;
 
     @OneToMany(mappedBy = "bankAccount")
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Operation> operations = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
+    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -297,7 +293,8 @@ public class BankAccount implements Serializable {
     public void setOperations(Set<Operation> operations) {
         this.operations = operations;
     }
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
+
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
@@ -315,6 +312,7 @@ public class BankAccount implements Serializable {
         return 31;
     }
 
+    // prettier-ignore
     @Override
     public String toString() {
         return "BankAccount{" +

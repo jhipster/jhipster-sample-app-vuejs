@@ -11,16 +11,16 @@ const error = {
   response: {
     status: null,
     data: {
-      type: null
-    }
-  }
+      type: null,
+    },
+  },
 };
 
 jest.mock('axios', () => ({
   get: jest.fn(),
   post: jest.fn(),
   put: jest.fn(),
-  delete: jest.fn()
+  delete: jest.fn(),
 }));
 
 describe('Service Tests', () => {
@@ -56,7 +56,7 @@ describe('Service Tests', () => {
       it('should create a Label', async () => {
         const returnedFromService = Object.assign(
           {
-            id: 0
+            id: 0,
           },
           elemDefault
         );
@@ -82,7 +82,7 @@ describe('Service Tests', () => {
       it('should update a Label', async () => {
         const returnedFromService = Object.assign(
           {
-            labelName: 'BBBBBB'
+            labelName: 'BBBBBB',
           },
           elemDefault
         );
@@ -109,7 +109,7 @@ describe('Service Tests', () => {
       it('should return a list of Label', async () => {
         const returnedFromService = Object.assign(
           {
-            labelName: 'BBBBBB'
+            labelName: 'BBBBBB',
           },
           elemDefault
         );
