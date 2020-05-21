@@ -65,6 +65,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
+      base: '/',
       template: './src/main/webapp/index.html',
       chunks: ['vendors', 'main', 'global'],
       chunksSortMode: 'manual',

@@ -26,7 +26,7 @@
     "otherModules": [
       {
         "name": "generator-jhipster-vuejs",
-        "version": "1.8.0"
+        "version": "1.8.1"
       }
     ],
     "enableTranslation": true,
@@ -41,7 +41,7 @@
     "blueprints": [
       {
         "name": "generator-jhipster-vuejs",
-        "version": "1.8.0"
+        "version": "1.8.1"
       }
     ],
     "creationTimestamp": 1581267209237,
