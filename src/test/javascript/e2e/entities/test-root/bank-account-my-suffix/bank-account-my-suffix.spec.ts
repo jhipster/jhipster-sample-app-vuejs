@@ -84,7 +84,7 @@ describe('BankAccount e2e test', () => {
       await updatePage.balanceInput.sendKeys('5');
       expect(await updatePage.balanceInput.getAttribute('value')).to.eq('5');
 
-      await updatePage.openingDayInput.sendKeys('01-01-2001');
+      await updatePage.openingDayInput.sendKeys('2001-01-01');
       expect(await updatePage.openingDayInput.getAttribute('value')).to.eq('2001-01-01');
 
       await updatePage.lastOperationDateInput.sendKeys('01/01/2001' + protractor.Key.TAB + '02:30AM');
@@ -192,7 +192,7 @@ describe('BankAccount e2e test', () => {
         expect(await updatePage.balanceInput.getAttribute('value')).to.eq('6');
 
         await updatePage.openingDayInput.clear();
-        await updatePage.openingDayInput.sendKeys('01-01-2019');
+        await updatePage.openingDayInput.sendKeys('2019-01-01');
         expect(await updatePage.openingDayInput.getAttribute('value')).to.eq('2019-01-01');
 
         await updatePage.lastOperationDateInput.clear();

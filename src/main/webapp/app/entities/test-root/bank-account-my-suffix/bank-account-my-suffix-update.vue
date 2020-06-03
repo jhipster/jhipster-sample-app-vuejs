@@ -54,10 +54,24 @@
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" v-text="$t('jhipsterApp.testRootBankAccount.openingDay')" for="bank-account-my-suffix-openingDay">Opening Day</label>
-                        <div class="input-group">
-                            <input id="bank-account-my-suffix-openingDay" type="date" class="form-control" name="openingDay"  :class="{'valid': !$v.bankAccount.openingDay.$invalid, 'invalid': $v.bankAccount.openingDay.$invalid }"
+                        <b-input-group class="mb-3">
+                            <b-input-group-prepend>
+                                <b-form-datepicker
+                                    aria-controls="bank-account-my-suffix-openingDay"
+                                    v-model="$v.bankAccount.openingDay.$model"
+                                    name="openingDay"
+                                    class="form-control"
+                                    :locale="currentLanguage"
+                                    button-only
+                                    today-button
+                                    reset-button
+                                    close-button
+                                >
+                                </b-form-datepicker>
+                            </b-input-group-prepend>
+                            <b-form-input id="bank-account-my-suffix-openingDay" type="text" class="form-control" name="openingDay"  :class="{'valid': !$v.bankAccount.openingDay.$invalid, 'invalid': $v.bankAccount.openingDay.$invalid }"
                             v-model="$v.bankAccount.openingDay.$model"  />
-                        </div>
+                        </b-input-group>
                     </div>
                     <div class="form-group">
                         <label class="form-control-label" v-text="$t('jhipsterApp.testRootBankAccount.lastOperationDate')" for="bank-account-my-suffix-lastOperationDate">Last Operation Date</label>

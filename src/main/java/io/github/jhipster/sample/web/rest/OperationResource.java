@@ -130,7 +130,6 @@ public class OperationResource {
     @DeleteMapping("/operations/{id}")
     public ResponseEntity<Void> deleteOperation(@PathVariable Long id) {
         log.debug("REST request to delete Operation : {}", id);
-
         operationRepository.deleteById(id);
         return ResponseEntity
             .noContent()

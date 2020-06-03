@@ -45,6 +45,7 @@ export default class OperationUpdate extends Vue {
 
   public labels: ILabel[] = [];
   public isSaving = false;
+  public currentLanguage = '';
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
@@ -56,6 +57,13 @@ export default class OperationUpdate extends Vue {
   }
 
   created(): void {
+    this.currentLanguage = this.$store.getters.currentLanguage;
+    this.$store.watch(
+      () => this.$store.getters.currentLanguage,
+      () => {
+        this.currentLanguage = this.$store.getters.currentLanguage;
+      }
+    );
     this.operation.labels = [];
   }
 

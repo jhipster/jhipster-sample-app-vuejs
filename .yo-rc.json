@@ -1,6 +1,6 @@
 {
   "generator-jhipster": {
-    "jhipsterVersion": "6.9.0",
+    "jhipsterVersion": "6.9.1",
     "applicationType": "monolith",
     "baseName": "jhipsterSampleApplicationVue",
     "packageName": "io.github.jhipster.sample",
@@ -26,7 +26,7 @@
     "otherModules": [
       {
         "name": "generator-jhipster-vuejs",
-        "version": "1.8.1"
+        "version": "1.8.2"
       }
     ],
     "enableTranslation": true,
@@ -41,7 +41,7 @@
     "blueprints": [
       {
         "name": "generator-jhipster-vuejs",
-        "version": "1.8.1"
+        "version": "1.8.2"
       }
     ],
     "creationTimestamp": 1581267209237,

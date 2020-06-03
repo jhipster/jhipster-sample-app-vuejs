@@ -56,6 +56,7 @@ export default class BankAccountMySuffixUpdate extends mixins(JhiDataUtils) {
 
   public operations: IOperation[] = [];
   public isSaving = false;
+  public currentLanguage = '';
 
   beforeRouteEnter(to, from, next) {
     next(vm => {
@@ -64,6 +65,16 @@ export default class BankAccountMySuffixUpdate extends mixins(JhiDataUtils) {
       }
       vm.initRelationships();
     });
+  }
+
+  created(): void {
+    this.currentLanguage = this.$store.getters.currentLanguage;
+    this.$store.watch(
+      () => this.$store.getters.currentLanguage,
+      () => {
+        this.currentLanguage = this.$store.getters.currentLanguage;
+      }
+    );
   }
 
   public save(): void {

@@ -119,7 +119,6 @@ public class LabelResource {
     @DeleteMapping("/labels/{id}")
     public ResponseEntity<Void> deleteLabel(@PathVariable Long id) {
         log.debug("REST request to delete Label : {}", id);
-
         labelService.delete(id);
         return ResponseEntity
             .noContent()

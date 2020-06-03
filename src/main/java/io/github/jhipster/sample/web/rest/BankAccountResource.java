@@ -129,7 +129,6 @@ public class BankAccountResource {
     @DeleteMapping("/bank-accounts/{id}")
     public ResponseEntity<Void> deleteBankAccount(@PathVariable Long id) {
         log.debug("REST request to delete BankAccount : {}", id);
-
         bankAccountService.delete(id);
         return ResponseEntity
             .noContent()

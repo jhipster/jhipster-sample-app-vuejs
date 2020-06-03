@@ -66,7 +66,6 @@ public class LabelService {
      */
     public void delete(Long id) {
         log.debug("Request to delete Label : {}", id);
-
         labelRepository.deleteById(id);
     }
 }

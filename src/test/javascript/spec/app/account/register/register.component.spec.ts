@@ -44,7 +44,6 @@ describe('Register Component', () => {
 
   it('should set all default values correctly', () => {
     expect(register.success).toBe(false);
-    expect(register.doNotMatch).toBe('');
     expect(register.error).toBe('');
     expect(register.errorEmailExists).toBe('');
     expect(register.errorUserExists).toBe('');
@@ -63,14 +62,6 @@ describe('Register Component', () => {
     expect(called).toBe(true);
   });
 
-  it('should set error when passwords do no match', () => {
-    register.registerAccount.password = filledRegisterAccount.password;
-    register.confirmPassword = 'not-jhipster';
-    register.register();
-
-    expect(register.doNotMatch).toBe('ERROR');
-  });
-
   it('should register when password match', async () => {
     mockedAxios.post.mockReturnValue(Promise.resolve());
     register.registerAccount = filledRegisterAccount;
@@ -85,7 +76,6 @@ describe('Register Component', () => {
       password: 'jhipster',
     });
     expect(register.success).toBe(true);
-    expect(register.doNotMatch).toBe(null);
     expect(register.error).toBe(null);
     expect(register.errorEmailExists).toBe(null);
     expect(register.errorUserExists).toBe(null);
@@ -107,7 +97,6 @@ describe('Register Component', () => {
     });
     await register.$nextTick();
     expect(register.success).toBe(null);
-    expect(register.doNotMatch).toBe(null);
     expect(register.error).toBe(null);
     expect(register.errorEmailExists).toBe(null);
     expect(register.errorUserExists).toBe('ERROR');
@@ -129,7 +118,6 @@ describe('Register Component', () => {
     });
     await register.$nextTick();
     expect(register.success).toBe(null);
-    expect(register.doNotMatch).toBe(null);
     expect(register.error).toBe(null);
     expect(register.errorEmailExists).toBe('ERROR');
     expect(register.errorUserExists).toBe(null);
@@ -151,7 +139,6 @@ describe('Register Component', () => {
     });
     await register.$nextTick();
     expect(register.success).toBe(null);
-    expect(register.doNotMatch).toBe(null);
     expect(register.errorEmailExists).toBe(null);
     expect(register.errorUserExists).toBe(null);
     expect(register.error).toBe('ERROR');

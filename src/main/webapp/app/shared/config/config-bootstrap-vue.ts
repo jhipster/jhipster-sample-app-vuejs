@@ -21,6 +21,9 @@ import {
   BAlert,
   BModal,
   VBModal,
+  BFormDatepicker,
+  BInputGroup,
+  BInputGroupPrepend,
 } from 'bootstrap-vue';
 
 export function initBootstrapVue(vue) {
@@ -47,4 +50,7 @@ export function initBootstrapVue(vue) {
   vue.component('b-nav-item-dropdown', BNavItemDropdown);
   vue.component('b-modal', BModal);
   vue.directive('b-modal', VBModal);
+  vue.component('b-form-datepicker', BFormDatepicker);
+  vue.component('b-input-group', BInputGroup);
+  vue.component('b-input-group-prepend', BInputGroupPrepend);
 }
