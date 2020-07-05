@@ -53,7 +53,7 @@ describe('Account Service test suite', () => {
     expect(mockedAxios.get).toHaveBeenCalledWith('management/info');
   });
 
-  it('should init service and retrieve profiles if already logged in before but exception occured and should be logged out', async () => {
+  it('should init service and retrieve profiles if already logged in before but exception occurred and should be logged out', async () => {
     localStorage.setItem('jhi-authenticationToken', 'token');
 
     mockedAxios.get = jest.fn(apiName => (apiName === 'api/account' ? Promise.reject() : Promise.resolve({})));

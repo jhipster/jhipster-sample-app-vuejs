@@ -9,7 +9,7 @@ const localVue = createLocalVue();
 config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
 const store = config.initVueXStore(localVue);
-const customErrorMsg = 'An error occured.';
+const customErrorMsg = 'An error occurred.';
 
 describe('Error component', () => {
   let error: ErrorClass;

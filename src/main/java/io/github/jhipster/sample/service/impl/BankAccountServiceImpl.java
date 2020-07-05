@@ -31,12 +31,6 @@ public class BankAccountServiceImpl implements BankAccountService {
         this.bankAccountMapper = bankAccountMapper;
     }
 
-    /**
-     * Save a bankAccount.
-     *
-     * @param bankAccountDTO the entity to save.
-     * @return the persisted entity.
-     */
     @Override
     public BankAccountDTO save(BankAccountDTO bankAccountDTO) {
         log.debug("Request to save BankAccount : {}", bankAccountDTO);
@@ -45,11 +39,6 @@ public class BankAccountServiceImpl implements BankAccountService {
         return bankAccountMapper.toDto(bankAccount);
     }
 
-    /**
-     * Get all the bankAccounts.
-     *
-     * @return the list of entities.
-     */
     @Override
     @Transactional(readOnly = true)
     public List<BankAccountDTO> findAll() {
@@ -57,12 +46,6 @@ public class BankAccountServiceImpl implements BankAccountService {
         return bankAccountRepository.findAll().stream().map(bankAccountMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
-    /**
-     * Get one bankAccount by id.
-     *
-     * @param id the id of the entity.
-     * @return the entity.
-     */
     @Override
     @Transactional(readOnly = true)
     public Optional<BankAccountDTO> findOne(Long id) {
@@ -70,11 +53,6 @@ public class BankAccountServiceImpl implements BankAccountService {
         return bankAccountRepository.findById(id).map(bankAccountMapper::toDto);
     }
 
-    /**
-     * Delete the bankAccount by id.
-     *
-     * @param id the id of the entity.
-     */
     @Override
     public void delete(Long id) {
         log.debug("Request to delete BankAccount : {}", id);
