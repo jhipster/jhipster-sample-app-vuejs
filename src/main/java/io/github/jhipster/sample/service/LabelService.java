@@ -37,7 +37,7 @@ public class LabelService {
     }
 
     /**
-     * Partially udpates a label.
+     * Partially update a label.
      *
      * @param label the entity to update partially.
      * @return the persisted entity.

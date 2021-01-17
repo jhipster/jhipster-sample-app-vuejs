@@ -4,19 +4,19 @@ import { ILabel } from '@/shared/model/test-root/label.model';
 export interface IOperation {
   id?: number;
   date?: Date;
-  description?: string;
+  description?: string | null;
   amount?: number;
-  bankAccount?: IBankAccountMySuffix;
-  labels?: ILabel[];
+  bankAccount?: IBankAccountMySuffix | null;
+  labels?: ILabel[] | null;
 }
 
 export class Operation implements IOperation {
   constructor(
     public id?: number,
     public date?: Date,
-    public description?: string,
+    public description?: string | null,
     public amount?: number,
-    public bankAccount?: IBankAccountMySuffix,
-    public labels?: ILabel[]
+    public bankAccount?: IBankAccountMySuffix | null,
+    public labels?: ILabel[] | null
   ) {}
 }

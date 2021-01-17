@@ -32,11 +32,13 @@ describe('BankAccount e2e test', () => {
   const fileToUpload = '../../../../../../main/webapp/content/images/logo-jhipster.png';
   const absolutePath = path.resolve(__dirname, fileToUpload);
   let beforeRecordsCount = 0;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
-    await navBarPage.login('admin', 'admin');
+    await navBarPage.login(username, password);
   });
 
   after(async () => {

@@ -5,7 +5,7 @@
       <div class="d-flex justify-content-end">
         <button class="btn btn-info mr-2" v-on:click="handleSyncList" :disabled="isFetching">
           <font-awesome-icon icon="sync" :spin="isFetching"></font-awesome-icon>
-          <span v-text="$t('userManagement.home.refreshListLabel')">Refresh List</span>
+          <span v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.home.refreshListLabel')">Refresh List</span>
         </button>
         <router-link
           :to="{ name: 'OperationCreate' }"

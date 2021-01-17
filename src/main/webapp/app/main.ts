@@ -15,17 +15,16 @@ import HealthService from './admin/health/health.service';
 import MetricsService from './admin/metrics/metrics.service';
 import LogsService from './admin/logs/logs.service';
 import ConfigurationService from '@/admin/configuration/configuration.service';
-
 import ActivateService from './account/activate/activate.service';
 import RegisterService from './account/register/register.service';
 import UserManagementService from '@/admin/user-management/user-management.service';
-
 import LoginService from './account/login.service';
 import AccountService from './account/account.service';
 
 import '../content/scss/vendor.scss';
 import TranslationService from '@/locale/translation.service';
 
+import UserOAuth2Service from '@/entities/user/user.oauth2.service';
 /* tslint:disable */
 
 import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
@@ -82,12 +81,12 @@ new Vue({
     activateService: () => new ActivateService(),
     registerService: () => new RegisterService(),
     userService: () => new UserManagementService(),
-
     healthService: () => new HealthService(),
     configurationService: () => new ConfigurationService(),
     logsService: () => new LogsService(),
     metricsService: () => new MetricsService(),
 
+    userOAuth2Service: () => new UserOAuth2Service(),
     translationService: () => translationService,
     bankAccountService: () => new BankAccountMySuffixService(),
     labelService: () => new LabelService(),

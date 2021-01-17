@@ -5,40 +5,40 @@ import { BankAccountType } from '@/shared/model/enumerations/bank-account-type.m
 export interface IBankAccountMySuffix {
   id?: number;
   name?: string;
-  bankNumber?: number;
-  agencyNumber?: number;
-  lastOperationDuration?: number;
-  meanOperationDuration?: number;
+  bankNumber?: number | null;
+  agencyNumber?: number | null;
+  lastOperationDuration?: number | null;
+  meanOperationDuration?: number | null;
   balance?: number;
-  openingDay?: Date;
-  lastOperationDate?: Date;
-  active?: boolean;
-  accountType?: BankAccountType;
-  attachmentContentType?: string;
-  attachment?: string;
-  description?: string;
-  user?: IUser;
-  operations?: IOperation[];
+  openingDay?: Date | null;
+  lastOperationDate?: Date | null;
+  active?: boolean | null;
+  accountType?: BankAccountType | null;
+  attachmentContentType?: string | null;
+  attachment?: string | null;
+  description?: string | null;
+  user?: IUser | null;
+  operations?: IOperation[] | null;
 }
 
 export class BankAccountMySuffix implements IBankAccountMySuffix {
   constructor(
     public id?: number,
     public name?: string,
-    public bankNumber?: number,
-    public agencyNumber?: number,
-    public lastOperationDuration?: number,
-    public meanOperationDuration?: number,
+    public bankNumber?: number | null,
+    public agencyNumber?: number | null,
+    public lastOperationDuration?: number | null,
+    public meanOperationDuration?: number | null,
     public balance?: number,
-    public openingDay?: Date,
-    public lastOperationDate?: Date,
-    public active?: boolean,
-    public accountType?: BankAccountType,
-    public attachmentContentType?: string,
-    public attachment?: string,
-    public description?: string,
-    public user?: IUser,
-    public operations?: IOperation[]
+    public openingDay?: Date | null,
+    public lastOperationDate?: Date | null,
+    public active?: boolean | null,
+    public accountType?: BankAccountType | null,
+    public attachmentContentType?: string | null,
+    public attachment?: string | null,
+    public description?: string | null,
+    public user?: IUser | null,
+    public operations?: IOperation[] | null
   ) {
     this.active = this.active ?? false;
   }

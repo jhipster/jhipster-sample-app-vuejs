@@ -7,6 +7,7 @@ const baseWebpackConfig = require('./webpack.common');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const jhiUtils = require('./utils.js');
@@ -119,6 +120,11 @@ const webpackConfig = webpackMerge(baseWebpackConfig, {
       tslint: false,
       formatter: 'codeframe',
       checkSyntacticErrors: false,
+    }),
+    new WorkboxPlugin.GenerateSW({
+      clientsClaim: true,
+      skipWaiting: true,
+      exclude: [/swagger-ui/],
     }),
   ],
 });

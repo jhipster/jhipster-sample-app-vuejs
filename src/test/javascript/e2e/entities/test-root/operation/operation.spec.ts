@@ -28,11 +28,13 @@ describe('Operation e2e test', () => {
   let listPage: OperationComponentsPage;
   let deleteDialog: OperationDeleteDialog;
   let beforeRecordsCount = 0;
+  const username = process.env.E2E_USERNAME ?? 'admin';
+  const password = process.env.E2E_PASSWORD ?? 'admin';
 
   before(async () => {
     await browser.get('/');
     navBarPage = new NavBarPage();
-    await navBarPage.login('admin', 'admin');
+    await navBarPage.login(username, password);
   });
 
   after(async () => {
