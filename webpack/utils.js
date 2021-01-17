@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  root
+  root,
 };
 
 const _root = path.resolve(__dirname, '..');

@@ -2,7 +2,6 @@
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
 
-import AlertService from '@/shared/alert/alert.service';
 import * as config from '@/shared/config/config';
 import LabelComponent from '@/entities/test-root/label/label.vue';
 import LabelClass from '@/entities/test-root/label/label.component';
@@ -14,7 +13,6 @@ config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
 const store = config.initVueXStore(localVue);
 localVue.component('font-awesome-icon', {});
-localVue.component('b-alert', {});
 localVue.component('b-badge', {});
 localVue.component('jhi-sort-indicator', {});
 localVue.directive('b-modal', {});
@@ -45,7 +43,6 @@ describe('Component Tests', () => {
         localVue,
         stubs: { jhiItemCount: true, bPagination: true, bModal: bModalStub as any },
         provide: {
-          alertService: () => new AlertService(store),
           labelService: () => labelServiceStub,
         },
       });
@@ -113,7 +110,7 @@ describe('Component Tests', () => {
       const result = comp.sort();
 
       // THEN
-      expect(result).toEqual(['id,desc']);
+      expect(result).toEqual(['id,asc']);
     });
 
     it('should calculate the sort attribute for a non-id attribute', () => {
@@ -124,7 +121,7 @@ describe('Component Tests', () => {
       const result = comp.sort();
 
       // THEN
-      expect(result).toEqual(['name,desc', 'id']);
+      expect(result).toEqual(['name,asc', 'id']);
     });
     it('Should call delete service on confirmDelete', async () => {
       // GIVEN
@@ -137,7 +134,7 @@ describe('Component Tests', () => {
 
       // THEN
       expect(labelServiceStub.delete.called).toBeTruthy();
-      expect(labelServiceStub.retrieve.callCount).toEqual(2);
+      expect(labelServiceStub.retrieve.callCount).toEqual(1);
     });
   });
 });

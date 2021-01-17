@@ -1,12 +1,10 @@
 /* tslint:disable max-line-length */
 import axios from 'axios';
+import sinon from 'sinon';
 
-import * as config from '@/shared/config/config';
-import {} from '@/shared/date/filters';
 import LabelService from '@/entities/test-root/label/label.service';
 import { Label } from '@/shared/model/test-root/label.model';
 
-const mockedAxios: any = axios;
 const error = {
   response: {
     status: null,
@@ -16,27 +14,27 @@ const error = {
   },
 };
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  post: jest.fn(),
-  put: jest.fn(),
-  delete: jest.fn(),
-}));
+const axiosStub = {
+  get: sinon.stub(axios, 'get'),
+  post: sinon.stub(axios, 'post'),
+  put: sinon.stub(axios, 'put'),
+  delete: sinon.stub(axios, 'delete'),
+};
 
 describe('Service Tests', () => {
   describe('Label Service', () => {
     let service: LabelService;
     let elemDefault;
+
     beforeEach(() => {
       service = new LabelService();
-
       elemDefault = new Label(0, 'AAAAAAA');
     });
 
     describe('Service methods', () => {
       it('should find an element', async () => {
         const returnedFromService = Object.assign({}, elemDefault);
-        mockedAxios.get.mockReturnValue(Promise.resolve({ data: returnedFromService }));
+        axiosStub.get.resolves({ data: returnedFromService });
 
         return service.find(123).then(res => {
           expect(res).toMatchObject(elemDefault);
@@ -44,7 +42,7 @@ describe('Service Tests', () => {
       });
 
       it('should not find an element', async () => {
-        mockedAxios.get.mockReturnValue(Promise.reject(error));
+        axiosStub.get.rejects(error);
         return service
           .find(123)
           .then()
@@ -62,14 +60,14 @@ describe('Service Tests', () => {
         );
         const expected = Object.assign({}, returnedFromService);
 
-        mockedAxios.post.mockReturnValue(Promise.resolve({ data: returnedFromService }));
+        axiosStub.post.resolves({ data: returnedFromService });
         return service.create({}).then(res => {
           expect(res).toMatchObject(expected);
         });
       });
 
       it('should not create a Label', async () => {
-        mockedAxios.post.mockReturnValue(Promise.reject(error));
+        axiosStub.post.rejects(error);
 
         return service
           .create({})
@@ -88,7 +86,7 @@ describe('Service Tests', () => {
         );
 
         const expected = Object.assign({}, returnedFromService);
-        mockedAxios.put.mockReturnValue(Promise.resolve({ data: returnedFromService }));
+        axiosStub.put.resolves({ data: returnedFromService });
 
         return service.update(expected).then(res => {
           expect(res).toMatchObject(expected);
@@ -96,7 +94,7 @@ describe('Service Tests', () => {
       });
 
       it('should not update a Label', async () => {
-        mockedAxios.put.mockReturnValue(Promise.reject(error));
+        axiosStub.put.rejects(error);
 
         return service
           .update({})
@@ -114,14 +112,14 @@ describe('Service Tests', () => {
           elemDefault
         );
         const expected = Object.assign({}, returnedFromService);
-        mockedAxios.get.mockReturnValue(Promise.resolve([returnedFromService]));
+        axiosStub.get.resolves([returnedFromService]);
         return service.retrieve({ sort: {}, page: 0, size: 10 }).then(res => {
           expect(res).toContainEqual(expected);
         });
       });
 
       it('should not return a list of Label', async () => {
-        mockedAxios.get.mockReturnValue(Promise.reject(error));
+        axiosStub.get.rejects(error);
 
         return service
           .retrieve()
@@ -132,14 +130,14 @@ describe('Service Tests', () => {
       });
 
       it('should delete a Label', async () => {
-        mockedAxios.delete.mockReturnValue(Promise.resolve({ ok: true }));
+        axiosStub.delete.resolves({ ok: true });
         return service.delete(123).then(res => {
           expect(res.ok).toBeTruthy();
         });
       });
 
       it('should not delete a Label', async () => {
-        mockedAxios.delete.mockReturnValue(Promise.reject(error));
+        axiosStub.delete.rejects(error);
 
         return service
           .delete(123)

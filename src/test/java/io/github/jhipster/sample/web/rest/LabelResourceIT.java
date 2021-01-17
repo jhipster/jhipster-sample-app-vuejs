@@ -5,17 +5,15 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import io.github.jhipster.sample.JhipsterApp;
+import io.github.jhipster.sample.IntegrationTest;
 import io.github.jhipster.sample.domain.Label;
 import io.github.jhipster.sample.repository.LabelRepository;
-import io.github.jhipster.sample.service.LabelService;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,18 +22,16 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link LabelResource} REST controller.
  */
-@SpringBootTest(classes = JhipsterApp.class)
+@IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class LabelResourceIT {
+class LabelResourceIT {
+
     private static final String DEFAULT_LABEL_NAME = "AAAAAAAAAA";
     private static final String UPDATED_LABEL_NAME = "BBBBBBBBBB";
 
     @Autowired
     private LabelRepository labelRepository;
-
-    @Autowired
-    private LabelService labelService;
 
     @Autowired
     private EntityManager em;
@@ -74,7 +70,7 @@ public class LabelResourceIT {
 
     @Test
     @Transactional
-    public void createLabel() throws Exception {
+    void createLabel() throws Exception {
         int databaseSizeBeforeCreate = labelRepository.findAll().size();
         // Create the Label
         restLabelMockMvc
@@ -90,11 +86,11 @@ public class LabelResourceIT {
 
     @Test
     @Transactional
-    public void createLabelWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = labelRepository.findAll().size();
-
+    void createLabelWithExistingId() throws Exception {
         // Create the Label with an existing ID
         label.setId(1L);
+
+        int databaseSizeBeforeCreate = labelRepository.findAll().size();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restLabelMockMvc
@@ -108,7 +104,7 @@ public class LabelResourceIT {
 
     @Test
     @Transactional
-    public void checkLabelNameIsRequired() throws Exception {
+    void checkLabelNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = labelRepository.findAll().size();
         // set the field null
         label.setLabelName(null);
@@ -125,7 +121,7 @@ public class LabelResourceIT {
 
     @Test
     @Transactional
-    public void getAllLabels() throws Exception {
+    void getAllLabels() throws Exception {
         // Initialize the database
         labelRepository.saveAndFlush(label);
 
@@ -140,7 +136,7 @@ public class LabelResourceIT {
 
     @Test
     @Transactional
-    public void getLabel() throws Exception {
+    void getLabel() throws Exception {
         // Initialize the database
         labelRepository.saveAndFlush(label);
 
@@ -155,16 +151,16 @@ public class LabelResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingLabel() throws Exception {
+    void getNonExistingLabel() throws Exception {
         // Get the label
         restLabelMockMvc.perform(get("/api/labels/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateLabel() throws Exception {
+    void updateLabel() throws Exception {
         // Initialize the database
-        labelService.save(label);
+        labelRepository.saveAndFlush(label);
 
         int databaseSizeBeforeUpdate = labelRepository.findAll().size();
 
@@ -187,7 +183,7 @@ public class LabelResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingLabel() throws Exception {
+    void updateNonExistingLabel() throws Exception {
         int databaseSizeBeforeUpdate = labelRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
@@ -202,9 +198,80 @@ public class LabelResourceIT {
 
     @Test
     @Transactional
-    public void deleteLabel() throws Exception {
+    void partialUpdateLabelWithPatch() throws Exception {
         // Initialize the database
-        labelService.save(label);
+        labelRepository.saveAndFlush(label);
+
+        int databaseSizeBeforeUpdate = labelRepository.findAll().size();
+
+        // Update the label using partial update
+        Label partialUpdatedLabel = new Label();
+        partialUpdatedLabel.setId(label.getId());
+
+        restLabelMockMvc
+            .perform(
+                patch("/api/labels")
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedLabel))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Label in the database
+        List<Label> labelList = labelRepository.findAll();
+        assertThat(labelList).hasSize(databaseSizeBeforeUpdate);
+        Label testLabel = labelList.get(labelList.size() - 1);
+        assertThat(testLabel.getLabelName()).isEqualTo(DEFAULT_LABEL_NAME);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateLabelWithPatch() throws Exception {
+        // Initialize the database
+        labelRepository.saveAndFlush(label);
+
+        int databaseSizeBeforeUpdate = labelRepository.findAll().size();
+
+        // Update the label using partial update
+        Label partialUpdatedLabel = new Label();
+        partialUpdatedLabel.setId(label.getId());
+
+        partialUpdatedLabel.labelName(UPDATED_LABEL_NAME);
+
+        restLabelMockMvc
+            .perform(
+                patch("/api/labels")
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedLabel))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Label in the database
+        List<Label> labelList = labelRepository.findAll();
+        assertThat(labelList).hasSize(databaseSizeBeforeUpdate);
+        Label testLabel = labelList.get(labelList.size() - 1);
+        assertThat(testLabel.getLabelName()).isEqualTo(UPDATED_LABEL_NAME);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateLabelShouldThrown() throws Exception {
+        // Update the label without id should throw
+        Label partialUpdatedLabel = new Label();
+
+        restLabelMockMvc
+            .perform(
+                patch("/api/labels")
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedLabel))
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    void deleteLabel() throws Exception {
+        // Initialize the database
+        labelRepository.saveAndFlush(label);
 
         int databaseSizeBeforeDelete = labelRepository.findAll().size();
 

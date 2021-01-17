@@ -1,5 +1,6 @@
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import axios from 'axios';
+import sinon from 'sinon';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import * as config from '@/shared/config/config';
@@ -9,7 +10,6 @@ import UserManagementService from '@/admin/user-management/user-management.servi
 import { Authority } from '@/shared/security/authority';
 
 const localVue = createLocalVue();
-const mockedAxios: any = axios;
 
 config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
@@ -18,10 +18,9 @@ localVue.component('font-awesome-icon', FontAwesomeIcon);
 localVue.component('b-badge', {});
 localVue.component('router-link', {});
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  put: jest.fn(),
-}));
+const axiosStub = {
+  get: sinon.stub(axios, 'get'),
+};
 
 describe('UserManagementView Component', () => {
   let wrapper: Wrapper<UserManagementViewClass>;
@@ -55,14 +54,14 @@ describe('UserManagementView Component', () => {
         lastModifiedDate: null,
         password: null,
       };
-      mockedAxios.get.mockReturnValue(Promise.resolve({ data: userData }));
+      axiosStub.get.resolves({ data: userData });
 
       // WHEN
       userManagementView.init(123);
       await userManagementView.$nextTick();
 
       // THEN
-      expect(mockedAxios.get).toHaveBeenCalledWith('api/users/' + 123);
+      expect(axiosStub.get.calledWith('api/admin/users/' + 123)).toBeTruthy();
       expect(userManagementView.user).toEqual(userData);
     });
   });

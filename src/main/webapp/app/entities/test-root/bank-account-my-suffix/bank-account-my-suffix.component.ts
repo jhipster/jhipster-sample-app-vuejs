@@ -3,7 +3,6 @@ import { mixins } from 'vue-class-component';
 import { Component, Vue, Inject } from 'vue-property-decorator';
 import Vue2Filters from 'vue2-filters';
 import { IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
-import AlertMixin from '@/shared/alert/alert.mixin';
 
 import JhiDataUtils from '@/shared/data/data-utils.service';
 
@@ -12,7 +11,7 @@ import BankAccountMySuffixService from './bank-account-my-suffix.service';
 @Component({
   mixins: [Vue2Filters.mixin],
 })
-export default class BankAccountMySuffix extends mixins(JhiDataUtils, AlertMixin) {
+export default class BankAccountMySuffix extends mixins(JhiDataUtils) {
   @Inject('bankAccountService') private bankAccountService: () => BankAccountMySuffixService;
   private removeId: number = null;
 
@@ -44,6 +43,10 @@ export default class BankAccountMySuffix extends mixins(JhiDataUtils, AlertMixin
       );
   }
 
+  public handleSyncList(): void {
+    this.clear();
+  }
+
   public prepareRemove(instance: IBankAccountMySuffix): void {
     this.removeId = instance.id;
     if (<any>this.$refs.removeEntity) {
@@ -55,9 +58,14 @@ export default class BankAccountMySuffix extends mixins(JhiDataUtils, AlertMixin
     this.bankAccountService()
       .delete(this.removeId)
       .then(() => {
-        const message = this.$t('jhipsterApp.testRootBankAccount.deleted', { param: this.removeId });
-        this.alertService().showAlert(message, 'danger');
-        this.getAlertFromStore();
+        const message = this.$t('jhipsterSampleApplicationVueApp.testRootBankAccount.deleted', { param: this.removeId });
+        this.$bvToast.toast(message.toString(), {
+          toaster: 'b-toaster-top-center',
+          title: 'Info',
+          variant: 'danger',
+          solid: true,
+          autoHideDelay: 5000,
+        });
         this.removeId = null;
         this.retrieveAllBankAccountMySuffixs();
         this.closeDialog();

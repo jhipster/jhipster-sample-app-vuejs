@@ -46,7 +46,7 @@ describe('JhiNavbar', () => {
 
   it('should not have user data set', () => {
     expect(jhiNavbar.authenticated).toBeFalsy();
-    expect(jhiNavbar.swaggerEnabled).toBeFalsy();
+    expect(jhiNavbar.openAPIEnabled).toBeFalsy();
     expect(jhiNavbar.inProduction).toBeFalsy();
   });
 
@@ -57,9 +57,9 @@ describe('JhiNavbar', () => {
   });
 
   it('should have profile info set after info retrieved', () => {
-    store.commit('setActiveProfiles', ['prod', 'swagger']);
+    store.commit('setActiveProfiles', ['prod', 'api-docs']);
 
-    expect(jhiNavbar.swaggerEnabled).toBeTruthy();
+    expect(jhiNavbar.openAPIEnabled).toBeTruthy();
     expect(jhiNavbar.inProduction).toBeTruthy();
   });
 

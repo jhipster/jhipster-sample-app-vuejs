@@ -1,13 +1,16 @@
 /* tslint:disable max-line-length */
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
+import VueRouter from 'vue-router';
 
 import * as config from '@/shared/config/config';
 import OperationDetailComponent from '@/entities/test-root/operation/operation-details.vue';
 import OperationClass from '@/entities/test-root/operation/operation-details.component';
 import OperationService from '@/entities/test-root/operation/operation.service';
+import router from '@/router';
 
 const localVue = createLocalVue();
+localVue.use(VueRouter);
 
 config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
@@ -28,6 +31,7 @@ describe('Component Tests', () => {
         store,
         i18n,
         localVue,
+        router,
         provide: { operationService: () => operationServiceStub },
       });
       comp = wrapper.vm;
@@ -45,6 +49,30 @@ describe('Component Tests', () => {
 
         // THEN
         expect(comp.operation).toBe(foundOperation);
+      });
+    });
+
+    describe('Before route enter', () => {
+      it('Should retrieve data', async () => {
+        // GIVEN
+        const foundOperation = { id: 123 };
+        operationServiceStub.find.resolves(foundOperation);
+
+        // WHEN
+        comp.beforeRouteEnter({ params: { operationId: 123 } }, null, cb => cb(comp));
+        await comp.$nextTick();
+
+        // THEN
+        expect(comp.operation).toBe(foundOperation);
+      });
+    });
+
+    describe('Previous state', () => {
+      it('Should go previous state', async () => {
+        comp.previousState();
+        await comp.$nextTick();
+
+        expect(comp.$router.currentRoute.fullPath).toContain('/');
       });
     });
   });

@@ -20,6 +20,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "bank_account")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class BankAccount implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -71,11 +72,11 @@ public class BankAccount implements Serializable {
     private String description;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "bankAccounts", allowSetters = true)
     private User user;
 
     @OneToMany(mappedBy = "bankAccount")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "bankAccount", "labels" }, allowSetters = true)
     private Set<Operation> operations = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -87,8 +88,13 @@ public class BankAccount implements Serializable {
         this.id = id;
     }
 
+    public BankAccount id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public BankAccount name(String name) {
@@ -101,7 +107,7 @@ public class BankAccount implements Serializable {
     }
 
     public Integer getBankNumber() {
-        return bankNumber;
+        return this.bankNumber;
     }
 
     public BankAccount bankNumber(Integer bankNumber) {
@@ -114,7 +120,7 @@ public class BankAccount implements Serializable {
     }
 
     public Long getAgencyNumber() {
-        return agencyNumber;
+        return this.agencyNumber;
     }
 
     public BankAccount agencyNumber(Long agencyNumber) {
@@ -127,7 +133,7 @@ public class BankAccount implements Serializable {
     }
 
     public Float getLastOperationDuration() {
-        return lastOperationDuration;
+        return this.lastOperationDuration;
     }
 
     public BankAccount lastOperationDuration(Float lastOperationDuration) {
@@ -140,7 +146,7 @@ public class BankAccount implements Serializable {
     }
 
     public Double getMeanOperationDuration() {
-        return meanOperationDuration;
+        return this.meanOperationDuration;
     }
 
     public BankAccount meanOperationDuration(Double meanOperationDuration) {
@@ -153,7 +159,7 @@ public class BankAccount implements Serializable {
     }
 
     public BigDecimal getBalance() {
-        return balance;
+        return this.balance;
     }
 
     public BankAccount balance(BigDecimal balance) {
@@ -166,7 +172,7 @@ public class BankAccount implements Serializable {
     }
 
     public LocalDate getOpeningDay() {
-        return openingDay;
+        return this.openingDay;
     }
 
     public BankAccount openingDay(LocalDate openingDay) {
@@ -179,7 +185,7 @@ public class BankAccount implements Serializable {
     }
 
     public Instant getLastOperationDate() {
-        return lastOperationDate;
+        return this.lastOperationDate;
     }
 
     public BankAccount lastOperationDate(Instant lastOperationDate) {
@@ -191,8 +197,8 @@ public class BankAccount implements Serializable {
         this.lastOperationDate = lastOperationDate;
     }
 
-    public Boolean isActive() {
-        return active;
+    public Boolean getActive() {
+        return this.active;
     }
 
     public BankAccount active(Boolean active) {
@@ -205,7 +211,7 @@ public class BankAccount implements Serializable {
     }
 
     public BankAccountType getAccountType() {
-        return accountType;
+        return this.accountType;
     }
 
     public BankAccount accountType(BankAccountType accountType) {
@@ -218,7 +224,7 @@ public class BankAccount implements Serializable {
     }
 
     public byte[] getAttachment() {
-        return attachment;
+        return this.attachment;
     }
 
     public BankAccount attachment(byte[] attachment) {
@@ -231,7 +237,7 @@ public class BankAccount implements Serializable {
     }
 
     public String getAttachmentContentType() {
-        return attachmentContentType;
+        return this.attachmentContentType;
     }
 
     public BankAccount attachmentContentType(String attachmentContentType) {
@@ -244,7 +250,7 @@ public class BankAccount implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public BankAccount description(String description) {
@@ -257,11 +263,11 @@ public class BankAccount implements Serializable {
     }
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     public BankAccount user(User user) {
-        this.user = user;
+        this.setUser(user);
         return this;
     }
 
@@ -270,11 +276,11 @@ public class BankAccount implements Serializable {
     }
 
     public Set<Operation> getOperations() {
-        return operations;
+        return this.operations;
     }
 
     public BankAccount operations(Set<Operation> operations) {
-        this.operations = operations;
+        this.setOperations(operations);
         return this;
     }
 
@@ -291,6 +297,12 @@ public class BankAccount implements Serializable {
     }
 
     public void setOperations(Set<Operation> operations) {
+        if (this.operations != null) {
+            this.operations.forEach(i -> i.setBankAccount(null));
+        }
+        if (operations != null) {
+            operations.forEach(i -> i.setBankAccount(this));
+        }
         this.operations = operations;
     }
 
@@ -309,7 +321,8 @@ public class BankAccount implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore
@@ -325,7 +338,7 @@ public class BankAccount implements Serializable {
             ", balance=" + getBalance() +
             ", openingDay='" + getOpeningDay() + "'" +
             ", lastOperationDate='" + getLastOperationDate() + "'" +
-            ", active='" + isActive() + "'" +
+            ", active='" + getActive() + "'" +
             ", accountType='" + getAccountType() + "'" +
             ", attachment='" + getAttachment() + "'" +
             ", attachmentContentType='" + getAttachmentContentType() + "'" +

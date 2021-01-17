@@ -3,18 +3,15 @@ import { Component, Inject } from 'vue-property-decorator';
 import { mixins } from 'vue-class-component';
 import JhiDataUtils from '@/shared/data/data-utils.service';
 
-import { numeric, required, minLength, maxLength, minValue, maxValue } from 'vuelidate/lib/validators';
-import format from 'date-fns/format';
-import parse from 'date-fns/parse';
-import parseISO from 'date-fns/parseISO';
+import { required, decimal } from 'vuelidate/lib/validators';
+import dayjs from 'dayjs';
 import { DATE_TIME_LONG_FORMAT } from '@/shared/date/filters';
 
 import UserService from '@/admin/user-management/user-management.service';
 
-import OperationService from '../operation/operation.service';
+import OperationService from '@/entities/test-root/operation/operation.service';
 import { IOperation } from '@/shared/model/test-root/operation.model';
 
-import AlertService from '@/shared/alert/alert.service';
 import { IBankAccountMySuffix, BankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
 import BankAccountMySuffixService from './bank-account-my-suffix.service';
 
@@ -29,7 +26,7 @@ const validations: any = {
     meanOperationDuration: {},
     balance: {
       required,
-      numeric,
+      decimal,
     },
     openingDay: {},
     lastOperationDate: {},
@@ -44,7 +41,6 @@ const validations: any = {
   validations,
 })
 export default class BankAccountMySuffixUpdate extends mixins(JhiDataUtils) {
-  @Inject('alertService') private alertService: () => AlertService;
   @Inject('bankAccountService') private bankAccountService: () => BankAccountMySuffixService;
   public bankAccount: IBankAccountMySuffix = new BankAccountMySuffix();
 
@@ -85,8 +81,14 @@ export default class BankAccountMySuffixUpdate extends mixins(JhiDataUtils) {
         .then(param => {
           this.isSaving = false;
           this.$router.go(-1);
-          const message = this.$t('jhipsterApp.testRootBankAccount.updated', { param: param.id });
-          this.alertService().showAlert(message, 'info');
+          const message = this.$t('jhipsterSampleApplicationVueApp.testRootBankAccount.updated', { param: param.id });
+          return this.$root.$bvToast.toast(message.toString(), {
+            toaster: 'b-toaster-top-center',
+            title: 'Info',
+            variant: 'info',
+            solid: true,
+            autoHideDelay: 5000,
+          });
         });
     } else {
       this.bankAccountService()
@@ -94,22 +96,28 @@ export default class BankAccountMySuffixUpdate extends mixins(JhiDataUtils) {
         .then(param => {
           this.isSaving = false;
           this.$router.go(-1);
-          const message = this.$t('jhipsterApp.testRootBankAccount.created', { param: param.id });
-          this.alertService().showAlert(message, 'success');
+          const message = this.$t('jhipsterSampleApplicationVueApp.testRootBankAccount.created', { param: param.id });
+          this.$root.$bvToast.toast(message.toString(), {
+            toaster: 'b-toaster-top-center',
+            title: 'Success',
+            variant: 'success',
+            solid: true,
+            autoHideDelay: 5000,
+          });
         });
     }
   }
 
   public convertDateTimeFromServer(date: Date): string {
-    if (date) {
-      return format(date, DATE_TIME_LONG_FORMAT);
+    if (date && dayjs(date).isValid()) {
+      return dayjs(date).format(DATE_TIME_LONG_FORMAT);
     }
     return null;
   }
 
   public updateInstantField(field, event) {
     if (event.target.value) {
-      this.bankAccount[field] = parse(event.target.value, DATE_TIME_LONG_FORMAT, new Date());
+      this.bankAccount[field] = dayjs(event.target.value, DATE_TIME_LONG_FORMAT);
     } else {
       this.bankAccount[field] = null;
     }
@@ -117,7 +125,7 @@ export default class BankAccountMySuffixUpdate extends mixins(JhiDataUtils) {
 
   public updateZonedDateTimeField(field, event) {
     if (event.target.value) {
-      this.bankAccount[field] = parse(event.target.value, DATE_TIME_LONG_FORMAT, new Date());
+      this.bankAccount[field] = dayjs(event.target.value, DATE_TIME_LONG_FORMAT);
     } else {
       this.bankAccount[field] = null;
     }

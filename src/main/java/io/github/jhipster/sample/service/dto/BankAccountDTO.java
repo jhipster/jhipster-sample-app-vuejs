@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Objects;
 import javax.persistence.Lob;
 import javax.validation.constraints.*;
 
@@ -12,6 +13,7 @@ import javax.validation.constraints.*;
  * A DTO for the {@link io.github.jhipster.sample.domain.BankAccount} entity.
  */
 public class BankAccountDTO implements Serializable {
+
     private Long id;
 
     @NotNull
@@ -44,9 +46,7 @@ public class BankAccountDTO implements Serializable {
     @Lob
     private String description;
 
-    private Long userId;
-
-    private String userLogin;
+    private UserDTO user;
 
     public Long getId() {
         return id;
@@ -120,7 +120,7 @@ public class BankAccountDTO implements Serializable {
         this.lastOperationDate = lastOperationDate;
     }
 
-    public Boolean isActive() {
+    public Boolean getActive() {
         return active;
     }
 
@@ -160,20 +160,12 @@ public class BankAccountDTO implements Serializable {
         this.description = description;
     }
 
-    public Long getUserId() {
-        return userId;
+    public UserDTO getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getUserLogin() {
-        return userLogin;
-    }
-
-    public void setUserLogin(String userLogin) {
-        this.userLogin = userLogin;
+    public void setUser(UserDTO user) {
+        this.user = user;
     }
 
     @Override
@@ -185,12 +177,16 @@ public class BankAccountDTO implements Serializable {
             return false;
         }
 
-        return id != null && id.equals(((BankAccountDTO) o).id);
+        BankAccountDTO bankAccountDTO = (BankAccountDTO) o;
+        if (this.id == null) {
+            return false;
+        }
+        return Objects.equals(this.id, bankAccountDTO.id);
     }
 
     @Override
     public int hashCode() {
-        return 31;
+        return Objects.hash(this.id);
     }
 
     // prettier-ignore
@@ -206,12 +202,11 @@ public class BankAccountDTO implements Serializable {
             ", balance=" + getBalance() +
             ", openingDay='" + getOpeningDay() + "'" +
             ", lastOperationDate='" + getLastOperationDate() + "'" +
-            ", active='" + isActive() + "'" +
+            ", active='" + getActive() + "'" +
             ", accountType='" + getAccountType() + "'" +
             ", attachment='" + getAttachment() + "'" +
             ", description='" + getDescription() + "'" +
-            ", userId=" + getUserId() +
-            ", userLogin='" + getUserLogin() + "'" +
+            ", user=" + getUser() +
             "}";
     }
 }

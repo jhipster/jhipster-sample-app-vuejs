@@ -1,18 +1,15 @@
 import { Component, Vue, Inject } from 'vue-property-decorator';
 
-import { numeric, required, minLength, maxLength, minValue, maxValue } from 'vuelidate/lib/validators';
-import format from 'date-fns/format';
-import parse from 'date-fns/parse';
-import parseISO from 'date-fns/parseISO';
+import { required, decimal } from 'vuelidate/lib/validators';
+import dayjs from 'dayjs';
 import { DATE_TIME_LONG_FORMAT } from '@/shared/date/filters';
 
-import BankAccountMySuffixService from '../bank-account-my-suffix/bank-account-my-suffix.service';
+import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
 import { IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
 
-import LabelService from '../label/label.service';
+import LabelService from '@/entities/test-root/label/label.service';
 import { ILabel } from '@/shared/model/test-root/label.model';
 
-import AlertService from '@/shared/alert/alert.service';
 import { IOperation, Operation } from '@/shared/model/test-root/operation.model';
 import OperationService from './operation.service';
 
@@ -24,7 +21,7 @@ const validations: any = {
     description: {},
     amount: {
       required,
-      numeric,
+      decimal,
     },
   },
 };
@@ -33,7 +30,6 @@ const validations: any = {
   validations,
 })
 export default class OperationUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
   @Inject('operationService') private operationService: () => OperationService;
   public operation: IOperation = new Operation();
 
@@ -75,8 +71,14 @@ export default class OperationUpdate extends Vue {
         .then(param => {
           this.isSaving = false;
           this.$router.go(-1);
-          const message = this.$t('jhipsterApp.testRootOperation.updated', { param: param.id });
-          this.alertService().showAlert(message, 'info');
+          const message = this.$t('jhipsterSampleApplicationVueApp.testRootOperation.updated', { param: param.id });
+          return this.$root.$bvToast.toast(message.toString(), {
+            toaster: 'b-toaster-top-center',
+            title: 'Info',
+            variant: 'info',
+            solid: true,
+            autoHideDelay: 5000,
+          });
         });
     } else {
       this.operationService()
@@ -84,22 +86,28 @@ export default class OperationUpdate extends Vue {
         .then(param => {
           this.isSaving = false;
           this.$router.go(-1);
-          const message = this.$t('jhipsterApp.testRootOperation.created', { param: param.id });
-          this.alertService().showAlert(message, 'success');
+          const message = this.$t('jhipsterSampleApplicationVueApp.testRootOperation.created', { param: param.id });
+          this.$root.$bvToast.toast(message.toString(), {
+            toaster: 'b-toaster-top-center',
+            title: 'Success',
+            variant: 'success',
+            solid: true,
+            autoHideDelay: 5000,
+          });
         });
     }
   }
 
   public convertDateTimeFromServer(date: Date): string {
-    if (date) {
-      return format(date, DATE_TIME_LONG_FORMAT);
+    if (date && dayjs(date).isValid()) {
+      return dayjs(date).format(DATE_TIME_LONG_FORMAT);
     }
     return null;
   }
 
   public updateInstantField(field, event) {
     if (event.target.value) {
-      this.operation[field] = parse(event.target.value, DATE_TIME_LONG_FORMAT, new Date());
+      this.operation[field] = dayjs(event.target.value, DATE_TIME_LONG_FORMAT);
     } else {
       this.operation[field] = null;
     }
@@ -107,7 +115,7 @@ export default class OperationUpdate extends Vue {
 
   public updateZonedDateTimeField(field, event) {
     if (event.target.value) {
-      this.operation[field] = parse(event.target.value, DATE_TIME_LONG_FORMAT, new Date());
+      this.operation[field] = dayjs(event.target.value, DATE_TIME_LONG_FORMAT);
     } else {
       this.operation[field] = null;
     }

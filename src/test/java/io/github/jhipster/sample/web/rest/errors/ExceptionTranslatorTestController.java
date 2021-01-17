@@ -47,6 +47,7 @@ public class ExceptionTranslatorTestController {
     }
 
     public static class TestDTO {
+
         @NotNull
         private String test;
 

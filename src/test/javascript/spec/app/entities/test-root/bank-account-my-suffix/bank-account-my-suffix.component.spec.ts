@@ -2,7 +2,6 @@
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
 
-import AlertService from '@/shared/alert/alert.service';
 import * as config from '@/shared/config/config';
 import BankAccountMySuffixComponent from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.vue';
 import BankAccountMySuffixClass from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.component';
@@ -14,7 +13,6 @@ config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
 const store = config.initVueXStore(localVue);
 localVue.component('font-awesome-icon', {});
-localVue.component('b-alert', {});
 localVue.component('b-badge', {});
 localVue.directive('b-modal', {});
 localVue.component('b-button', {});
@@ -44,7 +42,6 @@ describe('Component Tests', () => {
         localVue,
         stubs: { bModal: bModalStub as any },
         provide: {
-          alertService: () => new AlertService(store),
           bankAccountService: () => bankAccountServiceStub,
         },
       });
@@ -74,7 +71,7 @@ describe('Component Tests', () => {
 
       // THEN
       expect(bankAccountServiceStub.delete.called).toBeTruthy();
-      expect(bankAccountServiceStub.retrieve.callCount).toEqual(2);
+      expect(bankAccountServiceStub.retrieve.callCount).toEqual(1);
     });
   });
 });

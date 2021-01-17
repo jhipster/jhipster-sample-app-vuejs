@@ -27,6 +27,6 @@ export default class OperationComponentsPage extends AlertPage {
 
 export class OperationDeleteDialog {
   dialog: ElementFinder = element(by.id('removeEntity'));
-  title: ElementFinder = element(by.id('jhipsterApp.testRootOperation.delete.question'));
+  title: ElementFinder = element(by.id('jhipsterSampleApplicationVueApp.testRootOperation.delete.question'));
   confirmButton: ElementFinder = element(by.id('jhi-confirm-delete-operation'));
 }

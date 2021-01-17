@@ -3,7 +3,7 @@ import { browser } from 'protractor';
 
 import NavBarPage from '../../page-objects/navbar-page';
 
-import { waitUntilDisplayed, waitUntilHidden } from '../../util/utils';
+import { waitUntilDisplayed } from '../../util/utils';
 
 const expect = chai.expect;
 
@@ -42,12 +42,6 @@ describe('Administration', () => {
     const configurationsPage = await navBarPage.getConfigurationsPage();
     expect(await configurationsPage.title.isDisplayed()).to.be.true;
     expect(await configurationsPage.title.getText()).not.to.be.empty;
-  });
-
-  it('should load audits', async () => {
-    const auditsPage = await navBarPage.getAuditsPage();
-    expect(await auditsPage.title.isDisplayed()).to.be.true;
-    expect(await auditsPage.title.getText()).not.to.be.empty;
   });
 
   it('should load logs', async () => {

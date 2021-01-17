@@ -1,5 +1,5 @@
 {
-  "jhipsterApp": {
+  "jhipsterSampleApplicationVueApp": {
     "BankAccountType": {
       "null": "",
       "CHECKING": "CHECKING",

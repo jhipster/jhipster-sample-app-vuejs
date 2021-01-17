@@ -2,7 +2,7 @@ module.exports = {
   coverageDirectory: '<rootDir>/target/test-results/',
   coveragePathIgnorePatterns: [
     '<rootDir>/node_modules/',
-    '<rootDir>/src/test/javascript',
+    '<rootDir>/src/test/javascript/',
     '<rootDir>/src/main/webapp/app/router',
     '.*.json',
   ],

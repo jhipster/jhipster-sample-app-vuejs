@@ -33,7 +33,7 @@ const validations: any = {
     // prettier-ignore
     sameAsPassword: sameAs(function() {
       return this.registerAccount.password;
-    })
+    }),
   },
 };
 

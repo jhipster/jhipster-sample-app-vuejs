@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.github.jhipster.sample.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 
-public class BankAccountDTOTest {
+class BankAccountDTOTest {
 
     @Test
-    public void dtoEqualsVerifier() throws Exception {
+    void dtoEqualsVerifier() throws Exception {
         TestUtil.equalsVerifier(BankAccountDTO.class);
         BankAccountDTO bankAccountDTO1 = new BankAccountDTO();
         bankAccountDTO1.setId(1L);

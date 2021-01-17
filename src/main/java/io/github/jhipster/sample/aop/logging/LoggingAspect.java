@@ -1,6 +1,5 @@
 package io.github.jhipster.sample.aop.logging;
 
-import io.github.jhipster.config.JHipsterConstants;
 import java.util.Arrays;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -12,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
+import tech.jhipster.config.JHipsterConstants;
 
 /**
  * Aspect for logging execution of service and repository Spring components.
@@ -20,6 +20,7 @@ import org.springframework.core.env.Profiles;
  */
 @Aspect
 public class LoggingAspect {
+
     private final Environment env;
 
     public LoggingAspect(Environment env) {

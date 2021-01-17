@@ -4,7 +4,7 @@ import SignInPage from './signin-page';
 import RegisterPage from './register-page';
 import PasswordPage from './password-page';
 import SettingsPage from './settings-page';
-import { AuditsPage, ConfigurationsPage, HealthPage, LogsPage, MetricsPage, UserManagementPage } from './administration-page';
+import { ConfigurationsPage, HealthPage, LogsPage, MetricsPage, UserManagementPage } from './administration-page';
 import { click, isVisible, waitUntilDisplayed, waitUntilHidden } from '../util/utils';
 
 export default class NavBarPage {
@@ -106,31 +106,24 @@ export default class NavBarPage {
   }
 
   async getMetricsPage() {
-    await this.clickOnAdminMenuItem('jhi-metrics');
+    await this.clickOnAdminMenuItem('metrics');
     const metricsPage = new MetricsPage();
     await waitUntilDisplayed(metricsPage.title);
     return metricsPage;
   }
 
   async getHealthPage() {
-    await this.clickOnAdminMenuItem('jhi-health');
+    await this.clickOnAdminMenuItem('health');
     const healthPage = new HealthPage();
     await waitUntilDisplayed(healthPage.title);
     return healthPage;
   }
 
   async getConfigurationsPage() {
-    await this.clickOnAdminMenuItem('jhi-configuration');
+    await this.clickOnAdminMenuItem('configuration');
     const configurationsPage = new ConfigurationsPage();
     await waitUntilDisplayed(configurationsPage.title);
     return configurationsPage;
-  }
-
-  async getAuditsPage() {
-    await this.clickOnAdminMenuItem('audits');
-    const auditsPage = new AuditsPage();
-    await waitUntilDisplayed(auditsPage.title);
-    return auditsPage;
   }
 
   async getLogsPage() {

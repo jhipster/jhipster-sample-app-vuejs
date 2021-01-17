@@ -1,5 +1,6 @@
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import axios from 'axios';
+import sinon from 'sinon';
 
 import * as config from '@/shared/config/config';
 import Configuration from '@/admin/configuration/configuration.vue';
@@ -7,30 +8,24 @@ import ConfigurationClass from '@/admin/configuration/configuration.component';
 import ConfigurationService from '@/admin/configuration/configuration.service';
 
 const localVue = createLocalVue();
-const mockedAxios: any = axios;
 
 config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
 const store = config.initVueXStore(localVue);
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
-}));
+const axiosStub = {
+  get: sinon.stub(axios, 'get'),
+};
 
 describe('Configuration Component', () => {
   let wrapper: Wrapper<ConfigurationClass>;
   let configuration: ConfigurationClass;
 
   beforeEach(() => {
-    mockedAxios.get.mockReset();
-    mockedAxios.get.mockReturnValue(
-      Promise.resolve({
-        data: {
-          contexts: [{ beans: [{ prefix: 'A' }, { prefix: 'B' }] }],
-          propertySources: [{ properties: { key1: { value: 'value' } } }],
-        },
-      })
-    );
+    axiosStub.get.reset();
+    axiosStub.get.resolves({
+      data: { contexts: [{ beans: [{ prefix: 'A' }, { prefix: 'B' }] }], propertySources: [{ properties: { key1: { value: 'value' } } }] },
+    });
     wrapper = shallowMount<ConfigurationClass>(Configuration, {
       store,
       i18n,
@@ -53,8 +48,8 @@ describe('Configuration Component', () => {
       await configuration.$nextTick();
 
       // THEN
-      expect(mockedAxios.get).toHaveBeenCalledWith('management/env');
-      expect(mockedAxios.get).toHaveBeenCalledWith('management/configprops');
+      expect(axiosStub.get.calledWith('management/env')).toBeTruthy();
+      expect(axiosStub.get.calledWith('management/configprops')).toBeTruthy();
     });
   });
 

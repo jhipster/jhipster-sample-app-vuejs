@@ -30,6 +30,13 @@ management:
     git:
       mode: full
   health:
+    group:
+      liveness:
+        include: livenessState
+      readiness:
+        include: readinessState,datasource
+    probes:
+      enabled: true
     mail:
       enabled: false # When using the MailService, configure an SMTP server and set this to true
   metrics:
@@ -59,7 +66,7 @@ management:
 
 spring:
   application:
-    name: jhipster
+    name: jhipsterSampleApplicationVue
   profiles:
     # The commented value for `active` can be replaced with valid Spring profiles to load.
     # Otherwise, it will be filled in by maven when building the JAR file
@@ -97,13 +104,13 @@ spring:
     allow-bean-definition-overriding: true
   task:
     execution:
-      thread-name-prefix: jhipster-task-
+      thread-name-prefix: jhipster-sample-application-vue-task-
       pool:
         core-size: 2
         max-size: 50
         queue-capacity: 10000
     scheduling:
-      thread-name-prefix: jhipster-scheduling-
+      thread-name-prefix: jhipster-sample-application-vue-scheduling-
       pool:
         size: 2
   thymeleaf:
@@ -131,7 +138,7 @@ info:
 
 jhipster:
   clientApp:
-    name: 'jhipsterApp'
+    name: 'jhipsterSampleApplicationVueApp'
   # By default CORS is disabled. Uncomment to enable.
   # cors:
   #     allowed-origins: "*"
@@ -141,11 +148,11 @@ jhipster:
   #     allow-credentials: true
   #     max-age: 1800
   mail:
-    from: jhipster@localhost
-  swagger:
+    from: jhipsterSampleApplicationVue@localhost
+  api-docs:
     default-include-pattern: /api/.*
-    title: jhipster API
-    description: jhipster API documentation
+    title: jhipsterSampleApplicationVue API
+    description: jhipsterSampleApplicationVue API documentation
     version: 0.0.1
     terms-of-service-url:
     contact-name:

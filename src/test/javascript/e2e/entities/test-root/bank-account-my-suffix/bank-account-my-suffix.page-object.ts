@@ -27,6 +27,6 @@ export default class BankAccountComponentsPage extends AlertPage {
 
 export class BankAccountDeleteDialog {
   dialog: ElementFinder = element(by.id('removeEntity'));
-  title: ElementFinder = element(by.id('jhipsterApp.testRootBankAccount.delete.question'));
+  title: ElementFinder = element(by.id('jhipsterSampleApplicationVueApp.testRootBankAccount.delete.question'));
   confirmButton: ElementFinder = element(by.id('jhi-confirm-delete-bankAccount'));
 }

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class LabelService {
+
     private final Logger log = LoggerFactory.getLogger(LabelService.class);
 
     private final LabelRepository labelRepository;
@@ -33,6 +34,29 @@ public class LabelService {
     public Label save(Label label) {
         log.debug("Request to save Label : {}", label);
         return labelRepository.save(label);
+    }
+
+    /**
+     * Partially udpates a label.
+     *
+     * @param label the entity to update partially.
+     * @return the persisted entity.
+     */
+    public Optional<Label> partialUpdate(Label label) {
+        log.debug("Request to partially update Label : {}", label);
+
+        return labelRepository
+            .findById(label.getId())
+            .map(
+                existingLabel -> {
+                    if (label.getLabelName() != null) {
+                        existingLabel.setLabelName(label.getLabelName());
+                    }
+
+                    return existingLabel;
+                }
+            )
+            .map(labelRepository::save);
     }
 
     /**

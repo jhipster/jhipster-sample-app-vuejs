@@ -58,7 +58,9 @@ describe('Operation e2e test', () => {
 
       await waitUntilAllDisplayed([updatePage.title, updatePage.footer, updatePage.saveButton]);
 
-      expect(await updatePage.title.getAttribute('id')).to.match(/jhipsterApp.testRootOperation.home.createOrEditLabel/);
+      expect(await updatePage.title.getAttribute('id')).to.match(
+        /jhipsterSampleApplicationVueApp.testRootOperation.home.createOrEditLabel/
+      );
     });
 
     it('should create and save Operations', async () => {
@@ -71,17 +73,14 @@ describe('Operation e2e test', () => {
       await updatePage.amountInput.sendKeys('5');
       expect(await updatePage.amountInput.getAttribute('value')).to.eq('5');
 
-      // await  selectLastOption(updatePage.bankAccountSelect);
-      // await  selectLastOption(updatePage.labelSelect);
+      // await selectLastOption(updatePage.bankAccountSelect);
+      // await selectLastOption(updatePage.labelSelect);
 
       expect(await updatePage.saveButton.isEnabled()).to.be.true;
       await updatePage.saveButton.click();
 
       await waitUntilHidden(updatePage.saveButton);
       expect(await isVisible(updatePage.saveButton)).to.be.false;
-
-      await waitUntilDisplayed(listPage.successAlert);
-      expect(await listPage.successAlert.isDisplayed()).to.be.true;
 
       await waitUntilCount(listPage.records, beforeRecordsCount + 1);
       expect(await listPage.records.count()).to.eq(beforeRecordsCount + 1);
@@ -95,13 +94,12 @@ describe('Operation e2e test', () => {
         deleteDialog = new OperationDeleteDialog();
         await waitUntilDisplayed(deleteDialog.dialog);
 
-        expect(await deleteDialog.title.getAttribute('id')).to.match(/jhipsterApp.testRootOperation.delete.question/);
+        expect(await deleteDialog.title.getAttribute('id')).to.match(/jhipsterSampleApplicationVueApp.testRootOperation.delete.question/);
 
         await click(deleteDialog.confirmButton);
         await waitUntilHidden(deleteDialog.dialog);
 
         expect(await isVisible(deleteDialog.dialog)).to.be.false;
-        expect(await listPage.dangerAlert.isDisplayed()).to.be.true;
 
         await waitUntilCount(listPage.records, beforeRecordsCount);
         expect(await listPage.records.count()).to.eq(beforeRecordsCount);
@@ -147,7 +145,6 @@ describe('Operation e2e test', () => {
         await waitUntilHidden(updatePage.saveButton);
 
         expect(await isVisible(updatePage.saveButton)).to.be.false;
-        expect(await listPage.infoAlert.isDisplayed()).to.be.true;
         await waitUntilCount(listPage.records, beforeRecordsCount + 1);
       });
     });

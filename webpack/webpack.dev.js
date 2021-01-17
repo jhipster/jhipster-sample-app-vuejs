@@ -2,7 +2,7 @@
 const utils = require('./vue.utils');
 const webpack = require('webpack');
 const config = require('../config');
-const merge = require('webpack-merge');
+const webpackMerge = require('webpack-merge').merge;
 const path = require('path');
 const baseWebpackConfig = require('./webpack.common');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
@@ -12,7 +12,7 @@ const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const HOST = process.env.HOST;
 const PORT = process.env.PORT && Number(process.env.PORT);
 
-module.exports = merge(baseWebpackConfig, {
+module.exports = webpackMerge(baseWebpackConfig, {
   mode: 'development',
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true }),
@@ -33,7 +33,7 @@ module.exports = merge(baseWebpackConfig, {
     port: 9060,
     proxy: [
       {
-        context: ['/api', '/services', '/management', '/swagger-resources', '/v2/api-docs', '/h2-console', '/auth'],
+        context: ['/api', '/services', '/management', '/swagger-resources', '/v2/api-docs', '/v3/api-docs', '/h2-console', '/auth'],
         target: 'http://127.0.0.1:8080',
         secure: false,
         headers: { host: 'localhost:9000' },

@@ -1,13 +1,16 @@
 /* tslint:disable max-line-length */
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
+import VueRouter from 'vue-router';
 
 import * as config from '@/shared/config/config';
 import BankAccountMySuffixDetailComponent from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix-details.vue';
 import BankAccountMySuffixClass from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix-details.component';
 import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
+import router from '@/router';
 
 const localVue = createLocalVue();
+localVue.use(VueRouter);
 
 config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
@@ -28,6 +31,7 @@ describe('Component Tests', () => {
         store,
         i18n,
         localVue,
+        router,
         provide: { bankAccountService: () => bankAccountServiceStub },
       });
       comp = wrapper.vm;
@@ -45,6 +49,30 @@ describe('Component Tests', () => {
 
         // THEN
         expect(comp.bankAccount).toBe(foundBankAccountMySuffix);
+      });
+    });
+
+    describe('Before route enter', () => {
+      it('Should retrieve data', async () => {
+        // GIVEN
+        const foundBankAccountMySuffix = { id: 123 };
+        bankAccountServiceStub.find.resolves(foundBankAccountMySuffix);
+
+        // WHEN
+        comp.beforeRouteEnter({ params: { bankAccountId: 123 } }, null, cb => cb(comp));
+        await comp.$nextTick();
+
+        // THEN
+        expect(comp.bankAccount).toBe(foundBankAccountMySuffix);
+      });
+    });
+
+    describe('Previous state', () => {
+      it('Should go previous state', async () => {
+        comp.previousState();
+        await comp.$nextTick();
+
+        expect(comp.$router.currentRoute.fullPath).toContain('/');
       });
     });
   });

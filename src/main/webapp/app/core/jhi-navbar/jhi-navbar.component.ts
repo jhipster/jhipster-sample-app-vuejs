@@ -39,7 +39,7 @@ export default class JhiNavbar extends Vue {
     localStorage.removeItem('jhi-authenticationToken');
     sessionStorage.removeItem('jhi-authenticationToken');
     this.$store.commit('logout');
-    this.$router.push('/');
+    this.$router.push('/', () => {});
   }
 
   public openLogin(): void {
@@ -59,8 +59,8 @@ export default class JhiNavbar extends Vue {
     return this.hasAnyAuthorityValue;
   }
 
-  public get swaggerEnabled(): boolean {
-    return this.$store.getters.activeProfiles.indexOf('swagger') > -1;
+  public get openAPIEnabled(): boolean {
+    return this.$store.getters.activeProfiles.indexOf('api-docs') > -1;
   }
 
   public get inProduction(): boolean {

@@ -75,5 +75,6 @@
   "jpaMetamodelFiltering": true,
   "service": "serviceImpl",
   "angularJSSuffix": "mySuffix",
-  "clientRootFolder": "test-root"
+  "clientRootFolder": "test-root",
+  "name": "BankAccount"
 }

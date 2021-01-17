@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
- * Spring Data  repository for the Operation entity.
+ * Spring Data SQL repository for the Operation entity.
  */
 @Repository
 public interface OperationRepository extends JpaRepository<Operation, Long> {

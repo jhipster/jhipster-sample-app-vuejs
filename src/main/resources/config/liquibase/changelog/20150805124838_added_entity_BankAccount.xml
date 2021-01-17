@@ -3,17 +3,15 @@
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-
-        <property name="autoIncrement" value="true"/>
 
     <!--
         Added the entity BankAccount.
     -->
     <changeSet id="20150805124838-1" author="jhipster">
         <createTable tableName="bank_account">
-            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+            <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(255)">
@@ -37,7 +35,7 @@
             <column name="opening_day" type="date">
                 <constraints nullable="true" />
             </column>
-            <column name="last_operation_date" type="datetime">
+            <column name="last_operation_date" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
             <column name="active" type="boolean">
@@ -60,12 +58,9 @@
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
-        <dropDefaultValue tableName="bank_account" columnName="last_operation_date" columnDataType="datetime"/>
+        <dropDefaultValue tableName="bank_account" columnName="last_operation_date" columnDataType="${datetimeType}"/>
     </changeSet>
 
-    <changeSet id="20150805124838-1-relations" author="jhipster">
-
-    </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 
     <!--
@@ -89,7 +84,7 @@
             <column name="mean_operation_duration" type="numeric"/>
             <column name="balance" type="numeric"/>
             <column name="opening_day" type="date"/>
-            <column name="last_operation_date" type="datetime"/>
+            <column name="last_operation_date" type="${datetimeType}"/>
             <column name="active" type="boolean"/>
             <column name="account_type" type="string"/>
             <column name="attachment" type="blob"/>
@@ -98,5 +93,4 @@
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>
-
 </databaseChangeLog>

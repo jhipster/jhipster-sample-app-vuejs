@@ -1,11 +1,10 @@
 import { Component, Vue, Inject } from 'vue-property-decorator';
 
-import { numeric, required, minLength, maxLength, minValue, maxValue } from 'vuelidate/lib/validators';
+import { required, minLength } from 'vuelidate/lib/validators';
 
-import OperationService from '../operation/operation.service';
+import OperationService from '@/entities/test-root/operation/operation.service';
 import { IOperation } from '@/shared/model/test-root/operation.model';
 
-import AlertService from '@/shared/alert/alert.service';
 import { ILabel, Label } from '@/shared/model/test-root/label.model';
 import LabelService from './label.service';
 
@@ -22,7 +21,6 @@ const validations: any = {
   validations,
 })
 export default class LabelUpdate extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
   @Inject('labelService') private labelService: () => LabelService;
   public label: ILabel = new Label();
 
@@ -59,8 +57,14 @@ export default class LabelUpdate extends Vue {
         .then(param => {
           this.isSaving = false;
           this.$router.go(-1);
-          const message = this.$t('jhipsterApp.testRootLabel.updated', { param: param.id });
-          this.alertService().showAlert(message, 'info');
+          const message = this.$t('jhipsterSampleApplicationVueApp.testRootLabel.updated', { param: param.id });
+          return this.$root.$bvToast.toast(message.toString(), {
+            toaster: 'b-toaster-top-center',
+            title: 'Info',
+            variant: 'info',
+            solid: true,
+            autoHideDelay: 5000,
+          });
         });
     } else {
       this.labelService()
@@ -68,8 +72,14 @@ export default class LabelUpdate extends Vue {
         .then(param => {
           this.isSaving = false;
           this.$router.go(-1);
-          const message = this.$t('jhipsterApp.testRootLabel.created', { param: param.id });
-          this.alertService().showAlert(message, 'success');
+          const message = this.$t('jhipsterSampleApplicationVueApp.testRootLabel.created', { param: param.id });
+          this.$root.$bvToast.toast(message.toString(), {
+            toaster: 'b-toaster-top-center',
+            title: 'Success',
+            variant: 'success',
+            solid: true,
+            autoHideDelay: 5000,
+          });
         });
     }
   }

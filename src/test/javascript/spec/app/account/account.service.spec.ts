@@ -1,16 +1,17 @@
 import { createLocalVue } from '@vue/test-utils';
 import router from '@/router';
 import axios from 'axios';
+import sinon from 'sinon';
+
 import AccountService from '@/account/account.service';
 import TranslationService from '@/locale/translation.service';
 
 import * as config from '@/shared/config/config';
 
-const mockedAxios: any = axios;
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  post: jest.fn(),
-}));
+const axiosStub = {
+  get: sinon.stub(axios, 'get'),
+  post: sinon.stub(axios, 'post'),
+};
 
 const localVue = createLocalVue();
 let i18n;
@@ -21,20 +22,20 @@ describe('Account Service test suite', () => {
   let accountService: AccountService;
 
   beforeEach(() => {
-    mockedAxios.get.mockReset();
+    axiosStub.get.reset();
     store = config.initVueXStore(localVue);
     i18n = config.initI18N(localVue);
   });
 
   it('should init service and do not retrieve account', async () => {
-    mockedAxios.get.mockReturnValue(Promise.resolve({ data: { 'display-ribbon-on-profiles': 'dev', activeProfiles: ['dev', 'test'] } }));
+    axiosStub.get.resolves({ data: { 'display-ribbon-on-profiles': 'dev', activeProfiles: ['dev', 'test'] } });
 
     accountService = await new AccountService(store, new TranslationService(store, i18n), router);
 
     expect(store.getters.logon).toBe(false);
     expect(accountService.authenticated).toBe(false);
     expect(store.getters.account).toBe(null);
-    expect(mockedAxios.get).toHaveBeenCalledWith('management/info');
+    expect(axiosStub.get.calledWith('management/info')).toBeTruthy();
     expect(store.getters.activeProfiles[0]).toBe('dev');
     expect(store.getters.activeProfiles[1]).toBe('test');
     expect(store.getters.ribbonOnProfiles).toBe('dev');
@@ -43,32 +44,33 @@ describe('Account Service test suite', () => {
   it('should init service and retrieve profiles if already logged in before but no account found', async () => {
     localStorage.setItem('jhi-authenticationToken', 'token');
 
-    mockedAxios.get.mockReturnValue(Promise.resolve({}));
+    axiosStub.get.resolves({});
     accountService = await new AccountService(store, new TranslationService(store, i18n), router);
 
     expect((<any>router).history.current.fullPath).toBe('/');
     expect(store.getters.logon).toBe(false);
     expect(accountService.authenticated).toBe(false);
     expect(store.getters.account).toBe(null);
-    expect(mockedAxios.get).toHaveBeenCalledWith('management/info');
+    expect(axiosStub.get.calledWith('management/info')).toBeTruthy();
   });
 
   it('should init service and retrieve profiles if already logged in before but exception occurred and should be logged out', async () => {
     localStorage.setItem('jhi-authenticationToken', 'token');
 
-    mockedAxios.get = jest.fn(apiName => (apiName === 'api/account' ? Promise.reject() : Promise.resolve({})));
+    axiosStub.get.resolves({});
+    axiosStub.get.withArgs('api/account').rejects();
     accountService = await new AccountService(store, new TranslationService(store, i18n), router);
 
     expect((<any>router).history.current.fullPath).toBe('/');
     expect(accountService.authenticated).toBe(false);
     expect(store.getters.account).toBe(null);
-    expect(mockedAxios.get).toHaveBeenCalledWith('management/info');
+    expect(axiosStub.get.calledWith('management/info')).toBeTruthy();
   });
 
   it('should init service and check for authority after retrieving account but getAccount failed', async () => {
     localStorage.setItem('jhi-authenticationToken', 'token');
 
-    mockedAxios.get = jest.fn(apiName => Promise.reject());
+    axiosStub.get.rejects();
     accountService = await new AccountService(store, new TranslationService(store, i18n), router);
 
     return accountService.hasAnyAuthorityAndCheckAuth('USER').then((value: boolean) => {
@@ -79,7 +81,7 @@ describe('Account Service test suite', () => {
   it('should init service and check for authority after retrieving account', async () => {
     localStorage.setItem('jhi-authenticationToken', 'token');
 
-    mockedAxios.get.mockReturnValue(Promise.resolve({ data: { authorities: ['USER'] } }));
+    axiosStub.get.resolves({ data: { authorities: ['USER'] } });
     accountService = await new AccountService(store, new TranslationService(store, i18n), router);
 
     return accountService.hasAnyAuthorityAndCheckAuth('USER').then((value: boolean) => {
@@ -88,7 +90,8 @@ describe('Account Service test suite', () => {
   });
 
   it('should init service as not authentified and not return any authorities admin and not retrieve account', async () => {
-    mockedAxios.get = jest.fn(apiName => (apiName === 'api/account' ? Promise.reject() : Promise.resolve({})));
+    axiosStub.get.resolves({});
+    axiosStub.get.withArgs('api/account').rejects();
     accountService = await new AccountService(store, new TranslationService(store, i18n), router);
 
     return accountService.hasAnyAuthorityAndCheckAuth('ADMIN').then((value: boolean) => {
@@ -97,7 +100,8 @@ describe('Account Service test suite', () => {
   });
 
   it('should init service as not authentified and return authority user', async () => {
-    mockedAxios.get = jest.fn(apiName => (apiName === 'api/account' ? Promise.reject() : Promise.resolve({})));
+    axiosStub.get.resolves({});
+    axiosStub.get.withArgs('api/account').rejects();
     accountService = await new AccountService(store, new TranslationService(store, i18n), router);
 
     return accountService.hasAnyAuthorityAndCheckAuth('USER').then((value: boolean) => {

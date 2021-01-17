@@ -3,14 +3,13 @@ import { mixins } from 'vue-class-component';
 import { Component, Vue, Inject } from 'vue-property-decorator';
 import Vue2Filters from 'vue2-filters';
 import { ILabel } from '@/shared/model/test-root/label.model';
-import AlertMixin from '@/shared/alert/alert.mixin';
 
 import LabelService from './label.service';
 
 @Component({
   mixins: [Vue2Filters.mixin],
 })
-export default class Label extends mixins(AlertMixin) {
+export default class Label extends Vue {
   @Inject('labelService') private labelService: () => LabelService;
   private removeId: number = null;
   public itemsPerPage = 20;
@@ -57,6 +56,10 @@ export default class Label extends mixins(AlertMixin) {
       );
   }
 
+  public handleSyncList(): void {
+    this.clear();
+  }
+
   public prepareRemove(instance: ILabel): void {
     this.removeId = instance.id;
     if (<any>this.$refs.removeEntity) {
@@ -68,9 +71,14 @@ export default class Label extends mixins(AlertMixin) {
     this.labelService()
       .delete(this.removeId)
       .then(() => {
-        const message = this.$t('jhipsterApp.testRootLabel.deleted', { param: this.removeId });
-        this.alertService().showAlert(message, 'danger');
-        this.getAlertFromStore();
+        const message = this.$t('jhipsterSampleApplicationVueApp.testRootLabel.deleted', { param: this.removeId });
+        this.$bvToast.toast(message.toString(), {
+          toaster: 'b-toaster-top-center',
+          title: 'Info',
+          variant: 'danger',
+          solid: true,
+          autoHideDelay: 5000,
+        });
         this.removeId = null;
         this.retrieveAllLabels();
         this.closeDialog();
@@ -78,7 +86,7 @@ export default class Label extends mixins(AlertMixin) {
   }
 
   public sort(): Array<any> {
-    const result = [this.propOrder + ',' + (this.reverse ? 'asc' : 'desc')];
+    const result = [this.propOrder + ',' + (this.reverse ? 'desc' : 'asc')];
     if (this.propOrder !== 'id') {
       result.push('id');
     }

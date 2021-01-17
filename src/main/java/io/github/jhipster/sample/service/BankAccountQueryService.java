@@ -6,7 +6,6 @@ import io.github.jhipster.sample.repository.BankAccountRepository;
 import io.github.jhipster.sample.service.dto.BankAccountCriteria;
 import io.github.jhipster.sample.service.dto.BankAccountDTO;
 import io.github.jhipster.sample.service.mapper.BankAccountMapper;
-import io.github.jhipster.service.QueryService;
 import java.util.List;
 import javax.persistence.criteria.JoinType;
 import org.slf4j.Logger;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.jhipster.service.QueryService;
 
 /**
  * Service for executing complex queries for {@link BankAccount} entities in the database.
@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class BankAccountQueryService extends QueryService<BankAccount> {
+
     private final Logger log = LoggerFactory.getLogger(BankAccountQueryService.class);
 
     private final BankAccountRepository bankAccountRepository;

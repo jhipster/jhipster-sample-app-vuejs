@@ -3,7 +3,6 @@ import { mixins } from 'vue-class-component';
 import { Component, Vue, Inject } from 'vue-property-decorator';
 import Vue2Filters from 'vue2-filters';
 import { IOperation } from '@/shared/model/test-root/operation.model';
-import AlertMixin from '@/shared/alert/alert.mixin';
 
 import JhiDataUtils from '@/shared/data/data-utils.service';
 
@@ -12,7 +11,7 @@ import OperationService from './operation.service';
 @Component({
   mixins: [Vue2Filters.mixin],
 })
-export default class Operation extends mixins(JhiDataUtils, AlertMixin) {
+export default class Operation extends mixins(JhiDataUtils) {
   @Inject('operationService') private operationService: () => OperationService;
   private removeId: number = null;
   public itemsPerPage = 20;
@@ -20,7 +19,7 @@ export default class Operation extends mixins(JhiDataUtils, AlertMixin) {
   public page = 1;
   public previousPage = 1;
   public propOrder = 'id';
-  public reverse = true;
+  public reverse = false;
   public totalItems = 0;
   public infiniteId = +new Date();
   public links = {};
@@ -84,6 +83,10 @@ export default class Operation extends mixins(JhiDataUtils, AlertMixin) {
       );
   }
 
+  public handleSyncList(): void {
+    this.clear();
+  }
+
   public prepareRemove(instance: IOperation): void {
     this.removeId = instance.id;
     if (<any>this.$refs.removeEntity) {
@@ -95,9 +98,14 @@ export default class Operation extends mixins(JhiDataUtils, AlertMixin) {
     this.operationService()
       .delete(this.removeId)
       .then(() => {
-        const message = this.$t('jhipsterApp.testRootOperation.deleted', { param: this.removeId });
-        this.alertService().showAlert(message, 'danger');
-        this.getAlertFromStore();
+        const message = this.$t('jhipsterSampleApplicationVueApp.testRootOperation.deleted', { param: this.removeId });
+        this.$bvToast.toast(message.toString(), {
+          toaster: 'b-toaster-top-center',
+          title: 'Info',
+          variant: 'danger',
+          solid: true,
+          autoHideDelay: 5000,
+        });
         this.removeId = null;
         this.reset();
         this.closeDialog();
@@ -112,7 +120,7 @@ export default class Operation extends mixins(JhiDataUtils, AlertMixin) {
   }
 
   public sort(): Array<any> {
-    const result = [this.propOrder + ',' + (this.reverse ? 'asc' : 'desc')];
+    const result = [this.propOrder + ',' + (this.reverse ? 'desc' : 'asc')];
     if (this.propOrder !== 'id') {
       result.push('id');
     }

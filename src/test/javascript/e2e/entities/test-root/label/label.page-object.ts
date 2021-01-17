@@ -27,6 +27,6 @@ export default class LabelComponentsPage extends AlertPage {
 
 export class LabelDeleteDialog {
   dialog: ElementFinder = element(by.id('removeEntity'));
-  title: ElementFinder = element(by.id('jhipsterApp.testRootLabel.delete.question'));
+  title: ElementFinder = element(by.id('jhipsterSampleApplicationVueApp.testRootLabel.delete.question'));
   confirmButton: ElementFinder = element(by.id('jhi-confirm-delete-label'));
 }

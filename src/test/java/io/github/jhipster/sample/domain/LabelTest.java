@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.github.jhipster.sample.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 
-public class LabelTest {
+class LabelTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Label.class);
         Label label1 = new Label();
         label1.setId(1L);

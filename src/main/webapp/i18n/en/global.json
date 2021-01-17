@@ -1,6 +1,6 @@
 {
   "global": {
-    "title": "Jhipster",
+    "title": "JhipsterSampleApplicationVue",
     "browsehappy": "You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/?locale=en\">upgrade your browser</a> to improve your experience.",
     "menu": {
       "home": "Home",
@@ -29,7 +29,6 @@
         "health": "Health",
         "configuration": "Configuration",
         "logs": "Logs",
-        "audits": "Audits",
         "apidocs": "API",
         "database": "Database",
         "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)"

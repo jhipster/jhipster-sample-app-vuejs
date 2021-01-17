@@ -1,4 +1,5 @@
 import axios from 'axios';
+import sinon from 'sinon';
 import * as config from '@/shared/config/config';
 import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
 import ResetPasswordFinish from '@/account/reset-password/finish/reset-password-finish.vue';
@@ -6,22 +7,21 @@ import ResetPasswordFinishClass from '@/account/reset-password/finish/reset-pass
 import LoginService from '@/account/login.service';
 
 const localVue = createLocalVue();
-const mockedAxios: any = axios;
 
 config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  post: jest.fn(),
-}));
+const axiosStub = {
+  get: sinon.stub(axios, 'get'),
+  post: sinon.stub(axios, 'post'),
+};
 
 describe('Reset Component Finish', () => {
   let wrapper: Wrapper<ResetPasswordFinishClass>;
   let resetPasswordFinish: ResetPasswordFinishClass;
 
   beforeEach(() => {
-    mockedAxios.post.mockReset();
+    axiosStub.post.reset();
     wrapper = shallowMount<ResetPasswordFinishClass>(ResetPasswordFinish, {
       i18n,
       localVue,
@@ -34,7 +34,7 @@ describe('Reset Component Finish', () => {
 
   it('should reset finish be a success', async () => {
     // Given
-    mockedAxios.post.mockReturnValue(Promise.resolve());
+    axiosStub.post.resolves();
 
     // When
     await resetPasswordFinish.finishReset();
@@ -45,16 +45,14 @@ describe('Reset Component Finish', () => {
 
   it('should reset request fail as an error', async () => {
     // Given
-    mockedAxios.post.mockReturnValue(
-      Promise.reject({
-        response: {
-          status: null,
-          data: {
-            type: null,
-          },
+    axiosStub.post.rejects({
+      response: {
+        status: null,
+        data: {
+          type: null,
         },
-      })
-    );
+      },
+    });
 
     // When
     resetPasswordFinish.finishReset();

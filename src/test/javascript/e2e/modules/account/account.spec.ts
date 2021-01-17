@@ -14,6 +14,8 @@ const expect = chai.expect;
 describe('Account', () => {
   let navBarPage: NavBarPage = new NavBarPage();
   let signInPage: SignInPage;
+  const username = process.env.E2E_USERNAME || 'admin';
+  const password = process.env.E2E_PASSWORD || 'admin';
   let passwordPage: PasswordPage;
   let settingsPage: SettingsPage;
   let registerPage: RegisterPage;
@@ -39,7 +41,7 @@ describe('Account', () => {
       expect(await signInPage.getTitle()).to.eq(loginPageTitle);
       expect(await isVisible(signInPage.dangerAlert)).to.be.false;
 
-      await signInPage.login('admin', 'foo');
+      await signInPage.login(username, 'foo');
 
       await waitUntilDisplayed(signInPage.dangerAlert);
       expect(await signInPage.dangerAlert.isDisplayed()).to.be.true;
@@ -54,9 +56,9 @@ describe('Account', () => {
       expect(await isVisible(signInPage.dangerAlert)).to.be.false;
 
       await signInPage.username.clear();
-      await signInPage.username.sendKeys('admin');
+      await signInPage.username.sendKeys(username);
       await signInPage.password.clear();
-      await signInPage.password.sendKeys('admin');
+      await signInPage.password.sendKeys(password);
       await signInPage.loginButton.click();
 
       await waitUntilHidden(signInPage.loginForm);
@@ -337,9 +339,6 @@ describe('Account', () => {
         await detailsPage.email.sendKeys('ipster');
         await detailsPage.saveBtn.click();
 
-        await waitUntilDisplayed(detailsPage.infoAlert);
-        expect(await detailsPage.infoAlert.isDisplayed()).to.be.true;
-
         expect(await userManagementPage.getEmailColumnText('user_test')).to.eq('admin@localhost.jhipster');
       });
 
@@ -353,9 +352,6 @@ describe('Account', () => {
         await waitUntilHidden(deletePage.modal);
 
         expect(await isVisible(deletePage.modal)).to.be.false;
-
-        await waitUntilDisplayed(userManagementPage.dangerAlert);
-        expect(await userManagementPage.dangerAlert.isDisplayed()).to.be.true;
       });
     });
   });

@@ -1,5 +1,6 @@
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import axios from 'axios';
+import sinon from 'sinon';
 
 import * as config from '@/shared/config/config';
 import Activate from '@/account/activate/activate.vue';
@@ -8,24 +9,22 @@ import ActivateService from '@/account/activate/activate.service';
 import LoginService from '@/account/login.service';
 
 const localVue = createLocalVue();
-const mockedAxios: any = axios;
 
 config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
 const store = config.initVueXStore(localVue);
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  post: jest.fn(),
-}));
+const axiosStub = {
+  get: sinon.stub(axios, 'get'),
+  post: sinon.stub(axios, 'post'),
+};
 
 describe('Activate Component', () => {
   let wrapper: Wrapper<ActivateClass>;
   let activate: ActivateClass;
 
   beforeEach(() => {
-    mockedAxios.get.mockReset();
-    mockedAxios.get.mockReturnValue(Promise.resolve({}));
+    axiosStub.get.resolves({});
 
     wrapper = shallowMount<ActivateClass>(Activate, {
       i18n,
@@ -39,7 +38,7 @@ describe('Activate Component', () => {
   });
 
   it('should display error when activation fails using route', async () => {
-    mockedAxios.get.mockReturnValue(Promise.reject({}));
+    axiosStub.get.rejects({});
     activate.beforeRouteEnter({ query: { key: 'invalid-key' } }, null, cb => cb(activate));
     await activate.$nextTick();
 
@@ -48,7 +47,7 @@ describe('Activate Component', () => {
   });
 
   it('should display error when activation fails', async () => {
-    mockedAxios.get.mockReturnValue(Promise.reject({}));
+    axiosStub.get.rejects({});
     activate.init('invalid-key');
     await activate.$nextTick();
 
@@ -57,7 +56,7 @@ describe('Activate Component', () => {
   });
 
   it('should display success when activation succeeds', async () => {
-    mockedAxios.get.mockReturnValue(Promise.resolve({}));
+    axiosStub.get.resolves({});
 
     activate.init('valid-key');
     await activate.$nextTick();

@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Unit tests for the {@link ClientForwardController} REST controller.
  */
-public class ClientForwardControllerTest {
+class ClientForwardControllerTest {
+
     private MockMvc restMockMvc;
 
     @BeforeEach
@@ -27,7 +28,7 @@ public class ClientForwardControllerTest {
     }
 
     @Test
-    public void getBackendEndpoint() throws Exception {
+    void getBackendEndpoint() throws Exception {
         restMockMvc
             .perform(get("/test"))
             .andExpect(status().isOk())
@@ -36,13 +37,13 @@ public class ClientForwardControllerTest {
     }
 
     @Test
-    public void getClientEndpoint() throws Exception {
+    void getClientEndpoint() throws Exception {
         ResultActions perform = restMockMvc.perform(get("/non-existant-mapping"));
         perform.andExpect(status().isOk()).andExpect(forwardedUrl("/"));
     }
 
     @Test
-    public void getNestedClientEndpoint() throws Exception {
+    void getNestedClientEndpoint() throws Exception {
         restMockMvc.perform(get("/admin/user-management")).andExpect(status().isOk()).andExpect(forwardedUrl("/"));
     }
 

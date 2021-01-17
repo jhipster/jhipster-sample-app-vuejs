@@ -1,8 +1,8 @@
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import axios from 'axios';
+import sinon from 'sinon';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-import AlertService from '@/shared/alert/alert.service';
 import * as config from '@/shared/config/config';
 import UserManagementEdit from '@/admin/user-management/user-management-edit.vue';
 import UserManagementEditClass from '@/admin/user-management/user-management-edit.component';
@@ -11,19 +11,17 @@ import VueRouter from 'vue-router';
 
 const localVue = createLocalVue();
 localVue.use(VueRouter);
-const mockedAxios: any = axios;
 
 config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
 const store = config.initVueXStore(localVue);
 localVue.component('font-awesome-icon', FontAwesomeIcon);
-localVue.component('b-alert', {});
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  post: jest.fn(),
-  put: jest.fn(),
-}));
+const axiosStub = {
+  get: sinon.stub(axios, 'get'),
+  post: sinon.stub(axios, 'post'),
+  put: sinon.stub(axios, 'put'),
+};
 
 describe('UserManagementEdit Component', () => {
   let wrapper: Wrapper<UserManagementEditClass>;
@@ -37,7 +35,6 @@ describe('UserManagementEdit Component', () => {
       i18n,
       localVue,
       provide: {
-        alertService: () => new AlertService(store),
         userService: () => new UserManagementService(),
       },
     });
@@ -47,35 +44,40 @@ describe('UserManagementEdit Component', () => {
   describe('init', () => {
     it('Should load user', async () => {
       // GIVEN
-      mockedAxios.get.mockReturnValue(Promise.resolve({}));
+      axiosStub.get.resolves({});
 
       // WHEN
       userManagementEdit.init(123);
       await userManagementEdit.$nextTick();
 
       // THEN
-      expect(mockedAxios.get).toHaveBeenCalledWith('api/users/' + 123);
+      expect(axiosStub.get.calledWith('api/admin/users/' + 123)).toBeTruthy();
     });
   });
 
   describe('initAuthorities', () => {
     it('Should load authorities', async () => {
       // GIVEN
-      mockedAxios.get.mockReturnValue(Promise.resolve({}));
+      axiosStub.get.resolves({});
 
       // WHEN
       userManagementEdit.initAuthorities();
       await userManagementEdit.$nextTick();
 
       // THEN
-      expect(mockedAxios.get).toHaveBeenCalledWith(`api/users/authorities`);
+      expect(axiosStub.get.calledWith(`api/authorities`)).toBeTruthy();
     });
   });
 
   describe('save', () => {
     it('Should call update service on save for existing user', async () => {
       // GIVEN
-      mockedAxios.put.mockReturnValue(Promise.resolve({ headers: {} }));
+      axiosStub.put.resolves({
+        headers: {
+          'x-jhipsterapp-alert': '',
+          'x-jhipsterapp-params': '',
+        },
+      });
       userManagementEdit.userAccount = { id: 123, authorities: [] };
 
       // WHEN
@@ -83,13 +85,18 @@ describe('UserManagementEdit Component', () => {
       await userManagementEdit.$nextTick();
 
       // THEN
-      expect(mockedAxios.put).toHaveBeenCalledWith(`api/users`, { id: 123, authorities: [] });
+      expect(axiosStub.put.calledWith('api/admin/users', { id: 123, authorities: [] })).toBeTruthy();
       expect(userManagementEdit.isSaving).toEqual(false);
     });
 
     it('Should call create service on save for new user', async () => {
       // GIVEN
-      mockedAxios.post.mockReturnValue(Promise.resolve({ headers: {} }));
+      axiosStub.post.resolves({
+        headers: {
+          'x-jhipsterapp-alert': '',
+          'x-jhipsterapp-params': '',
+        },
+      });
       userManagementEdit.userAccount = { authorities: [] };
 
       // WHEN
@@ -97,7 +104,7 @@ describe('UserManagementEdit Component', () => {
       await userManagementEdit.$nextTick();
 
       // THEN
-      expect(mockedAxios.post).toHaveBeenCalledWith(`api/users`, { authorities: [] });
+      expect(axiosStub.post.calledWith('api/admin/users', { authorities: [] })).toBeTruthy();
       expect(userManagementEdit.isSaving).toEqual(false);
     });
   });

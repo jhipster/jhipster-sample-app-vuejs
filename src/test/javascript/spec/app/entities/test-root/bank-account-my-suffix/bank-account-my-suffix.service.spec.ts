@@ -1,13 +1,13 @@
 /* tslint:disable max-line-length */
 import axios from 'axios';
-import { format } from 'date-fns';
+import sinon from 'sinon';
+import dayjs from 'dayjs';
 
-import * as config from '@/shared/config/config';
 import { DATE_FORMAT, DATE_TIME_FORMAT } from '@/shared/date/filters';
 import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
-import { BankAccountMySuffix, BankAccountType } from '@/shared/model/test-root/bank-account-my-suffix.model';
+import { BankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
+import { BankAccountType } from '@/shared/model/enumerations/bank-account-type.model';
 
-const mockedAxios: any = axios;
 const error = {
   response: {
     status: null,
@@ -17,22 +17,22 @@ const error = {
   },
 };
 
-jest.mock('axios', () => ({
-  get: jest.fn(),
-  post: jest.fn(),
-  put: jest.fn(),
-  delete: jest.fn(),
-}));
+const axiosStub = {
+  get: sinon.stub(axios, 'get'),
+  post: sinon.stub(axios, 'post'),
+  put: sinon.stub(axios, 'put'),
+  delete: sinon.stub(axios, 'delete'),
+};
 
 describe('Service Tests', () => {
   describe('BankAccountMySuffix Service', () => {
     let service: BankAccountMySuffixService;
     let elemDefault;
     let currentDate: Date;
+
     beforeEach(() => {
       service = new BankAccountMySuffixService();
       currentDate = new Date();
-
       elemDefault = new BankAccountMySuffix(
         0,
         'AAAAAAA',
@@ -55,12 +55,12 @@ describe('Service Tests', () => {
       it('should find an element', async () => {
         const returnedFromService = Object.assign(
           {
-            openingDay: format(currentDate, DATE_FORMAT),
-            lastOperationDate: format(currentDate, DATE_TIME_FORMAT),
+            openingDay: dayjs(currentDate).format(DATE_FORMAT),
+            lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
-        mockedAxios.get.mockReturnValue(Promise.resolve({ data: returnedFromService }));
+        axiosStub.get.resolves({ data: returnedFromService });
 
         return service.find(123).then(res => {
           expect(res).toMatchObject(elemDefault);
@@ -68,7 +68,7 @@ describe('Service Tests', () => {
       });
 
       it('should not find an element', async () => {
-        mockedAxios.get.mockReturnValue(Promise.reject(error));
+        axiosStub.get.rejects(error);
         return service
           .find(123)
           .then()
@@ -81,8 +81,8 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 0,
-            openingDay: format(currentDate, DATE_FORMAT),
-            lastOperationDate: format(currentDate, DATE_TIME_FORMAT),
+            openingDay: dayjs(currentDate).format(DATE_FORMAT),
+            lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
@@ -94,14 +94,14 @@ describe('Service Tests', () => {
           returnedFromService
         );
 
-        mockedAxios.post.mockReturnValue(Promise.resolve({ data: returnedFromService }));
+        axiosStub.post.resolves({ data: returnedFromService });
         return service.create({}).then(res => {
           expect(res).toMatchObject(expected);
         });
       });
 
       it('should not create a BankAccountMySuffix', async () => {
-        mockedAxios.post.mockReturnValue(Promise.reject(error));
+        axiosStub.post.rejects(error);
 
         return service
           .create({})
@@ -120,8 +120,8 @@ describe('Service Tests', () => {
             lastOperationDuration: 1,
             meanOperationDuration: 1,
             balance: 1,
-            openingDay: format(currentDate, DATE_FORMAT),
-            lastOperationDate: format(currentDate, DATE_TIME_FORMAT),
+            openingDay: dayjs(currentDate).format(DATE_FORMAT),
+            lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
             active: true,
             accountType: 'BBBBBB',
             attachment: 'BBBBBB',
@@ -137,7 +137,7 @@ describe('Service Tests', () => {
           },
           returnedFromService
         );
-        mockedAxios.put.mockReturnValue(Promise.resolve({ data: returnedFromService }));
+        axiosStub.put.resolves({ data: returnedFromService });
 
         return service.update(expected).then(res => {
           expect(res).toMatchObject(expected);
@@ -145,7 +145,7 @@ describe('Service Tests', () => {
       });
 
       it('should not update a BankAccountMySuffix', async () => {
-        mockedAxios.put.mockReturnValue(Promise.reject(error));
+        axiosStub.put.rejects(error);
 
         return service
           .update({})
@@ -164,8 +164,8 @@ describe('Service Tests', () => {
             lastOperationDuration: 1,
             meanOperationDuration: 1,
             balance: 1,
-            openingDay: format(currentDate, DATE_FORMAT),
-            lastOperationDate: format(currentDate, DATE_TIME_FORMAT),
+            openingDay: dayjs(currentDate).format(DATE_FORMAT),
+            lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
             active: true,
             accountType: 'BBBBBB',
             attachment: 'BBBBBB',
@@ -180,14 +180,14 @@ describe('Service Tests', () => {
           },
           returnedFromService
         );
-        mockedAxios.get.mockReturnValue(Promise.resolve([returnedFromService]));
+        axiosStub.get.resolves([returnedFromService]);
         return service.retrieve().then(res => {
           expect(res).toContainEqual(expected);
         });
       });
 
       it('should not return a list of BankAccountMySuffix', async () => {
-        mockedAxios.get.mockReturnValue(Promise.reject(error));
+        axiosStub.get.rejects(error);
 
         return service
           .retrieve()
@@ -198,14 +198,14 @@ describe('Service Tests', () => {
       });
 
       it('should delete a BankAccountMySuffix', async () => {
-        mockedAxios.delete.mockReturnValue(Promise.resolve({ ok: true }));
+        axiosStub.delete.resolves({ ok: true });
         return service.delete(123).then(res => {
           expect(res.ok).toBeTruthy();
         });
       });
 
       it('should not delete a BankAccountMySuffix', async () => {
-        mockedAxios.delete.mockReturnValue(Promise.reject(error));
+        axiosStub.delete.rejects(error);
 
         return service
           .delete(123)

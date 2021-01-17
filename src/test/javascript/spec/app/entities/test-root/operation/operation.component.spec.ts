@@ -2,7 +2,6 @@
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
 
-import AlertService from '@/shared/alert/alert.service';
 import * as config from '@/shared/config/config';
 import OperationComponent from '@/entities/test-root/operation/operation.vue';
 import OperationClass from '@/entities/test-root/operation/operation.component';
@@ -14,7 +13,6 @@ config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
 const store = config.initVueXStore(localVue);
 localVue.component('font-awesome-icon', {});
-localVue.component('b-alert', {});
 localVue.component('b-badge', {});
 localVue.component('jhi-sort-indicator', {});
 localVue.directive('b-modal', {});
@@ -45,7 +43,6 @@ describe('Component Tests', () => {
         localVue,
         stubs: { jhiItemCount: true, bPagination: true, bModal: bModalStub as any },
         provide: {
-          alertService: () => new AlertService(store),
           operationService: () => operationServiceStub,
         },
       });
@@ -125,7 +122,7 @@ describe('Component Tests', () => {
 
       // THEN
       expect(operationServiceStub.delete.called).toBeTruthy();
-      expect(operationServiceStub.retrieve.callCount).toEqual(2);
+      expect(operationServiceStub.retrieve.callCount).toEqual(1);
     });
   });
 });

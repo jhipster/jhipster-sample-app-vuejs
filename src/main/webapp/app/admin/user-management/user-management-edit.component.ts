@@ -2,7 +2,6 @@ import { email, maxLength, minLength, required } from 'vuelidate/lib/validators'
 import { Component, Inject, Vue } from 'vue-property-decorator';
 import UserManagementService from './user-management.service';
 import { IUser, User } from '@/shared/model/user.model';
-import AlertService from '@/shared/alert/alert.service';
 
 const loginValidator = (value: string) => {
   if (!value) {
@@ -37,7 +36,6 @@ const validations: any = {
   validations,
 })
 export default class JhiUserManagementEdit extends Vue {
-  @Inject('alertService') private alertService: () => AlertService;
   @Inject('userService') private userManagementService: () => UserManagementService;
   public userAccount: IUser;
   public isSaving = false;
@@ -86,14 +84,26 @@ export default class JhiUserManagementEdit extends Vue {
         .update(this.userAccount)
         .then(res => {
           this.returnToList();
-          this.alertService().showAlert(this.getMessageFromHeader(res), 'info');
+          this.$root.$bvToast.toast(this.getMessageFromHeader(res).toString(), {
+            toaster: 'b-toaster-top-center',
+            title: 'Info',
+            variant: 'info',
+            solid: true,
+            autoHideDelay: 5000,
+          });
         });
     } else {
       this.userManagementService()
         .create(this.userAccount)
         .then(res => {
           this.returnToList();
-          this.alertService().showAlert(this.getMessageFromHeader(res), 'success');
+          this.$root.$bvToast.toast(this.getMessageFromHeader(res).toString(), {
+            toaster: 'b-toaster-top-center',
+            title: 'Success',
+            variant: 'success',
+            solid: true,
+            autoHideDelay: 5000,
+          });
         });
     }
   }
@@ -104,8 +114,8 @@ export default class JhiUserManagementEdit extends Vue {
   }
 
   private getMessageFromHeader(res: any): any {
-    return this.$t(res.headers['x-jhipsterapp-alert'], {
-      param: decodeURIComponent(res.headers['x-jhipsterapp-params'].replace(/\+/g, ' ')),
+    return this.$t(res.headers['x-jhipstersampleapplicationvueapp-alert'], {
+      param: decodeURIComponent(res.headers['x-jhipstersampleapplicationvueapp-params'].replace(/\+/g, ' ')),
     });
   }
 }

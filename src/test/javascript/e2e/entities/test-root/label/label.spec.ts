@@ -58,7 +58,7 @@ describe('Label e2e test', () => {
 
       await waitUntilAllDisplayed([updatePage.title, updatePage.footer, updatePage.saveButton]);
 
-      expect(await updatePage.title.getAttribute('id')).to.match(/jhipsterApp.testRootLabel.home.createOrEditLabel/);
+      expect(await updatePage.title.getAttribute('id')).to.match(/jhipsterSampleApplicationVueApp.testRootLabel.home.createOrEditLabel/);
     });
 
     it('should create and save Labels', async () => {
@@ -70,9 +70,6 @@ describe('Label e2e test', () => {
 
       await waitUntilHidden(updatePage.saveButton);
       expect(await isVisible(updatePage.saveButton)).to.be.false;
-
-      await waitUntilDisplayed(listPage.successAlert);
-      expect(await listPage.successAlert.isDisplayed()).to.be.true;
 
       await waitUntilCount(listPage.records, beforeRecordsCount + 1);
       expect(await listPage.records.count()).to.eq(beforeRecordsCount + 1);
@@ -86,13 +83,12 @@ describe('Label e2e test', () => {
         deleteDialog = new LabelDeleteDialog();
         await waitUntilDisplayed(deleteDialog.dialog);
 
-        expect(await deleteDialog.title.getAttribute('id')).to.match(/jhipsterApp.testRootLabel.delete.question/);
+        expect(await deleteDialog.title.getAttribute('id')).to.match(/jhipsterSampleApplicationVueApp.testRootLabel.delete.question/);
 
         await click(deleteDialog.confirmButton);
         await waitUntilHidden(deleteDialog.dialog);
 
         expect(await isVisible(deleteDialog.dialog)).to.be.false;
-        expect(await listPage.dangerAlert.isDisplayed()).to.be.true;
 
         await waitUntilCount(listPage.records, beforeRecordsCount);
         expect(await listPage.records.count()).to.eq(beforeRecordsCount);
@@ -130,7 +126,6 @@ describe('Label e2e test', () => {
         await waitUntilHidden(updatePage.saveButton);
 
         expect(await isVisible(updatePage.saveButton)).to.be.false;
-        expect(await listPage.infoAlert.isDisplayed()).to.be.true;
         await waitUntilCount(listPage.records, beforeRecordsCount + 1);
       });
     });

@@ -1,18 +1,18 @@
 package io.github.jhipster.sample.web.rest;
 
+import static io.github.jhipster.sample.web.rest.TestUtil.sameNumber;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import io.github.jhipster.sample.JhipsterApp;
+import io.github.jhipster.sample.IntegrationTest;
 import io.github.jhipster.sample.domain.BankAccount;
 import io.github.jhipster.sample.domain.Operation;
 import io.github.jhipster.sample.domain.User;
 import io.github.jhipster.sample.domain.enumeration.BankAccountType;
 import io.github.jhipster.sample.repository.BankAccountRepository;
 import io.github.jhipster.sample.service.BankAccountQueryService;
-import io.github.jhipster.sample.service.BankAccountService;
 import io.github.jhipster.sample.service.dto.BankAccountCriteria;
 import io.github.jhipster.sample.service.dto.BankAccountDTO;
 import io.github.jhipster.sample.service.mapper.BankAccountMapper;
@@ -27,7 +27,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,10 +36,11 @@ import org.springframework.util.Base64Utils;
 /**
  * Integration tests for the {@link BankAccountResource} REST controller.
  */
-@SpringBootTest(classes = JhipsterApp.class)
+@IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class BankAccountResourceIT {
+class BankAccountResourceIT {
+
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
@@ -90,9 +90,6 @@ public class BankAccountResourceIT {
 
     @Autowired
     private BankAccountMapper bankAccountMapper;
-
-    @Autowired
-    private BankAccountService bankAccountService;
 
     @Autowired
     private BankAccountQueryService bankAccountQueryService;
@@ -160,7 +157,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void createBankAccount() throws Exception {
+    void createBankAccount() throws Exception {
         int databaseSizeBeforeCreate = bankAccountRepository.findAll().size();
         // Create the BankAccount
         BankAccountDTO bankAccountDTO = bankAccountMapper.toDto(bankAccount);
@@ -181,10 +178,10 @@ public class BankAccountResourceIT {
         assertThat(testBankAccount.getAgencyNumber()).isEqualTo(DEFAULT_AGENCY_NUMBER);
         assertThat(testBankAccount.getLastOperationDuration()).isEqualTo(DEFAULT_LAST_OPERATION_DURATION);
         assertThat(testBankAccount.getMeanOperationDuration()).isEqualTo(DEFAULT_MEAN_OPERATION_DURATION);
-        assertThat(testBankAccount.getBalance()).isEqualTo(DEFAULT_BALANCE);
+        assertThat(testBankAccount.getBalance()).isEqualByComparingTo(DEFAULT_BALANCE);
         assertThat(testBankAccount.getOpeningDay()).isEqualTo(DEFAULT_OPENING_DAY);
         assertThat(testBankAccount.getLastOperationDate()).isEqualTo(DEFAULT_LAST_OPERATION_DATE);
-        assertThat(testBankAccount.isActive()).isEqualTo(DEFAULT_ACTIVE);
+        assertThat(testBankAccount.getActive()).isEqualTo(DEFAULT_ACTIVE);
         assertThat(testBankAccount.getAccountType()).isEqualTo(DEFAULT_ACCOUNT_TYPE);
         assertThat(testBankAccount.getAttachment()).isEqualTo(DEFAULT_ATTACHMENT);
         assertThat(testBankAccount.getAttachmentContentType()).isEqualTo(DEFAULT_ATTACHMENT_CONTENT_TYPE);
@@ -193,12 +190,12 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void createBankAccountWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = bankAccountRepository.findAll().size();
-
+    void createBankAccountWithExistingId() throws Exception {
         // Create the BankAccount with an existing ID
         bankAccount.setId(1L);
         BankAccountDTO bankAccountDTO = bankAccountMapper.toDto(bankAccount);
+
+        int databaseSizeBeforeCreate = bankAccountRepository.findAll().size();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restBankAccountMockMvc
@@ -216,7 +213,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void checkNameIsRequired() throws Exception {
+    void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = bankAccountRepository.findAll().size();
         // set the field null
         bankAccount.setName(null);
@@ -238,7 +235,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void checkBalanceIsRequired() throws Exception {
+    void checkBalanceIsRequired() throws Exception {
         int databaseSizeBeforeTest = bankAccountRepository.findAll().size();
         // set the field null
         bankAccount.setBalance(null);
@@ -260,7 +257,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccounts() throws Exception {
+    void getAllBankAccounts() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -275,7 +272,7 @@ public class BankAccountResourceIT {
             .andExpect(jsonPath("$.[*].agencyNumber").value(hasItem(DEFAULT_AGENCY_NUMBER.intValue())))
             .andExpect(jsonPath("$.[*].lastOperationDuration").value(hasItem(DEFAULT_LAST_OPERATION_DURATION.doubleValue())))
             .andExpect(jsonPath("$.[*].meanOperationDuration").value(hasItem(DEFAULT_MEAN_OPERATION_DURATION.doubleValue())))
-            .andExpect(jsonPath("$.[*].balance").value(hasItem(DEFAULT_BALANCE.intValue())))
+            .andExpect(jsonPath("$.[*].balance").value(hasItem(sameNumber(DEFAULT_BALANCE))))
             .andExpect(jsonPath("$.[*].openingDay").value(hasItem(DEFAULT_OPENING_DAY.toString())))
             .andExpect(jsonPath("$.[*].lastOperationDate").value(hasItem(DEFAULT_LAST_OPERATION_DATE.toString())))
             .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE.booleanValue())))
@@ -287,7 +284,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getBankAccount() throws Exception {
+    void getBankAccount() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -302,7 +299,7 @@ public class BankAccountResourceIT {
             .andExpect(jsonPath("$.agencyNumber").value(DEFAULT_AGENCY_NUMBER.intValue()))
             .andExpect(jsonPath("$.lastOperationDuration").value(DEFAULT_LAST_OPERATION_DURATION.doubleValue()))
             .andExpect(jsonPath("$.meanOperationDuration").value(DEFAULT_MEAN_OPERATION_DURATION.doubleValue()))
-            .andExpect(jsonPath("$.balance").value(DEFAULT_BALANCE.intValue()))
+            .andExpect(jsonPath("$.balance").value(sameNumber(DEFAULT_BALANCE)))
             .andExpect(jsonPath("$.openingDay").value(DEFAULT_OPENING_DAY.toString()))
             .andExpect(jsonPath("$.lastOperationDate").value(DEFAULT_LAST_OPERATION_DATE.toString()))
             .andExpect(jsonPath("$.active").value(DEFAULT_ACTIVE.booleanValue()))
@@ -314,7 +311,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getBankAccountsByIdFiltering() throws Exception {
+    void getBankAccountsByIdFiltering() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -332,7 +329,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByNameIsEqualToSomething() throws Exception {
+    void getAllBankAccountsByNameIsEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -345,7 +342,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByNameIsNotEqualToSomething() throws Exception {
+    void getAllBankAccountsByNameIsNotEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -358,7 +355,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByNameIsInShouldWork() throws Exception {
+    void getAllBankAccountsByNameIsInShouldWork() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -371,7 +368,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByNameIsNullOrNotNull() throws Exception {
+    void getAllBankAccountsByNameIsNullOrNotNull() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -384,7 +381,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByNameContainsSomething() throws Exception {
+    void getAllBankAccountsByNameContainsSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -397,7 +394,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByNameNotContainsSomething() throws Exception {
+    void getAllBankAccountsByNameNotContainsSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -410,7 +407,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByBankNumberIsEqualToSomething() throws Exception {
+    void getAllBankAccountsByBankNumberIsEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -423,7 +420,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByBankNumberIsNotEqualToSomething() throws Exception {
+    void getAllBankAccountsByBankNumberIsNotEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -436,7 +433,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByBankNumberIsInShouldWork() throws Exception {
+    void getAllBankAccountsByBankNumberIsInShouldWork() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -449,7 +446,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByBankNumberIsNullOrNotNull() throws Exception {
+    void getAllBankAccountsByBankNumberIsNullOrNotNull() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -462,7 +459,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByBankNumberIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllBankAccountsByBankNumberIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -475,7 +472,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByBankNumberIsLessThanOrEqualToSomething() throws Exception {
+    void getAllBankAccountsByBankNumberIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -488,7 +485,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByBankNumberIsLessThanSomething() throws Exception {
+    void getAllBankAccountsByBankNumberIsLessThanSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -501,7 +498,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByBankNumberIsGreaterThanSomething() throws Exception {
+    void getAllBankAccountsByBankNumberIsGreaterThanSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -514,7 +511,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByAgencyNumberIsEqualToSomething() throws Exception {
+    void getAllBankAccountsByAgencyNumberIsEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -527,7 +524,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByAgencyNumberIsNotEqualToSomething() throws Exception {
+    void getAllBankAccountsByAgencyNumberIsNotEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -540,7 +537,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByAgencyNumberIsInShouldWork() throws Exception {
+    void getAllBankAccountsByAgencyNumberIsInShouldWork() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -553,7 +550,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByAgencyNumberIsNullOrNotNull() throws Exception {
+    void getAllBankAccountsByAgencyNumberIsNullOrNotNull() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -566,7 +563,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByAgencyNumberIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllBankAccountsByAgencyNumberIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -579,7 +576,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByAgencyNumberIsLessThanOrEqualToSomething() throws Exception {
+    void getAllBankAccountsByAgencyNumberIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -592,7 +589,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByAgencyNumberIsLessThanSomething() throws Exception {
+    void getAllBankAccountsByAgencyNumberIsLessThanSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -605,7 +602,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByAgencyNumberIsGreaterThanSomething() throws Exception {
+    void getAllBankAccountsByAgencyNumberIsGreaterThanSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -618,7 +615,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByLastOperationDurationIsEqualToSomething() throws Exception {
+    void getAllBankAccountsByLastOperationDurationIsEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -631,7 +628,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByLastOperationDurationIsNotEqualToSomething() throws Exception {
+    void getAllBankAccountsByLastOperationDurationIsNotEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -644,7 +641,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByLastOperationDurationIsInShouldWork() throws Exception {
+    void getAllBankAccountsByLastOperationDurationIsInShouldWork() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -659,7 +656,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByLastOperationDurationIsNullOrNotNull() throws Exception {
+    void getAllBankAccountsByLastOperationDurationIsNullOrNotNull() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -672,7 +669,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByLastOperationDurationIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllBankAccountsByLastOperationDurationIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -685,7 +682,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByLastOperationDurationIsLessThanOrEqualToSomething() throws Exception {
+    void getAllBankAccountsByLastOperationDurationIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -698,7 +695,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByLastOperationDurationIsLessThanSomething() throws Exception {
+    void getAllBankAccountsByLastOperationDurationIsLessThanSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -711,7 +708,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByLastOperationDurationIsGreaterThanSomething() throws Exception {
+    void getAllBankAccountsByLastOperationDurationIsGreaterThanSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -724,7 +721,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByMeanOperationDurationIsEqualToSomething() throws Exception {
+    void getAllBankAccountsByMeanOperationDurationIsEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -737,7 +734,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByMeanOperationDurationIsNotEqualToSomething() throws Exception {
+    void getAllBankAccountsByMeanOperationDurationIsNotEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -750,7 +747,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByMeanOperationDurationIsInShouldWork() throws Exception {
+    void getAllBankAccountsByMeanOperationDurationIsInShouldWork() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -765,7 +762,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByMeanOperationDurationIsNullOrNotNull() throws Exception {
+    void getAllBankAccountsByMeanOperationDurationIsNullOrNotNull() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -778,7 +775,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByMeanOperationDurationIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllBankAccountsByMeanOperationDurationIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -791,7 +788,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByMeanOperationDurationIsLessThanOrEqualToSomething() throws Exception {
+    void getAllBankAccountsByMeanOperationDurationIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -804,7 +801,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByMeanOperationDurationIsLessThanSomething() throws Exception {
+    void getAllBankAccountsByMeanOperationDurationIsLessThanSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -817,7 +814,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByMeanOperationDurationIsGreaterThanSomething() throws Exception {
+    void getAllBankAccountsByMeanOperationDurationIsGreaterThanSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -830,7 +827,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByBalanceIsEqualToSomething() throws Exception {
+    void getAllBankAccountsByBalanceIsEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -843,7 +840,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByBalanceIsNotEqualToSomething() throws Exception {
+    void getAllBankAccountsByBalanceIsNotEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -856,7 +853,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByBalanceIsInShouldWork() throws Exception {
+    void getAllBankAccountsByBalanceIsInShouldWork() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -869,7 +866,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByBalanceIsNullOrNotNull() throws Exception {
+    void getAllBankAccountsByBalanceIsNullOrNotNull() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -882,7 +879,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByBalanceIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllBankAccountsByBalanceIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -895,7 +892,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByBalanceIsLessThanOrEqualToSomething() throws Exception {
+    void getAllBankAccountsByBalanceIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -908,7 +905,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByBalanceIsLessThanSomething() throws Exception {
+    void getAllBankAccountsByBalanceIsLessThanSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -921,7 +918,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByBalanceIsGreaterThanSomething() throws Exception {
+    void getAllBankAccountsByBalanceIsGreaterThanSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -934,7 +931,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByOpeningDayIsEqualToSomething() throws Exception {
+    void getAllBankAccountsByOpeningDayIsEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -947,7 +944,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByOpeningDayIsNotEqualToSomething() throws Exception {
+    void getAllBankAccountsByOpeningDayIsNotEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -960,7 +957,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByOpeningDayIsInShouldWork() throws Exception {
+    void getAllBankAccountsByOpeningDayIsInShouldWork() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -973,7 +970,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByOpeningDayIsNullOrNotNull() throws Exception {
+    void getAllBankAccountsByOpeningDayIsNullOrNotNull() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -986,7 +983,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByOpeningDayIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllBankAccountsByOpeningDayIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -999,7 +996,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByOpeningDayIsLessThanOrEqualToSomething() throws Exception {
+    void getAllBankAccountsByOpeningDayIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -1012,7 +1009,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByOpeningDayIsLessThanSomething() throws Exception {
+    void getAllBankAccountsByOpeningDayIsLessThanSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -1025,7 +1022,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByOpeningDayIsGreaterThanSomething() throws Exception {
+    void getAllBankAccountsByOpeningDayIsGreaterThanSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -1038,7 +1035,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByLastOperationDateIsEqualToSomething() throws Exception {
+    void getAllBankAccountsByLastOperationDateIsEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -1051,7 +1048,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByLastOperationDateIsNotEqualToSomething() throws Exception {
+    void getAllBankAccountsByLastOperationDateIsNotEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -1064,7 +1061,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByLastOperationDateIsInShouldWork() throws Exception {
+    void getAllBankAccountsByLastOperationDateIsInShouldWork() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -1077,7 +1074,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByLastOperationDateIsNullOrNotNull() throws Exception {
+    void getAllBankAccountsByLastOperationDateIsNullOrNotNull() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -1090,7 +1087,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByActiveIsEqualToSomething() throws Exception {
+    void getAllBankAccountsByActiveIsEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -1103,7 +1100,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByActiveIsNotEqualToSomething() throws Exception {
+    void getAllBankAccountsByActiveIsNotEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -1116,7 +1113,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByActiveIsInShouldWork() throws Exception {
+    void getAllBankAccountsByActiveIsInShouldWork() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -1129,7 +1126,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByActiveIsNullOrNotNull() throws Exception {
+    void getAllBankAccountsByActiveIsNullOrNotNull() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -1142,7 +1139,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByAccountTypeIsEqualToSomething() throws Exception {
+    void getAllBankAccountsByAccountTypeIsEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -1155,7 +1152,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByAccountTypeIsNotEqualToSomething() throws Exception {
+    void getAllBankAccountsByAccountTypeIsNotEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -1168,7 +1165,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByAccountTypeIsInShouldWork() throws Exception {
+    void getAllBankAccountsByAccountTypeIsInShouldWork() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -1181,7 +1178,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByAccountTypeIsNullOrNotNull() throws Exception {
+    void getAllBankAccountsByAccountTypeIsNullOrNotNull() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -1194,7 +1191,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByUserIsEqualToSomething() throws Exception {
+    void getAllBankAccountsByUserIsEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
         User user = UserResourceIT.createEntity(em);
@@ -1213,7 +1210,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getAllBankAccountsByOperationIsEqualToSomething() throws Exception {
+    void getAllBankAccountsByOperationIsEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
         Operation operation = OperationResourceIT.createEntity(em);
@@ -1244,7 +1241,7 @@ public class BankAccountResourceIT {
             .andExpect(jsonPath("$.[*].agencyNumber").value(hasItem(DEFAULT_AGENCY_NUMBER.intValue())))
             .andExpect(jsonPath("$.[*].lastOperationDuration").value(hasItem(DEFAULT_LAST_OPERATION_DURATION.doubleValue())))
             .andExpect(jsonPath("$.[*].meanOperationDuration").value(hasItem(DEFAULT_MEAN_OPERATION_DURATION.doubleValue())))
-            .andExpect(jsonPath("$.[*].balance").value(hasItem(DEFAULT_BALANCE.intValue())))
+            .andExpect(jsonPath("$.[*].balance").value(hasItem(sameNumber(DEFAULT_BALANCE))))
             .andExpect(jsonPath("$.[*].openingDay").value(hasItem(DEFAULT_OPENING_DAY.toString())))
             .andExpect(jsonPath("$.[*].lastOperationDate").value(hasItem(DEFAULT_LAST_OPERATION_DATE.toString())))
             .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE.booleanValue())))
@@ -1282,14 +1279,14 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingBankAccount() throws Exception {
+    void getNonExistingBankAccount() throws Exception {
         // Get the bankAccount
         restBankAccountMockMvc.perform(get("/api/bank-accounts/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateBankAccount() throws Exception {
+    void updateBankAccount() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
@@ -1333,7 +1330,7 @@ public class BankAccountResourceIT {
         assertThat(testBankAccount.getBalance()).isEqualTo(UPDATED_BALANCE);
         assertThat(testBankAccount.getOpeningDay()).isEqualTo(UPDATED_OPENING_DAY);
         assertThat(testBankAccount.getLastOperationDate()).isEqualTo(UPDATED_LAST_OPERATION_DATE);
-        assertThat(testBankAccount.isActive()).isEqualTo(UPDATED_ACTIVE);
+        assertThat(testBankAccount.getActive()).isEqualTo(UPDATED_ACTIVE);
         assertThat(testBankAccount.getAccountType()).isEqualTo(UPDATED_ACCOUNT_TYPE);
         assertThat(testBankAccount.getAttachment()).isEqualTo(UPDATED_ATTACHMENT);
         assertThat(testBankAccount.getAttachmentContentType()).isEqualTo(UPDATED_ATTACHMENT_CONTENT_TYPE);
@@ -1342,7 +1339,7 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingBankAccount() throws Exception {
+    void updateNonExistingBankAccount() throws Exception {
         int databaseSizeBeforeUpdate = bankAccountRepository.findAll().size();
 
         // Create the BankAccount
@@ -1362,7 +1359,117 @@ public class BankAccountResourceIT {
 
     @Test
     @Transactional
-    public void deleteBankAccount() throws Exception {
+    void partialUpdateBankAccountWithPatch() throws Exception {
+        // Initialize the database
+        bankAccountRepository.saveAndFlush(bankAccount);
+
+        int databaseSizeBeforeUpdate = bankAccountRepository.findAll().size();
+
+        // Update the bankAccount using partial update
+        BankAccount partialUpdatedBankAccount = new BankAccount();
+        partialUpdatedBankAccount.setId(bankAccount.getId());
+
+        partialUpdatedBankAccount.bankNumber(UPDATED_BANK_NUMBER).agencyNumber(UPDATED_AGENCY_NUMBER).openingDay(UPDATED_OPENING_DAY);
+
+        restBankAccountMockMvc
+            .perform(
+                patch("/api/bank-accounts")
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedBankAccount))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the BankAccount in the database
+        List<BankAccount> bankAccountList = bankAccountRepository.findAll();
+        assertThat(bankAccountList).hasSize(databaseSizeBeforeUpdate);
+        BankAccount testBankAccount = bankAccountList.get(bankAccountList.size() - 1);
+        assertThat(testBankAccount.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testBankAccount.getBankNumber()).isEqualTo(UPDATED_BANK_NUMBER);
+        assertThat(testBankAccount.getAgencyNumber()).isEqualTo(UPDATED_AGENCY_NUMBER);
+        assertThat(testBankAccount.getLastOperationDuration()).isEqualTo(DEFAULT_LAST_OPERATION_DURATION);
+        assertThat(testBankAccount.getMeanOperationDuration()).isEqualTo(DEFAULT_MEAN_OPERATION_DURATION);
+        assertThat(testBankAccount.getBalance()).isEqualByComparingTo(DEFAULT_BALANCE);
+        assertThat(testBankAccount.getOpeningDay()).isEqualTo(UPDATED_OPENING_DAY);
+        assertThat(testBankAccount.getLastOperationDate()).isEqualTo(DEFAULT_LAST_OPERATION_DATE);
+        assertThat(testBankAccount.getActive()).isEqualTo(DEFAULT_ACTIVE);
+        assertThat(testBankAccount.getAccountType()).isEqualTo(DEFAULT_ACCOUNT_TYPE);
+        assertThat(testBankAccount.getAttachment()).isEqualTo(DEFAULT_ATTACHMENT);
+        assertThat(testBankAccount.getAttachmentContentType()).isEqualTo(DEFAULT_ATTACHMENT_CONTENT_TYPE);
+        assertThat(testBankAccount.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateBankAccountWithPatch() throws Exception {
+        // Initialize the database
+        bankAccountRepository.saveAndFlush(bankAccount);
+
+        int databaseSizeBeforeUpdate = bankAccountRepository.findAll().size();
+
+        // Update the bankAccount using partial update
+        BankAccount partialUpdatedBankAccount = new BankAccount();
+        partialUpdatedBankAccount.setId(bankAccount.getId());
+
+        partialUpdatedBankAccount
+            .name(UPDATED_NAME)
+            .bankNumber(UPDATED_BANK_NUMBER)
+            .agencyNumber(UPDATED_AGENCY_NUMBER)
+            .lastOperationDuration(UPDATED_LAST_OPERATION_DURATION)
+            .meanOperationDuration(UPDATED_MEAN_OPERATION_DURATION)
+            .balance(UPDATED_BALANCE)
+            .openingDay(UPDATED_OPENING_DAY)
+            .lastOperationDate(UPDATED_LAST_OPERATION_DATE)
+            .active(UPDATED_ACTIVE)
+            .accountType(UPDATED_ACCOUNT_TYPE)
+            .attachment(UPDATED_ATTACHMENT)
+            .attachmentContentType(UPDATED_ATTACHMENT_CONTENT_TYPE)
+            .description(UPDATED_DESCRIPTION);
+
+        restBankAccountMockMvc
+            .perform(
+                patch("/api/bank-accounts")
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedBankAccount))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the BankAccount in the database
+        List<BankAccount> bankAccountList = bankAccountRepository.findAll();
+        assertThat(bankAccountList).hasSize(databaseSizeBeforeUpdate);
+        BankAccount testBankAccount = bankAccountList.get(bankAccountList.size() - 1);
+        assertThat(testBankAccount.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testBankAccount.getBankNumber()).isEqualTo(UPDATED_BANK_NUMBER);
+        assertThat(testBankAccount.getAgencyNumber()).isEqualTo(UPDATED_AGENCY_NUMBER);
+        assertThat(testBankAccount.getLastOperationDuration()).isEqualTo(UPDATED_LAST_OPERATION_DURATION);
+        assertThat(testBankAccount.getMeanOperationDuration()).isEqualTo(UPDATED_MEAN_OPERATION_DURATION);
+        assertThat(testBankAccount.getBalance()).isEqualByComparingTo(UPDATED_BALANCE);
+        assertThat(testBankAccount.getOpeningDay()).isEqualTo(UPDATED_OPENING_DAY);
+        assertThat(testBankAccount.getLastOperationDate()).isEqualTo(UPDATED_LAST_OPERATION_DATE);
+        assertThat(testBankAccount.getActive()).isEqualTo(UPDATED_ACTIVE);
+        assertThat(testBankAccount.getAccountType()).isEqualTo(UPDATED_ACCOUNT_TYPE);
+        assertThat(testBankAccount.getAttachment()).isEqualTo(UPDATED_ATTACHMENT);
+        assertThat(testBankAccount.getAttachmentContentType()).isEqualTo(UPDATED_ATTACHMENT_CONTENT_TYPE);
+        assertThat(testBankAccount.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateBankAccountShouldThrown() throws Exception {
+        // Update the bankAccount without id should throw
+        BankAccount partialUpdatedBankAccount = new BankAccount();
+
+        restBankAccountMockMvc
+            .perform(
+                patch("/api/bank-accounts")
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedBankAccount))
+            )
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Transactional
+    void deleteBankAccount() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 

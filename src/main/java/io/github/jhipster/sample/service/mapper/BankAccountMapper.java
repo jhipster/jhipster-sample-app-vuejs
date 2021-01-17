@@ -9,21 +9,12 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = { UserMapper.class })
 public interface BankAccountMapper extends EntityMapper<BankAccountDTO, BankAccount> {
-    @Mapping(source = "user.id", target = "userId")
-    @Mapping(source = "user.login", target = "userLogin")
+    @Mapping(target = "user", source = "user", qualifiedByName = "login")
     BankAccountDTO toDto(BankAccount bankAccount);
 
-    @Mapping(source = "userId", target = "user")
-    @Mapping(target = "operations", ignore = true)
-    @Mapping(target = "removeOperation", ignore = true)
-    BankAccount toEntity(BankAccountDTO bankAccountDTO);
-
-    default BankAccount fromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.setId(id);
-        return bankAccount;
-    }
+    @Named("name")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "name")
+    BankAccountDTO toDtoName(BankAccount bankAccount);
 }

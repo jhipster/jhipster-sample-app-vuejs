@@ -1,11 +1,7 @@
+import { IUser } from '@/shared/model/user.model';
 import { IOperation } from '@/shared/model/test-root/operation.model';
 
-export const enum BankAccountType {
-  CHECKING = 'CHECKING',
-  SAVINGS = 'SAVINGS',
-  LOAN = 'LOAN',
-}
-
+import { BankAccountType } from '@/shared/model/enumerations/bank-account-type.model';
 export interface IBankAccountMySuffix {
   id?: number;
   name?: string;
@@ -19,10 +15,9 @@ export interface IBankAccountMySuffix {
   active?: boolean;
   accountType?: BankAccountType;
   attachmentContentType?: string;
-  attachment?: any;
-  description?: any;
-  userLogin?: string;
-  userId?: number;
+  attachment?: string;
+  description?: string;
+  user?: IUser;
   operations?: IOperation[];
 }
 
@@ -40,12 +35,11 @@ export class BankAccountMySuffix implements IBankAccountMySuffix {
     public active?: boolean,
     public accountType?: BankAccountType,
     public attachmentContentType?: string,
-    public attachment?: any,
-    public description?: any,
-    public userLogin?: string,
-    public userId?: number,
+    public attachment?: string,
+    public description?: string,
+    public user?: IUser,
     public operations?: IOperation[]
   ) {
-    this.active = this.active || false;
+    this.active = this.active ?? false;
   }
 }
