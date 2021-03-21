@@ -1,4 +1,4 @@
-package io.github.jhipster.sample.service.dto;
+package io.github.jhipster.sample.service.criteria;
 
 import io.github.jhipster.sample.domain.enumeration.BankAccountType;
 import java.io.Serializable;
@@ -98,11 +98,25 @@ public class BankAccountCriteria implements Serializable, Criteria {
         return id;
     }
 
+    public LongFilter id() {
+        if (id == null) {
+            id = new LongFilter();
+        }
+        return id;
+    }
+
     public void setId(LongFilter id) {
         this.id = id;
     }
 
     public StringFilter getName() {
+        return name;
+    }
+
+    public StringFilter name() {
+        if (name == null) {
+            name = new StringFilter();
+        }
         return name;
     }
 
@@ -114,11 +128,25 @@ public class BankAccountCriteria implements Serializable, Criteria {
         return bankNumber;
     }
 
+    public IntegerFilter bankNumber() {
+        if (bankNumber == null) {
+            bankNumber = new IntegerFilter();
+        }
+        return bankNumber;
+    }
+
     public void setBankNumber(IntegerFilter bankNumber) {
         this.bankNumber = bankNumber;
     }
 
     public LongFilter getAgencyNumber() {
+        return agencyNumber;
+    }
+
+    public LongFilter agencyNumber() {
+        if (agencyNumber == null) {
+            agencyNumber = new LongFilter();
+        }
         return agencyNumber;
     }
 
@@ -130,11 +158,25 @@ public class BankAccountCriteria implements Serializable, Criteria {
         return lastOperationDuration;
     }
 
+    public FloatFilter lastOperationDuration() {
+        if (lastOperationDuration == null) {
+            lastOperationDuration = new FloatFilter();
+        }
+        return lastOperationDuration;
+    }
+
     public void setLastOperationDuration(FloatFilter lastOperationDuration) {
         this.lastOperationDuration = lastOperationDuration;
     }
 
     public DoubleFilter getMeanOperationDuration() {
+        return meanOperationDuration;
+    }
+
+    public DoubleFilter meanOperationDuration() {
+        if (meanOperationDuration == null) {
+            meanOperationDuration = new DoubleFilter();
+        }
         return meanOperationDuration;
     }
 
@@ -146,11 +188,25 @@ public class BankAccountCriteria implements Serializable, Criteria {
         return balance;
     }
 
+    public BigDecimalFilter balance() {
+        if (balance == null) {
+            balance = new BigDecimalFilter();
+        }
+        return balance;
+    }
+
     public void setBalance(BigDecimalFilter balance) {
         this.balance = balance;
     }
 
     public LocalDateFilter getOpeningDay() {
+        return openingDay;
+    }
+
+    public LocalDateFilter openingDay() {
+        if (openingDay == null) {
+            openingDay = new LocalDateFilter();
+        }
         return openingDay;
     }
 
@@ -162,11 +218,25 @@ public class BankAccountCriteria implements Serializable, Criteria {
         return lastOperationDate;
     }
 
+    public InstantFilter lastOperationDate() {
+        if (lastOperationDate == null) {
+            lastOperationDate = new InstantFilter();
+        }
+        return lastOperationDate;
+    }
+
     public void setLastOperationDate(InstantFilter lastOperationDate) {
         this.lastOperationDate = lastOperationDate;
     }
 
     public BooleanFilter getActive() {
+        return active;
+    }
+
+    public BooleanFilter active() {
+        if (active == null) {
+            active = new BooleanFilter();
+        }
         return active;
     }
 
@@ -178,6 +248,13 @@ public class BankAccountCriteria implements Serializable, Criteria {
         return accountType;
     }
 
+    public BankAccountTypeFilter accountType() {
+        if (accountType == null) {
+            accountType = new BankAccountTypeFilter();
+        }
+        return accountType;
+    }
+
     public void setAccountType(BankAccountTypeFilter accountType) {
         this.accountType = accountType;
     }
@@ -186,11 +263,25 @@ public class BankAccountCriteria implements Serializable, Criteria {
         return userId;
     }
 
+    public LongFilter userId() {
+        if (userId == null) {
+            userId = new LongFilter();
+        }
+        return userId;
+    }
+
     public void setUserId(LongFilter userId) {
         this.userId = userId;
     }
 
     public LongFilter getOperationId() {
+        return operationId;
+    }
+
+    public LongFilter operationId() {
+        if (operationId == null) {
+            operationId = new LongFilter();
+        }
         return operationId;
     }
 
@@ -247,19 +338,19 @@ public class BankAccountCriteria implements Serializable, Criteria {
     @Override
     public String toString() {
         return "BankAccountCriteria{" +
-                (id != null ? "id=" + id + ", " : "") +
-                (name != null ? "name=" + name + ", " : "") +
-                (bankNumber != null ? "bankNumber=" + bankNumber + ", " : "") +
-                (agencyNumber != null ? "agencyNumber=" + agencyNumber + ", " : "") +
-                (lastOperationDuration != null ? "lastOperationDuration=" + lastOperationDuration + ", " : "") +
-                (meanOperationDuration != null ? "meanOperationDuration=" + meanOperationDuration + ", " : "") +
-                (balance != null ? "balance=" + balance + ", " : "") +
-                (openingDay != null ? "openingDay=" + openingDay + ", " : "") +
-                (lastOperationDate != null ? "lastOperationDate=" + lastOperationDate + ", " : "") +
-                (active != null ? "active=" + active + ", " : "") +
-                (accountType != null ? "accountType=" + accountType + ", " : "") +
-                (userId != null ? "userId=" + userId + ", " : "") +
-                (operationId != null ? "operationId=" + operationId + ", " : "") +
+            (id != null ? "id=" + id + ", " : "") +
+            (name != null ? "name=" + name + ", " : "") +
+            (bankNumber != null ? "bankNumber=" + bankNumber + ", " : "") +
+            (agencyNumber != null ? "agencyNumber=" + agencyNumber + ", " : "") +
+            (lastOperationDuration != null ? "lastOperationDuration=" + lastOperationDuration + ", " : "") +
+            (meanOperationDuration != null ? "meanOperationDuration=" + meanOperationDuration + ", " : "") +
+            (balance != null ? "balance=" + balance + ", " : "") +
+            (openingDay != null ? "openingDay=" + openingDay + ", " : "") +
+            (lastOperationDate != null ? "lastOperationDate=" + lastOperationDate + ", " : "") +
+            (active != null ? "active=" + active + ", " : "") +
+            (accountType != null ? "accountType=" + accountType + ", " : "") +
+            (userId != null ? "userId=" + userId + ", " : "") +
+            (operationId != null ? "operationId=" + operationId + ", " : "") +
             "}";
     }
 }

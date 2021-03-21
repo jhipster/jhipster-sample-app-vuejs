@@ -1,11 +1,13 @@
 package io.github.jhipster.sample.web.rest;
 
 import io.github.jhipster.sample.domain.Label;
+import io.github.jhipster.sample.repository.LabelRepository;
 import io.github.jhipster.sample.service.LabelService;
 import io.github.jhipster.sample.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -39,8 +41,11 @@ public class LabelResource {
 
     private final LabelService labelService;
 
-    public LabelResource(LabelService labelService) {
+    private final LabelRepository labelRepository;
+
+    public LabelResource(LabelService labelService, LabelRepository labelRepository) {
         this.labelService = labelService;
+        this.labelRepository = labelRepository;
     }
 
     /**
@@ -64,20 +69,30 @@ public class LabelResource {
     }
 
     /**
-     * {@code PUT  /labels} : Updates an existing label.
+     * {@code PUT  /labels/:id} : Updates an existing label.
      *
+     * @param id the id of the label to save.
      * @param label the label to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated label,
      * or with status {@code 400 (Bad Request)} if the label is not valid,
      * or with status {@code 500 (Internal Server Error)} if the label couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/labels")
-    public ResponseEntity<Label> updateLabel(@Valid @RequestBody Label label) throws URISyntaxException {
-        log.debug("REST request to update Label : {}", label);
+    @PutMapping("/labels/{id}")
+    public ResponseEntity<Label> updateLabel(@PathVariable(value = "id", required = false) final Long id, @Valid @RequestBody Label label)
+        throws URISyntaxException {
+        log.debug("REST request to update Label : {}, {}", id, label);
         if (label.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, label.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!labelRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         Label result = labelService.save(label);
         return ResponseEntity
             .ok()
@@ -86,8 +101,9 @@ public class LabelResource {
     }
 
     /**
-     * {@code PATCH  /labels} : Updates given fields of an existing label.
+     * {@code PATCH  /labels/:id} : Partial updates given fields of an existing label, field will ignore if it is null
      *
+     * @param id the id of the label to save.
      * @param label the label to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated label,
      * or with status {@code 400 (Bad Request)} if the label is not valid,
@@ -95,11 +111,21 @@ public class LabelResource {
      * or with status {@code 500 (Internal Server Error)} if the label couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/labels", consumes = "application/merge-patch+json")
-    public ResponseEntity<Label> partialUpdateLabel(@NotNull @RequestBody Label label) throws URISyntaxException {
-        log.debug("REST request to update Label partially : {}", label);
+    @PatchMapping(value = "/labels/{id}", consumes = "application/merge-patch+json")
+    public ResponseEntity<Label> partialUpdateLabel(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody Label label
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update Label partially : {}, {}", id, label);
         if (label.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, label.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!labelRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
         Optional<Label> result = labelService.partialUpdate(label);

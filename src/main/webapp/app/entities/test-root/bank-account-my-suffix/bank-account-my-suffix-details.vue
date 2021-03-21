@@ -97,10 +97,12 @@
         <router-link
           v-if="bankAccount.id"
           :to="{ name: 'BankAccountMySuffixEdit', params: { bankAccountId: bankAccount.id } }"
-          tag="button"
-          class="btn btn-primary"
+          custom
+          v-slot="{ navigate }"
         >
-          <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"> Edit</span>
+          <button @click="navigate" class="btn btn-primary">
+            <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"> Edit</span>
+          </button>
         </router-link>
       </div>
     </div>

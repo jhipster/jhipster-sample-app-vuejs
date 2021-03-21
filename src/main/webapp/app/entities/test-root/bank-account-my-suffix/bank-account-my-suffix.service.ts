@@ -60,7 +60,20 @@ export default class BankAccountMySuffixService {
   public update(entity: IBankAccountMySuffix): Promise<IBankAccountMySuffix> {
     return new Promise<IBankAccountMySuffix>((resolve, reject) => {
       axios
-        .put(`${baseApiUrl}`, entity)
+        .put(`${baseApiUrl}/${entity.id}`, entity)
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
+
+  public partialUpdate(entity: IBankAccountMySuffix): Promise<IBankAccountMySuffix> {
+    return new Promise<IBankAccountMySuffix>((resolve, reject) => {
+      axios
+        .patch(`${baseApiUrl}/${entity.id}`, entity)
         .then(res => {
           resolve(res.data);
         })

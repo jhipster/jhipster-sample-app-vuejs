@@ -62,7 +62,20 @@ export default class LabelService {
   public update(entity: ILabel): Promise<ILabel> {
     return new Promise<ILabel>((resolve, reject) => {
       axios
-        .put(`${baseApiUrl}`, entity)
+        .put(`${baseApiUrl}/${entity.id}`, entity)
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+  }
+
+  public partialUpdate(entity: ILabel): Promise<ILabel> {
+    return new Promise<ILabel>((resolve, reject) => {
+      axios
+        .patch(`${baseApiUrl}/${entity.id}`, entity)
         .then(res => {
           resolve(res.data);
         })

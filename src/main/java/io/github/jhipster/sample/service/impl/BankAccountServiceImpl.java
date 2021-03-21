@@ -48,57 +48,7 @@ public class BankAccountServiceImpl implements BankAccountService {
             .findById(bankAccountDTO.getId())
             .map(
                 existingBankAccount -> {
-                    if (bankAccountDTO.getName() != null) {
-                        existingBankAccount.setName(bankAccountDTO.getName());
-                    }
-
-                    if (bankAccountDTO.getBankNumber() != null) {
-                        existingBankAccount.setBankNumber(bankAccountDTO.getBankNumber());
-                    }
-
-                    if (bankAccountDTO.getAgencyNumber() != null) {
-                        existingBankAccount.setAgencyNumber(bankAccountDTO.getAgencyNumber());
-                    }
-
-                    if (bankAccountDTO.getLastOperationDuration() != null) {
-                        existingBankAccount.setLastOperationDuration(bankAccountDTO.getLastOperationDuration());
-                    }
-
-                    if (bankAccountDTO.getMeanOperationDuration() != null) {
-                        existingBankAccount.setMeanOperationDuration(bankAccountDTO.getMeanOperationDuration());
-                    }
-
-                    if (bankAccountDTO.getBalance() != null) {
-                        existingBankAccount.setBalance(bankAccountDTO.getBalance());
-                    }
-
-                    if (bankAccountDTO.getOpeningDay() != null) {
-                        existingBankAccount.setOpeningDay(bankAccountDTO.getOpeningDay());
-                    }
-
-                    if (bankAccountDTO.getLastOperationDate() != null) {
-                        existingBankAccount.setLastOperationDate(bankAccountDTO.getLastOperationDate());
-                    }
-
-                    if (bankAccountDTO.getActive() != null) {
-                        existingBankAccount.setActive(bankAccountDTO.getActive());
-                    }
-
-                    if (bankAccountDTO.getAccountType() != null) {
-                        existingBankAccount.setAccountType(bankAccountDTO.getAccountType());
-                    }
-
-                    if (bankAccountDTO.getAttachment() != null) {
-                        existingBankAccount.setAttachment(bankAccountDTO.getAttachment());
-                    }
-                    if (bankAccountDTO.getAttachmentContentType() != null) {
-                        existingBankAccount.setAttachmentContentType(bankAccountDTO.getAttachmentContentType());
-                    }
-
-                    if (bankAccountDTO.getDescription() != null) {
-                        existingBankAccount.setDescription(bankAccountDTO.getDescription());
-                    }
-
+                    bankAccountMapper.partialUpdate(existingBankAccount, bankAccountDTO);
                     return existingBankAccount;
                 }
             )

@@ -9,10 +9,10 @@ import Router from 'vue-router';
 
 const Home = () => import('@/core/home/home.vue');
 const Error = () => import('@/core/error/error.vue');
-import account from '@/router/account.ts';
-import admin from '@/router/admin.ts';
-import entities from '@/router/entities.ts';
-import pages from '@/router/pages.ts';
+import account from '@/router/account';
+import admin from '@/router/admin';
+import entities from '@/router/entities';
+import pages from '@/router/pages';
 
 Vue.use(Router);
 

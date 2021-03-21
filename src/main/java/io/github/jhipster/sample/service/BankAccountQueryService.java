@@ -3,7 +3,7 @@ package io.github.jhipster.sample.service;
 import io.github.jhipster.sample.domain.*; // for static metamodels
 import io.github.jhipster.sample.domain.BankAccount;
 import io.github.jhipster.sample.repository.BankAccountRepository;
-import io.github.jhipster.sample.service.dto.BankAccountCriteria;
+import io.github.jhipster.sample.service.criteria.BankAccountCriteria;
 import io.github.jhipster.sample.service.dto.BankAccountDTO;
 import io.github.jhipster.sample.service.mapper.BankAccountMapper;
 import java.util.List;

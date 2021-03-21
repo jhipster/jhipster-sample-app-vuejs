@@ -8,8 +8,11 @@
           <font-awesome-icon icon="sync" :spin="isLoading"></font-awesome-icon>
           <span v-text="$t('userManagement.home.refreshListLabel')">Refresh List</span>
         </button>
-        <router-link tag="button" class="btn btn-primary jh-create-entity" :to="{ name: 'JhiUserCreate' }">
-          <font-awesome-icon icon="plus"></font-awesome-icon> <span v-text="$t('userManagement.home.createLabel')">Create a new User</span>
+        <router-link custom v-slot="{ navigate }" :to="{ name: 'JhiUserCreate' }">
+          <button @click="navigate" class="btn btn-primary jh-create-entity">
+            <font-awesome-icon icon="plus"></font-awesome-icon>
+            <span v-text="$t('userManagement.home.createLabel')">Create a new User</span>
+          </button>
         </router-link>
       </div>
     </h2>
@@ -53,7 +56,7 @@
         <tbody v-if="users">
           <tr v-for="user in users" :key="user.id" :id="user.login">
             <td>
-              <router-link tag="a" :to="{ name: 'JhiUserView', params: { userId: user.login } }">{{ user.id }}</router-link>
+              <router-link :to="{ name: 'JhiUserView', params: { userId: user.login } }">{{ user.id }}</router-link>
             </td>
             <td>{{ user.login }}</td>
             <td class="jhi-user-email">{{ user.email }}</td>
@@ -89,13 +92,17 @@
             <td v-else>{{ user.lastModifiedDate | formatDate }}</td>
             <td class="text-right">
               <div class="btn-group">
-                <router-link :to="{ name: 'JhiUserView', params: { userId: user.login } }" tag="button" class="btn btn-info btn-sm details">
-                  <font-awesome-icon icon="eye"></font-awesome-icon>
-                  <span class="d-none d-md-inline" v-text="$t('entity.action.view')">View</span>
+                <router-link :to="{ name: 'JhiUserView', params: { userId: user.login } }" custom v-slot="{ navigate }">
+                  <button @click="navigate" class="btn btn-info btn-sm details">
+                    <font-awesome-icon icon="eye"></font-awesome-icon>
+                    <span class="d-none d-md-inline" v-text="$t('entity.action.view')">View</span>
+                  </button>
                 </router-link>
-                <router-link :to="{ name: 'JhiUserEdit', params: { userId: user.login } }" tag="button" class="btn btn-primary btn-sm edit">
-                  <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-                  <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Edit</span>
+                <router-link :to="{ name: 'JhiUserEdit', params: { userId: user.login } }" custom v-slot="{ navigate }">
+                  <button @click="navigate" class="btn btn-primary btn-sm edit">
+                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
+                    <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Edit</span>
+                  </button>
                 </router-link>
                 <b-button v-on:click="prepareRemove(user)" variant="danger" class="btn btn-sm delete" :disabled="username === user.login">
                   <font-awesome-icon icon="times"></font-awesome-icon>

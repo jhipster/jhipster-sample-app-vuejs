@@ -46,8 +46,10 @@
             </ul>
           </dd>
         </dl>
-        <router-link tag="button" type="submit" :to="{ name: 'JhiUser' }" class="btn btn-info">
-          <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
+        <router-link custom v-slot="{ navigate }" :to="{ name: 'JhiUser' }">
+          <button @click="navigate" class="btn btn-info">
+            <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
+          </button>
         </router-link>
       </div>
     </div>

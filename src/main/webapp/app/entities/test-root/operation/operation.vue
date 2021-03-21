@@ -7,15 +7,16 @@
           <font-awesome-icon icon="sync" :spin="isFetching"></font-awesome-icon>
           <span v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.home.refreshListLabel')">Refresh List</span>
         </button>
-        <router-link
-          :to="{ name: 'OperationCreate' }"
-          tag="button"
-          id="jh-create-entity"
-          data-cy="entityCreateButton"
-          class="btn btn-primary jh-create-entity create-operation"
-        >
-          <font-awesome-icon icon="plus"></font-awesome-icon>
-          <span v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.home.createLabel')"> Create a new Operation </span>
+        <router-link :to="{ name: 'OperationCreate' }" custom v-slot="{ navigate }">
+          <button
+            @click="navigate"
+            id="jh-create-entity"
+            data-cy="entityCreateButton"
+            class="btn btn-primary jh-create-entity create-operation"
+          >
+            <font-awesome-icon icon="plus"></font-awesome-icon>
+            <span v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.home.createLabel')"> Create a new Operation </span>
+          </button>
         </router-link>
       </div>
     </h2>
@@ -67,23 +68,17 @@
             </td>
             <td class="text-right">
               <div class="btn-group">
-                <router-link
-                  :to="{ name: 'OperationView', params: { operationId: operation.id } }"
-                  tag="button"
-                  class="btn btn-info btn-sm details"
-                  data-cy="entityDetailsButton"
-                >
-                  <font-awesome-icon icon="eye"></font-awesome-icon>
-                  <span class="d-none d-md-inline" v-text="$t('entity.action.view')">View</span>
+                <router-link :to="{ name: 'OperationView', params: { operationId: operation.id } }" custom v-slot="{ navigate }">
+                  <button @click="navigate" class="btn btn-info btn-sm details" data-cy="entityDetailsButton">
+                    <font-awesome-icon icon="eye"></font-awesome-icon>
+                    <span class="d-none d-md-inline" v-text="$t('entity.action.view')">View</span>
+                  </button>
                 </router-link>
-                <router-link
-                  :to="{ name: 'OperationEdit', params: { operationId: operation.id } }"
-                  tag="button"
-                  class="btn btn-primary btn-sm edit"
-                  data-cy="entityEditButton"
-                >
-                  <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
-                  <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Edit</span>
+                <router-link :to="{ name: 'OperationEdit', params: { operationId: operation.id } }" custom v-slot="{ navigate }">
+                  <button @click="navigate" class="btn btn-primary btn-sm edit" data-cy="entityEditButton">
+                    <font-awesome-icon icon="pencil-alt"></font-awesome-icon>
+                    <span class="d-none d-md-inline" v-text="$t('entity.action.edit')">Edit</span>
+                  </button>
                 </router-link>
                 <b-button
                   v-on:click="prepareRemove(operation)"

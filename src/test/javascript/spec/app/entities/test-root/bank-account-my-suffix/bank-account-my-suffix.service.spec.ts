@@ -21,6 +21,7 @@ const axiosStub = {
   get: sinon.stub(axios, 'get'),
   post: sinon.stub(axios, 'post'),
   put: sinon.stub(axios, 'put'),
+  patch: sinon.stub(axios, 'patch'),
   delete: sinon.stub(axios, 'delete'),
 };
 
@@ -149,6 +150,42 @@ describe('Service Tests', () => {
 
         return service
           .update({})
+          .then()
+          .catch(err => {
+            expect(err).toMatchObject(error);
+          });
+      });
+
+      it('should partial update a BankAccountMySuffix', async () => {
+        const patchObject = Object.assign(
+          {
+            bankNumber: 1,
+            agencyNumber: 1,
+            openingDay: dayjs(currentDate).format(DATE_FORMAT),
+          },
+          new BankAccountMySuffix()
+        );
+        const returnedFromService = Object.assign(patchObject, elemDefault);
+
+        const expected = Object.assign(
+          {
+            openingDay: currentDate,
+            lastOperationDate: currentDate,
+          },
+          returnedFromService
+        );
+        axiosStub.patch.resolves({ data: returnedFromService });
+
+        return service.partialUpdate(patchObject).then(res => {
+          expect(res).toMatchObject(expected);
+        });
+      });
+
+      it('should not partial update a BankAccountMySuffix', async () => {
+        axiosStub.patch.rejects(error);
+
+        return service
+          .partialUpdate({})
           .then()
           .catch(err => {
             expect(err).toMatchObject(error);
