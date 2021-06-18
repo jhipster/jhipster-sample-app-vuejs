@@ -35,7 +35,6 @@ export default class Label extends Vue {
 
   public retrieveAllLabels(): void {
     this.isFetching = true;
-
     const paginationQuery = {
       page: this.page - 1,
       size: this.itemsPerPage,

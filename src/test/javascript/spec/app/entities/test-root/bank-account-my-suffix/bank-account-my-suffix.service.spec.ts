@@ -35,7 +35,7 @@ describe('Service Tests', () => {
       service = new BankAccountMySuffixService();
       currentDate = new Date();
       elemDefault = new BankAccountMySuffix(
-        0,
+        123,
         'AAAAAAA',
         0,
         0,
@@ -81,7 +81,7 @@ describe('Service Tests', () => {
       it('should create a BankAccountMySuffix', async () => {
         const returnedFromService = Object.assign(
           {
-            id: 0,
+            id: 123,
             openingDay: dayjs(currentDate).format(DATE_FORMAT),
             lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
           },
@@ -159,9 +159,12 @@ describe('Service Tests', () => {
       it('should partial update a BankAccountMySuffix', async () => {
         const patchObject = Object.assign(
           {
-            bankNumber: 1,
-            agencyNumber: 1,
-            openingDay: dayjs(currentDate).format(DATE_FORMAT),
+            name: 'BBBBBB',
+            balance: 1,
+            lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
+            active: true,
+            attachment: 'BBBBBB',
+            description: 'BBBBBB',
           },
           new BankAccountMySuffix()
         );

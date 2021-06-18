@@ -71,12 +71,11 @@ class BankAccountGatlingTest extends Simulation {
             .post("/api/bank-accounts")
             .headers(headers_http_authenticated)
             .body(StringBody("""{
-                "id":null
-                , "name":"SAMPLE_TEXT"
+                "name":"SAMPLE_TEXT"
                 , "bankNumber":"0"
-                , "agencyNumber":null
-                , "lastOperationDuration":null
-                , "meanOperationDuration":null
+                , "agencyNumber":"0"
+                , "lastOperationDuration":"0"
+                , "meanOperationDuration":"0"
                 , "balance":"0"
                 , "openingDay":"2020-01-01T00:00:00.000Z"
                 , "lastOperationDate":"2020-01-01T00:00:00.000Z"

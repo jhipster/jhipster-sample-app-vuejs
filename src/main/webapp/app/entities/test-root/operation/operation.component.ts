@@ -49,7 +49,6 @@ export default class Operation extends mixins(JhiDataUtils) {
 
   public retrieveAllOperations(): void {
     this.isFetching = true;
-
     const paginationQuery = {
       page: this.page - 1,
       size: this.itemsPerPage,

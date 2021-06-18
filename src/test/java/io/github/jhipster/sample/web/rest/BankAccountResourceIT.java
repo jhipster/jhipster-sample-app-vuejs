@@ -1412,7 +1412,14 @@ class BankAccountResourceIT {
         BankAccount partialUpdatedBankAccount = new BankAccount();
         partialUpdatedBankAccount.setId(bankAccount.getId());
 
-        partialUpdatedBankAccount.bankNumber(UPDATED_BANK_NUMBER).agencyNumber(UPDATED_AGENCY_NUMBER).openingDay(UPDATED_OPENING_DAY);
+        partialUpdatedBankAccount
+            .name(UPDATED_NAME)
+            .bankNumber(UPDATED_BANK_NUMBER)
+            .lastOperationDuration(UPDATED_LAST_OPERATION_DURATION)
+            .balance(UPDATED_BALANCE)
+            .lastOperationDate(UPDATED_LAST_OPERATION_DATE)
+            .attachment(UPDATED_ATTACHMENT)
+            .attachmentContentType(UPDATED_ATTACHMENT_CONTENT_TYPE);
 
         restBankAccountMockMvc
             .perform(
@@ -1426,18 +1433,18 @@ class BankAccountResourceIT {
         List<BankAccount> bankAccountList = bankAccountRepository.findAll();
         assertThat(bankAccountList).hasSize(databaseSizeBeforeUpdate);
         BankAccount testBankAccount = bankAccountList.get(bankAccountList.size() - 1);
-        assertThat(testBankAccount.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testBankAccount.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testBankAccount.getBankNumber()).isEqualTo(UPDATED_BANK_NUMBER);
-        assertThat(testBankAccount.getAgencyNumber()).isEqualTo(UPDATED_AGENCY_NUMBER);
-        assertThat(testBankAccount.getLastOperationDuration()).isEqualTo(DEFAULT_LAST_OPERATION_DURATION);
+        assertThat(testBankAccount.getAgencyNumber()).isEqualTo(DEFAULT_AGENCY_NUMBER);
+        assertThat(testBankAccount.getLastOperationDuration()).isEqualTo(UPDATED_LAST_OPERATION_DURATION);
         assertThat(testBankAccount.getMeanOperationDuration()).isEqualTo(DEFAULT_MEAN_OPERATION_DURATION);
-        assertThat(testBankAccount.getBalance()).isEqualByComparingTo(DEFAULT_BALANCE);
-        assertThat(testBankAccount.getOpeningDay()).isEqualTo(UPDATED_OPENING_DAY);
-        assertThat(testBankAccount.getLastOperationDate()).isEqualTo(DEFAULT_LAST_OPERATION_DATE);
+        assertThat(testBankAccount.getBalance()).isEqualByComparingTo(UPDATED_BALANCE);
+        assertThat(testBankAccount.getOpeningDay()).isEqualTo(DEFAULT_OPENING_DAY);
+        assertThat(testBankAccount.getLastOperationDate()).isEqualTo(UPDATED_LAST_OPERATION_DATE);
         assertThat(testBankAccount.getActive()).isEqualTo(DEFAULT_ACTIVE);
         assertThat(testBankAccount.getAccountType()).isEqualTo(DEFAULT_ACCOUNT_TYPE);
-        assertThat(testBankAccount.getAttachment()).isEqualTo(DEFAULT_ATTACHMENT);
-        assertThat(testBankAccount.getAttachmentContentType()).isEqualTo(DEFAULT_ATTACHMENT_CONTENT_TYPE);
+        assertThat(testBankAccount.getAttachment()).isEqualTo(UPDATED_ATTACHMENT);
+        assertThat(testBankAccount.getAttachmentContentType()).isEqualTo(UPDATED_ATTACHMENT_CONTENT_TYPE);
         assertThat(testBankAccount.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 

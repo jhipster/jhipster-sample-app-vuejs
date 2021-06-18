@@ -94,8 +94,8 @@ describe('Account', () => {
       signInPage = await navBarPage.getSignInPage();
       expect(await signInPage.getTitle()).to.eq(loginPageTitle);
 
-      await signInPage.username.sendKeys('admin');
-      await signInPage.password.sendKeys('admin');
+      await signInPage.username.sendKeys(username);
+      await signInPage.password.sendKeys(password);
       await signInPage.loginButton.click();
 
       await waitUntilHidden(signInPage.loginForm);
@@ -167,8 +167,8 @@ describe('Account', () => {
         signInPage = await navBarPage.getSignInPage();
         expect(await signInPage.getTitle()).to.eq(loginPageTitle);
 
-        await signInPage.username.sendKeys('admin');
-        await signInPage.password.sendKeys('admin');
+        await signInPage.username.sendKeys(username);
+        await signInPage.password.sendKeys(password);
         await signInPage.loginButton.click();
 
         await waitUntilHidden(signInPage.loginForm);
@@ -194,8 +194,8 @@ describe('Account', () => {
         signInPage = await navBarPage.getSignInPage();
         expect(await signInPage.getTitle()).to.eq(loginPageTitle);
 
-        await signInPage.username.sendKeys('admin');
-        await signInPage.password.sendKeys('admin');
+        await signInPage.username.sendKeys(username);
+        await signInPage.password.sendKeys(password);
         await signInPage.loginButton.click();
 
         await waitUntilHidden(signInPage.loginForm);
@@ -208,7 +208,7 @@ describe('Account', () => {
         passwordPage = await navBarPage.getPasswordPage();
         expect(await passwordPage.getTitle()).to.eq(passwordPageTitle);
 
-        await passwordPage.autoChangePassword('admin', 'new_password', 'new_password');
+        await passwordPage.autoChangePassword(password, 'new_password', 'new_password');
 
         await waitUntilDisplayed(passwordPage.successAlert);
         expect(await passwordPage.successAlert.isDisplayed()).to.be.true;
@@ -221,7 +221,7 @@ describe('Account', () => {
         signInPage = await navBarPage.getSignInPage();
         expect(await signInPage.getTitle()).to.eq(loginPageTitle);
 
-        await signInPage.username.sendKeys('admin');
+        await signInPage.username.sendKeys(username);
         await signInPage.password.sendKeys('new_password');
         await signInPage.loginButton.click();
 
@@ -233,7 +233,7 @@ describe('Account', () => {
         // change back to default
         passwordPage = await navBarPage.getPasswordPage();
         expect(await passwordPage.getTitle()).to.eq(passwordPageTitle);
-        await passwordPage.autoChangePassword('new_password', 'admin', 'admin');
+        await passwordPage.autoChangePassword('new_password', password, password);
 
         await waitUntilDisplayed(passwordPage.successAlert);
         expect(await passwordPage.successAlert.isDisplayed()).to.be.true;
@@ -283,8 +283,8 @@ describe('Account', () => {
         signInPage = await navBarPage.getSignInPage();
         expect(await signInPage.getTitle()).to.eq(loginPageTitle);
 
-        await signInPage.username.sendKeys('admin');
-        await signInPage.password.sendKeys('admin');
+        await signInPage.username.sendKeys(username);
+        await signInPage.password.sendKeys(password);
         await signInPage.loginButton.click();
 
         await waitUntilHidden(signInPage.loginForm);
@@ -315,8 +315,8 @@ describe('Account', () => {
         signInPage = await navBarPage.getSignInPage();
         expect(await signInPage.getTitle()).to.eq(loginPageTitle);
 
-        await signInPage.username.sendKeys('admin');
-        await signInPage.password.sendKeys('admin');
+        await signInPage.username.sendKeys(username);
+        await signInPage.password.sendKeys(password);
         await signInPage.loginButton.click();
 
         await waitUntilHidden(signInPage.loginForm);

@@ -65,7 +65,6 @@ describe('Label e2e test', () => {
 
     it('should create and save Labels', async () => {
       await updatePage.labelNameInput.sendKeys('labelName');
-      expect(await updatePage.labelNameInput.getAttribute('value')).to.match(/labelName/);
 
       expect(await updatePage.saveButton.isEnabled()).to.be.true;
       await updatePage.saveButton.click();
@@ -121,7 +120,6 @@ describe('Label e2e test', () => {
 
         await updatePage.labelNameInput.clear();
         await updatePage.labelNameInput.sendKeys('modified');
-        expect(await updatePage.labelNameInput.getAttribute('value')).to.match(/modified/);
 
         await updatePage.saveButton.click();
 

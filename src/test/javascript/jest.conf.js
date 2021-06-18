@@ -1,4 +1,5 @@
 module.exports = {
+  testEnvironment: 'jsdom',
   coverageDirectory: '<rootDir>/target/test-results/',
   coveragePathIgnorePatterns: [
     '<rootDir>/node_modules/',

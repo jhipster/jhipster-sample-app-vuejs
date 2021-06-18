@@ -33,7 +33,7 @@ describe('Service Tests', () => {
     beforeEach(() => {
       service = new OperationService();
       currentDate = new Date();
-      elemDefault = new Operation(0, currentDate, 'AAAAAAA', 0);
+      elemDefault = new Operation(123, currentDate, 'AAAAAAA', 0);
     });
 
     describe('Service methods', () => {
@@ -64,7 +64,7 @@ describe('Service Tests', () => {
       it('should create a Operation', async () => {
         const returnedFromService = Object.assign(
           {
-            id: 0,
+            id: 123,
             date: dayjs(currentDate).format(DATE_TIME_FORMAT),
           },
           elemDefault
@@ -128,13 +128,7 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a Operation', async () => {
-        const patchObject = Object.assign(
-          {
-            description: 'BBBBBB',
-            amount: 1,
-          },
-          new Operation()
-        );
+        const patchObject = Object.assign({}, new Operation());
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
         const expected = Object.assign(

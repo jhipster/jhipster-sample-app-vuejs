@@ -58,7 +58,7 @@ describe('Component Tests', () => {
 
       // THEN
       expect(bankAccountServiceStub.retrieve.called).toBeTruthy();
-      expect(comp.bankAccounts[0]).toEqual(jasmine.objectContaining({ id: 123 }));
+      expect(comp.bankAccounts[0]).toEqual(expect.objectContaining({ id: 123 }));
     });
     it('Should call delete service on confirmDelete', async () => {
       // GIVEN

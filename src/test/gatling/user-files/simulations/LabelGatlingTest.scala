@@ -71,8 +71,7 @@ class LabelGatlingTest extends Simulation {
             .post("/api/labels")
             .headers(headers_http_authenticated)
             .body(StringBody("""{
-                "id":null
-                , "labelName":"SAMPLE_TEXT"
+                "labelName":"SAMPLE_TEXT"
                 }""")).asJson
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_label_url"))).exitHereIfFailed

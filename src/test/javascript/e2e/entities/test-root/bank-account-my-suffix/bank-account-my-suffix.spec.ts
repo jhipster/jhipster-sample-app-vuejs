@@ -71,37 +71,22 @@ describe('BankAccount e2e test', () => {
 
     it('should create and save BankAccounts', async () => {
       await updatePage.nameInput.sendKeys('name');
-      expect(await updatePage.nameInput.getAttribute('value')).to.match(/name/);
 
       await updatePage.bankNumberInput.sendKeys('5');
-      expect(await updatePage.bankNumberInput.getAttribute('value')).to.eq('5');
 
       await updatePage.agencyNumberInput.sendKeys('5');
-      expect(await updatePage.agencyNumberInput.getAttribute('value')).to.eq('5');
 
       await updatePage.lastOperationDurationInput.sendKeys('5');
-      expect(await updatePage.lastOperationDurationInput.getAttribute('value')).to.eq('5');
 
       await updatePage.meanOperationDurationInput.sendKeys('5');
-      expect(await updatePage.meanOperationDurationInput.getAttribute('value')).to.eq('5');
 
       await updatePage.balanceInput.sendKeys('5');
-      expect(await updatePage.balanceInput.getAttribute('value')).to.eq('5');
 
       await updatePage.openingDayInput.sendKeys('2001-01-01');
-      expect(await updatePage.openingDayInput.getAttribute('value')).to.eq('2001-01-01');
 
       await updatePage.lastOperationDateInput.sendKeys('01/01/2001' + protractor.Key.TAB + '02:30AM');
-      expect(await updatePage.lastOperationDateInput.getAttribute('value')).to.contain('2001-01-01T02:30');
 
-      const selectedActive = await updatePage.activeInput.isSelected();
-      if (selectedActive) {
-        await updatePage.activeInput.click();
-        expect(await updatePage.activeInput.isSelected()).to.be.false;
-      } else {
-        await updatePage.activeInput.click();
-        expect(await updatePage.activeInput.isSelected()).to.be.true;
-      }
+      await updatePage.activeInput.click();
 
       await selectLastOption(updatePage.accountTypeSelect);
 
@@ -110,8 +95,6 @@ describe('BankAccount e2e test', () => {
 
       await waitUntilDisplayed(updatePage.descriptionInput);
       await updatePage.descriptionInput.sendKeys('description');
-
-      expect(await updatePage.descriptionInput.getAttribute('value')).to.match(/description/);
 
       // await selectLastOption(updatePage.userSelect);
 
@@ -169,48 +152,32 @@ describe('BankAccount e2e test', () => {
 
         await updatePage.nameInput.clear();
         await updatePage.nameInput.sendKeys('modified');
-        expect(await updatePage.nameInput.getAttribute('value')).to.match(/modified/);
 
         await clear(updatePage.bankNumberInput);
         await updatePage.bankNumberInput.sendKeys('6');
-        expect(await updatePage.bankNumberInput.getAttribute('value')).to.eq('6');
 
         await clear(updatePage.agencyNumberInput);
         await updatePage.agencyNumberInput.sendKeys('6');
-        expect(await updatePage.agencyNumberInput.getAttribute('value')).to.eq('6');
 
         await clear(updatePage.lastOperationDurationInput);
         await updatePage.lastOperationDurationInput.sendKeys('6');
-        expect(await updatePage.lastOperationDurationInput.getAttribute('value')).to.eq('6');
 
         await clear(updatePage.meanOperationDurationInput);
         await updatePage.meanOperationDurationInput.sendKeys('6');
-        expect(await updatePage.meanOperationDurationInput.getAttribute('value')).to.eq('6');
 
         await clear(updatePage.balanceInput);
         await updatePage.balanceInput.sendKeys('6');
-        expect(await updatePage.balanceInput.getAttribute('value')).to.eq('6');
 
         await updatePage.openingDayInput.clear();
         await updatePage.openingDayInput.sendKeys('2019-01-01');
-        expect(await updatePage.openingDayInput.getAttribute('value')).to.eq('2019-01-01');
 
         await updatePage.lastOperationDateInput.clear();
         await updatePage.lastOperationDateInput.sendKeys('01/01/2019' + protractor.Key.TAB + '02:30AM');
-        expect(await updatePage.lastOperationDateInput.getAttribute('value')).to.contain('2019-01-01T02:30');
 
-        const selectedActive = await updatePage.activeInput.isSelected();
-        if (selectedActive) {
-          await updatePage.activeInput.click();
-          expect(await updatePage.activeInput.isSelected()).to.be.false;
-        } else {
-          await updatePage.activeInput.click();
-          expect(await updatePage.activeInput.isSelected()).to.be.true;
-        }
+        await updatePage.activeInput.click();
 
         await updatePage.descriptionInput.clear();
         await updatePage.descriptionInput.sendKeys('updateddescription');
-        expect(await updatePage.descriptionInput.getAttribute('value')).to.match(/updateddescription/);
 
         await updatePage.saveButton.click();
 

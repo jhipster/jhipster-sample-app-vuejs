@@ -29,7 +29,6 @@ export default class BankAccountMySuffix extends mixins(JhiDataUtils) {
 
   public retrieveAllBankAccountMySuffixs(): void {
     this.isFetching = true;
-
     this.bankAccountService()
       .retrieve()
       .then(

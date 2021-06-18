@@ -67,13 +67,10 @@ describe('Operation e2e test', () => {
 
     it('should create and save Operations', async () => {
       await updatePage.dateInput.sendKeys('01/01/2001' + protractor.Key.TAB + '02:30AM');
-      expect(await updatePage.dateInput.getAttribute('value')).to.contain('2001-01-01T02:30');
 
       await updatePage.descriptionInput.sendKeys('description');
-      expect(await updatePage.descriptionInput.getAttribute('value')).to.match(/description/);
 
       await updatePage.amountInput.sendKeys('5');
-      expect(await updatePage.amountInput.getAttribute('value')).to.eq('5');
 
       // await selectLastOption(updatePage.bankAccountSelect);
       // await selectLastOption(updatePage.labelSelect);
@@ -132,15 +129,12 @@ describe('Operation e2e test', () => {
 
         await updatePage.dateInput.clear();
         await updatePage.dateInput.sendKeys('01/01/2019' + protractor.Key.TAB + '02:30AM');
-        expect(await updatePage.dateInput.getAttribute('value')).to.contain('2019-01-01T02:30');
 
         await updatePage.descriptionInput.clear();
         await updatePage.descriptionInput.sendKeys('modified');
-        expect(await updatePage.descriptionInput.getAttribute('value')).to.match(/modified/);
 
         await clear(updatePage.amountInput);
         await updatePage.amountInput.sendKeys('6');
-        expect(await updatePage.amountInput.getAttribute('value')).to.eq('6');
 
         await updatePage.saveButton.click();
 

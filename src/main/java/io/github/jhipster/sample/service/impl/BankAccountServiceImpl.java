@@ -49,6 +49,7 @@ public class BankAccountServiceImpl implements BankAccountService {
             .map(
                 existingBankAccount -> {
                     bankAccountMapper.partialUpdate(existingBankAccount, bankAccountDTO);
+
                     return existingBankAccount;
                 }
             )

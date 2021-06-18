@@ -1,21 +1,23 @@
 'use strict';
-const utils = require('./vue.utils');
 const webpack = require('webpack');
-const config = require('../config');
 const webpackMerge = require('webpack-merge').merge;
-const baseWebpackConfig = require('./webpack.common');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+
+const utils = require('./vue.utils');
+const config = require('./env');
+const baseWebpackConfig = require('./webpack.common');
 const jhiUtils = require('./utils.js');
 
-const env = require('../config/prod.env');
+const env = require('./prod.env');
+const MODE = 'production';
 
-const webpackConfig = webpackMerge(baseWebpackConfig, {
-  mode: 'production',
+const webpackConfig = {
+  mode: MODE,
   module: {
     rules: utils.styleLoaders({
       sourceMap: config.build.productionSourceMap,
@@ -30,11 +32,17 @@ const webpackConfig = webpackMerge(baseWebpackConfig, {
   },
   output: {
     path: jhiUtils.root('target/classes/static/'),
-    filename: 'app/[name].[hash].bundle.js',
-    chunkFilename: 'app/[id].[hash].chunk.js',
+    filename: 'app/[name].[contenthash].bundle.js',
+    chunkFilename: 'app/[id].[chunkhash].chunk.js',
   },
   optimization: {
     moduleIds: 'deterministic',
+    minimizer: [
+      '...',
+      new CssMinimizerPlugin({
+        parallel: true,
+      }),
+    ],
     splitChunks: {
       cacheGroups: {
         commons: {
@@ -89,9 +97,6 @@ const webpackConfig = webpackMerge(baseWebpackConfig, {
       filename: 'content/[name].[contenthash].css',
       chunkFilename: 'content/[id].css',
     }),
-    // Compress extracted CSS. We are using this plugin so that possible
-    // duplicated CSS from different components can be deduped.
-    new OptimizeCSSPlugin({}),
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
@@ -129,7 +134,7 @@ const webpackConfig = webpackMerge(baseWebpackConfig, {
       exclude: [/swagger-ui/],
     }),
   ],
-});
+};
 
 if (config.build.productionGzip) {
   const CompressionWebpackPlugin = require('compression-webpack-plugin');
@@ -150,4 +155,4 @@ if (config.build.bundleAnalyzerReport) {
   webpackConfig.plugins.push(new BundleAnalyzerPlugin());
 }
 
-module.exports = webpackConfig;
+module.exports = webpackMerge(baseWebpackConfig({ env: MODE }), webpackConfig);
