@@ -24,9 +24,8 @@ export default class JhiHealth extends Vue {
   public getBadgeClass(statusState: any): string {
     if (statusState === 'UP') {
       return 'badge-success';
-    } else {
-      return 'badge-danger';
     }
+    return 'badge-danger';
   }
 
   public refresh(): void {

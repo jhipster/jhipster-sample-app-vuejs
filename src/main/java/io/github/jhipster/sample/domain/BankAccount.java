@@ -25,6 +25,7 @@ public class BankAccount implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @NotNull
@@ -80,17 +81,18 @@ public class BankAccount implements Serializable {
     private Set<Operation> operations = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
     public Long getId() {
-        return id;
+        return this.id;
+    }
+
+    public BankAccount id(Long id) {
+        this.setId(id);
+        return this;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public BankAccount id(Long id) {
-        this.id = id;
-        return this;
     }
 
     public String getName() {
@@ -98,7 +100,7 @@ public class BankAccount implements Serializable {
     }
 
     public BankAccount name(String name) {
-        this.name = name;
+        this.setName(name);
         return this;
     }
 
@@ -111,7 +113,7 @@ public class BankAccount implements Serializable {
     }
 
     public BankAccount bankNumber(Integer bankNumber) {
-        this.bankNumber = bankNumber;
+        this.setBankNumber(bankNumber);
         return this;
     }
 
@@ -124,7 +126,7 @@ public class BankAccount implements Serializable {
     }
 
     public BankAccount agencyNumber(Long agencyNumber) {
-        this.agencyNumber = agencyNumber;
+        this.setAgencyNumber(agencyNumber);
         return this;
     }
 
@@ -137,7 +139,7 @@ public class BankAccount implements Serializable {
     }
 
     public BankAccount lastOperationDuration(Float lastOperationDuration) {
-        this.lastOperationDuration = lastOperationDuration;
+        this.setLastOperationDuration(lastOperationDuration);
         return this;
     }
 
@@ -150,7 +152,7 @@ public class BankAccount implements Serializable {
     }
 
     public BankAccount meanOperationDuration(Double meanOperationDuration) {
-        this.meanOperationDuration = meanOperationDuration;
+        this.setMeanOperationDuration(meanOperationDuration);
         return this;
     }
 
@@ -163,7 +165,7 @@ public class BankAccount implements Serializable {
     }
 
     public BankAccount balance(BigDecimal balance) {
-        this.balance = balance;
+        this.setBalance(balance);
         return this;
     }
 
@@ -176,7 +178,7 @@ public class BankAccount implements Serializable {
     }
 
     public BankAccount openingDay(LocalDate openingDay) {
-        this.openingDay = openingDay;
+        this.setOpeningDay(openingDay);
         return this;
     }
 
@@ -189,7 +191,7 @@ public class BankAccount implements Serializable {
     }
 
     public BankAccount lastOperationDate(Instant lastOperationDate) {
-        this.lastOperationDate = lastOperationDate;
+        this.setLastOperationDate(lastOperationDate);
         return this;
     }
 
@@ -202,7 +204,7 @@ public class BankAccount implements Serializable {
     }
 
     public BankAccount active(Boolean active) {
-        this.active = active;
+        this.setActive(active);
         return this;
     }
 
@@ -215,7 +217,7 @@ public class BankAccount implements Serializable {
     }
 
     public BankAccount accountType(BankAccountType accountType) {
-        this.accountType = accountType;
+        this.setAccountType(accountType);
         return this;
     }
 
@@ -228,7 +230,7 @@ public class BankAccount implements Serializable {
     }
 
     public BankAccount attachment(byte[] attachment) {
-        this.attachment = attachment;
+        this.setAttachment(attachment);
         return this;
     }
 
@@ -254,7 +256,7 @@ public class BankAccount implements Serializable {
     }
 
     public BankAccount description(String description) {
-        this.description = description;
+        this.setDescription(description);
         return this;
     }
 
@@ -266,17 +268,27 @@ public class BankAccount implements Serializable {
         return this.user;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public BankAccount user(User user) {
         this.setUser(user);
         return this;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public Set<Operation> getOperations() {
         return this.operations;
+    }
+
+    public void setOperations(Set<Operation> operations) {
+        if (this.operations != null) {
+            this.operations.forEach(i -> i.setBankAccount(null));
+        }
+        if (operations != null) {
+            operations.forEach(i -> i.setBankAccount(this));
+        }
+        this.operations = operations;
     }
 
     public BankAccount operations(Set<Operation> operations) {
@@ -294,16 +306,6 @@ public class BankAccount implements Serializable {
         this.operations.remove(operation);
         operation.setBankAccount(null);
         return this;
-    }
-
-    public void setOperations(Set<Operation> operations) {
-        if (this.operations != null) {
-            this.operations.forEach(i -> i.setBankAccount(null));
-        }
-        if (operations != null) {
-            operations.forEach(i -> i.setBankAccount(this));
-        }
-        this.operations = operations;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

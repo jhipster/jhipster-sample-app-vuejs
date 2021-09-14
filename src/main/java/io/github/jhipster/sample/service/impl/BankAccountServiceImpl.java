@@ -46,13 +46,11 @@ public class BankAccountServiceImpl implements BankAccountService {
 
         return bankAccountRepository
             .findById(bankAccountDTO.getId())
-            .map(
-                existingBankAccount -> {
-                    bankAccountMapper.partialUpdate(existingBankAccount, bankAccountDTO);
+            .map(existingBankAccount -> {
+                bankAccountMapper.partialUpdate(existingBankAccount, bankAccountDTO);
 
-                    return existingBankAccount;
-                }
-            )
+                return existingBankAccount;
+            })
             .map(bankAccountRepository::save)
             .map(bankAccountMapper::toDto);
     }

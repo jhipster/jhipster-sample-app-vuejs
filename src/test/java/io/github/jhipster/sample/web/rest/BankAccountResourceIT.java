@@ -1190,7 +1190,14 @@ class BankAccountResourceIT {
     void getAllBankAccountsByUserIsEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
-        User user = UserResourceIT.createEntity(em);
+        User user;
+        if (TestUtil.findAll(em, User.class).isEmpty()) {
+            user = UserResourceIT.createEntity(em);
+            em.persist(user);
+            em.flush();
+        } else {
+            user = TestUtil.findAll(em, User.class).get(0);
+        }
         em.persist(user);
         em.flush();
         bankAccount.setUser(user);
@@ -1209,7 +1216,14 @@ class BankAccountResourceIT {
     void getAllBankAccountsByOperationIsEqualToSomething() throws Exception {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
-        Operation operation = OperationResourceIT.createEntity(em);
+        Operation operation;
+        if (TestUtil.findAll(em, Operation.class).isEmpty()) {
+            operation = OperationResourceIT.createEntity(em);
+            em.persist(operation);
+            em.flush();
+        } else {
+            operation = TestUtil.findAll(em, Operation.class).get(0);
+        }
         em.persist(operation);
         em.flush();
         bankAccount.addOperation(operation);

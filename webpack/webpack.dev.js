@@ -11,8 +11,8 @@ const commonConfig = require('./webpack.common');
 const jhiUtils = require('./utils.js');
 const MODE = 'development';
 
-module.exports = env =>
-  webpackMerge(commonConfig({ env: MODE }), {
+module.exports = async env =>
+  webpackMerge(await commonConfig({ env: MODE }), {
     mode: MODE,
     module: {
       rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true }),
@@ -32,7 +32,9 @@ module.exports = env =>
       moduleIds: 'named',
     },
     devServer: {
-      contentBase: './target/classes/static/',
+      static: {
+        directory: './target/classes/static/',
+      },
       port: 9060,
       proxy: [
         {
@@ -42,15 +44,9 @@ module.exports = env =>
           headers: { host: 'localhost:9000' },
         },
       ],
-      watchOptions: {
-        ignored: /node_modules/,
-      },
       historyApiFallback: true,
     },
     plugins: [
-      new webpack.DefinePlugin({
-        'process.env': require('./dev.env'),
-      }),
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
       new HtmlWebpackPlugin({

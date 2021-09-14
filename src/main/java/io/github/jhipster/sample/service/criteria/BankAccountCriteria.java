@@ -71,6 +71,8 @@ public class BankAccountCriteria implements Serializable, Criteria {
 
     private LongFilter operationId;
 
+    private Boolean distinct;
+
     public BankAccountCriteria() {}
 
     public BankAccountCriteria(BankAccountCriteria other) {
@@ -87,6 +89,7 @@ public class BankAccountCriteria implements Serializable, Criteria {
         this.accountType = other.accountType == null ? null : other.accountType.copy();
         this.userId = other.userId == null ? null : other.userId.copy();
         this.operationId = other.operationId == null ? null : other.operationId.copy();
+        this.distinct = other.distinct;
     }
 
     @Override
@@ -289,6 +292,14 @@ public class BankAccountCriteria implements Serializable, Criteria {
         this.operationId = operationId;
     }
 
+    public Boolean getDistinct() {
+        return distinct;
+    }
+
+    public void setDistinct(Boolean distinct) {
+        this.distinct = distinct;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -311,7 +322,8 @@ public class BankAccountCriteria implements Serializable, Criteria {
             Objects.equals(active, that.active) &&
             Objects.equals(accountType, that.accountType) &&
             Objects.equals(userId, that.userId) &&
-            Objects.equals(operationId, that.operationId)
+            Objects.equals(operationId, that.operationId) &&
+            Objects.equals(distinct, that.distinct)
         );
     }
 
@@ -330,7 +342,8 @@ public class BankAccountCriteria implements Serializable, Criteria {
             active,
             accountType,
             userId,
-            operationId
+            operationId,
+            distinct
         );
     }
 
@@ -351,6 +364,7 @@ public class BankAccountCriteria implements Serializable, Criteria {
             (accountType != null ? "accountType=" + accountType + ", " : "") +
             (userId != null ? "userId=" + userId + ", " : "") +
             (operationId != null ? "operationId=" + operationId + ", " : "") +
+            (distinct != null ? "distinct=" + distinct + ", " : "") +
             "}";
     }
 }

@@ -38,7 +38,7 @@ export default class JhiConfiguration extends Vue {
       });
   }
 
-  public changeOrder(prop): void {
+  public changeOrder(prop: string): void {
     this.orderProp = prop;
     this.reverse = !this.reverse;
   }

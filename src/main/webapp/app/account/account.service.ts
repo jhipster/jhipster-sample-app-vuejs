@@ -45,7 +45,7 @@ export default class AccountService {
             }
           } else {
             this.store.commit('logout');
-            this.router.push('/', () => {});
+            this.router.push('/');
             sessionStorage.removeItem('requested-url');
           }
           this.translationService.refreshTranslation(this.store.getters.currentLanguage);

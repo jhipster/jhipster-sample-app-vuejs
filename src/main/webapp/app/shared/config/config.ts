@@ -83,7 +83,10 @@ export function initVueApp(vue) {
   vue.use(VueCookie);
   vue.use(Vuelidate);
   vue.use(Vue2Filters);
-  setupAxiosInterceptors(() => console.log('Unauthorized!'));
+  setupAxiosInterceptors(
+    () => console.log('Unauthorized!'),
+    () => console.log('Server error!')
+  );
   filters.initFilters();
 }
 

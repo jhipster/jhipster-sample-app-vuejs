@@ -24,11 +24,11 @@ export default class Activate extends Vue {
     this.activateService()
       .activateAccount(key)
       .then(
-        res => {
+        () => {
           this.success = true;
           this.error = false;
         },
-        err => {
+        () => {
           this.error = true;
           this.success = false;
         }

@@ -3,15 +3,23 @@ const path = require('path');
 const { merge } = require('webpack-merge');
 const { VueLoaderPlugin } = require('vue-loader');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { hashElement } = require('folder-hash');
 const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
+const { DefinePlugin } = require('webpack');
 const vueLoaderConfig = require('./loader.conf');
 
 function resolve(dir) {
   return path.join(__dirname, '..', dir);
 }
 
-module.exports = env =>
-  merge(
+module.exports = async env => {
+  const languagesHash = await hashElement(path.resolve(__dirname, '../src/main/webapp/i18n'), {
+    algo: 'md5',
+    encoding: 'hex',
+    files: { include: ['*.json'] },
+  });
+
+  return merge(
     {
       mode: 'development',
       context: path.resolve(__dirname, '../'),
@@ -103,6 +111,10 @@ module.exports = env =>
         ],
       },
       plugins: [
+        new DefinePlugin({
+          I18N_HASH: JSON.stringify(languagesHash.hash),
+          'process.env': require(env.env == 'development' ? './dev.env' : './prod.env'),
+        }),
         new VueLoaderPlugin(),
         new CopyWebpackPlugin({
           patterns: [
@@ -136,3 +148,4 @@ module.exports = env =>
     }
     // jhipster-needle-add-webpack-config - JHipster will add custom config
   );
+};

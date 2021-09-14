@@ -47,15 +47,13 @@ public class LabelService {
 
         return labelRepository
             .findById(label.getId())
-            .map(
-                existingLabel -> {
-                    if (label.getLabelName() != null) {
-                        existingLabel.setLabelName(label.getLabelName());
-                    }
-
-                    return existingLabel;
+            .map(existingLabel -> {
+                if (label.getLabelName() != null) {
+                    existingLabel.setLabelName(label.getLabelName());
                 }
-            )
+
+                return existingLabel;
+            })
             .map(labelRepository::save);
     }
 

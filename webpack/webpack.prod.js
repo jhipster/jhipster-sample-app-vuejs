@@ -13,7 +13,6 @@ const config = require('./env');
 const baseWebpackConfig = require('./webpack.common');
 const jhiUtils = require('./utils.js');
 
-const env = require('./prod.env');
 const MODE = 'production';
 
 const webpackConfig = {
@@ -54,10 +53,6 @@ const webpackConfig = {
     },
   },
   plugins: [
-    // http://vuejs.github.io/vue-loader/en/workflow/production.html
-    new webpack.DefinePlugin({
-      'process.env': env,
-    }),
     new TerserPlugin({
       terserOptions: {
         compress: {
@@ -155,4 +150,4 @@ if (config.build.bundleAnalyzerReport) {
   webpackConfig.plugins.push(new BundleAnalyzerPlugin());
 }
 
-module.exports = webpackMerge(baseWebpackConfig({ env: MODE }), webpackConfig);
+module.exports = async () => webpackMerge(await baseWebpackConfig({ env: MODE }), webpackConfig);

@@ -116,7 +116,7 @@ public class BankAccountResource {
      * or with status {@code 500 (Internal Server Error)} if the bankAccountDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/bank-accounts/{id}", consumes = "application/merge-patch+json")
+    @PatchMapping(value = "/bank-accounts/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<BankAccountDTO> partialUpdateBankAccount(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody BankAccountDTO bankAccountDTO
