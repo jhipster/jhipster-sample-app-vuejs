@@ -8,6 +8,7 @@ import UserManagementView from '@/admin/user-management/user-management-view.vue
 import UserManagementViewClass from '@/admin/user-management/user-management-view.component';
 import UserManagementService from '@/admin/user-management/user-management.service';
 import { Authority } from '@/shared/security/authority';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 
@@ -31,7 +32,7 @@ describe('UserManagementView Component', () => {
       store,
       i18n,
       localVue,
-      provide: { userService: () => new UserManagementService() },
+      provide: { userService: () => new UserManagementService(), alertService: () => new AlertService() },
     });
     userManagementView = wrapper.vm;
   });

@@ -159,8 +159,8 @@ jhipster:
   api-docs:
     default-include-pattern: ${server.servlet.context-path:}/api/.*
     management-include-pattern: ${server.servlet.context-path:}/management/.*
-    title: jhipsterSampleApplicationVue API
-    description: jhipsterSampleApplicationVue API documentation
+    title: Jhipster Sample Application Vue API
+    description: Jhipster Sample Application Vue API documentation
     version: 0.0.1
     terms-of-service-url:
     contact-name:

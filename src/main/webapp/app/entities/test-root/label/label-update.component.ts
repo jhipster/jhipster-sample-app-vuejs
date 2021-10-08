@@ -2,6 +2,8 @@ import { Component, Vue, Inject } from 'vue-property-decorator';
 
 import { required, minLength } from 'vuelidate/lib/validators';
 
+import AlertService from '@/shared/alert/alert.service';
+
 import OperationService from '@/entities/test-root/operation/operation.service';
 import { IOperation } from '@/shared/model/test-root/operation.model';
 
@@ -22,6 +24,8 @@ const validations: any = {
 })
 export default class LabelUpdate extends Vue {
   @Inject('labelService') private labelService: () => LabelService;
+  @Inject('alertService') private alertService: () => AlertService;
+
   public label: ILabel = new Label();
 
   @Inject('operationService') private operationService: () => OperationService;
@@ -65,6 +69,10 @@ export default class LabelUpdate extends Vue {
             solid: true,
             autoHideDelay: 5000,
           });
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error.response);
         });
     } else {
       this.labelService()
@@ -80,6 +88,10 @@ export default class LabelUpdate extends Vue {
             solid: true,
             autoHideDelay: 5000,
           });
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error.response);
         });
     }
   }
@@ -89,6 +101,9 @@ export default class LabelUpdate extends Vue {
       .find(labelId)
       .then(res => {
         this.label = res;
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
       });
   }
 

@@ -6,6 +6,7 @@ import * as config from '@/shared/config/config';
 import BankAccountMySuffixComponent from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.vue';
 import BankAccountMySuffixClass from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.component';
 import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 
@@ -43,6 +44,7 @@ describe('Component Tests', () => {
         stubs: { bModal: bModalStub as any },
         provide: {
           bankAccountService: () => bankAccountServiceStub,
+          alertService: () => new AlertService(),
         },
       });
       comp = wrapper.vm;

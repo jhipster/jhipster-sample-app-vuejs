@@ -8,6 +8,7 @@ import OperationDetailComponent from '@/entities/test-root/operation/operation-d
 import OperationClass from '@/entities/test-root/operation/operation-details.component';
 import OperationService from '@/entities/test-root/operation/operation.service';
 import router from '@/router';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 localVue.use(VueRouter);
@@ -32,7 +33,7 @@ describe('Component Tests', () => {
         i18n,
         localVue,
         router,
-        provide: { operationService: () => operationServiceStub },
+        provide: { operationService: () => operationServiceStub, alertService: () => new AlertService() },
       });
       comp = wrapper.vm;
     });

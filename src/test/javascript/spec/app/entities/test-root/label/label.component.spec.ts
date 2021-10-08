@@ -6,6 +6,7 @@ import * as config from '@/shared/config/config';
 import LabelComponent from '@/entities/test-root/label/label.vue';
 import LabelClass from '@/entities/test-root/label/label.component';
 import LabelService from '@/entities/test-root/label/label.service';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 
@@ -44,6 +45,7 @@ describe('Component Tests', () => {
         stubs: { jhiItemCount: true, bPagination: true, bModal: bModalStub as any },
         provide: {
           labelService: () => labelServiceStub,
+          alertService: () => new AlertService(),
         },
       });
       comp = wrapper.vm;

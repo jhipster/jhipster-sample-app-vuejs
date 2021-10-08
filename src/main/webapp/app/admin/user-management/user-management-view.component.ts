@@ -1,10 +1,13 @@
 import Vue from 'vue';
 import { Component, Inject } from 'vue-property-decorator';
 import UserManagementService from './user-management.service';
+import AlertService from '@/shared/alert/alert.service';
 
 @Component
 export default class JhiUserManagementView extends Vue {
   @Inject('userService') private userManagementService: () => UserManagementService;
+  @Inject('alertService') private alertService: () => AlertService;
+
   public user: any = null;
 
   beforeRouteEnter(to, from, next) {
@@ -19,6 +22,9 @@ export default class JhiUserManagementView extends Vue {
       .get(userId)
       .then(res => {
         this.user = res.data;
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
       });
   }
 }

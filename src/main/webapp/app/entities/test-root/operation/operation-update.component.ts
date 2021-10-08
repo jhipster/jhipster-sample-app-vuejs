@@ -4,6 +4,8 @@ import { required, decimal } from 'vuelidate/lib/validators';
 import dayjs from 'dayjs';
 import { DATE_TIME_LONG_FORMAT } from '@/shared/date/filters';
 
+import AlertService from '@/shared/alert/alert.service';
+
 import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
 import { IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
 
@@ -31,6 +33,8 @@ const validations: any = {
 })
 export default class OperationUpdate extends Vue {
   @Inject('operationService') private operationService: () => OperationService;
+  @Inject('alertService') private alertService: () => AlertService;
+
   public operation: IOperation = new Operation();
 
   @Inject('bankAccountService') private bankAccountService: () => BankAccountMySuffixService;
@@ -79,6 +83,10 @@ export default class OperationUpdate extends Vue {
             solid: true,
             autoHideDelay: 5000,
           });
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error.response);
         });
     } else {
       this.operationService()
@@ -94,6 +102,10 @@ export default class OperationUpdate extends Vue {
             solid: true,
             autoHideDelay: 5000,
           });
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error.response);
         });
     }
   }
@@ -127,6 +139,9 @@ export default class OperationUpdate extends Vue {
       .then(res => {
         res.date = new Date(res.date);
         this.operation = res;
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
       });
   }
 

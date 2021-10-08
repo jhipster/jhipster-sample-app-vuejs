@@ -14,6 +14,7 @@ import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suf
 import UserService from '@/admin/user-management/user-management.service';
 
 import OperationService from '@/entities/test-root/operation/operation.service';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 
@@ -44,6 +45,7 @@ describe('Component Tests', () => {
         router,
         provide: {
           bankAccountService: () => bankAccountServiceStub,
+          alertService: () => new AlertService(),
 
           userService: () => new UserService(),
 

@@ -8,6 +8,7 @@ import LabelDetailComponent from '@/entities/test-root/label/label-details.vue';
 import LabelClass from '@/entities/test-root/label/label-details.component';
 import LabelService from '@/entities/test-root/label/label.service';
 import router from '@/router';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 localVue.use(VueRouter);
@@ -32,7 +33,7 @@ describe('Component Tests', () => {
         i18n,
         localVue,
         router,
-        provide: { labelService: () => labelServiceStub },
+        provide: { labelService: () => labelServiceStub, alertService: () => new AlertService() },
       });
       comp = wrapper.vm;
     });

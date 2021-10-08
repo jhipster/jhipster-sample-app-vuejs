@@ -7,6 +7,8 @@ import { required, decimal } from 'vuelidate/lib/validators';
 import dayjs from 'dayjs';
 import { DATE_TIME_LONG_FORMAT } from '@/shared/date/filters';
 
+import AlertService from '@/shared/alert/alert.service';
+
 import UserService from '@/admin/user-management/user-management.service';
 
 import OperationService from '@/entities/test-root/operation/operation.service';
@@ -42,6 +44,8 @@ const validations: any = {
 })
 export default class BankAccountMySuffixUpdate extends mixins(JhiDataUtils) {
   @Inject('bankAccountService') private bankAccountService: () => BankAccountMySuffixService;
+  @Inject('alertService') private alertService: () => AlertService;
+
   public bankAccount: IBankAccountMySuffix = new BankAccountMySuffix();
 
   @Inject('userService') private userService: () => UserService;
@@ -89,6 +93,10 @@ export default class BankAccountMySuffixUpdate extends mixins(JhiDataUtils) {
             solid: true,
             autoHideDelay: 5000,
           });
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error.response);
         });
     } else {
       this.bankAccountService()
@@ -104,6 +112,10 @@ export default class BankAccountMySuffixUpdate extends mixins(JhiDataUtils) {
             solid: true,
             autoHideDelay: 5000,
           });
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error.response);
         });
     }
   }
@@ -137,6 +149,9 @@ export default class BankAccountMySuffixUpdate extends mixins(JhiDataUtils) {
       .then(res => {
         res.lastOperationDate = new Date(res.lastOperationDate);
         this.bankAccount = res;
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
       });
   }
 

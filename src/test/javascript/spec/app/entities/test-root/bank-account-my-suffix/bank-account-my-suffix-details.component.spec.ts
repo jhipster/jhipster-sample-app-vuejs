@@ -8,6 +8,7 @@ import BankAccountMySuffixDetailComponent from '@/entities/test-root/bank-accoun
 import BankAccountMySuffixClass from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix-details.component';
 import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
 import router from '@/router';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 localVue.use(VueRouter);
@@ -32,7 +33,7 @@ describe('Component Tests', () => {
         i18n,
         localVue,
         router,
-        provide: { bankAccountService: () => bankAccountServiceStub },
+        provide: { bankAccountService: () => bankAccountServiceStub, alertService: () => new AlertService() },
       });
       comp = wrapper.vm;
     });

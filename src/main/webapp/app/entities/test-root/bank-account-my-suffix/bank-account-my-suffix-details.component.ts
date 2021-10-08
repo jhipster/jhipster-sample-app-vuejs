@@ -5,10 +5,13 @@ import JhiDataUtils from '@/shared/data/data-utils.service';
 
 import { IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
 import BankAccountMySuffixService from './bank-account-my-suffix.service';
+import AlertService from '@/shared/alert/alert.service';
 
 @Component
 export default class BankAccountMySuffixDetails extends mixins(JhiDataUtils) {
   @Inject('bankAccountService') private bankAccountService: () => BankAccountMySuffixService;
+  @Inject('alertService') private alertService: () => AlertService;
+
   public bankAccount: IBankAccountMySuffix = {};
 
   beforeRouteEnter(to, from, next) {
@@ -24,6 +27,9 @@ export default class BankAccountMySuffixDetails extends mixins(JhiDataUtils) {
       .find(bankAccountId)
       .then(res => {
         this.bankAccount = res;
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
       });
   }
 

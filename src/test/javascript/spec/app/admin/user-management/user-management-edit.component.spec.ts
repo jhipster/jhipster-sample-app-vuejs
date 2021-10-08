@@ -8,6 +8,7 @@ import UserManagementEdit from '@/admin/user-management/user-management-edit.vue
 import UserManagementEditClass from '@/admin/user-management/user-management-edit.component';
 import UserManagementService from '@/admin/user-management/user-management.service';
 import VueRouter from 'vue-router';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 localVue.use(VueRouter);
@@ -36,6 +37,7 @@ describe('UserManagementEdit Component', () => {
       localVue,
       provide: {
         userService: () => new UserManagementService(),
+        alertService: () => new AlertService(),
       },
     });
     userManagementEdit = wrapper.vm;

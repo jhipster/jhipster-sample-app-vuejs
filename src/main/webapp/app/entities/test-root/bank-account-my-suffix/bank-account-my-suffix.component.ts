@@ -7,12 +7,15 @@ import { IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-s
 import JhiDataUtils from '@/shared/data/data-utils.service';
 
 import BankAccountMySuffixService from './bank-account-my-suffix.service';
+import AlertService from '@/shared/alert/alert.service';
 
 @Component({
   mixins: [Vue2Filters.mixin],
 })
 export default class BankAccountMySuffix extends mixins(JhiDataUtils) {
   @Inject('bankAccountService') private bankAccountService: () => BankAccountMySuffixService;
+  @Inject('alertService') private alertService: () => AlertService;
+
   private removeId: number = null;
 
   public bankAccounts: IBankAccountMySuffix[] = [];
@@ -38,6 +41,7 @@ export default class BankAccountMySuffix extends mixins(JhiDataUtils) {
         },
         err => {
           this.isFetching = false;
+          this.alertService().showHttpError(this, err.response);
         }
       );
   }
@@ -68,6 +72,9 @@ export default class BankAccountMySuffix extends mixins(JhiDataUtils) {
         this.removeId = null;
         this.retrieveAllBankAccountMySuffixs();
         this.closeDialog();
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
       });
   }
 

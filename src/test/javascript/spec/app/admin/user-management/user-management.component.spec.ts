@@ -7,6 +7,7 @@ import * as config from '@/shared/config/config';
 import UserManagement from '@/admin/user-management/user-management.vue';
 import UserManagementClass from '@/admin/user-management/user-management.component';
 import UserManagementService from '@/admin/user-management/user-management.service';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 
@@ -51,6 +52,7 @@ describe('UserManagement Component', () => {
       },
       provide: {
         userService: () => new UserManagementService(),
+        alertService: () => new AlertService(),
       },
     });
     userManagement = wrapper.vm;

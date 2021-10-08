@@ -9,6 +9,7 @@ import LabelClass from '@/entities/test-root/label/label-update.component';
 import LabelService from '@/entities/test-root/label/label.service';
 
 import OperationService from '@/entities/test-root/operation/operation.service';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 
@@ -39,6 +40,7 @@ describe('Component Tests', () => {
         router,
         provide: {
           labelService: () => labelServiceStub,
+          alertService: () => new AlertService(),
 
           operationService: () => new OperationService(),
         },

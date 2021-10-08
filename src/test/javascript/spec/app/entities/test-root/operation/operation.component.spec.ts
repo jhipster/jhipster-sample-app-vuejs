@@ -6,6 +6,7 @@ import * as config from '@/shared/config/config';
 import OperationComponent from '@/entities/test-root/operation/operation.vue';
 import OperationClass from '@/entities/test-root/operation/operation.component';
 import OperationService from '@/entities/test-root/operation/operation.service';
+import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
 
@@ -44,6 +45,7 @@ describe('Component Tests', () => {
         stubs: { jhiItemCount: true, bPagination: true, bModal: bModalStub as any },
         provide: {
           operationService: () => operationServiceStub,
+          alertService: () => new AlertService(),
         },
       });
       comp = wrapper.vm;
