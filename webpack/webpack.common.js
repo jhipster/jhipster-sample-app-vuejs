@@ -5,15 +5,18 @@ const { VueLoaderPlugin } = require('vue-loader');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { hashElement } = require('folder-hash');
 const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
-const { DefinePlugin } = require('webpack');
-const vueLoaderConfig = require('./loader.conf');
 
-function resolve(dir) {
+const { DefinePlugin, EnvironmentPlugin } = require('webpack');
+const { vueLoaderConfig } = require('./vue.utils');
+const config = require('./config');
+
+function resolve(dir = '') {
   return path.join(__dirname, '..', dir);
 }
 
-module.exports = async env => {
-  const languagesHash = await hashElement(path.resolve(__dirname, '../src/main/webapp/i18n'), {
+module.exports = async (env, options) => {
+  const development = options.mode === 'development';
+  const languagesHash = await hashElement(resolve('src/main/webapp/i18n'), {
     algo: 'md5',
     encoding: 'hex',
     files: { include: ['*.json'] },
@@ -21,10 +24,13 @@ module.exports = async env => {
 
   return merge(
     {
-      mode: 'development',
-      context: path.resolve(__dirname, '../'),
+      mode: options.mode,
+      context: resolve(),
       entry: {
         app: './src/main/webapp/app/main.ts',
+      },
+      output: {
+        path: resolve('target/classes/static/'),
       },
       resolve: {
         extensions: ['.ts', '.js', '.vue', '.json'],
@@ -48,13 +54,14 @@ module.exports = async env => {
       cache: {
         // 1. Set cache type to filesystem
         type: 'filesystem',
-        cacheDirectory: path.resolve(__dirname, '../target/webpack'),
+        cacheDirectory: resolve('target/webpack'),
         buildDependencies: {
           // 2. Add your config as buildDependency to get cache invalidation on config change
           config: [
             __filename,
-            path.resolve(__dirname, `webpack.${env.env == 'development' ? 'dev' : 'prod'}.js`),
-            path.resolve(__dirname, 'utils.js'),
+            path.resolve(__dirname, 'config.js'),
+            path.resolve(__dirname, 'vue.utils.js'),
+            path.resolve(__dirname, `webpack.${development ? 'dev' : 'prod'}.js`),
             path.resolve(__dirname, '../.postcssrc.js'),
             path.resolve(__dirname, '../tsconfig.json'),
           ],
@@ -65,7 +72,7 @@ module.exports = async env => {
           {
             test: /\.vue$/,
             loader: 'vue-loader',
-            options: vueLoaderConfig,
+            options: vueLoaderConfig(!development),
           },
           {
             test: /\.ts$/,
@@ -111,9 +118,14 @@ module.exports = async env => {
         ],
       },
       plugins: [
+        new EnvironmentPlugin({
+          // Required by vuelidate https://github.com/vuelidate/vuelidate/issues/365
+          BUILD: 'web',
+        }),
         new DefinePlugin({
           I18N_HASH: JSON.stringify(languagesHash.hash),
-          'process.env': require(env.env == 'development' ? './dev.env' : './prod.env'),
+          VERSION: JSON.stringify(config.version),
+          SERVER_API_URL: JSON.stringify(config.serverApiUrl),
         }),
         new VueLoaderPlugin(),
         new CopyWebpackPlugin({
@@ -145,7 +157,8 @@ module.exports = async env => {
           },
         }),
       ],
-    }
+    },
+    await require(`./webpack.${development ? 'dev' : 'prod'}`)(env, options)
     // jhipster-needle-add-webpack-config - JHipster will add custom config
   );
 };

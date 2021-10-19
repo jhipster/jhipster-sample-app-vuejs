@@ -16,6 +16,7 @@ import { IOperation } from '@/shared/model/test-root/operation.model';
 
 import { IBankAccountMySuffix, BankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
 import BankAccountMySuffixService from './bank-account-my-suffix.service';
+import { BankAccountType } from '@/shared/model/enumerations/bank-account-type.model';
 
 const validations: any = {
   bankAccount: {
@@ -55,6 +56,7 @@ export default class BankAccountMySuffixUpdate extends mixins(JhiDataUtils) {
   @Inject('operationService') private operationService: () => OperationService;
 
   public operations: IOperation[] = [];
+  public bankAccountTypeValues: string[] = Object.keys(BankAccountType);
   public isSaving = false;
   public currentLanguage = '';
 

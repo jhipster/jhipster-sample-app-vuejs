@@ -114,7 +114,7 @@
             <label v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.label')" for="operation-label">Label</label>
             <select
               class="form-control"
-              id="operation-label"
+              id="operation-labels"
               data-cy="label"
               multiple
               name="label"

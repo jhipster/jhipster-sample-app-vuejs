@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-import { SERVER_API_URL } from '@/constants';
-
 const TIMEOUT = 1000000;
 const onRequestSuccess = config => {
   const token = localStorage.getItem('jhi-authenticationToken') || sessionStorage.getItem('jhi-authenticationToken');

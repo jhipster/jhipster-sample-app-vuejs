@@ -216,9 +216,14 @@
               id="bank-account-my-suffix-accountType"
               data-cy="accountType"
             >
-              <option value="CHECKING" v-bind:label="$t('jhipsterSampleApplicationVueApp.BankAccountType.CHECKING')">CHECKING</option>
-              <option value="SAVINGS" v-bind:label="$t('jhipsterSampleApplicationVueApp.BankAccountType.SAVINGS')">SAVINGS</option>
-              <option value="LOAN" v-bind:label="$t('jhipsterSampleApplicationVueApp.BankAccountType.LOAN')">LOAN</option>
+              <option
+                v-for="bankAccountType in bankAccountTypeValues"
+                :key="bankAccountType"
+                v-bind:value="bankAccountType"
+                v-bind:label="$t('jhipsterSampleApplicationVueApp.BankAccountType.' + bankAccountType)"
+              >
+                {{ bankAccountType }}
+              </option>
             </select>
           </div>
           <div class="form-group">

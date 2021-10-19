@@ -1,3 +1,5 @@
+const config = require('../../../webpack/config');
+
 module.exports = {
   testEnvironment: 'jsdom',
   coverageDirectory: '<rootDir>/target/test-results/',
@@ -22,6 +24,8 @@ module.exports = {
   rootDir: '../../../',
   globals: {
     I18N_HASH: 'generated_hash',
+    SERVER_API_URL: config.serverApiUrl,
+    VERSION: config.version,
   },
   coverageThreshold: {
     global: {

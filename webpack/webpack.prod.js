@@ -1,6 +1,5 @@
 'use strict';
 const webpack = require('webpack');
-const webpackMerge = require('webpack-merge').merge;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
@@ -8,17 +7,12 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
-const utils = require('./vue.utils');
-const config = require('./env');
-const baseWebpackConfig = require('./webpack.common');
-const jhiUtils = require('./utils.js');
-
-const MODE = 'production';
+const { styleLoaders } = require('./vue.utils');
+const config = require('./config');
 
 const webpackConfig = {
-  mode: MODE,
   module: {
-    rules: utils.styleLoaders({
+    rules: styleLoaders({
       sourceMap: config.build.productionSourceMap,
       extract: true,
       usePostCSS: true,
@@ -30,7 +24,6 @@ const webpackConfig = {
     main: './src/main/webapp/app/main',
   },
   output: {
-    path: jhiUtils.root('target/classes/static/'),
     filename: 'app/[name].[contenthash].bundle.js',
     chunkFilename: 'app/[id].[chunkhash].chunk.js',
   },
@@ -150,4 +143,4 @@ if (config.build.bundleAnalyzerReport) {
   webpackConfig.plugins.push(new BundleAnalyzerPlugin());
 }
 
-module.exports = async () => webpackMerge(await baseWebpackConfig({ env: MODE }), webpackConfig);
+module.exports = async () => webpackConfig;
