@@ -3,7 +3,13 @@ import LoginService from '@/account/login.service';
 import AccountService from '@/account/account.service';
 import TranslationService from '@/locale/translation.service';
 
-@Component
+import EntitiesMenu from '@/entities/entities-menu.vue';
+
+@Component({
+  components: {
+    'entities-menu': EntitiesMenu,
+  },
+})
 export default class JhiNavbar extends Vue {
   @Inject('loginService')
   private loginService: () => LoginService;

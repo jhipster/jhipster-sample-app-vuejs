@@ -17,7 +17,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="entry in orderBy(filterBy(configuration, filtered), orderProp, reverse === true ? 1 : -1)" :key="entry.prefix">
+          <tr v-for="entry in orderBy(filterBy(configuration, filtered), orderProp, reverse ? 1 : -1)" :key="entry.prefix">
             <td>
               <span>{{ entry.prefix }}</span>
             </td>

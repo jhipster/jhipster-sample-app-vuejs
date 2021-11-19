@@ -22,15 +22,13 @@ import LoginService from './account/login.service';
 import AccountService from './account/account.service';
 import AlertService from './shared/alert/alert.service';
 
+import '../content/scss/global.scss';
 import '../content/scss/vendor.scss';
 import TranslationService from '@/locale/translation.service';
 
 import UserOAuth2Service from '@/entities/user/user.oauth2.service';
 /* tslint:disable */
 
-import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
-import LabelService from '@/entities/test-root/label/label.service';
-import OperationService from '@/entities/test-root/operation/operation.service';
 // jhipster-needle-add-entity-service-to-main-import - JHipster will import entities services here
 
 /* tslint:enable */
@@ -89,9 +87,6 @@ new Vue({
 
     userOAuth2Service: () => new UserOAuth2Service(),
     translationService: () => translationService,
-    bankAccountService: () => new BankAccountMySuffixService(),
-    labelService: () => new LabelService(),
-    operationService: () => new OperationService(),
     // jhipster-needle-add-entity-service-to-main - JHipster will import entities services here
     accountService: () => accountService,
     alertService: () => new AlertService(),

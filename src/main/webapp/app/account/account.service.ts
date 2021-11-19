@@ -67,9 +67,8 @@ export default class AccountService {
       const token = localStorage.getItem('jhi-authenticationToken') || sessionStorage.getItem('jhi-authenticationToken');
       if (!this.store.getters.account && !this.store.getters.logon && token) {
         return this.retrieveAccount();
-      } else {
-        return Promise.resolve(false);
       }
+      return Promise.resolve(false);
     }
 
     for (const authority of authorities) {

@@ -3,6 +3,7 @@ const path = require('path');
 const { merge } = require('webpack-merge');
 const { VueLoaderPlugin } = require('vue-loader');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { hashElement } = require('folder-hash');
 const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
 
@@ -38,18 +39,20 @@ module.exports = async (env, options) => {
           vue$: 'vue/dist/vue.esm.js',
           '@': resolve('src/main/webapp/app'),
         },
-        fallback: {
-          // prevent webpack from injecting useless setImmediate polyfill because Vue
-          // source contains it (although only uses it if it's native).
-          setImmediate: false,
-          // prevent webpack from injecting mocks to Node native modules
-          // that does not make sense for the client
-          dgram: 'empty',
-          fs: 'empty',
-          net: 'empty',
-          tls: 'empty',
-          child_process: 'empty',
+      },
+      devServer: {
+        static: {
+          directory: './target/classes/static/',
         },
+        port: 9060,
+        proxy: [
+          {
+            context: ['/api', '/services', '/management', '/swagger-resources', '/v2/api-docs', '/v3/api-docs', '/h2-console', '/auth'],
+            target: 'http://localhost:8080',
+            secure: false,
+          },
+        ],
+        historyApiFallback: true,
       },
       cache: {
         // 1. Set cache type to filesystem
@@ -89,31 +92,8 @@ module.exports = async (env, options) => {
             include: [resolve('src'), resolve('test')],
           },
           {
-            test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-            loader: 'url-loader',
-            options: {
-              limit: 10000,
-              name: 'content/[hash].[ext]',
-              publicPath: '../',
-            },
-          },
-          {
-            test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
-            loader: 'url-loader',
-            options: {
-              limit: 10000,
-              name: 'content/[hash].[ext]',
-              publicPath: '../',
-            },
-          },
-          {
-            test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-            loader: 'url-loader',
-            options: {
-              limit: 10000,
-              name: 'content/[hash].[ext]',
-              publicPath: '../',
-            },
+            test: /\.(png|jpe?g|gif|svg|mp4|webm|ogg|mp3|wav|flac|aac|woff2?|eot|ttf|otf)/,
+            type: 'asset/resource',
           },
         ],
       },
@@ -126,6 +106,10 @@ module.exports = async (env, options) => {
           I18N_HASH: JSON.stringify(languagesHash.hash),
           VERSION: JSON.stringify(config.version),
           SERVER_API_URL: JSON.stringify(config.serverApiUrl),
+        }),
+        new HtmlWebpackPlugin({
+          base: '/',
+          template: './src/main/webapp/index.html',
         }),
         new VueLoaderPlugin(),
         new CopyWebpackPlugin({

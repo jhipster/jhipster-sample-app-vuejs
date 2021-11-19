@@ -19,16 +19,20 @@ export default class TranslationService {
       this.i18n.setLocaleMessage(currentLanguage, {});
       axios.get(`i18n/${currentLanguage}.json?_=${I18N_HASH}`).then((res: any) => {
         if (res.data) {
-          dayjs.locale(currentLanguage);
           this.i18n.setLocaleMessage(currentLanguage, res.data);
-          this.i18n.locale = currentLanguage;
-          this.store.commit('currentLanguage', currentLanguage);
+          this.setLocale(currentLanguage);
         }
       });
     } else if (this.i18n) {
-      dayjs.locale(currentLanguage);
-      this.i18n.locale = currentLanguage;
-      this.store.commit('currentLanguage', currentLanguage);
+      this.setLocale(currentLanguage);
     }
+  }
+
+  private setLocale(lang: string) {
+    dayjs.locale(lang);
+    this.i18n.locale = lang;
+    this.store.commit('currentLanguage', lang);
+    axios.defaults.headers.common['Accept-Language'] = lang;
+    document.querySelector('html').setAttribute('lang', lang);
   }
 }

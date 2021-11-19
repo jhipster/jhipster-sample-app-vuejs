@@ -85,6 +85,7 @@ const vueLoaderConfig = production => ({
     img: 'src',
     image: 'xlink:href',
   },
+  hotReload: config.dev.hotReload,
 });
 
 module.exports = {

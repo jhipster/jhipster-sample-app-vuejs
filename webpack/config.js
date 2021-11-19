@@ -8,6 +8,8 @@ module.exports = {
   version: process.env.hasOwnProperty('APP_VERSION') ? process.env.APP_VERSION : 'UNKNOWN',
 
   dev: {
+    hotReload: true,
+
     // https://webpack.js.org/configuration/devtool/#development
     devtool: 'cheap-module-source-map',
 

@@ -1,6 +1,13 @@
+const { pathsToModuleNameMapper } = require('ts-jest/utils');
 const config = require('../../../webpack/config');
+const {
+  compilerOptions: { paths = {}, baseUrl = './' },
+} = require('../../../tsconfig.json');
 
 module.exports = {
+  rootDir: '../../../',
+  roots: ['<rootDir>', `<rootDir>/${baseUrl}`, `<rootDir>/src/test/javascript/spec/app/`],
+  preset: 'ts-jest',
   testEnvironment: 'jsdom',
   coverageDirectory: '<rootDir>/target/test-results/',
   coveragePathIgnorePatterns: [
@@ -16,16 +23,19 @@ module.exports = {
   },
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/main/webapp/app/$1',
+    ...pathsToModuleNameMapper(paths, { prefix: `<rootDir>/${baseUrl}/` }),
   },
   reporters: ['default', ['jest-junit', { outputDirectory: './target/test-results/', outputName: 'TESTS-results-jest.xml' }]],
   testResultsProcessor: 'jest-sonar-reporter',
   testMatch: ['<rootDir>/src/test/javascript/spec/**/@(*.)@(spec.ts)'],
   snapshotSerializers: ['<rootDir>/node_modules/jest-serializer-vue'],
-  rootDir: '../../../',
   globals: {
     I18N_HASH: 'generated_hash',
     SERVER_API_URL: config.serverApiUrl,
     VERSION: config.version,
+    'ts-jest': {
+      tsconfig: '<rootDir>/tsconfig.spec.json',
+    },
   },
   coverageThreshold: {
     global: {

@@ -1,6 +1,5 @@
 'use strict';
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
@@ -19,14 +18,6 @@ const webpackConfig = {
     }),
   },
   devtool: config.build.productionSourceMap ? config.build.devtool : false,
-  entry: {
-    global: './src/main/webapp/content/scss/global.scss',
-    main: './src/main/webapp/app/main',
-  },
-  output: {
-    filename: 'app/[name].[contenthash].bundle.js',
-    chunkFilename: 'app/[id].[chunkhash].chunk.js',
-  },
   optimization: {
     moduleIds: 'deterministic',
     minimizer: [
@@ -81,27 +72,7 @@ const webpackConfig = {
       extractComments: false,
     }),
     // extract css into its own file
-    new MiniCssExtractPlugin({
-      filename: 'content/[name].[contenthash].css',
-      chunkFilename: 'content/[id].css',
-    }),
-    // generate dist index.html with correct asset hash for caching.
-    // you can customize output by editing /index.html
-    // see https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      base: '/',
-      template: './src/main/webapp/index.html',
-      chunks: ['vendors', 'main', 'global'],
-      chunksSortMode: 'manual',
-      inject: true,
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true,
-        // more options:
-        // https://github.com/kangax/html-minifier#options-quick-reference
-      },
-    }),
+    new MiniCssExtractPlugin(),
     // keep module.id stable when vendor modules does not change
     new ForkTsCheckerWebpackPlugin({
       typescript: {
