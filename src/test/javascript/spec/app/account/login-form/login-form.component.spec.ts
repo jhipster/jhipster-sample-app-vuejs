@@ -2,7 +2,7 @@ import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
 import AccountService from '@/account/account.service';
-import router from '@/router';
+import VueRouter from 'vue-router';
 import TranslationService from '@/locale/translation.service';
 
 import * as config from '@/shared/config/config';
@@ -40,7 +40,7 @@ describe('LoginForm Component', () => {
       i18n,
       localVue,
       provide: {
-        accountService: () => new AccountService(store, new TranslationService(store, i18n), router),
+        accountService: () => new AccountService(store, new TranslationService(store, i18n), new VueRouter()),
       },
     });
     loginForm = wrapper.vm;

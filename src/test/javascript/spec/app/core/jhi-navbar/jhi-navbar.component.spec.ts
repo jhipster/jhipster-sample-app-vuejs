@@ -74,9 +74,9 @@ describe('JhiNavbar', () => {
     expect(accountService.hasAnyAuthorityAndCheckAuth).toHaveBeenCalled();
   });
 
-  it('logout should clear credentials', () => {
+  it('logout should clear credentials', async () => {
     store.commit('authenticated', { login: 'test' });
-    jhiNavbar.logout();
+    await jhiNavbar.logout();
 
     expect(jhiNavbar.authenticated).toBeFalsy();
   });

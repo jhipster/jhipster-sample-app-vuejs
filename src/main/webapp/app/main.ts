@@ -49,12 +49,10 @@ const translationService = new TranslationService(store, i18n);
 const loginService = new LoginService();
 const accountService = new AccountService(store, translationService, router);
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   if (!to.matched.length) {
     next('/not-found');
-  }
-
-  if (to.meta && to.meta.authorities && to.meta.authorities.length > 0) {
+  } else if (to.meta && to.meta.authorities && to.meta.authorities.length > 0) {
     accountService.hasAnyAuthorityAndCheckAuth(to.meta.authorities).then(value => {
       if (!value) {
         sessionStorage.setItem('requested-url', to.fullPath);

@@ -17,84 +17,82 @@ const OperationDetails = () => import('@/entities/test-root/operation/operation-
 
 // jhipster-needle-add-entity-to-router-import - JHipster will import entities to the router here
 
-export default [
-  {
-    path: '/',
-    component: Entities,
-    children: [
-      {
-        path: 'bank-account-my-suffix',
-        name: 'BankAccountMySuffix',
-        component: BankAccountMySuffix,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'bank-account-my-suffix/new',
-        name: 'BankAccountMySuffixCreate',
-        component: BankAccountMySuffixUpdate,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'bank-account-my-suffix/:bankAccountId/edit',
-        name: 'BankAccountMySuffixEdit',
-        component: BankAccountMySuffixUpdate,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'bank-account-my-suffix/:bankAccountId/view',
-        name: 'BankAccountMySuffixView',
-        component: BankAccountMySuffixDetails,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'label',
-        name: 'Label',
-        component: Label,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'label/new',
-        name: 'LabelCreate',
-        component: LabelUpdate,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'label/:labelId/edit',
-        name: 'LabelEdit',
-        component: LabelUpdate,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'label/:labelId/view',
-        name: 'LabelView',
-        component: LabelDetails,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'operation',
-        name: 'Operation',
-        component: Operation,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'operation/new',
-        name: 'OperationCreate',
-        component: OperationUpdate,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'operation/:operationId/edit',
-        name: 'OperationEdit',
-        component: OperationUpdate,
-        meta: { authorities: [Authority.USER] },
-      },
-      {
-        path: 'operation/:operationId/view',
-        name: 'OperationView',
-        component: OperationDetails,
-        meta: { authorities: [Authority.USER] },
-      },
-      // jhipster-needle-add-entity-to-router - JHipster will add entities to the router here
-    ],
-  },
-];
+export default {
+  path: '/',
+  component: Entities,
+  children: [
+    {
+      path: 'bank-account-my-suffix',
+      name: 'BankAccountMySuffix',
+      component: BankAccountMySuffix,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'bank-account-my-suffix/new',
+      name: 'BankAccountMySuffixCreate',
+      component: BankAccountMySuffixUpdate,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'bank-account-my-suffix/:bankAccountId/edit',
+      name: 'BankAccountMySuffixEdit',
+      component: BankAccountMySuffixUpdate,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'bank-account-my-suffix/:bankAccountId/view',
+      name: 'BankAccountMySuffixView',
+      component: BankAccountMySuffixDetails,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'label',
+      name: 'Label',
+      component: Label,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'label/new',
+      name: 'LabelCreate',
+      component: LabelUpdate,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'label/:labelId/edit',
+      name: 'LabelEdit',
+      component: LabelUpdate,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'label/:labelId/view',
+      name: 'LabelView',
+      component: LabelDetails,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'operation',
+      name: 'Operation',
+      component: Operation,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'operation/new',
+      name: 'OperationCreate',
+      component: OperationUpdate,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'operation/:operationId/edit',
+      name: 'OperationEdit',
+      component: OperationUpdate,
+      meta: { authorities: [Authority.USER] },
+    },
+    {
+      path: 'operation/:operationId/view',
+      name: 'OperationView',
+      component: OperationDetails,
+      meta: { authorities: [Authority.USER] },
+    },
+    // jhipster-needle-add-entity-to-router - JHipster will add entities to the router here
+  ],
+};

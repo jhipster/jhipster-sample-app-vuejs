@@ -40,11 +40,14 @@ export default class JhiNavbar extends Vue {
     return key === this.$store.getters.currentLanguage;
   }
 
-  public logout(): void {
+  public logout(): Promise<any> {
     localStorage.removeItem('jhi-authenticationToken');
     sessionStorage.removeItem('jhi-authenticationToken');
     this.$store.commit('logout');
-    this.$router.push('/');
+    if (this.$route.path !== '/') {
+      return this.$router.push('/');
+    }
+    return Promise.resolve(this.$router.currentRoute);
   }
 
   public openLogin(): void {

@@ -1,6 +1,7 @@
 /* tslint:disable max-line-length */
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
+import { ToastPlugin } from 'bootstrap-vue';
 
 import * as config from '@/shared/config/config';
 import LabelComponent from '@/entities/test-root/label/label.vue';
@@ -9,6 +10,7 @@ import LabelService from '@/entities/test-root/label/label.service';
 import AlertService from '@/shared/alert/alert.service';
 
 const localVue = createLocalVue();
+localVue.use(ToastPlugin);
 
 config.initVueApp(localVue);
 const i18n = config.initI18N(localVue);
@@ -131,12 +133,14 @@ describe('Component Tests', () => {
 
       // WHEN
       comp.prepareRemove({ id: 123 });
+      expect(labelServiceStub.retrieve.callCount).toEqual(1);
+
       comp.removeLabel();
       await comp.$nextTick();
 
       // THEN
       expect(labelServiceStub.delete.called).toBeTruthy();
-      expect(labelServiceStub.retrieve.callCount).toEqual(1);
+      expect(labelServiceStub.retrieve.callCount).toEqual(2);
     });
   });
 });
