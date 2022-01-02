@@ -17,7 +17,6 @@ import LogsService from './admin/logs/logs.service';
 import ConfigurationService from '@/admin/configuration/configuration.service';
 import ActivateService from './account/activate/activate.service';
 import RegisterService from './account/register/register.service';
-import UserManagementService from '@/admin/user-management/user-management.service';
 import LoginService from './account/login.service';
 import AccountService from './account/account.service';
 import AlertService from './shared/alert/alert.service';
@@ -25,8 +24,6 @@ import AlertService from './shared/alert/alert.service';
 import '../content/scss/global.scss';
 import '../content/scss/vendor.scss';
 import TranslationService from '@/locale/translation.service';
-
-import UserOAuth2Service from '@/entities/user/user.oauth2.service';
 /* tslint:disable */
 
 // jhipster-needle-add-entity-service-to-main-import - JHipster will import entities services here
@@ -77,13 +74,11 @@ new Vue({
     loginService: () => loginService,
     activateService: () => new ActivateService(),
     registerService: () => new RegisterService(),
-    userService: () => new UserManagementService(),
     healthService: () => new HealthService(),
     configurationService: () => new ConfigurationService(),
     logsService: () => new LogsService(),
     metricsService: () => new MetricsService(),
 
-    userOAuth2Service: () => new UserOAuth2Service(),
     translationService: () => translationService,
     // jhipster-needle-add-entity-service-to-main - JHipster will import entities services here
     accountService: () => accountService,

@@ -143,7 +143,7 @@ public class LabelResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of labels in body.
      */
     @GetMapping("/labels")
-    public ResponseEntity<List<Label>> getAllLabels(Pageable pageable) {
+    public ResponseEntity<List<Label>> getAllLabels(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Labels");
         Page<Label> page = labelService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);

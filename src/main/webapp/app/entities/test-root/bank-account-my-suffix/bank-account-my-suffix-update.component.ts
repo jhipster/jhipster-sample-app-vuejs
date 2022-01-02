@@ -9,7 +9,7 @@ import { DATE_TIME_LONG_FORMAT } from '@/shared/date/filters';
 
 import AlertService from '@/shared/alert/alert.service';
 
-import UserService from '@/admin/user-management/user-management.service';
+import UserService from '@/entities/user/user.service';
 
 import OperationService from '@/entities/test-root/operation/operation.service';
 import { IOperation } from '@/shared/model/test-root/operation.model';

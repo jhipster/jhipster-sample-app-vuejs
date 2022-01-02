@@ -68,18 +68,17 @@ export default class AccountService {
     if (!this.authenticated || !this.userAuthorities) {
       const token = localStorage.getItem('jhi-authenticationToken') || sessionStorage.getItem('jhi-authenticationToken');
       if (!this.store.getters.account && !this.store.getters.logon && token) {
-        return this.retrieveAccount();
+        return this.retrieveAccount().then(resp => {
+          if (resp) {
+            return this.checkAuthorities(authorities);
+          }
+          return Promise.resolve(false);
+        });
       }
       return Promise.resolve(false);
     }
 
-    for (const authority of authorities) {
-      if (this.userAuthorities.includes(authority)) {
-        return Promise.resolve(true);
-      }
-    }
-
-    return Promise.resolve(false);
+    return this.checkAuthorities(authorities);
   }
 
   public get authenticated(): boolean {
@@ -87,6 +86,17 @@ export default class AccountService {
   }
 
   public get userAuthorities(): any {
-    return this.store.getters.account.authorities;
+    return this.store.getters.account?.authorities;
+  }
+
+  private checkAuthorities(authorities: any): Promise<boolean> {
+    if (this.userAuthorities) {
+      for (const authority of authorities) {
+        if (this.userAuthorities.includes(authority)) {
+          return Promise.resolve(true);
+        }
+      }
+    }
+    return Promise.resolve(false);
   }
 }

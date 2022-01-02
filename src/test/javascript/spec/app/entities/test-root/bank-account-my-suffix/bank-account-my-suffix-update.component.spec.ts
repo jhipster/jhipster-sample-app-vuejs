@@ -12,7 +12,7 @@ import BankAccountMySuffixUpdateComponent from '@/entities/test-root/bank-accoun
 import BankAccountMySuffixClass from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix-update.component';
 import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
 
-import UserService from '@/admin/user-management/user-management.service';
+import UserService from '@/entities/user/user.service';
 
 import OperationService from '@/entities/test-root/operation/operation.service';
 import AlertService from '@/shared/alert/alert.service';
@@ -49,10 +49,7 @@ describe('Component Tests', () => {
           bankAccountService: () => bankAccountServiceStub,
           alertService: () => new AlertService(),
 
-          userService: () =>
-            sinon.createStubInstance<UserService>(UserService, {
-              retrieve: sinon.stub().resolves({}),
-            } as any),
+          userService: () => new UserService(),
 
           operationService: () =>
             sinon.createStubInstance<OperationService>(OperationService, {
