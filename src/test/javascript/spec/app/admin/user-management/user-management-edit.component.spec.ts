@@ -38,7 +38,7 @@ describe('UserManagementEdit Component', () => {
       i18n,
       localVue,
       provide: {
-        userService: () => new UserManagementService(),
+        userManagementService: () => new UserManagementService(),
         alertService: () => new AlertService(),
       },
     });

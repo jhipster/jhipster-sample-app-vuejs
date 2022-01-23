@@ -1,14 +1,7 @@
 {
-  "fluentMethods": true,
-  "relationships": [
-    {
-      "relationshipName": "operation",
-      "otherEntityName": "operation",
-      "relationshipType": "many-to-many",
-      "ownerSide": false,
-      "otherEntityRelationshipName": "label"
-    }
-  ],
+  "changelogDate": "20150805124936",
+  "clientRootFolder": "test-root",
+  "dto": "no",
   "fields": [
     {
       "fieldName": "labelName",
@@ -17,10 +10,17 @@
       "fieldValidateRulesMinlength": "3"
     }
   ],
-  "changelogDate": "20150805124936",
-  "dto": "no",
+  "fluentMethods": true,
+  "name": "Label",
   "pagination": "pagination",
-  "service": "serviceClass",
-  "clientRootFolder": "test-root",
-  "name": "Label"
+  "relationships": [
+    {
+      "otherEntityName": "operation",
+      "otherEntityRelationshipName": "label",
+      "ownerSide": false,
+      "relationshipName": "operation",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "service": "serviceClass"
 }

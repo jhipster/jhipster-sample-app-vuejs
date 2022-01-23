@@ -32,7 +32,7 @@ describe('UserManagementView Component', () => {
       store,
       i18n,
       localVue,
-      provide: { userService: () => new UserManagementService(), alertService: () => new AlertService() },
+      provide: { userManagementService: () => new UserManagementService(), alertService: () => new AlertService() },
     });
     userManagementView = wrapper.vm;
   });

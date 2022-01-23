@@ -1339,7 +1339,7 @@ class BankAccountResourceIT {
         assertThat(testBankAccount.getAgencyNumber()).isEqualTo(UPDATED_AGENCY_NUMBER);
         assertThat(testBankAccount.getLastOperationDuration()).isEqualTo(UPDATED_LAST_OPERATION_DURATION);
         assertThat(testBankAccount.getMeanOperationDuration()).isEqualTo(UPDATED_MEAN_OPERATION_DURATION);
-        assertThat(testBankAccount.getBalance()).isEqualTo(UPDATED_BALANCE);
+        assertThat(testBankAccount.getBalance()).isEqualByComparingTo(UPDATED_BALANCE);
         assertThat(testBankAccount.getOpeningDay()).isEqualTo(UPDATED_OPENING_DAY);
         assertThat(testBankAccount.getLastOperationDate()).isEqualTo(UPDATED_LAST_OPERATION_DATE);
         assertThat(testBankAccount.getActive()).isEqualTo(UPDATED_ACTIVE);

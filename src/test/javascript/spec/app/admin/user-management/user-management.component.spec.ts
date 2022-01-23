@@ -53,7 +53,7 @@ describe('UserManagement Component', () => {
         bModal: true,
       },
       provide: {
-        userService: () => new UserManagementService(),
+        userManagementService: () => new UserManagementService(),
         alertService: () => new AlertService(),
       },
     });

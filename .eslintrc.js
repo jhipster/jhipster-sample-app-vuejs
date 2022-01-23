@@ -1,15 +1,11 @@
+require('@rushstack/eslint-patch/modern-module-resolution');
+
 module.exports = {
   root: true,
   env: {
     node: true,
   },
-  extends: [
-    'plugin:vue/essential',
-    'eslint:recommended',
-    '@vue/typescript/recommended',
-    '@vue/prettier',
-    '@vue/prettier/@typescript-eslint',
-  ],
+  extends: ['plugin:vue/essential', '@vue/eslint-config-typescript/recommended', '@vue/eslint-config-prettier'],
   parserOptions: {
     ecmaVersion: 2020,
     project: ['./tsconfig.spec.json'],

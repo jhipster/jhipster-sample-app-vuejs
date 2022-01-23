@@ -1,13 +1,23 @@
 import { Module } from 'vuex';
 
-export const accountStore: Module<any, any> = {
-  state: {
-    logon: false,
-    userIdentity: null,
-    authenticated: false,
-    ribbonOnProfiles: '',
-    activeProfiles: '',
-  },
+export interface AccountStateStorable {
+  logon: boolean;
+  userIdentity: null | any;
+  authenticated: boolean;
+  ribbonOnProfiles: string;
+  activeProfiles: string;
+}
+
+export const defaultAccountState: AccountStateStorable = {
+  logon: false,
+  userIdentity: null,
+  authenticated: false,
+  ribbonOnProfiles: '',
+  activeProfiles: '',
+};
+
+export const accountStore: Module<AccountStateStorable, any> = {
+  state: { ...defaultAccountState },
   getters: {
     logon: state => state.logon,
     account: state => state.userIdentity,

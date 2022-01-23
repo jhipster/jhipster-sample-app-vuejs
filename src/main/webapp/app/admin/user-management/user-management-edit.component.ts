@@ -37,7 +37,7 @@ const validations: any = {
   validations,
 })
 export default class JhiUserManagementEdit extends Vue {
-  @Inject('userService') private userManagementService: () => UserManagementService;
+  @Inject('userManagementService') private userManagementService: () => UserManagementService;
   @Inject('alertService') private alertService: () => AlertService;
 
   public userAccount: IUser;

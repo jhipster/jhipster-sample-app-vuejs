@@ -7,7 +7,7 @@ import AlertService from '@/shared/alert/alert.service';
   mixins: [Vue2Filters.mixin],
 })
 export default class JhiUserManagementComponent extends Vue {
-  @Inject('userService') private userManagementService: () => UserManagementService;
+  @Inject('userManagementService') private userManagementService: () => UserManagementService;
   @Inject('alertService') private alertService: () => AlertService;
 
   public error = '';
