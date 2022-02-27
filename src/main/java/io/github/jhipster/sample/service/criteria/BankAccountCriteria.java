@@ -3,6 +3,7 @@ package io.github.jhipster.sample.service.criteria;
 import io.github.jhipster.sample.domain.enumeration.BankAccountType;
 import java.io.Serializable;
 import java.util.Objects;
+import org.springdoc.api.annotations.ParameterObject;
 import tech.jhipster.service.Criteria;
 import tech.jhipster.service.filter.BigDecimalFilter;
 import tech.jhipster.service.filter.BooleanFilter;
@@ -24,6 +25,7 @@ import tech.jhipster.service.filter.StringFilter;
  * As Spring is unable to properly convert the types, unless specific {@link Filter} class are used, we need to use
  * fix type specific filters.
  */
+@ParameterObject
 public class BankAccountCriteria implements Serializable, Criteria {
 
     /**

@@ -2,6 +2,8 @@
 // (runtime-only or standalone) has been set in webpack.common with an alias.
 import Vue from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { setupAxiosInterceptors } from '@/shared/config/axios-interceptor';
+
 import App from './app.vue';
 import Vue2Filters from 'vue2-filters';
 import { ToastPlugin } from 'bootstrap-vue';
@@ -66,7 +68,7 @@ router.beforeEach(async (to, from, next) => {
 });
 
 /* tslint:disable */
-new Vue({
+const vue = new Vue({
   el: '#app',
   components: { App },
   template: '<App/>',
@@ -89,3 +91,25 @@ new Vue({
   i18n,
   store,
 });
+
+setupAxiosInterceptors(
+  error => {
+    const url = error.response?.config?.url;
+    const status = error.status || error.response.status;
+    if (status === 401) {
+      // Store logged out state.
+      store.commit('logout');
+      if (!url.endsWith('api/account') && !url.endsWith('api/authenticate')) {
+        // Ask for a new authentication
+        loginService.openLogin(vue);
+        return;
+      }
+    }
+    console.log('Unauthorized!');
+    return Promise.reject(error);
+  },
+  error => {
+    console.log('Server error!');
+    return Promise.reject(error);
+  }
+);

@@ -1,7 +1,6 @@
 import Vuex from 'vuex';
 import VueI18n, { DateTimeFormats } from 'vue-i18n';
 import JhiFormatter from './formatter';
-import { setupAxiosInterceptors } from '@/shared/config/axios-interceptor';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons/faArrowLeft';
@@ -83,10 +82,6 @@ export function initVueApp(vue) {
   vue.use(VueCookie);
   vue.use(Vuelidate);
   vue.use(Vue2Filters);
-  setupAxiosInterceptors(
-    () => console.log('Unauthorized!'),
-    () => console.log('Server error!')
-  );
   filters.initFilters();
 }
 

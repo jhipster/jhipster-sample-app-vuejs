@@ -11,6 +11,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,14 +61,22 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Transactional(readOnly = true)
     public List<BankAccountDTO> findAll() {
         log.debug("Request to get all BankAccounts");
-        return bankAccountRepository.findAll().stream().map(bankAccountMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
+        return bankAccountRepository
+            .findAllWithEagerRelationships()
+            .stream()
+            .map(bankAccountMapper::toDto)
+            .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    public Page<BankAccountDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return bankAccountRepository.findAllWithEagerRelationships(pageable).map(bankAccountMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<BankAccountDTO> findOne(Long id) {
         log.debug("Request to get BankAccount : {}", id);
-        return bankAccountRepository.findById(id).map(bankAccountMapper::toDto);
+        return bankAccountRepository.findOneWithEagerRelationships(id).map(bankAccountMapper::toDto);
     }
 
     @Override
