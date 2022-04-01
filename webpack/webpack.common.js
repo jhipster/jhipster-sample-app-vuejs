@@ -115,12 +115,16 @@ module.exports = async (env, options) => {
         new CopyWebpackPlugin({
           patterns: [
             {
-              context: './node_modules/swagger-ui-dist/',
+              // https://github.com/swagger-api/swagger-ui/blob/v4.6.1/swagger-ui-dist-package/README.md
+              context: require('swagger-ui-dist').getAbsoluteFSPath(),
               from: '*.{js,css,html,png}',
               to: 'swagger-ui/',
               globOptions: { ignore: ['**/index.html'] },
             },
-            { from: './node_modules/axios/dist/axios.min.js', to: 'swagger-ui/' },
+            {
+              from: require.resolve('axios/dist/axios.min.js'),
+              to: 'swagger-ui/',
+            },
             { from: './src/main/webapp/swagger-ui/', to: 'swagger-ui/' },
             { from: './src/main/webapp/content/', to: 'content/' },
             { from: './src/main/webapp/favicon.ico', to: 'favicon.ico' },

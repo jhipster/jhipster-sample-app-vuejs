@@ -37,6 +37,17 @@ public class LabelService {
     }
 
     /**
+     * Update a label.
+     *
+     * @param label the entity to save.
+     * @return the persisted entity.
+     */
+    public Label update(Label label) {
+        log.debug("Request to save Label : {}", label);
+        return labelRepository.save(label);
+    }
+
+    /**
      * Partially update a label.
      *
      * @param label the entity to update partially.

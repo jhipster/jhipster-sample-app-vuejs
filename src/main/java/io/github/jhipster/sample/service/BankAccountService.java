@@ -19,6 +19,14 @@ public interface BankAccountService {
     BankAccountDTO save(BankAccountDTO bankAccountDTO);
 
     /**
+     * Updates a bankAccount.
+     *
+     * @param bankAccountDTO the entity to update.
+     * @return the persisted entity.
+     */
+    BankAccountDTO update(BankAccountDTO bankAccountDTO);
+
+    /**
      * Partially updates a bankAccount.
      *
      * @param bankAccountDTO the entity to update partially.

@@ -43,6 +43,14 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
+    public BankAccountDTO update(BankAccountDTO bankAccountDTO) {
+        log.debug("Request to save BankAccount : {}", bankAccountDTO);
+        BankAccount bankAccount = bankAccountMapper.toEntity(bankAccountDTO);
+        bankAccount = bankAccountRepository.save(bankAccount);
+        return bankAccountMapper.toDto(bankAccount);
+    }
+
+    @Override
     public Optional<BankAccountDTO> partialUpdate(BankAccountDTO bankAccountDTO) {
         log.debug("Request to partially update BankAccount : {}", bankAccountDTO);
 

@@ -98,7 +98,7 @@ public class BankAccountResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        BankAccountDTO result = bankAccountService.save(bankAccountDTO);
+        BankAccountDTO result = bankAccountService.update(bankAccountDTO);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, bankAccountDTO.getId().toString()))
