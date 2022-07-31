@@ -149,7 +149,7 @@ public class BankAccountResource {
      */
     @GetMapping("/bank-accounts")
     public ResponseEntity<List<BankAccountDTO>> getAllBankAccounts(BankAccountCriteria criteria) {
-        log.debug("REST request to get BankAccounts by criteria: {}", criteria);
+        log.debug("REST request to get BankAccounts by criteria: {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
         List<BankAccountDTO> entityList = bankAccountQueryService.findByCriteria(criteria);
         return ResponseEntity.ok().body(entityList);
     }
@@ -162,7 +162,7 @@ public class BankAccountResource {
      */
     @GetMapping("/bank-accounts/count")
     public ResponseEntity<Long> countBankAccounts(BankAccountCriteria criteria) {
-        log.debug("REST request to count BankAccounts by criteria: {}", criteria);
+        log.debug("REST request to count BankAccounts by criteria: {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
         return ResponseEntity.ok().body(bankAccountQueryService.countByCriteria(criteria));
     }
 

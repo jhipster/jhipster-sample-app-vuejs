@@ -3,7 +3,7 @@ import Vue from 'vue';
 export default class AlertService {
   public showError(instance: Vue, message: string, params?: any) {
     const alertMessage = instance.$t(message, params);
-    instance.$root.$bvToast.toast(alertMessage.toString(), {
+    (instance.$root as any).$bvToast.toast(alertMessage.toString(), {
       toaster: 'b-toaster-top-center',
       title: 'Error',
       variant: 'danger',

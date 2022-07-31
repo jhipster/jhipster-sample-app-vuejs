@@ -45,7 +45,7 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
      */
     @Transactional(readOnly = true)
     public List<BankAccountDTO> findByCriteria(BankAccountCriteria criteria) {
-        log.debug("find by criteria : {}", criteria);
+        log.debug("find by criteria : {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
         final Specification<BankAccount> specification = createSpecification(criteria);
         return bankAccountMapper.toDto(bankAccountRepository.findAll(specification));
     }
@@ -58,7 +58,7 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
      */
     @Transactional(readOnly = true)
     public Page<BankAccountDTO> findByCriteria(BankAccountCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria, page);
+        log.debug("find by criteria : {}, page: {}", criteria.toString().replaceAll("[\n\r\t]", "_"), page);
         final Specification<BankAccount> specification = createSpecification(criteria);
         return bankAccountRepository.findAll(specification, page).map(bankAccountMapper::toDto);
     }
@@ -70,7 +70,7 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
      */
     @Transactional(readOnly = true)
     public long countByCriteria(BankAccountCriteria criteria) {
-        log.debug("count by criteria : {}", criteria);
+        log.debug("count by criteria : {}", criteria.toString().replaceAll("[\n\r\t]", "_"));
         final Specification<BankAccount> specification = createSpecification(criteria);
         return bankAccountRepository.count(specification);
     }
