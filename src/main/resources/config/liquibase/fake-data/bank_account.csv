@@ -1,11 +1,1 @@
 id;name;bank_number;agency_number;last_operation_duration;mean_operation_duration;balance;opening_day;last_operation_date;active;account_type;attachment;attachment_content_type;description
-1;monitor;17676;4944;85342;56;7254;2015-08-05;2015-08-05T03:04:38;false;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
-2;multi-byte Shoes architect;29169;61296;55016;45514;15589;2015-08-04;2015-08-04T17:01:10;true;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
-3;Frozen;21844;4492;23597;37315;35179;2015-08-04;2015-08-04T20:39:38;false;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
-4;Computers Ethiopian monitor;59149;68885;42865;69202;46583;2015-08-04;2015-08-05T00:56:53;false;SAVINGS;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
-5;Market Functionality;93296;58586;50774;71679;66193;2015-08-05;2015-08-05T10:00:19;true;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
-6;Electronics;76293;40226;11130;10123;82392;2015-08-05;2015-08-04T23:53:56;false;SAVINGS;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
-7;Personal Washington;15199;39876;71246;58535;15303;2015-08-05;2015-08-05T05:47:44;false;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
-8;Loan;41095;4552;73176;70789;93839;2015-08-05;2015-08-05T08:42:28;false;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
-9;payment driver withdrawal;94647;96785;10771;64070;2787;2015-08-04;2015-08-05T01:29:45;true;SAVINGS;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
-10;Identity Kenya Tasty;76383;35542;46867;78035;40962;2015-08-04;2015-08-04T21:31:45;false;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt

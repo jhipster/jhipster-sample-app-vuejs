@@ -4,5 +4,5 @@
     "outDir": "target/out-tsc/spec",
     "types": ["jest", "node"]
   },
-  "include": ["src/main/webapp/app/**/*", "src/test/javascript/spec/**/*"]
+  "include": ["src/main/webapp/app", "src/test/javascript/spec"]
 }

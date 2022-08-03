@@ -88,7 +88,7 @@ export default class BankAccountMySuffixUpdate extends mixins(JhiDataUtils) {
           this.isSaving = false;
           this.$router.go(-1);
           const message = this.$t('jhipsterSampleApplicationVueApp.testRootBankAccount.updated', { param: param.id });
-          return this.$root.$bvToast.toast(message.toString(), {
+          return (this.$root as any).$bvToast.toast(message.toString(), {
             toaster: 'b-toaster-top-center',
             title: 'Info',
             variant: 'info',
@@ -107,7 +107,7 @@ export default class BankAccountMySuffixUpdate extends mixins(JhiDataUtils) {
           this.isSaving = false;
           this.$router.go(-1);
           const message = this.$t('jhipsterSampleApplicationVueApp.testRootBankAccount.created', { param: param.id });
-          this.$root.$bvToast.toast(message.toString(), {
+          (this.$root as any).$bvToast.toast(message.toString(), {
             toaster: 'b-toaster-top-center',
             title: 'Success',
             variant: 'success',

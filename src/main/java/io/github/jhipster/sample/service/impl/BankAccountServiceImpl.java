@@ -69,11 +69,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Transactional(readOnly = true)
     public List<BankAccountDTO> findAll() {
         log.debug("Request to get all BankAccounts");
-        return bankAccountRepository
-            .findAllWithEagerRelationships()
-            .stream()
-            .map(bankAccountMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
+        return bankAccountRepository.findAll().stream().map(bankAccountMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     public Page<BankAccountDTO> findAllWithEagerRelationships(Pageable pageable) {
