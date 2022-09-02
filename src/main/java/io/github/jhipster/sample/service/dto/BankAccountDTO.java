@@ -12,6 +12,7 @@ import javax.validation.constraints.*;
 /**
  * A DTO for the {@link io.github.jhipster.sample.domain.BankAccount} entity.
  */
+@SuppressWarnings("common-java:DuplicatedBlocks")
 public class BankAccountDTO implements Serializable {
 
     private Long id;

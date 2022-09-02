@@ -43,7 +43,7 @@ public class LabelService {
      * @return the persisted entity.
      */
     public Label update(Label label) {
-        log.debug("Request to save Label : {}", label);
+        log.debug("Request to update Label : {}", label);
         return labelRepository.save(label);
     }
 

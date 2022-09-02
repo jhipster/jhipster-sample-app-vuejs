@@ -22,7 +22,8 @@ export default class JhiNavbar extends Vue {
   private hasAnyAuthorityValues = {};
 
   created() {
-    this.translationService().refreshTranslation(this.currentLanguage);
+    const currentLanguage = Object.keys(this.languages).includes(navigator.language) ? navigator.language : this.currentLanguage;
+    this.translationService().refreshTranslation(currentLanguage);
   }
 
   public subIsActive(input) {

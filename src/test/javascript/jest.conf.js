@@ -26,9 +26,15 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/src/main/webapp/app/$1',
     ...pathsToModuleNameMapper(paths, { prefix: `<rootDir>/${baseUrl}/` }),
   },
-  reporters: ['default', ['jest-junit', { outputDirectory: './target/test-results/', outputName: 'TESTS-results-jest.xml' }]],
-  testResultsProcessor: 'jest-sonar-reporter',
+  reporters: [
+    'default',
+    ['jest-junit', { outputDirectory: './target/test-results/', outputName: 'TESTS-results-jest.xml' }],
+    ['jest-sonar', { outputDirectory: './target/test-results/jest', outputName: 'TESTS-results-sonar.xml' }],
+  ],
   testMatch: ['<rootDir>/src/test/javascript/spec/**/@(*.)@(spec.ts)'],
+  testEnvironmentOptions: {
+    url: 'https://jhipster.tech',
+  },
   snapshotSerializers: ['jest-serializer-vue'],
   globals: {
     I18N_HASH: 'generated_hash',

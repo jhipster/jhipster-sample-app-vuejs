@@ -73,7 +73,7 @@ export default class Operation extends mixins(JhiDataUtils) {
           this.isFetching = false;
           if (<any>this.$refs.infiniteLoading) {
             (<any>this.$refs.infiniteLoading).stateChanger.loaded();
-            if (this.links !== {} && this.page > this.links['last']) {
+            if (JSON.stringify(this.links) !== JSON.stringify({}) && this.page > this.links['last']) {
               (<any>this.$refs.infiniteLoading).stateChanger.complete();
             }
           }
