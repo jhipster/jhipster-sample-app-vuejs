@@ -15,7 +15,7 @@ describe('BankAccount e2e test', () => {
   const bankAccountPageUrlPattern = new RegExp('/bank-account-my-suffix(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const bankAccountSample = { name: 'applications', balance: 91795 };
+  const bankAccountSample = { name: 'schemas', balance: 10802 };
 
   let bankAccount;
 
@@ -157,23 +157,23 @@ describe('BankAccount e2e test', () => {
     });
 
     it('should create an instance of BankAccount', () => {
-      cy.get(`[data-cy="name"]`).type('Philippines');
-      cy.get(`[data-cy="name"]`).should('have.value', 'Philippines');
+      cy.get(`[data-cy="name"]`).type('Buckinghamshire');
+      cy.get(`[data-cy="name"]`).should('have.value', 'Buckinghamshire');
 
-      cy.get(`[data-cy="bankNumber"]`).type('88502');
-      cy.get(`[data-cy="bankNumber"]`).should('have.value', '88502');
+      cy.get(`[data-cy="bankNumber"]`).type('29000');
+      cy.get(`[data-cy="bankNumber"]`).should('have.value', '29000');
 
-      cy.get(`[data-cy="agencyNumber"]`).type('15572');
-      cy.get(`[data-cy="agencyNumber"]`).should('have.value', '15572');
+      cy.get(`[data-cy="agencyNumber"]`).type('5102');
+      cy.get(`[data-cy="agencyNumber"]`).should('have.value', '5102');
 
-      cy.get(`[data-cy="lastOperationDuration"]`).type('18166');
-      cy.get(`[data-cy="lastOperationDuration"]`).should('have.value', '18166');
+      cy.get(`[data-cy="lastOperationDuration"]`).type('5952');
+      cy.get(`[data-cy="lastOperationDuration"]`).should('have.value', '5952');
 
-      cy.get(`[data-cy="meanOperationDuration"]`).type('59947');
-      cy.get(`[data-cy="meanOperationDuration"]`).should('have.value', '59947');
+      cy.get(`[data-cy="meanOperationDuration"]`).type('19643');
+      cy.get(`[data-cy="meanOperationDuration"]`).should('have.value', '19643');
 
-      cy.get(`[data-cy="balance"]`).type('53063');
-      cy.get(`[data-cy="balance"]`).should('have.value', '53063');
+      cy.get(`[data-cy="balance"]`).type('17387');
+      cy.get(`[data-cy="balance"]`).should('have.value', '17387');
 
       cy.get(`[data-cy="openingDay"]`).type('2015-08-05');
       cy.get(`[data-cy="openingDay"]`).blur();
