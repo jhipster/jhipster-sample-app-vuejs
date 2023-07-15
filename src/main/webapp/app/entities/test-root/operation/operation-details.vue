@@ -3,29 +3,29 @@
     <div class="col-8">
       <div v-if="operation">
         <h2 class="jh-entity-heading" data-cy="operationDetailsHeading">
-          <span v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.detail.title')">Operation</span> {{ operation.id }}
+          <span v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.detail.title')"></span> {{ operation.id }}
         </h2>
         <dl class="row jh-entity-details">
           <dt>
-            <span v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.date')">Date</span>
+            <span v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.date')"></span>
           </dt>
           <dd>
-            <span v-if="operation.date">{{ $d(Date.parse(operation.date), 'long') }}</span>
+            <span v-if="operation.date">{{ formatDateLong(operation.date) }}</span>
           </dd>
           <dt>
-            <span v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.description')">Description</span>
+            <span v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.description')"></span>
           </dt>
           <dd>
             <span>{{ operation.description }}</span>
           </dd>
           <dt>
-            <span v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.amount')">Amount</span>
+            <span v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.amount')"></span>
           </dt>
           <dd>
             <span>{{ operation.amount }}</span>
           </dd>
           <dt>
-            <span v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.bankAccount')">Bank Account</span>
+            <span v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.bankAccount')"></span>
           </dt>
           <dd>
             <div v-if="operation.bankAccount">
@@ -35,7 +35,7 @@
             </div>
           </dd>
           <dt>
-            <span v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.label')">Label</span>
+            <span v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.label')"></span>
           </dt>
           <dd>
             <span v-for="(label, i) in operation.labels" :key="label.id"
@@ -45,7 +45,7 @@
           </dd>
         </dl>
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
-          <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.back')"> Back</span>
+          <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.back')"></span>
         </button>
         <router-link
           v-if="operation.id"
@@ -54,7 +54,7 @@
           v-slot="{ navigate }"
         >
           <button @click="navigate" class="btn btn-primary">
-            <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.edit')"> Edit</span>
+            <font-awesome-icon icon="pencil-alt"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.edit')"></span>
           </button>
         </router-link>
       </div>

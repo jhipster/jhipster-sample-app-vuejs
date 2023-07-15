@@ -1,66 +1,77 @@
 /* tslint:disable max-line-length */
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { vitest } from 'vitest';
+import { shallowMount, MountingOptions } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
-import Router from 'vue-router';
-import { ToastPlugin } from 'bootstrap-vue';
+import { RouteLocation } from 'vue-router';
 
 import dayjs from 'dayjs';
-import { DATE_TIME_LONG_FORMAT } from '@/shared/date/filters';
+import { DATE_TIME_LONG_FORMAT } from '../../..../......mainwebappapp/shared/composables/date-format';
+import BankAccountMySuffixUpdate from '../../..../......mainwebappapp/entities/test-root/bank-account-my-suffix/bank-account-my-suffix-update.vue';
+import BankAccountMySuffixService from '../../..../......mainwebappapp/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
+import AlertService from '../../..../......mainwebappapp/shared/alert/alert.service';
 
-import * as config from '@/shared/config/config';
-import BankAccountMySuffixUpdateComponent from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix-update.vue';
-import BankAccountMySuffixClass from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix-update.component';
-import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
+import UserService from '../../..../......mainwebappapp/entities/user/user.service';
 
-import UserService from '@/entities/user/user.service';
+type BankAccountMySuffixUpdateComponentType = InstanceType<typeof BankAccountMySuffixUpdate>;
 
-import OperationService from '@/entities/test-root/operation/operation.service';
-import AlertService from '@/shared/alert/alert.service';
+let route: Partial<RouteLocation>;
+const routerGoMock = vitest.fn();
 
-const localVue = createLocalVue();
+vitest.mock('vue-router', () => ({
+  useRoute: () => route,
+  useRouter: () => ({ go: routerGoMock }),
+}));
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
-const router = new Router();
-localVue.use(Router);
-localVue.use(ToastPlugin);
-localVue.component('font-awesome-icon', {});
-localVue.component('b-input-group', {});
-localVue.component('b-input-group-prepend', {});
-localVue.component('b-form-datepicker', {});
-localVue.component('b-form-input', {});
+const bankAccountSample = { id: 123 };
 
 describe('Component Tests', () => {
+  let mountOptions: MountingOptions<BankAccountMySuffixUpdateComponentType>['global'];
+  let alertService: AlertService;
+
   describe('BankAccountMySuffix Management Update Component', () => {
-    let wrapper: Wrapper<BankAccountMySuffixClass>;
-    let comp: BankAccountMySuffixClass;
+    let comp: BankAccountMySuffixUpdateComponentType;
     let bankAccountServiceStub: SinonStubbedInstance<BankAccountMySuffixService>;
 
     beforeEach(() => {
+      route = {};
       bankAccountServiceStub = sinon.createStubInstance<BankAccountMySuffixService>(BankAccountMySuffixService);
 
-      wrapper = shallowMount<BankAccountMySuffixClass>(BankAccountMySuffixUpdateComponent, {
-        store,
-        i18n,
-        localVue,
-        router,
+      alertService = new AlertService({
+        i18n: { t: vitest.fn() } as any,
+        bvToast: {
+          toast: vitest.fn(),
+        } as any,
+      });
+
+      mountOptions = {
+        stubs: {
+          'font-awesome-icon': true,
+          'b-input-group': true,
+          'b-input-group-prepend': true,
+          'b-form-datepicker': true,
+          'b-form-input': true,
+        },
         provide: {
+          alertService,
           bankAccountService: () => bankAccountServiceStub,
-          alertService: () => new AlertService(),
 
-          userService: () => new UserService(),
-
-          operationService: () =>
-            sinon.createStubInstance<OperationService>(OperationService, {
+          userService: () =>
+            sinon.createStubInstance<UserService>(UserService, {
               retrieve: sinon.stub().resolves({}),
             } as any),
         },
-      });
-      comp = wrapper.vm;
+      };
+    });
+
+    afterEach(() => {
+      vitest.resetAllMocks();
     });
 
     describe('load', () => {
+      beforeEach(() => {
+        const wrapper = shallowMount(BankAccountMySuffixUpdate, { global: mountOptions });
+        comp = wrapper.vm;
+      });
       it('Should convert date from string', () => {
         // GIVEN
         const date = new Date('2019-10-15T11:42:02Z');
@@ -80,24 +91,27 @@ describe('Component Tests', () => {
     describe('save', () => {
       it('Should call update service on save for existing entity', async () => {
         // GIVEN
-        const entity = { id: 123 };
-        comp.bankAccount = entity;
-        bankAccountServiceStub.update.resolves(entity);
+        const wrapper = shallowMount(BankAccountMySuffixUpdate, { global: mountOptions });
+        comp = wrapper.vm;
+        comp.bankAccount = bankAccountSample;
+        bankAccountServiceStub.update.resolves(bankAccountSample);
 
         // WHEN
         comp.save();
         await comp.$nextTick();
 
         // THEN
-        expect(bankAccountServiceStub.update.calledWith(entity)).toBeTruthy();
+        expect(bankAccountServiceStub.update.calledWith(bankAccountSample)).toBeTruthy();
         expect(comp.isSaving).toEqual(false);
       });
 
       it('Should call create service on save for new entity', async () => {
         // GIVEN
         const entity = {};
-        comp.bankAccount = entity;
         bankAccountServiceStub.create.resolves(entity);
+        const wrapper = shallowMount(BankAccountMySuffixUpdate, { global: mountOptions });
+        comp = wrapper.vm;
+        comp.bankAccount = entity;
 
         // WHEN
         comp.save();
@@ -112,25 +126,35 @@ describe('Component Tests', () => {
     describe('Before route enter', () => {
       it('Should retrieve data', async () => {
         // GIVEN
-        const foundBankAccountMySuffix = { id: 123 };
-        bankAccountServiceStub.find.resolves(foundBankAccountMySuffix);
-        bankAccountServiceStub.retrieve.resolves([foundBankAccountMySuffix]);
+        bankAccountServiceStub.find.resolves(bankAccountSample);
+        bankAccountServiceStub.retrieve.resolves([bankAccountSample]);
 
         // WHEN
-        comp.beforeRouteEnter({ params: { bankAccountId: 123 } }, null, cb => cb(comp));
+        route = {
+          params: {
+            bankAccountId: '' + bankAccountSample.id,
+          },
+        };
+        const wrapper = shallowMount(BankAccountMySuffixUpdate, { global: mountOptions });
+        comp = wrapper.vm;
         await comp.$nextTick();
 
         // THEN
-        expect(comp.bankAccount).toBe(foundBankAccountMySuffix);
+        expect(comp.bankAccount).toMatchObject(bankAccountSample);
       });
     });
 
     describe('Previous state', () => {
       it('Should go previous state', async () => {
+        bankAccountServiceStub.find.resolves(bankAccountSample);
+        const wrapper = shallowMount(BankAccountMySuffixUpdate, { global: mountOptions });
+        comp = wrapper.vm;
+        await comp.$nextTick();
+
         comp.previousState();
         await comp.$nextTick();
 
-        expect(comp.$router.currentRoute.fullPath).toContain('/');
+        expect(routerGoMock).toHaveBeenCalledWith(-1);
       });
     });
   });

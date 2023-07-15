@@ -2,6 +2,7 @@
   "changelogDate": "20150805125054",
   "clientRootFolder": "test-root",
   "dto": "no",
+  "entityTableName": "operation",
   "fields": [
     {
       "fieldName": "date",
@@ -26,6 +27,7 @@
       "otherEntityField": "name",
       "otherEntityName": "bankAccount",
       "relationshipName": "bankAccount",
+      "relationshipSide": "left",
       "relationshipType": "many-to-one"
     },
     {
@@ -34,8 +36,10 @@
       "otherEntityRelationshipName": "operation",
       "ownerSide": true,
       "relationshipName": "label",
+      "relationshipSide": "left",
       "relationshipType": "many-to-many"
     }
   ],
+  "searchEngine": "no",
   "service": "no"
 }

@@ -1,17 +1,10 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
-import Logs from '@/admin/logs/logs.vue';
-import LogsClass from '@/admin/logs/logs.component';
-import LogsService from '@/admin/logs/logs.service';
+import Logs from '../../../......mainwebappapp/admin/logs/logs.vue';
+import LogsService from '../../../......mainwebappapp/admin/logs/logs.service';
 
-import * as config from '@/shared/config/config';
-
-const localVue = createLocalVue();
-
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+type LogsComponentType = InstanceType<typeof Logs>;
 
 const axiosStub = {
   get: sinon.stub(axios, 'get'),
@@ -19,12 +12,11 @@ const axiosStub = {
 };
 
 describe('Logs Component', () => {
-  let wrapper: Wrapper<LogsClass>;
-  let logs: LogsClass;
+  let logs: LogsComponentType;
 
   beforeEach(() => {
     axiosStub.get.resolves({});
-    wrapper = shallowMount<LogsClass>(Logs, { store, i18n, localVue, provide: { logsService: () => new LogsService() } });
+    const wrapper = shallowMount(Logs);
     logs = wrapper.vm;
   });
 

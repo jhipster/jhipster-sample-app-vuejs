@@ -1,155 +1,163 @@
-import { mixins } from 'vue-class-component';
-import { Component, Vue, Inject } from 'vue-property-decorator';
-import Vue2Filters from 'vue2-filters';
+import { defineComponent, inject, onMounted, ref, Ref, watch, watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useIntersectionObserver } from '@vueuse/core';
+
 import { IOperation } from '@/shared/model/test-root/operation.model';
-
-import JhiDataUtils from '@/shared/data/data-utils.service';
-
+import useDataUtils from '@/shared/data/data-utils.service';
+import { useDateFormat } from '@/shared/composables';
 import OperationService from './operation.service';
-import AlertService from '@/shared/alert/alert.service';
+import { useAlertService } from '@/shared/alert/alert.service';
 
-@Component({
-  mixins: [Vue2Filters.mixin],
-})
-export default class Operation extends mixins(JhiDataUtils) {
-  @Inject('operationService') private operationService: () => OperationService;
-  @Inject('alertService') private alertService: () => AlertService;
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'Operation',
+  setup() {
+    const { t: t$ } = useI18n();
+    const dateFormat = useDateFormat();
+    const dataUtils = useDataUtils();
+    const operationService = inject('operationService', () => new OperationService());
+    const alertService = inject('alertService', () => useAlertService(), true);
 
-  private removeId: number = null;
-  public itemsPerPage = 20;
-  public queryCount: number = null;
-  public page = 1;
-  public previousPage = 1;
-  public propOrder = 'id';
-  public reverse = false;
-  public totalItems = 0;
-  public infiniteId = +new Date();
-  public links = {};
+    const itemsPerPage = ref(20);
+    const queryCount: Ref<number> = ref(null);
+    const page: Ref<number> = ref(1);
+    const propOrder = ref('id');
+    const reverse = ref(false);
+    const totalItems = ref(0);
+    const links: Ref<any> = ref({});
 
-  public operations: IOperation[] = [];
+    const operations: Ref<IOperation[]> = ref([]);
 
-  public isFetching = false;
+    const isFetching = ref(false);
 
-  public mounted(): void {
-    this.retrieveAllOperations();
-  }
-
-  public clear(): void {
-    this.page = 1;
-    this.links = {};
-    this.infiniteId += 1;
-    this.operations = [];
-    this.retrieveAllOperations();
-  }
-
-  public reset(): void {
-    this.page = 1;
-    this.infiniteId += 1;
-    this.operations = [];
-    this.retrieveAllOperations();
-  }
-
-  public retrieveAllOperations(): void {
-    this.isFetching = true;
-    const paginationQuery = {
-      page: this.page - 1,
-      size: this.itemsPerPage,
-      sort: this.sort(),
+    const clear = () => {
+      page.value = 1;
+      links.value = {};
+      operations.value = [];
     };
-    this.operationService()
-      .retrieve(paginationQuery)
-      .then(
-        res => {
-          if (res.data && res.data.length > 0) {
-            for (let i = 0; i < res.data.length; i++) {
-              this.operations.push(res.data[i]);
-            }
-            if (res.headers && res.headers['link']) {
-              this.links = this.parseLinks(res.headers['link']);
-            }
-          }
-          this.totalItems = Number(res.headers['x-total-count']);
-          this.queryCount = this.totalItems;
-          this.isFetching = false;
-          if (<any>this.$refs.infiniteLoading) {
-            (<any>this.$refs.infiniteLoading).stateChanger.loaded();
-            if (JSON.stringify(this.links) !== JSON.stringify({}) && this.page > this.links['last']) {
-              (<any>this.$refs.infiniteLoading).stateChanger.complete();
-            }
-          }
-        },
-        err => {
-          this.isFetching = false;
-          this.alertService().showHttpError(this, err.response);
+
+    const sort = (): Array<any> => {
+      const result = [propOrder.value + ',' + (reverse.value ? 'desc' : 'asc')];
+      if (propOrder.value !== 'id') {
+        result.push('id');
+      }
+      return result;
+    };
+
+    const retrieveOperations = async () => {
+      isFetching.value = true;
+      try {
+        const paginationQuery = {
+          page: page.value - 1,
+          size: itemsPerPage.value,
+          sort: sort(),
+        };
+        const res = await operationService().retrieve(paginationQuery);
+        totalItems.value = Number(res.headers['x-total-count']);
+        queryCount.value = totalItems.value;
+        links.value = dataUtils.parseLinks(res.headers?.['link']);
+        operations.value.push(...(res.data ?? []));
+      } catch (err) {
+        alertService.showHttpError(err.response);
+      } finally {
+        isFetching.value = false;
+      }
+    };
+
+    const handleSyncList = () => {
+      clear();
+    };
+
+    onMounted(async () => {
+      await retrieveOperations();
+    });
+
+    const removeId: Ref<number> = ref(null);
+    const removeEntity = ref<any>(null);
+    const prepareRemove = (instance: IOperation) => {
+      removeId.value = instance.id;
+      removeEntity.value.show();
+    };
+    const closeDialog = () => {
+      removeEntity.value.hide();
+    };
+    const removeOperation = async () => {
+      try {
+        await operationService().delete(removeId.value);
+        const message = t$('jhipsterSampleApplicationVueApp.testRootOperation.deleted', { param: removeId.value }).toString();
+        alertService.showInfo(message, { variant: 'danger' });
+        removeId.value = null;
+        clear();
+        closeDialog();
+      } catch (error) {
+        alertService.showHttpError(error.response);
+      }
+    };
+
+    const changeOrder = (newOrder: string) => {
+      if (propOrder.value === newOrder) {
+        reverse.value = !reverse.value;
+      } else {
+        reverse.value = false;
+      }
+      propOrder.value = newOrder;
+    };
+
+    // Whenever order changes, reset the pagination
+    watch([propOrder, reverse], () => {
+      clear();
+    });
+
+    // Whenever the data resets or page changes, switch to the new page.
+    watch([operations, page], async ([data, page], [_prevData, prevPage]) => {
+      if (data.length === 0 || page !== prevPage) {
+        await retrieveOperations();
+      }
+    });
+
+    const infiniteScrollEl = ref<HTMLElement>(null);
+    const intersectionObserver = useIntersectionObserver(
+      infiniteScrollEl,
+      intersection => {
+        if (intersection[0].isIntersecting && !isFetching.value) {
+          page.value++;
         }
-      );
-  }
+      },
+      {
+        threshold: 0.5,
+        immediate: false,
+      }
+    );
+    watchEffect(() => {
+      if (links.value.next) {
+        intersectionObserver.resume();
+      } else if (intersectionObserver.isActive) {
+        intersectionObserver.pause();
+      }
+    });
 
-  public handleSyncList(): void {
-    this.clear();
-  }
-
-  public prepareRemove(instance: IOperation): void {
-    this.removeId = instance.id;
-    if (<any>this.$refs.removeEntity) {
-      (<any>this.$refs.removeEntity).show();
-    }
-  }
-
-  public removeOperation(): void {
-    this.operationService()
-      .delete(this.removeId)
-      .then(() => {
-        const message = this.$t('jhipsterSampleApplicationVueApp.testRootOperation.deleted', { param: this.removeId });
-        this.$bvToast.toast(message.toString(), {
-          toaster: 'b-toaster-top-center',
-          title: 'Info',
-          variant: 'danger',
-          solid: true,
-          autoHideDelay: 5000,
-        });
-        this.removeId = null;
-        this.reset();
-        this.closeDialog();
-      })
-      .catch(error => {
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
-
-  public loadMore($state): void {
-    if (!this.isFetching) {
-      this.page++;
-      this.transition();
-    }
-  }
-
-  public sort(): Array<any> {
-    const result = [this.propOrder + ',' + (this.reverse ? 'desc' : 'asc')];
-    if (this.propOrder !== 'id') {
-      result.push('id');
-    }
-    return result;
-  }
-
-  public loadPage(page: number): void {
-    if (page !== this.previousPage) {
-      this.previousPage = page;
-      this.transition();
-    }
-  }
-
-  public transition(): void {
-    this.retrieveAllOperations();
-  }
-
-  public changeOrder(propOrder): void {
-    this.propOrder = propOrder;
-    this.reverse = !this.reverse;
-    this.reset();
-  }
-
-  public closeDialog(): void {
-    (<any>this.$refs.removeEntity).hide();
-  }
-}
+    return {
+      operations,
+      handleSyncList,
+      isFetching,
+      retrieveOperations,
+      clear,
+      ...dateFormat,
+      removeId,
+      removeEntity,
+      prepareRemove,
+      closeDialog,
+      removeOperation,
+      itemsPerPage,
+      queryCount,
+      page,
+      propOrder,
+      reverse,
+      totalItems,
+      changeOrder,
+      infiniteScrollEl,
+      t$,
+      ...dataUtils,
+    };
+  },
+});

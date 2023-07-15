@@ -1,176 +1,133 @@
-import { Component, Inject } from 'vue-property-decorator';
+import { computed, defineComponent, inject, ref, Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import { useVuelidate } from '@vuelidate/core';
 
-import { mixins } from 'vue-class-component';
-import JhiDataUtils from '@/shared/data/data-utils.service';
-
-import { required, decimal } from 'vuelidate/lib/validators';
-import dayjs from 'dayjs';
-import { DATE_TIME_LONG_FORMAT } from '@/shared/date/filters';
-
-import AlertService from '@/shared/alert/alert.service';
+import useDataUtils from '@/shared/data/data-utils.service';
+import { useValidation, useDateFormat } from '@/shared/composables';
+import { useAlertService } from '@/shared/alert/alert.service';
 
 import UserService from '@/entities/user/user.service';
-
-import OperationService from '@/entities/test-root/operation/operation.service';
-import { IOperation } from '@/shared/model/test-root/operation.model';
-
 import { IBankAccountMySuffix, BankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
 import BankAccountMySuffixService from './bank-account-my-suffix.service';
 import { BankAccountType } from '@/shared/model/enumerations/bank-account-type.model';
 
-const validations: any = {
-  bankAccount: {
-    name: {
-      required,
-    },
-    bankNumber: {},
-    agencyNumber: {},
-    lastOperationDuration: {},
-    meanOperationDuration: {},
-    balance: {
-      required,
-      decimal,
-    },
-    openingDay: {},
-    lastOperationDate: {},
-    active: {},
-    accountType: {},
-    attachment: {},
-    description: {},
-  },
-};
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'BankAccountMySuffixUpdate',
+  setup() {
+    const bankAccountService = inject('bankAccountService', () => new BankAccountMySuffixService());
+    const alertService = inject('alertService', () => useAlertService(), true);
 
-@Component({
-  validations,
-})
-export default class BankAccountMySuffixUpdate extends mixins(JhiDataUtils) {
-  @Inject('bankAccountService') private bankAccountService: () => BankAccountMySuffixService;
-  @Inject('alertService') private alertService: () => AlertService;
+    const bankAccount: Ref<IBankAccountMySuffix> = ref(new BankAccountMySuffix());
+    const userService = inject('userService', () => new UserService());
+    const users: Ref<Array<any>> = ref([]);
+    const bankAccountTypeValues: Ref<string[]> = ref(Object.keys(BankAccountType));
+    const isSaving = ref(false);
+    const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'en'), true);
 
-  public bankAccount: IBankAccountMySuffix = new BankAccountMySuffix();
+    const route = useRoute();
+    const router = useRouter();
 
-  @Inject('userService') private userService: () => UserService;
+    const previousState = () => router.go(-1);
 
-  public users: Array<any> = [];
-
-  @Inject('operationService') private operationService: () => OperationService;
-
-  public operations: IOperation[] = [];
-  public bankAccountTypeValues: string[] = Object.keys(BankAccountType);
-  public isSaving = false;
-  public currentLanguage = '';
-
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (to.params.bankAccountId) {
-        vm.retrieveBankAccountMySuffix(to.params.bankAccountId);
-      }
-      vm.initRelationships();
-    });
-  }
-
-  created(): void {
-    this.currentLanguage = this.$store.getters.currentLanguage;
-    this.$store.watch(
-      () => this.$store.getters.currentLanguage,
-      () => {
-        this.currentLanguage = this.$store.getters.currentLanguage;
-      }
-    );
-  }
-
-  public save(): void {
-    this.isSaving = true;
-    if (this.bankAccount.id) {
-      this.bankAccountService()
-        .update(this.bankAccount)
-        .then(param => {
-          this.isSaving = false;
-          this.$router.go(-1);
-          const message = this.$t('jhipsterSampleApplicationVueApp.testRootBankAccount.updated', { param: param.id });
-          return (this.$root as any).$bvToast.toast(message.toString(), {
-            toaster: 'b-toaster-top-center',
-            title: 'Info',
-            variant: 'info',
-            solid: true,
-            autoHideDelay: 5000,
-          });
-        })
-        .catch(error => {
-          this.isSaving = false;
-          this.alertService().showHttpError(this, error.response);
-        });
-    } else {
-      this.bankAccountService()
-        .create(this.bankAccount)
-        .then(param => {
-          this.isSaving = false;
-          this.$router.go(-1);
-          const message = this.$t('jhipsterSampleApplicationVueApp.testRootBankAccount.created', { param: param.id });
-          (this.$root as any).$bvToast.toast(message.toString(), {
-            toaster: 'b-toaster-top-center',
-            title: 'Success',
-            variant: 'success',
-            solid: true,
-            autoHideDelay: 5000,
-          });
-        })
-        .catch(error => {
-          this.isSaving = false;
-          this.alertService().showHttpError(this, error.response);
-        });
-    }
-  }
-
-  public convertDateTimeFromServer(date: Date): string {
-    if (date && dayjs(date).isValid()) {
-      return dayjs(date).format(DATE_TIME_LONG_FORMAT);
-    }
-    return null;
-  }
-
-  public updateInstantField(field, event) {
-    if (event.target.value) {
-      this.bankAccount[field] = dayjs(event.target.value, DATE_TIME_LONG_FORMAT);
-    } else {
-      this.bankAccount[field] = null;
-    }
-  }
-
-  public updateZonedDateTimeField(field, event) {
-    if (event.target.value) {
-      this.bankAccount[field] = dayjs(event.target.value, DATE_TIME_LONG_FORMAT);
-    } else {
-      this.bankAccount[field] = null;
-    }
-  }
-
-  public retrieveBankAccountMySuffix(bankAccountId): void {
-    this.bankAccountService()
-      .find(bankAccountId)
-      .then(res => {
+    const retrieveBankAccountMySuffix = async bankAccountId => {
+      try {
+        const res = await bankAccountService().find(bankAccountId);
         res.lastOperationDate = new Date(res.lastOperationDate);
-        this.bankAccount = res;
-      })
-      .catch(error => {
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
+        bankAccount.value = res;
+      } catch (error) {
+        alertService.showHttpError(error.response);
+      }
+    };
 
-  public previousState(): void {
-    this.$router.go(-1);
-  }
+    if (route.params?.bankAccountId) {
+      retrieveBankAccountMySuffix(route.params.bankAccountId);
+    }
 
-  public initRelationships(): void {
-    this.userService()
-      .retrieve()
-      .then(res => {
-        this.users = res.data;
-      });
-    this.operationService()
-      .retrieve()
-      .then(res => {
-        this.operations = res.data;
-      });
-  }
-}
+    const initRelationships = () => {
+      userService()
+        .retrieve()
+        .then(res => {
+          users.value = res.data;
+        });
+    };
+
+    initRelationships();
+
+    const dataUtils = useDataUtils();
+
+    const { t: t$ } = useI18n();
+    const validations = useValidation();
+    const validationRules = {
+      name: {
+        required: validations.required(t$('entity.validation.required').toString()),
+      },
+      bankNumber: {},
+      agencyNumber: {},
+      lastOperationDuration: {},
+      meanOperationDuration: {},
+      balance: {
+        required: validations.required(t$('entity.validation.required').toString()),
+      },
+      openingDay: {},
+      lastOperationDate: {},
+      active: {},
+      accountType: {},
+      attachment: {},
+      description: {},
+      user: {},
+      operations: {},
+    };
+    const v$ = useVuelidate(validationRules, bankAccount as any);
+    v$.value.$validate();
+
+    return {
+      bankAccountService,
+      alertService,
+      bankAccount,
+      previousState,
+      bankAccountTypeValues,
+      isSaving,
+      currentLanguage,
+      users,
+      ...dataUtils,
+      v$,
+      ...useDateFormat({ entityRef: bankAccount }),
+      t$,
+    };
+  },
+  created(): void {},
+  methods: {
+    save(): void {
+      this.isSaving = true;
+      if (this.bankAccount.id) {
+        this.bankAccountService()
+          .update(this.bankAccount)
+          .then(param => {
+            this.isSaving = false;
+            this.previousState();
+            this.alertService.showInfo(this.t$('jhipsterSampleApplicationVueApp.testRootBankAccount.updated', { param: param.id }));
+          })
+          .catch(error => {
+            this.isSaving = false;
+            this.alertService.showHttpError(error.response);
+          });
+      } else {
+        this.bankAccountService()
+          .create(this.bankAccount)
+          .then(param => {
+            this.isSaving = false;
+            this.previousState();
+            this.alertService.showSuccess(
+              this.t$('jhipsterSampleApplicationVueApp.testRootBankAccount.created', { param: param.id }).toString()
+            );
+          })
+          .catch(error => {
+            this.isSaving = false;
+            this.alertService.showHttpError(error.response);
+          });
+      }
+    },
+  },
+});

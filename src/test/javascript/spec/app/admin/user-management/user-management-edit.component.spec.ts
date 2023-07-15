@@ -1,75 +1,90 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { vitest } from 'vitest';
+import { shallowMount, MountingOptions } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { RouteLocation } from 'vue-router';
 
-import * as config from '@/shared/config/config';
-import UserManagementEdit from '@/admin/user-management/user-management-edit.vue';
-import UserManagementEditClass from '@/admin/user-management/user-management-edit.component';
-import UserManagementService from '@/admin/user-management/user-management.service';
-import VueRouter from 'vue-router';
-import { ToastPlugin } from 'bootstrap-vue';
-import AlertService from '@/shared/alert/alert.service';
+import AlertService from '../../../......mainwebappapp/shared/alert/alert.service';
+import UserManagementEdit from '../../../......mainwebappapp/admin/user-management/user-management-edit.vue';
 
-const localVue = createLocalVue();
-localVue.use(VueRouter);
-localVue.use(ToastPlugin);
+type UserManagementEditComponentType = InstanceType<typeof UserManagementEdit>;
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
-localVue.component('font-awesome-icon', FontAwesomeIcon);
+let route: Partial<RouteLocation>;
+const routerGoMock = vitest.fn();
 
-const axiosStub = {
-  get: sinon.stub(axios, 'get'),
-  post: sinon.stub(axios, 'post'),
-  put: sinon.stub(axios, 'put'),
-};
+vitest.mock('vue-router', () => ({
+  useRoute: () => route,
+  useRouter: () => ({ go: routerGoMock }),
+}));
 
 describe('UserManagementEdit Component', () => {
-  let wrapper: Wrapper<UserManagementEditClass>;
-  let userManagementEdit: UserManagementEditClass;
+  const axiosStub = {
+    get: sinon.stub(axios, 'get'),
+    post: sinon.stub(axios, 'post'),
+    put: sinon.stub(axios, 'put'),
+  };
+  let mountOptions: MountingOptions<UserManagementEditComponentType>['global'];
+  let alertService: AlertService;
 
   beforeEach(() => {
-    const router = new VueRouter();
-    wrapper = shallowMount<UserManagementEditClass>(UserManagementEdit, {
-      store,
-      router,
-      i18n,
-      localVue,
-      provide: {
-        userManagementService: () => new UserManagementService(),
-        alertService: () => new AlertService(),
-      },
+    route = {};
+    alertService = new AlertService({
+      i18n: { t: vitest.fn() } as any,
+      bvToast: {
+        toast: vitest.fn(),
+      } as any,
     });
-    userManagementEdit = wrapper.vm;
+
+    mountOptions = {
+      stubs: {
+        'font-awesome-icon': true,
+      },
+      provide: {
+        alertService,
+      },
+    };
+
+    axiosStub.get.reset();
+    axiosStub.post.reset();
+    axiosStub.put.reset();
   });
 
   describe('init', () => {
     it('Should load user', async () => {
       // GIVEN
-      axiosStub.get.resolves({});
+      axiosStub.get.withArgs('api/admin/users/' + 123).resolves({});
+      axiosStub.get.withArgs('api/authorities').resolves({ data: [] });
+      route = {
+        params: {
+          userId: '' + 123,
+        },
+      };
+      const wrapper = shallowMount(UserManagementEdit, { global: mountOptions });
+      const userManagementEdit: UserManagementEditComponentType = wrapper.vm;
 
       // WHEN
-      userManagementEdit.init(123);
       await userManagementEdit.$nextTick();
 
       // THEN
+      expect(axiosStub.get.calledWith('api/authorities')).toBeTruthy();
       expect(axiosStub.get.calledWith('api/admin/users/' + 123)).toBeTruthy();
     });
-  });
-
-  describe('initAuthorities', () => {
-    it('Should load authorities', async () => {
+    it('Should open create user', async () => {
       // GIVEN
       axiosStub.get.resolves({});
+      axiosStub.get.withArgs('api/authorities').resolves({ data: [] });
+      route = {
+        params: {},
+      };
+      const wrapper = shallowMount(UserManagementEdit, { global: mountOptions });
+      const userManagementEdit: UserManagementEditComponentType = wrapper.vm;
 
       // WHEN
-      userManagementEdit.initAuthorities();
       await userManagementEdit.$nextTick();
 
       // THEN
-      expect(axiosStub.get.calledWith(`api/authorities`)).toBeTruthy();
+      expect(axiosStub.get.calledWith('api/authorities')).toBeTruthy();
+      expect(axiosStub.get.callCount).toBe(1);
     });
   });
 
@@ -82,7 +97,18 @@ describe('UserManagementEdit Component', () => {
           'x-jhipstersampleapplicationvueapp-params': '',
         },
       });
-      userManagementEdit.userAccount = { id: 123, authorities: [] };
+      axiosStub.get.withArgs('api/admin/users/' + 123).resolves({
+        data: { id: 123, authorities: [] },
+      });
+      axiosStub.get.withArgs('api/authorities').resolves({ data: [] });
+      route = {
+        params: {
+          userId: '' + 123,
+        },
+      };
+      const wrapper = shallowMount(UserManagementEdit, { global: mountOptions });
+      const userManagementEdit: UserManagementEditComponentType = wrapper.vm;
+      await userManagementEdit.$nextTick();
 
       // WHEN
       userManagementEdit.save();
@@ -101,6 +127,14 @@ describe('UserManagementEdit Component', () => {
           'x-jhipstersampleapplicationvueapp-params': '',
         },
       });
+      axiosStub.get.resolves({});
+      axiosStub.get.withArgs('api/authorities').resolves({ data: [] });
+      route = {
+        params: {},
+      };
+      const wrapper = shallowMount(UserManagementEdit, { global: mountOptions });
+      const userManagementEdit: UserManagementEditComponentType = wrapper.vm;
+      await userManagementEdit.$nextTick();
       userManagementEdit.userAccount = { authorities: [] };
 
       // WHEN
@@ -108,7 +142,11 @@ describe('UserManagementEdit Component', () => {
       await userManagementEdit.$nextTick();
 
       // THEN
-      expect(axiosStub.post.calledWith('api/admin/users', { authorities: [] })).toBeTruthy();
+      expect(
+        axiosStub.post.calledWith('api/admin/users', {
+          authorities: [],
+        })
+      ).toBeTruthy();
       expect(userManagementEdit.isSaving).toEqual(false);
     });
   });

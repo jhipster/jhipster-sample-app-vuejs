@@ -1,26 +1,28 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { vitest } from 'vitest';
+import { shallowMount, MountingOptions } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
-import AccountService from '@/account/account.service';
-import VueRouter from 'vue-router';
-import TranslationService from '@/locale/translation.service';
+import { RouteLocation } from 'vue-router';
+import { PiniaVuePlugin } from 'pinia';
+import { createTestingPinia } from '@pinia/testing';
 
-import * as config from '@/shared/config/config';
-import LoginForm from '@/account/login-form/login-form.vue';
-import LoginFormClass from '@/account/login-form/login-form.component';
+import LoginService from '../../../......mainwebappapp/account/login.service';
+import AccountService from '../../../......mainwebappapp/account/account.service';
+import { useStore } from '../../../......mainwebappapp/store';
+import LoginForm from '../../../......mainwebappapp/account/login-form/login-form.vue';
 
-const localVue = createLocalVue();
-localVue.component('b-alert', {});
-localVue.component('b-button', {});
-localVue.component('b-form', {});
-localVue.component('b-form-input', {});
-localVue.component('b-form-group', {});
-localVue.component('b-form-checkbox', {});
-localVue.component('b-link', {});
+type LoginFormComponentType = InstanceType<typeof LoginForm>;
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+let route: Partial<RouteLocation>;
+const routerGoMock = vitest.fn();
+vitest.mock('vue-router', () => ({
+  useRoute: () => route,
+  useRouter: () => ({ go: routerGoMock }),
+}));
+
+const pinia = createTestingPinia();
+
+const store = useStore();
 
 const axiosStub = {
   get: sinon.stub(axios, 'get'),
@@ -28,21 +30,33 @@ const axiosStub = {
 };
 
 describe('LoginForm Component', () => {
-  let wrapper: Wrapper<LoginFormClass>;
-  let loginForm: LoginFormClass;
+  let loginForm: LoginFormComponentType;
 
   beforeEach(() => {
+    route = {};
     axiosStub.get.resolves({});
     axiosStub.post.reset();
 
-    wrapper = shallowMount<LoginFormClass>(LoginForm, {
-      store,
-      i18n,
-      localVue,
-      provide: {
-        accountService: () => new AccountService(store, new TranslationService(store, i18n), new VueRouter()),
+    const loginService = new LoginService({ emit: vitest.fn() });
+
+    const globalOptions: MountingOptions<LoginFormComponentType>['global'] = {
+      stubs: {
+        'b-alert': true,
+        'b-button': true,
+        'b-form': true,
+        'b-form-input': true,
+        'b-form-group': true,
+        'b-form-checkbox': true,
+        'b-link': true,
       },
-    });
+      plugins: [pinia],
+      provide: {
+        loginService,
+        accountService: new AccountService(store),
+      },
+    };
+    const wrapper = shallowMount(LoginForm, { global: globalOptions });
+
     loginForm = wrapper.vm;
   });
 

@@ -2,41 +2,44 @@
   <div class="modal-body">
     <div class="row justify-content-center">
       <div class="col-md-8">
-        <b-alert show data-cy="loginError" variant="danger" v-if="authenticationError" v-html="$t('login.messages.error.authentication')">
-          <strong>Failed to sign in!</strong> Please check your credentials and try again.
-        </b-alert>
+        <b-alert
+          show
+          data-cy="loginError"
+          variant="danger"
+          v-if="authenticationError"
+          v-html="t$('login.messages.error.authentication')"
+        ></b-alert>
       </div>
       <div class="col-md-8">
         <b-form role="form" v-on:submit.prevent="doLogin()">
-          <b-form-group v-bind:label="$t('global.form[\'username.label\']')" label-for="username">
+          <b-form-group v-bind:label="t$('global.form[\'username.label\']')" label-for="username">
             <b-form-input
               id="username"
               type="text"
               name="username"
               autofocus
-              v-bind:placeholder="$t('global.form[\'username.placeholder\']')"
+              v-bind:placeholder="t$('global.form[\'username.placeholder\']')"
               v-model="login"
               data-cy="username"
             >
             </b-form-input>
           </b-form-group>
-          <b-form-group v-bind:label="$t('login.form.password')" label-for="password">
+          <b-form-group v-bind:label="t$('login.form.password')" label-for="password">
             <b-form-input
               id="password"
               type="password"
               name="password"
-              v-model.trim="name"
-              v-bind:placeholder="$t('login.form[\'password.placeholder\']')"
+              v-bind:placeholder="t$('login.form[\'password.placeholder\']')"
               v-model="password"
               data-cy="password"
             >
             </b-form-input>
           </b-form-group>
           <b-form-checkbox id="rememberMe" name="rememberMe" v-model="rememberMe" checked>
-            <span v-text="$t('login.form.rememberme')">Remember me</span>
+            <span v-text="t$('login.form.rememberme')"></span>
           </b-form-checkbox>
           <div>
-            <b-button data-cy="submit" type="submit" variant="primary" v-text="$t('login.form.button')">Sign in</b-button>
+            <b-button data-cy="submit" type="submit" variant="primary" v-text="t$('login.form.button')"></b-button>
           </div>
         </b-form>
         <p></p>
@@ -45,16 +48,15 @@
             <b-link
               :to="'/account/reset/request'"
               class="alert-link"
-              v-text="$t('login.password.forgot')"
+              v-text="t$('login.password.forgot')"
               data-cy="forgetYourPasswordSelector"
-              >Did you forget your password?</b-link
-            >
+            ></b-link>
           </b-alert>
         </div>
         <div>
           <b-alert show variant="warning">
-            <span v-text="$t('global.messages.info.register.noaccount')">You don't have an account yet?</span>
-            <b-link :to="'/register'" class="alert-link" v-text="$t('global.messages.info.register.link')">Register a new account</b-link>
+            <span v-text="t$('global.messages.info.register.noaccount')"></span>
+            <b-link :to="'/register'" class="alert-link" v-text="t$('global.messages.info.register.link')"></b-link>
           </b-alert>
         </div>
       </div>

@@ -2,6 +2,7 @@
   "changelogDate": "20150805124936",
   "clientRootFolder": "test-root",
   "dto": "no",
+  "entityTableName": "label",
   "fields": [
     {
       "fieldName": "labelName",
@@ -19,8 +20,10 @@
       "otherEntityRelationshipName": "label",
       "ownerSide": false,
       "relationshipName": "operation",
+      "relationshipSide": "right",
       "relationshipType": "many-to-many"
     }
   ],
+  "searchEngine": "no",
   "service": "serviceClass"
 }

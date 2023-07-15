@@ -1,69 +1,81 @@
 /* tslint:disable max-line-length */
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { vitest } from 'vitest';
+import { shallowMount, MountingOptions } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
-import Router from 'vue-router';
-import { ToastPlugin } from 'bootstrap-vue';
+import { RouteLocation } from 'vue-router';
 
 import dayjs from 'dayjs';
-import { DATE_TIME_LONG_FORMAT } from '@/shared/date/filters';
+import { DATE_TIME_LONG_FORMAT } from '../../..../......mainwebappapp/shared/composables/date-format';
+import OperationUpdate from '../../..../......mainwebappapp/entities/test-root/operation/operation-update.vue';
+import OperationService from '../../..../......mainwebappapp/entities/test-root/operation/operation.service';
+import AlertService from '../../..../......mainwebappapp/shared/alert/alert.service';
 
-import * as config from '@/shared/config/config';
-import OperationUpdateComponent from '@/entities/test-root/operation/operation-update.vue';
-import OperationClass from '@/entities/test-root/operation/operation-update.component';
-import OperationService from '@/entities/test-root/operation/operation.service';
+import BankAccountMySuffixService from '../../..../......mainwebappapp/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
+import LabelService from '../../..../......mainwebappapp/entities/test-root/label/label.service';
 
-import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
+type OperationUpdateComponentType = InstanceType<typeof OperationUpdate>;
 
-import LabelService from '@/entities/test-root/label/label.service';
-import AlertService from '@/shared/alert/alert.service';
+let route: Partial<RouteLocation>;
+const routerGoMock = vitest.fn();
 
-const localVue = createLocalVue();
+vitest.mock('vue-router', () => ({
+  useRoute: () => route,
+  useRouter: () => ({ go: routerGoMock }),
+}));
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
-const router = new Router();
-localVue.use(Router);
-localVue.use(ToastPlugin);
-localVue.component('font-awesome-icon', {});
-localVue.component('b-input-group', {});
-localVue.component('b-input-group-prepend', {});
-localVue.component('b-form-datepicker', {});
-localVue.component('b-form-input', {});
+const operationSample = { id: 123 };
 
 describe('Component Tests', () => {
+  let mountOptions: MountingOptions<OperationUpdateComponentType>['global'];
+  let alertService: AlertService;
+
   describe('Operation Management Update Component', () => {
-    let wrapper: Wrapper<OperationClass>;
-    let comp: OperationClass;
+    let comp: OperationUpdateComponentType;
     let operationServiceStub: SinonStubbedInstance<OperationService>;
 
     beforeEach(() => {
+      route = {};
       operationServiceStub = sinon.createStubInstance<OperationService>(OperationService);
 
-      wrapper = shallowMount<OperationClass>(OperationUpdateComponent, {
-        store,
-        i18n,
-        localVue,
-        router,
-        provide: {
-          operationService: () => operationServiceStub,
-          alertService: () => new AlertService(),
+      alertService = new AlertService({
+        i18n: { t: vitest.fn() } as any,
+        bvToast: {
+          toast: vitest.fn(),
+        } as any,
+      });
 
+      mountOptions = {
+        stubs: {
+          'font-awesome-icon': true,
+          'b-input-group': true,
+          'b-input-group-prepend': true,
+          'b-form-datepicker': true,
+          'b-form-input': true,
+        },
+        provide: {
+          alertService,
+          operationService: () => operationServiceStub,
           bankAccountService: () =>
             sinon.createStubInstance<BankAccountMySuffixService>(BankAccountMySuffixService, {
               retrieve: sinon.stub().resolves({}),
             } as any),
-
           labelService: () =>
             sinon.createStubInstance<LabelService>(LabelService, {
               retrieve: sinon.stub().resolves({}),
             } as any),
         },
-      });
-      comp = wrapper.vm;
+      };
+    });
+
+    afterEach(() => {
+      vitest.resetAllMocks();
     });
 
     describe('load', () => {
+      beforeEach(() => {
+        const wrapper = shallowMount(OperationUpdate, { global: mountOptions });
+        comp = wrapper.vm;
+      });
       it('Should convert date from string', () => {
         // GIVEN
         const date = new Date('2019-10-15T11:42:02Z');
@@ -83,24 +95,27 @@ describe('Component Tests', () => {
     describe('save', () => {
       it('Should call update service on save for existing entity', async () => {
         // GIVEN
-        const entity = { id: 123 };
-        comp.operation = entity;
-        operationServiceStub.update.resolves(entity);
+        const wrapper = shallowMount(OperationUpdate, { global: mountOptions });
+        comp = wrapper.vm;
+        comp.operation = operationSample;
+        operationServiceStub.update.resolves(operationSample);
 
         // WHEN
         comp.save();
         await comp.$nextTick();
 
         // THEN
-        expect(operationServiceStub.update.calledWith(entity)).toBeTruthy();
+        expect(operationServiceStub.update.calledWith(operationSample)).toBeTruthy();
         expect(comp.isSaving).toEqual(false);
       });
 
       it('Should call create service on save for new entity', async () => {
         // GIVEN
         const entity = {};
-        comp.operation = entity;
         operationServiceStub.create.resolves(entity);
+        const wrapper = shallowMount(OperationUpdate, { global: mountOptions });
+        comp = wrapper.vm;
+        comp.operation = entity;
 
         // WHEN
         comp.save();
@@ -115,25 +130,35 @@ describe('Component Tests', () => {
     describe('Before route enter', () => {
       it('Should retrieve data', async () => {
         // GIVEN
-        const foundOperation = { id: 123 };
-        operationServiceStub.find.resolves(foundOperation);
-        operationServiceStub.retrieve.resolves([foundOperation]);
+        operationServiceStub.find.resolves(operationSample);
+        operationServiceStub.retrieve.resolves([operationSample]);
 
         // WHEN
-        comp.beforeRouteEnter({ params: { operationId: 123 } }, null, cb => cb(comp));
+        route = {
+          params: {
+            operationId: '' + operationSample.id,
+          },
+        };
+        const wrapper = shallowMount(OperationUpdate, { global: mountOptions });
+        comp = wrapper.vm;
         await comp.$nextTick();
 
         // THEN
-        expect(comp.operation).toBe(foundOperation);
+        expect(comp.operation).toMatchObject(operationSample);
       });
     });
 
     describe('Previous state', () => {
       it('Should go previous state', async () => {
+        operationServiceStub.find.resolves(operationSample);
+        const wrapper = shallowMount(OperationUpdate, { global: mountOptions });
+        comp = wrapper.vm;
+        await comp.$nextTick();
+
         comp.previousState();
         await comp.$nextTick();
 
-        expect(comp.$router.currentRoute.fullPath).toContain('/');
+        expect(routerGoMock).toHaveBeenCalledWith(-1);
       });
     });
   });

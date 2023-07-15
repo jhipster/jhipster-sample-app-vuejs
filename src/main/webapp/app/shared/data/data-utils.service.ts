@@ -1,10 +1,7 @@
-import { Component, Vue } from 'vue-property-decorator';
-
 /**
- * An utility service for data.
+ * An composable utility for data.
  */
-@Component
-export default class JhiDataUtils extends Vue {
+const useDataUtils = () => ({
   /**
    * Method to abbreviate the text given
    */
@@ -13,14 +10,14 @@ export default class JhiDataUtils extends Vue {
       return text;
     }
     return text ? text.substring(0, 15) + append + text.slice(-10) : '';
-  }
+  },
 
   /**
    * Method to find the byte size of the string provides
    */
   byteSize(base64String) {
     return this.formatAsBytes(this.size(base64String));
-  }
+  },
 
   /**
    * Method to open file
@@ -40,7 +37,7 @@ export default class JhiDataUtils extends Vue {
     if (win) {
       win.onload = () => URL.revokeObjectURL(objectURL);
     }
-  }
+  },
 
   /**
    * Method to convert the file to base64
@@ -52,7 +49,7 @@ export default class JhiDataUtils extends Vue {
       const base64Data = e.target.result.substring(e.target.result.indexOf('base64,') + 'base64,'.length);
       cb(base64Data);
     };
-  }
+  },
 
   /**
    * Method to clear the input
@@ -69,11 +66,11 @@ export default class JhiDataUtils extends Vue {
         elementRef.nativeElement.querySelector('#' + idInput).value = null;
       }
     }
-  }
+  },
 
   endsWith(suffix, str) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
-  }
+  },
 
   paddingSize(value) {
     if (this.endsWith('==', value)) {
@@ -83,15 +80,15 @@ export default class JhiDataUtils extends Vue {
       return 1;
     }
     return 0;
-  }
+  },
 
   size(value) {
     return (value.length / 4) * 3 - this.paddingSize(value);
-  }
+  },
 
   formatAsBytes(size) {
     return size.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' bytes';
-  }
+  },
 
   setFileData(event, entity, field, isImage) {
     if (event && event.target.files && event.target.files[0]) {
@@ -104,7 +101,7 @@ export default class JhiDataUtils extends Vue {
         entity[`${field}ContentType`] = file.type;
       });
     }
-  }
+  },
 
   /**
    * Method to download file
@@ -124,7 +121,7 @@ export default class JhiDataUtils extends Vue {
     tempLink.download = fileName;
     tempLink.target = '_blank';
     tempLink.click();
-  }
+  },
 
   /**
    * Method to parse header links
@@ -132,7 +129,7 @@ export default class JhiDataUtils extends Vue {
   parseLinks(header) {
     const links = {};
 
-    if (header === null || header.indexOf(',') === -1) {
+    if ((header?.indexOf(',') ?? -1) === -1) {
       return links;
     }
     // Split parts by comma
@@ -157,5 +154,7 @@ export default class JhiDataUtils extends Vue {
       links[name] = page;
     });
     return links;
-  }
-}
+  },
+});
+
+export default useDataUtils;

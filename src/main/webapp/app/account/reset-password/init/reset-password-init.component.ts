@@ -1,6 +1,8 @@
-import { email, maxLength, minLength, required } from 'vuelidate/lib/validators';
+import { defineComponent, ref, Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useVuelidate } from '@vuelidate/core';
+import { email, maxLength, minLength, required } from '@vuelidate/validators';
 import axios from 'axios';
-import { Vue, Component } from 'vue-property-decorator';
 
 const validations = {
   resetAccount: {
@@ -14,33 +16,45 @@ const validations = {
 };
 
 interface ResetAccount {
-  email: string;
+  email: string | null;
 }
 
-@Component({
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'ResetPasswordInit',
   validations,
-})
-export default class ResetPasswordInit extends Vue {
-  public success: boolean = null;
-  public error: string = null;
-  public resetAccount: ResetAccount = {
-    email: null,
-  };
+  setup(prop) {
+    const error: Ref<string> = ref(null);
+    const success: Ref<boolean> = ref(false);
+    const resetAccount: Ref<ResetAccount> = ref({
+      email: null,
+    });
 
-  public requestReset(): void {
-    this.error = null;
-    axios
-      .post('api/account/reset-password/init', this.resetAccount.email, {
-        headers: {
-          'content-type': 'text/plain',
-        },
-      })
-      .then(() => {
-        this.success = true;
-      })
-      .catch(() => {
-        this.success = null;
-        this.error = 'ERROR';
-      });
-  }
-}
+    return {
+      error,
+      success,
+      resetAccount,
+      v$: useVuelidate(),
+      t$: useI18n().t,
+    };
+  },
+  methods: {
+    async requestReset(): Promise<void> {
+      this.error = null;
+      this.success = false;
+      await axios
+        .post('api/account/reset-password/init', this.resetAccount.email, {
+          headers: {
+            'content-type': 'text/plain',
+          },
+        })
+        .then(() => {
+          this.success = true;
+        })
+        .catch(() => {
+          this.success = false;
+          this.error = 'ERROR';
+        });
+    },
+  },
+});

@@ -1,36 +1,43 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { defineComponent, inject, ref, Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
 
 import { ILabel } from '@/shared/model/test-root/label.model';
 import LabelService from './label.service';
-import AlertService from '@/shared/alert/alert.service';
+import { useAlertService } from '@/shared/alert/alert.service';
 
-@Component
-export default class LabelDetails extends Vue {
-  @Inject('labelService') private labelService: () => LabelService;
-  @Inject('alertService') private alertService: () => AlertService;
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'LabelDetails',
+  setup() {
+    const labelService = inject('labelService', () => new LabelService());
+    const alertService = inject('alertService', () => useAlertService(), true);
 
-  public label: ILabel = {};
+    const route = useRoute();
+    const router = useRouter();
 
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (to.params.labelId) {
-        vm.retrieveLabel(to.params.labelId);
+    const previousState = () => router.go(-1);
+    const label: Ref<ILabel> = ref({});
+
+    const retrieveLabel = async labelId => {
+      try {
+        const res = await labelService().find(labelId);
+        label.value = res;
+      } catch (error) {
+        alertService.showHttpError(error.response);
       }
-    });
-  }
+    };
 
-  public retrieveLabel(labelId) {
-    this.labelService()
-      .find(labelId)
-      .then(res => {
-        this.label = res;
-      })
-      .catch(error => {
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
+    if (route.params?.labelId) {
+      retrieveLabel(route.params.labelId);
+    }
 
-  public previousState() {
-    this.$router.go(-1);
-  }
-}
+    return {
+      alertService,
+      label,
+
+      previousState,
+      t$: useI18n().t,
+    };
+  },
+});

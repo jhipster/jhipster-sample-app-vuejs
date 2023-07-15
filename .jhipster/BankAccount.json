@@ -3,6 +3,7 @@
   "changelogDate": "20150805124838",
   "clientRootFolder": "test-root",
   "dto": "mapstruct",
+  "entityTableName": "bank_account",
   "fields": [
     {
       "fieldName": "name",
@@ -67,14 +68,17 @@
       "otherEntityField": "login",
       "otherEntityName": "user",
       "relationshipName": "user",
+      "relationshipSide": "left",
       "relationshipType": "many-to-one"
     },
     {
       "otherEntityName": "operation",
       "otherEntityRelationshipName": "bankAccount",
       "relationshipName": "operation",
+      "relationshipSide": "left",
       "relationshipType": "one-to-many"
     }
   ],
+  "searchEngine": "no",
   "service": "serviceImpl"
 }

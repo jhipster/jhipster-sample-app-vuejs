@@ -18,13 +18,13 @@
     <div class="mt-2">&nbsp;</div>
     Filter
     <input type="text" v-model="threadDumpFilter" class="form-control" />
-    <div class="pad" v-for="(entry, key) of filterBy(threadDump, threadDumpFilter)" :key="key">
+    <div class="pad" v-for="(entry, key) of filteredThreadDump" :key="key">
       <h6>
         <span class="badge" :class="getBadgeClass(entry.threadState)">{{ entry.threadState }}</span
         >&nbsp;{{ entry.threadName }} (ID {{ entry.threadId }})
         <a v-on:click="entry.show = !entry.show" href="javascript:void(0);">
-          <span :hidden="entry.show" v-text="$t('metrics.jvm.threads.dump.show')">Show StackTrace</span>
-          <span :hidden="!entry.show" v-text="$t('metrics.jvm.threads.dump.hide')">Hide StackTrace</span>
+          <span :hidden="entry.show" v-text="t$('metrics.jvm.threads.dump.show')"></span>
+          <span :hidden="!entry.show" v-text="t$('metrics.jvm.threads.dump.hide')"></span>
         </a>
       </h6>
       <div class="card" :hidden="!entry.show">
@@ -41,11 +41,11 @@
       <table class="table table-sm table-responsive" aria-describedby="Metrics">
         <thead>
           <tr>
-            <th v-text="$t('metrics.jvm.threads.dump.blockedtime')" scope="col">Blocked Time</th>
-            <th v-text="$t('metrics.jvm.threads.dump.blockedcount')" scope="col">Blocked Count</th>
-            <th v-text="$t('metrics.jvm.threads.dump.waitedtime')" scope="col">Waited Time</th>
-            <th v-text="$t('metrics.jvm.threads.dump.waitedcount')" scope="col">Waited Count</th>
-            <th v-text="$t('metrics.jvm.threads.dump.lockname')" scope="col">Lock Name</th>
+            <th v-text="t$('metrics.jvm.threads.dump.blockedtime')" scope="col"></th>
+            <th v-text="t$('metrics.jvm.threads.dump.blockedcount')" scope="col"></th>
+            <th v-text="t$('metrics.jvm.threads.dump.waitedtime')" scope="col"></th>
+            <th v-text="t$('metrics.jvm.threads.dump.waitedcount')" scope="col"></th>
+            <th v-text="t$('metrics.jvm.threads.dump.lockname')" scope="col"></th>
           </tr>
         </thead>
         <tbody>

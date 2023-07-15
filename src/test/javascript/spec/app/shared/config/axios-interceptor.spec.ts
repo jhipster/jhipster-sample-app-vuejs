@@ -1,4 +1,4 @@
-import * as setupAxiosConfig from '@/shared/config/axios-interceptor';
+import * as setupAxiosConfig from '../../../......mainwebappapp/shared/config/axios-interceptor';
 import * as sinon from 'sinon';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
@@ -6,6 +6,11 @@ import MockAdapter from 'axios-mock-adapter';
 const mock = new MockAdapter(axios);
 
 describe('Axios interceptor', () => {
+  beforeEach(() => {
+    axios.interceptors.request.clear();
+    axios.interceptors.response.clear();
+  });
+
   it('should use localStorage to provide bearer', () => {
     localStorage.setItem('jhi-authenticationToken', 'auth');
     const result = setupAxiosConfig.onRequestSuccess(() => console.log('A problem occured'));

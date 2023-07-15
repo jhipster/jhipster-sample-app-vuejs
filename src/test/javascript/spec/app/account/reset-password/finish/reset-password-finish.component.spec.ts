@@ -1,15 +1,10 @@
 import axios from 'axios';
 import sinon from 'sinon';
-import * as config from '@/shared/config/config';
-import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
-import ResetPasswordFinish from '@/account/reset-password/finish/reset-password-finish.vue';
-import ResetPasswordFinishClass from '@/account/reset-password/finish/reset-password-finish.component';
-import LoginService from '@/account/login.service';
+import { shallowMount } from '@vue/test-utils';
+import ResetPasswordFinish from '../../../../......mainwebappapp/account/reset-password/finish/reset-password-finish.vue';
+import LoginService from '../../../../......mainwebappapp/account/login.service';
 
-const localVue = createLocalVue();
-
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
+type ResetPasswordFinishComponentType = InstanceType<typeof ResetPasswordFinish>;
 
 const axiosStub = {
   get: sinon.stub(axios, 'get'),
@@ -17,16 +12,15 @@ const axiosStub = {
 };
 
 describe('Reset Component Finish', () => {
-  let wrapper: Wrapper<ResetPasswordFinishClass>;
-  let resetPasswordFinish: ResetPasswordFinishClass;
+  let resetPasswordFinish: ResetPasswordFinishComponentType;
 
   beforeEach(() => {
     axiosStub.post.reset();
-    wrapper = shallowMount<ResetPasswordFinishClass>(ResetPasswordFinish, {
-      i18n,
-      localVue,
-      provide: {
-        loginService: () => new LoginService(),
+    const wrapper = shallowMount(ResetPasswordFinish, {
+      global: {
+        provide: {
+          loginService: {},
+        },
       },
     });
     resetPasswordFinish = wrapper.vm;
@@ -55,7 +49,7 @@ describe('Reset Component Finish', () => {
     });
 
     // When
-    resetPasswordFinish.finishReset();
+    await resetPasswordFinish.finishReset();
     await resetPasswordFinish.$nextTick();
 
     // Then

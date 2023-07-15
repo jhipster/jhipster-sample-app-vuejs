@@ -1,79 +1,87 @@
 /* tslint:disable max-line-length */
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { vitest } from 'vitest';
+import { shallowMount, MountingOptions } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
-import Router from 'vue-router';
-import { ToastPlugin } from 'bootstrap-vue';
+import { RouteLocation } from 'vue-router';
 
-import * as config from '@/shared/config/config';
-import LabelUpdateComponent from '@/entities/test-root/label/label-update.vue';
-import LabelClass from '@/entities/test-root/label/label-update.component';
-import LabelService from '@/entities/test-root/label/label.service';
+import LabelUpdate from '../../..../......mainwebappapp/entities/test-root/label/label-update.vue';
+import LabelService from '../../..../......mainwebappapp/entities/test-root/label/label.service';
+import AlertService from '../../..../......mainwebappapp/shared/alert/alert.service';
 
-import OperationService from '@/entities/test-root/operation/operation.service';
-import AlertService from '@/shared/alert/alert.service';
+type LabelUpdateComponentType = InstanceType<typeof LabelUpdate>;
 
-const localVue = createLocalVue();
+let route: Partial<RouteLocation>;
+const routerGoMock = vitest.fn();
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
-const router = new Router();
-localVue.use(Router);
-localVue.use(ToastPlugin);
-localVue.component('font-awesome-icon', {});
-localVue.component('b-input-group', {});
-localVue.component('b-input-group-prepend', {});
-localVue.component('b-form-datepicker', {});
-localVue.component('b-form-input', {});
+vitest.mock('vue-router', () => ({
+  useRoute: () => route,
+  useRouter: () => ({ go: routerGoMock }),
+}));
+
+const labelSample = { id: 123 };
 
 describe('Component Tests', () => {
+  let mountOptions: MountingOptions<LabelUpdateComponentType>['global'];
+  let alertService: AlertService;
+
   describe('Label Management Update Component', () => {
-    let wrapper: Wrapper<LabelClass>;
-    let comp: LabelClass;
+    let comp: LabelUpdateComponentType;
     let labelServiceStub: SinonStubbedInstance<LabelService>;
 
     beforeEach(() => {
+      route = {};
       labelServiceStub = sinon.createStubInstance<LabelService>(LabelService);
 
-      wrapper = shallowMount<LabelClass>(LabelUpdateComponent, {
-        store,
-        i18n,
-        localVue,
-        router,
-        provide: {
-          labelService: () => labelServiceStub,
-          alertService: () => new AlertService(),
-
-          operationService: () =>
-            sinon.createStubInstance<OperationService>(OperationService, {
-              retrieve: sinon.stub().resolves({}),
-            } as any),
-        },
+      alertService = new AlertService({
+        i18n: { t: vitest.fn() } as any,
+        bvToast: {
+          toast: vitest.fn(),
+        } as any,
       });
-      comp = wrapper.vm;
+
+      mountOptions = {
+        stubs: {
+          'font-awesome-icon': true,
+          'b-input-group': true,
+          'b-input-group-prepend': true,
+          'b-form-datepicker': true,
+          'b-form-input': true,
+        },
+        provide: {
+          alertService,
+          labelService: () => labelServiceStub,
+        },
+      };
+    });
+
+    afterEach(() => {
+      vitest.resetAllMocks();
     });
 
     describe('save', () => {
       it('Should call update service on save for existing entity', async () => {
         // GIVEN
-        const entity = { id: 123 };
-        comp.label = entity;
-        labelServiceStub.update.resolves(entity);
+        const wrapper = shallowMount(LabelUpdate, { global: mountOptions });
+        comp = wrapper.vm;
+        comp.label = labelSample;
+        labelServiceStub.update.resolves(labelSample);
 
         // WHEN
         comp.save();
         await comp.$nextTick();
 
         // THEN
-        expect(labelServiceStub.update.calledWith(entity)).toBeTruthy();
+        expect(labelServiceStub.update.calledWith(labelSample)).toBeTruthy();
         expect(comp.isSaving).toEqual(false);
       });
 
       it('Should call create service on save for new entity', async () => {
         // GIVEN
         const entity = {};
-        comp.label = entity;
         labelServiceStub.create.resolves(entity);
+        const wrapper = shallowMount(LabelUpdate, { global: mountOptions });
+        comp = wrapper.vm;
+        comp.label = entity;
 
         // WHEN
         comp.save();
@@ -88,25 +96,35 @@ describe('Component Tests', () => {
     describe('Before route enter', () => {
       it('Should retrieve data', async () => {
         // GIVEN
-        const foundLabel = { id: 123 };
-        labelServiceStub.find.resolves(foundLabel);
-        labelServiceStub.retrieve.resolves([foundLabel]);
+        labelServiceStub.find.resolves(labelSample);
+        labelServiceStub.retrieve.resolves([labelSample]);
 
         // WHEN
-        comp.beforeRouteEnter({ params: { labelId: 123 } }, null, cb => cb(comp));
+        route = {
+          params: {
+            labelId: '' + labelSample.id,
+          },
+        };
+        const wrapper = shallowMount(LabelUpdate, { global: mountOptions });
+        comp = wrapper.vm;
         await comp.$nextTick();
 
         // THEN
-        expect(comp.label).toBe(foundLabel);
+        expect(comp.label).toMatchObject(labelSample);
       });
     });
 
     describe('Previous state', () => {
       it('Should go previous state', async () => {
+        labelServiceStub.find.resolves(labelSample);
+        const wrapper = shallowMount(LabelUpdate, { global: mountOptions });
+        comp = wrapper.vm;
+        await comp.$nextTick();
+
         comp.previousState();
         await comp.$nextTick();
 
-        expect(comp.$router.currentRoute.fullPath).toContain('/');
+        expect(routerGoMock).toHaveBeenCalledWith(-1);
       });
     });
   });

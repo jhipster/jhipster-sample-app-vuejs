@@ -1,26 +1,29 @@
-import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
-import Home from '@/core/home/home.vue';
-import HomeClass from '@/core/home/home.component';
-import * as config from '@/shared/config/config';
+import { vitest } from 'vitest';
+import { ref } from 'vue';
+import { shallowMount } from '@vue/test-utils';
+import Home from '../../../......mainwebappapp/core/home/home.vue';
 
-const localVue = createLocalVue();
-config.initVueApp(localVue);
-const store = config.initVueXStore(localVue);
-const i18n = config.initI18N(localVue);
-localVue.component('router-link', {});
+type HomeComponentType = InstanceType<typeof Home>;
 
 describe('Home', () => {
-  let home: HomeClass;
-  let wrapper: Wrapper<HomeClass>;
-  const loginService = { openLogin: jest.fn() };
+  let home: HomeComponentType;
+  let authenticated;
+  let currentUsername;
+  const loginService = { openLogin: vitest.fn() };
 
   beforeEach(() => {
-    wrapper = shallowMount<HomeClass>(Home, {
-      i18n,
-      store,
-      localVue,
-      provide: {
-        loginService: () => loginService,
+    authenticated = ref(false);
+    currentUsername = ref('');
+    const wrapper = shallowMount(Home, {
+      global: {
+        stubs: {
+          'router-link': true,
+        },
+        provide: {
+          loginService,
+          authenticated,
+          currentUsername,
+        },
       },
     });
     home = wrapper.vm;
@@ -32,7 +35,8 @@ describe('Home', () => {
   });
 
   it('should have user data set after authentication', () => {
-    store.commit('authenticated', { login: 'test' });
+    authenticated.value = true;
+    currentUsername.value = 'test';
 
     expect(home.authenticated).toBeTruthy();
     expect(home.username).toBe('test');

@@ -1,26 +1,13 @@
 /* tslint:disable max-line-length */
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { vitest } from 'vitest';
+import { shallowMount, MountingOptions } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
-import { ToastPlugin } from 'bootstrap-vue';
 
-import * as config from '@/shared/config/config';
-import OperationComponent from '@/entities/test-root/operation/operation.vue';
-import OperationClass from '@/entities/test-root/operation/operation.component';
-import OperationService from '@/entities/test-root/operation/operation.service';
-import AlertService from '@/shared/alert/alert.service';
+import Operation from '../../..../......mainwebappapp/entities/test-root/operation/operation.vue';
+import OperationService from '../../..../......mainwebappapp/entities/test-root/operation/operation.service';
+import AlertService from '../../..../......mainwebappapp/shared/alert/alert.service';
 
-const localVue = createLocalVue();
-localVue.use(ToastPlugin);
-
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
-localVue.component('font-awesome-icon', {});
-localVue.component('b-badge', {});
-localVue.component('jhi-sort-indicator', {});
-localVue.directive('b-modal', {});
-localVue.component('b-button', {});
-localVue.component('router-link', {});
+type OperationComponentType = InstanceType<typeof Operation>;
 
 const bModalStub = {
   render: () => {},
@@ -31,104 +18,140 @@ const bModalStub = {
 };
 
 describe('Component Tests', () => {
+  let alertService: AlertService;
+
   describe('Operation Management Component', () => {
-    let wrapper: Wrapper<OperationClass>;
-    let comp: OperationClass;
     let operationServiceStub: SinonStubbedInstance<OperationService>;
+    let mountOptions: MountingOptions<OperationComponentType>['global'];
 
     beforeEach(() => {
       operationServiceStub = sinon.createStubInstance<OperationService>(OperationService);
       operationServiceStub.retrieve.resolves({ headers: {} });
 
-      wrapper = shallowMount<OperationClass>(OperationComponent, {
-        store,
-        i18n,
-        localVue,
-        stubs: { jhiItemCount: true, bPagination: true, bModal: bModalStub as any },
-        provide: {
-          operationService: () => operationServiceStub,
-          alertService: () => new AlertService(),
-        },
+      alertService = new AlertService({
+        i18n: { t: vitest.fn() } as any,
+        bvToast: {
+          toast: vitest.fn(),
+        } as any,
       });
-      comp = wrapper.vm;
+
+      mountOptions = {
+        stubs: {
+          jhiItemCount: true,
+          bPagination: true,
+          bModal: bModalStub as any,
+          'font-awesome-icon': true,
+          'b-badge': true,
+          'jhi-sort-indicator': true,
+          'b-button': true,
+          'router-link': true,
+        },
+        directives: {
+          'b-modal': {},
+        },
+        provide: {
+          alertService,
+          operationService: () => operationServiceStub,
+        },
+      };
     });
 
-    it('Should call load all on init', async () => {
-      // GIVEN
-      operationServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
+    describe('Mount', () => {
+      it('Should call load all on init', async () => {
+        // GIVEN
+        operationServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
 
-      // WHEN
-      comp.retrieveAllOperations();
-      await comp.$nextTick();
+        // WHEN
+        const wrapper = shallowMount(Operation, { global: mountOptions });
+        const comp = wrapper.vm;
+        await comp.$nextTick();
 
-      // THEN
-      expect(operationServiceStub.retrieve.called).toBeTruthy();
-      expect(comp.operations[0]).toEqual(expect.objectContaining({ id: 123 }));
+        // THEN
+        expect(operationServiceStub.retrieve.calledOnce).toBeTruthy();
+        expect(comp.operations[0]).toEqual(expect.objectContaining({ id: 123 }));
+      });
+
+      it('should calculate the sort attribute for an id', async () => {
+        // WHEN
+        const wrapper = shallowMount(Operation, { global: mountOptions });
+        const comp = wrapper.vm;
+        await comp.$nextTick();
+
+        // THEN
+        expect(operationServiceStub.retrieve.lastCall.firstArg).toMatchObject({
+          sort: ['id,asc'],
+        });
+      });
     });
+    describe('Handles', () => {
+      let comp: OperationComponentType;
 
-    it('should load a page', async () => {
-      // GIVEN
-      operationServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
-      comp.previousPage = 1;
+      beforeEach(async () => {
+        const wrapper = shallowMount(Operation, { global: mountOptions });
+        comp = wrapper.vm;
+        await comp.$nextTick();
+        operationServiceStub.retrieve.reset();
+        operationServiceStub.retrieve.resolves({ headers: {}, data: [] });
+      });
 
-      // WHEN
-      comp.loadPage(2);
-      await comp.$nextTick();
+      it('should load a page', async () => {
+        // GIVEN
+        operationServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
 
-      // THEN
-      expect(operationServiceStub.retrieve.called).toBeTruthy();
-      expect(comp.operations[0]).toEqual(expect.objectContaining({ id: 123 }));
-    });
+        // WHEN
+        comp.page = 2;
+        await comp.$nextTick();
 
-    it('should re-initialize the page', async () => {
-      // GIVEN
-      operationServiceStub.retrieve.reset();
-      operationServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
+        // THEN
+        expect(operationServiceStub.retrieve.called).toBeTruthy();
+        expect(comp.operations[0]).toEqual(expect.objectContaining({ id: 123 }));
+      });
 
-      // WHEN
-      comp.loadPage(2);
-      await comp.$nextTick();
-      comp.clear();
-      await comp.$nextTick();
+      it('should re-initialize the page', async () => {
+        // GIVEN
+        comp.page = 2;
+        await comp.$nextTick();
+        operationServiceStub.retrieve.reset();
+        operationServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
 
-      // THEN
-      expect(operationServiceStub.retrieve.callCount).toEqual(2);
-      expect(comp.page).toEqual(1);
-      expect(comp.operations[0]).toEqual(expect.objectContaining({ id: 123 }));
-    });
+        // WHEN
+        comp.clear();
+        await comp.$nextTick();
 
-    it('should calculate the sort attribute for an id', () => {
-      // WHEN
-      const result = comp.sort();
+        // THEN
+        expect(comp.page).toEqual(1);
+        expect(operationServiceStub.retrieve.callCount).toEqual(1);
+        expect(comp.operations[0]).toEqual(expect.objectContaining({ id: 123 }));
+      });
 
-      // THEN
-      expect(result).toEqual(['id,asc']);
-    });
+      it('should calculate the sort attribute for a non-id attribute', async () => {
+        // WHEN
+        comp.propOrder = 'name';
+        await comp.$nextTick();
 
-    it('should calculate the sort attribute for a non-id attribute', () => {
-      // GIVEN
-      comp.propOrder = 'name';
+        // THEN
+        expect(operationServiceStub.retrieve.lastCall.firstArg).toMatchObject({
+          sort: ['name,asc', 'id'],
+        });
+      });
 
-      // WHEN
-      const result = comp.sort();
+      it('Should call delete service on confirmDelete', async () => {
+        // GIVEN
+        operationServiceStub.delete.resolves({});
 
-      // THEN
-      expect(result).toEqual(['name,asc', 'id']);
-    });
-    it('Should call delete service on confirmDelete', async () => {
-      // GIVEN
-      operationServiceStub.delete.resolves({});
+        // WHEN
+        comp.prepareRemove({ id: 123 });
 
-      // WHEN
-      comp.prepareRemove({ id: 123 });
-      expect(operationServiceStub.retrieve.callCount).toEqual(1);
+        comp.removeOperation();
+        await comp.$nextTick(); // clear components
 
-      comp.removeOperation();
-      await comp.$nextTick();
+        // THEN
+        expect(operationServiceStub.delete.called).toBeTruthy();
 
-      // THEN
-      expect(operationServiceStub.delete.called).toBeTruthy();
-      expect(operationServiceStub.retrieve.callCount).toEqual(2);
+        // THEN
+        await comp.$nextTick(); // handle component clear watch
+        expect(operationServiceStub.retrieve.callCount).toEqual(1);
+      });
     });
   });
 });

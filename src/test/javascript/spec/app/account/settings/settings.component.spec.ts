@@ -1,17 +1,17 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
+import { createTestingPinia } from '@pinia/testing';
 
-import * as config from '@/shared/config/config';
-import Settings from '@/account/settings/settings.vue';
-import SettingsClass from '@/account/settings/settings.component';
-import { EMAIL_ALREADY_USED_TYPE } from '@/constants';
+import { useStore } from '../../../......mainwebappapp/store';
+import Settings from '../../../......mainwebappapp/account/settings/settings.vue';
+import { EMAIL_ALREADY_USED_TYPE } from '../../../......mainwebappapp/constants';
 
-const localVue = createLocalVue();
+type SettingsComponentType = InstanceType<typeof Settings>;
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+const pinia = createTestingPinia({ stubActions: false });
+
+const store = useStore();
 
 const axiosStub = {
   get: sinon.stub(axios, 'get'),
@@ -19,8 +19,7 @@ const axiosStub = {
 };
 
 describe('Settings Component', () => {
-  let wrapper: Wrapper<SettingsClass>;
-  let settings: SettingsClass;
+  let settings: SettingsComponentType;
   const account = {
     firstName: 'John',
     lastName: 'Doe',
@@ -31,11 +30,11 @@ describe('Settings Component', () => {
     axiosStub.get.resolves({});
     axiosStub.post.reset();
 
-    store.commit('authenticated', account);
-    wrapper = shallowMount<SettingsClass>(Settings, {
-      store,
-      i18n,
-      localVue,
+    store.setAuthentication(account);
+    const wrapper = shallowMount(Settings, {
+      global: {
+        plugins: [pinia],
+      },
     });
     settings = wrapper.vm;
   });
@@ -45,7 +44,7 @@ describe('Settings Component', () => {
     axiosStub.post.resolves({});
 
     // WHEN
-    settings.save();
+    await settings.save();
     await settings.$nextTick();
 
     // THEN
@@ -57,7 +56,7 @@ describe('Settings Component', () => {
     axiosStub.post.resolves(account);
 
     // WHEN
-    settings.save();
+    await settings.save();
     await settings.$nextTick();
 
     // THEN
@@ -71,7 +70,7 @@ describe('Settings Component', () => {
     axiosStub.post.rejects(error);
 
     // WHEN
-    settings.save();
+    await settings.save();
     await settings.$nextTick();
 
     // THEN
@@ -86,7 +85,7 @@ describe('Settings Component', () => {
     axiosStub.post.rejects(error);
 
     // WHEN
-    settings.save();
+    await settings.save();
     await settings.$nextTick();
 
     // THEN
@@ -101,7 +100,7 @@ describe('Settings Component', () => {
     axiosStub.post.rejects(error);
 
     // WHEN
-    settings.save();
+    await settings.save();
     await settings.$nextTick();
 
     // THEN

@@ -1,1 +1,11 @@
 id;name;bank_number;agency_number;last_operation_duration;mean_operation_duration;balance;opening_day;last_operation_date;active;account_type;attachment;attachment_content_type;description
+1;Unbranded Cheese Northeast;23742;69621;13240;65027;76128;2015-08-04;2015-08-04T16:03:18;false;SAVINGS;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+2;Connecticut;28859;22708;92919;13868;40138;2015-08-04;2015-08-04T16:58:30;false;SAVINGS;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+3;Vietnam;19054;51354;44071;27813;62150;2015-08-04;2015-08-04T16:31:28;false;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+4;Fiat Product;17586;76185;84857;28660;61488;2015-08-04;2015-08-05T04:59:47;true;LOAN;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+5;plum Money Integrated;44399;31251;10707;71874;64731;2015-08-05;2015-08-05T06:50:32;false;LOAN;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+6;Wooden middleware;53835;93859;61181;4880;29461;2015-08-05;2015-08-04T14:30:47;true;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+7;1080p island;53415;13238;90837;49053;51082;2015-08-05;2015-08-04T14:12:47;true;LOAN;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+8;cheap Licensed port;78764;3816;7553;36887;60849;2015-08-04;2015-08-04T13:03:48;true;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+9;gold;28424;43475;27425;60512;89090;2015-08-05;2015-08-04T14:41:37;true;LOAN;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+10;male;64445;33137;65827;94016;90536;2015-08-05;2015-08-05T08:13:34;false;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt

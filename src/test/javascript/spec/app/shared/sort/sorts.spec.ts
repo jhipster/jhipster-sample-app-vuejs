@@ -1,4 +1,4 @@
-import buildPaginationQueryOpts from '@/shared/sort/sorts';
+import buildPaginationQueryOpts from '../../../......mainwebappapp/shared/sort/sorts';
 
 describe('Sort', () => {
   it('should return an empty string if there is no pagination', () => {

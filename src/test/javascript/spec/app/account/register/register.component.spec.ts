@@ -1,19 +1,15 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { vitest } from 'vitest';
+import { computed } from 'vue';
+import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
 
-import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from '@/constants';
-import * as config from '@/shared/config/config';
-import Register from '@/account/register/register.vue';
-import RegisterClass from '@/account/register/register.component';
-import RegisterService from '@/account/register/register.service';
-import LoginService from '@/account/login.service';
+import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from '../../../......mainwebappapp/constants';
+import Register from '../../../......mainwebappapp/account/register/register.vue';
+import RegisterService from '../../../......mainwebappapp/account/register/register.service';
+import LoginService from '../../../......mainwebappapp/account/login.service';
 
-const localVue = createLocalVue();
-
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+type RegisterComponentType = InstanceType<typeof Register>;
 
 const axiosStub = {
   get: sinon.stub(axios, 'get'),
@@ -21,21 +17,27 @@ const axiosStub = {
 };
 
 describe('Register Component', () => {
-  let wrapper: Wrapper<RegisterClass>;
-  let register: RegisterClass;
-  const filledRegisterAccount = { email: 'jhi@pster.net', langKey: 'en', login: 'jhi', password: 'jhipster' };
+  let register: RegisterComponentType;
+  let loginService: LoginService;
+  const filledRegisterAccount = {
+    email: 'jhi@pster.net',
+    langKey: 'en',
+    login: 'jhi',
+    password: 'jhipster',
+  };
 
   beforeEach(() => {
     axiosStub.get.resolves({});
     axiosStub.post.reset();
+    loginService = new LoginService({ emit: vitest.fn() });
+    vitest.spyOn(loginService, 'openLogin');
 
-    wrapper = shallowMount<RegisterClass>(Register, {
-      store,
-      i18n,
-      localVue,
-      provide: {
-        registerService: () => new RegisterService(),
-        loginService: () => new LoginService(),
+    const wrapper = shallowMount(Register, {
+      global: {
+        provide: {
+          loginService,
+          currentLanguage: computed(() => 'en'),
+        },
       },
     });
     register = wrapper.vm;
@@ -53,12 +55,8 @@ describe('Register Component', () => {
   });
 
   it('should open login modal when asked to', () => {
-    let called = false;
-    (register.$root as any).$on('bv::show::modal', () => {
-      called = true;
-    });
     register.openLogin();
-    expect(called).toBe(true);
+    expect(loginService.openLogin).toBeCalledTimes(1);
   });
 
   it('should register when password match', async () => {
@@ -69,7 +67,12 @@ describe('Register Component', () => {
     await register.$nextTick();
 
     expect(
-      axiosStub.post.calledWith('api/register', { email: 'jhi@pster.net', langKey: 'en', login: 'jhi', password: 'jhipster' })
+      axiosStub.post.calledWith('api/register', {
+        email: 'jhi@pster.net',
+        langKey: 'en',
+        login: 'jhi',
+        password: 'jhipster',
+      })
     ).toBeTruthy();
     expect(register.success).toBe(true);
     expect(register.error).toBe(null);

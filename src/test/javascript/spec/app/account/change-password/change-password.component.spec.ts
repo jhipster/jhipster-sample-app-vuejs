@@ -1,16 +1,15 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { computed } from 'vue';
+import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
 
-import * as config from '@/shared/config/config';
-import ChangePassword from '@/account/change-password/change-password.vue';
-import ChangePasswordClass from '@/account/change-password/change-password.component';
+import { createTestingPinia } from '@pinia/testing';
+import { useStore } from '../../../......mainwebappapp/store';
+import ChangePassword from '../../../......mainwebappapp/account/change-password/change-password.vue';
 
-const localVue = createLocalVue();
+type ChangePasswordComponentType = InstanceType<typeof ChangePassword>;
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+const pinia = createTestingPinia();
 
 const axiosStub = {
   get: sinon.stub(axios, 'get'),
@@ -18,17 +17,19 @@ const axiosStub = {
 };
 
 describe('ChangePassword Component', () => {
-  let wrapper: Wrapper<ChangePasswordClass>;
-  let changePassword: ChangePasswordClass;
+  let changePassword: ChangePasswordComponentType;
 
   beforeEach(() => {
     axiosStub.get.resolves({});
     axiosStub.post.reset();
 
-    wrapper = shallowMount<ChangePasswordClass>(ChangePassword, {
-      store,
-      i18n,
-      localVue,
+    const wrapper = shallowMount(ChangePassword, {
+      global: {
+        plugins: [pinia],
+        provide: {
+          currentUsername: computed(() => 'username'),
+        },
+      },
     });
     changePassword = wrapper.vm;
   });

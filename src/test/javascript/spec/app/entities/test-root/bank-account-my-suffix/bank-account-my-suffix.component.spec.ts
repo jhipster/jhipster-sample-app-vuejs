@@ -1,25 +1,13 @@
 /* tslint:disable max-line-length */
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { vitest } from 'vitest';
+import { shallowMount, MountingOptions } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
-import { ToastPlugin } from 'bootstrap-vue';
 
-import * as config from '@/shared/config/config';
-import BankAccountMySuffixComponent from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.vue';
-import BankAccountMySuffixClass from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.component';
-import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
-import AlertService from '@/shared/alert/alert.service';
+import BankAccountMySuffix from '../../..../......mainwebappapp/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.vue';
+import BankAccountMySuffixService from '../../..../......mainwebappapp/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
+import AlertService from '../../..../......mainwebappapp/shared/alert/alert.service';
 
-const localVue = createLocalVue();
-localVue.use(ToastPlugin);
-
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
-localVue.component('font-awesome-icon', {});
-localVue.component('b-badge', {});
-localVue.directive('b-modal', {});
-localVue.component('b-button', {});
-localVue.component('router-link', {});
+type BankAccountMySuffixComponentType = InstanceType<typeof BankAccountMySuffix>;
 
 const bModalStub = {
   render: () => {},
@@ -30,54 +18,84 @@ const bModalStub = {
 };
 
 describe('Component Tests', () => {
+  let alertService: AlertService;
+
   describe('BankAccountMySuffix Management Component', () => {
-    let wrapper: Wrapper<BankAccountMySuffixClass>;
-    let comp: BankAccountMySuffixClass;
     let bankAccountServiceStub: SinonStubbedInstance<BankAccountMySuffixService>;
+    let mountOptions: MountingOptions<BankAccountMySuffixComponentType>['global'];
 
     beforeEach(() => {
       bankAccountServiceStub = sinon.createStubInstance<BankAccountMySuffixService>(BankAccountMySuffixService);
       bankAccountServiceStub.retrieve.resolves({ headers: {} });
 
-      wrapper = shallowMount<BankAccountMySuffixClass>(BankAccountMySuffixComponent, {
-        store,
-        i18n,
-        localVue,
-        stubs: { bModal: bModalStub as any },
-        provide: {
-          bankAccountService: () => bankAccountServiceStub,
-          alertService: () => new AlertService(),
-        },
+      alertService = new AlertService({
+        i18n: { t: vitest.fn() } as any,
+        bvToast: {
+          toast: vitest.fn(),
+        } as any,
       });
-      comp = wrapper.vm;
+
+      mountOptions = {
+        stubs: {
+          bModal: bModalStub as any,
+          'font-awesome-icon': true,
+          'b-badge': true,
+          'b-button': true,
+          'router-link': true,
+        },
+        directives: {
+          'b-modal': {},
+        },
+        provide: {
+          alertService,
+          bankAccountService: () => bankAccountServiceStub,
+        },
+      };
     });
 
-    it('Should call load all on init', async () => {
-      // GIVEN
-      bankAccountServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
+    describe('Mount', () => {
+      it('Should call load all on init', async () => {
+        // GIVEN
+        bankAccountServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
 
-      // WHEN
-      comp.retrieveAllBankAccountMySuffixs();
-      await comp.$nextTick();
+        // WHEN
+        const wrapper = shallowMount(BankAccountMySuffix, { global: mountOptions });
+        const comp = wrapper.vm;
+        await comp.$nextTick();
 
-      // THEN
-      expect(bankAccountServiceStub.retrieve.called).toBeTruthy();
-      expect(comp.bankAccounts[0]).toEqual(expect.objectContaining({ id: 123 }));
+        // THEN
+        expect(bankAccountServiceStub.retrieve.calledOnce).toBeTruthy();
+        expect(comp.bankAccounts[0]).toEqual(expect.objectContaining({ id: 123 }));
+      });
     });
-    it('Should call delete service on confirmDelete', async () => {
-      // GIVEN
-      bankAccountServiceStub.delete.resolves({});
+    describe('Handles', () => {
+      let comp: BankAccountMySuffixComponentType;
 
-      // WHEN
-      comp.prepareRemove({ id: 123 });
-      expect(bankAccountServiceStub.retrieve.callCount).toEqual(1);
+      beforeEach(async () => {
+        const wrapper = shallowMount(BankAccountMySuffix, { global: mountOptions });
+        comp = wrapper.vm;
+        await comp.$nextTick();
+        bankAccountServiceStub.retrieve.reset();
+        bankAccountServiceStub.retrieve.resolves({ headers: {}, data: [] });
+      });
 
-      comp.removeBankAccountMySuffix();
-      await comp.$nextTick();
+      it('Should call delete service on confirmDelete', async () => {
+        // GIVEN
+        bankAccountServiceStub.delete.resolves({});
 
-      // THEN
-      expect(bankAccountServiceStub.delete.called).toBeTruthy();
-      expect(bankAccountServiceStub.retrieve.callCount).toEqual(2);
+        // WHEN
+        comp.prepareRemove({ id: 123 });
+
+        comp.removeBankAccountMySuffix();
+        await comp.$nextTick(); // clear components
+
+        // THEN
+        expect(bankAccountServiceStub.delete.called).toBeTruthy();
+
+        // THEN
+        await comp.$nextTick(); // handle component clear watch
+        expect(bankAccountServiceStub.retrieve.callCount).toEqual(1);
+      });
     });
   });
 });

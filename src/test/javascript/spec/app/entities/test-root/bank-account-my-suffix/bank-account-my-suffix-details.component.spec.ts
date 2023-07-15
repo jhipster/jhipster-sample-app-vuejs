@@ -1,79 +1,89 @@
 /* tslint:disable max-line-length */
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { vitest } from 'vitest';
+import { shallowMount, MountingOptions } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
-import VueRouter from 'vue-router';
+import { RouteLocation } from 'vue-router';
 
-import * as config from '@/shared/config/config';
-import BankAccountMySuffixDetailComponent from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix-details.vue';
-import BankAccountMySuffixClass from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix-details.component';
-import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
-import router from '@/router';
-import AlertService from '@/shared/alert/alert.service';
+import BankAccountMySuffixDetails from '../../..../......mainwebappapp/entities/test-root/bank-account-my-suffix/bank-account-my-suffix-details.vue';
+import BankAccountMySuffixService from '../../..../......mainwebappapp/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
+import AlertService from '../../..../......mainwebappapp/shared/alert/alert.service';
 
-const localVue = createLocalVue();
-localVue.use(VueRouter);
+type BankAccountMySuffixDetailsComponentType = InstanceType<typeof BankAccountMySuffixDetails>;
 
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
-localVue.component('font-awesome-icon', {});
-localVue.component('router-link', {});
+let route: Partial<RouteLocation>;
+const routerGoMock = vitest.fn();
+
+vitest.mock('vue-router', () => ({
+  useRoute: () => route,
+  useRouter: () => ({ go: routerGoMock }),
+}));
+
+const bankAccountSample = { id: 123 };
 
 describe('Component Tests', () => {
+  let alertService: AlertService;
+
+  afterEach(() => {
+    vitest.resetAllMocks();
+  });
+
   describe('BankAccountMySuffix Management Detail Component', () => {
-    let wrapper: Wrapper<BankAccountMySuffixClass>;
-    let comp: BankAccountMySuffixClass;
     let bankAccountServiceStub: SinonStubbedInstance<BankAccountMySuffixService>;
+    let mountOptions: MountingOptions<BankAccountMySuffixDetailsComponentType>['global'];
 
     beforeEach(() => {
+      route = {};
       bankAccountServiceStub = sinon.createStubInstance<BankAccountMySuffixService>(BankAccountMySuffixService);
 
-      wrapper = shallowMount<BankAccountMySuffixClass>(BankAccountMySuffixDetailComponent, {
-        store,
-        i18n,
-        localVue,
-        router,
-        provide: { bankAccountService: () => bankAccountServiceStub, alertService: () => new AlertService() },
+      alertService = new AlertService({
+        i18n: { t: vitest.fn() } as any,
+        bvToast: {
+          toast: vitest.fn(),
+        } as any,
       });
-      comp = wrapper.vm;
+
+      mountOptions = {
+        stubs: {
+          'font-awesome-icon': true,
+          'router-link': true,
+        },
+        provide: {
+          alertService,
+          bankAccountService: () => bankAccountServiceStub,
+        },
+      };
     });
 
-    describe('OnInit', () => {
+    describe('Navigate to details', () => {
       it('Should call load all on init', async () => {
         // GIVEN
-        const foundBankAccountMySuffix = { id: 123 };
-        bankAccountServiceStub.find.resolves(foundBankAccountMySuffix);
-
+        bankAccountServiceStub.find.resolves(bankAccountSample);
+        route = {
+          params: {
+            bankAccountId: '' + 123,
+          },
+        };
+        const wrapper = shallowMount(BankAccountMySuffixDetails, { global: mountOptions });
+        const comp = wrapper.vm;
         // WHEN
-        comp.retrieveBankAccountMySuffix(123);
         await comp.$nextTick();
 
         // THEN
-        expect(comp.bankAccount).toBe(foundBankAccountMySuffix);
-      });
-    });
-
-    describe('Before route enter', () => {
-      it('Should retrieve data', async () => {
-        // GIVEN
-        const foundBankAccountMySuffix = { id: 123 };
-        bankAccountServiceStub.find.resolves(foundBankAccountMySuffix);
-
-        // WHEN
-        comp.beforeRouteEnter({ params: { bankAccountId: 123 } }, null, cb => cb(comp));
-        await comp.$nextTick();
-
-        // THEN
-        expect(comp.bankAccount).toBe(foundBankAccountMySuffix);
+        expect(comp.bankAccount).toMatchObject(bankAccountSample);
       });
     });
 
     describe('Previous state', () => {
       it('Should go previous state', async () => {
+        bankAccountServiceStub.find.resolves(bankAccountSample);
+        const wrapper = shallowMount(BankAccountMySuffixDetails, { global: mountOptions });
+        const comp = wrapper.vm;
+        await comp.$nextTick();
+
         comp.previousState();
         await comp.$nextTick();
 
-        expect(comp.$router.currentRoute.fullPath).toContain('/');
+        expect(routerGoMock).toHaveBeenCalledWith(-1);
       });
     });
   });

@@ -1,42 +1,34 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-import * as config from '@/shared/config/config';
-import Health from '@/admin/health/health.vue';
-import HealthModal from '@/admin/health/health-modal.vue';
-import HealthClass from '@/admin/health/health.component';
-import HealthService from '@/admin/health/health.service';
+import Health from '../../../......mainwebappapp/admin/health/health.vue';
+import HealthService from '../../../......mainwebappapp/admin/health/health.service';
 
-const localVue = createLocalVue();
-
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
-localVue.component('font-awesome-icon', FontAwesomeIcon);
-localVue.component('health-modal', HealthModal);
-localVue.directive('b-modal', {});
+type HealthComponentType = InstanceType<typeof Health>;
 
 const axiosStub = {
   get: sinon.stub(axios, 'get'),
 };
 
 describe('Health Component', () => {
-  let wrapper: Wrapper<HealthClass>;
-  let health: HealthClass;
+  let health: HealthComponentType;
 
   beforeEach(() => {
     axiosStub.get.resolves({});
-    wrapper = shallowMount<HealthClass>(Health, {
-      store,
-      i18n,
-      localVue,
-      stubs: {
-        bModal: true,
-      },
-      provide: {
-        healthService: () => new HealthService(),
+    const wrapper = shallowMount(Health, {
+      global: {
+        stubs: {
+          bModal: true,
+          'font-awesome-icon': true,
+          'health-modal': true,
+        },
+        directives: {
+          'b-modal': {},
+        },
+        provide: {
+          healthService: new HealthService(),
+        },
       },
     });
     health = wrapper.vm;

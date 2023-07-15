@@ -1,37 +1,49 @@
-import { createLocalVue, Wrapper, shallowMount } from '@vue/test-utils';
-import Error from '@/core/error/error.vue';
-import ErrorClass from '@/core/error/error.component';
-import * as config from '@/shared/config/config';
-import router from '@/router';
-import LoginService from '@/account/login.service';
+import { vitest } from 'vitest';
+import { Ref, ref } from 'vue';
+import { shallowMount } from '@vue/test-utils';
+import { RouteLocation } from 'vue-router';
 
-const localVue = createLocalVue();
-config.initVueApp(localVue);
-const i18n = config.initI18N(localVue);
-const store = config.initVueXStore(localVue);
+import Error from '../../../......mainwebappapp/core/error/error.vue';
+
+import LoginService from '../../../......mainwebappapp/account/login.service';
+
+type ErrorComponentType = InstanceType<typeof Error>;
+
+let route: Partial<RouteLocation>;
+
+vitest.mock('vue-router', () => ({
+  useRoute: () => route,
+}));
+
 const customErrorMsg = 'An error occurred.';
 
 describe('Error component', () => {
-  let error: ErrorClass;
-  let wrapper: Wrapper<ErrorClass>;
+  let error: ErrorComponentType;
   let loginService: LoginService;
+  let authenticated: Ref<boolean>;
 
   beforeEach(() => {
-    loginService = { openLogin: jest.fn() };
-    wrapper = shallowMount<ErrorClass>(Error, {
-      i18n,
-      store,
-      router,
-      localVue,
-      provide: {
-        loginService: () => loginService,
-      },
-    });
-    error = wrapper.vm;
+    route = {};
+    authenticated = ref(false);
+    loginService = new LoginService({ emit: vitest.fn() });
+    vitest.spyOn(loginService, 'openLogin');
   });
 
   it('should have retrieve custom error on routing', () => {
-    error.beforeRouteEnter({ meta: { errorMessage: customErrorMsg } }, null, cb => cb(error));
+    route = {
+      path: '/custom-error',
+      name: 'CustomMessage',
+      meta: { errorMessage: customErrorMsg },
+    };
+    const wrapper = shallowMount(Error, {
+      global: {
+        provide: {
+          loginService,
+          authenticated,
+        },
+      },
+    });
+    error = wrapper.vm;
 
     expect(error.errorMessage).toBe(customErrorMsg);
     expect(error.error403).toBeFalsy();
@@ -40,7 +52,18 @@ describe('Error component', () => {
   });
 
   it('should have set forbidden error on routing', () => {
-    error.beforeRouteEnter({ meta: { error403: true } }, null, cb => cb(error));
+    route = {
+      meta: { error403: true },
+    };
+    const wrapper = shallowMount(Error, {
+      global: {
+        provide: {
+          loginService,
+          authenticated,
+        },
+      },
+    });
+    error = wrapper.vm;
 
     expect(error.errorMessage).toBeNull();
     expect(error.error403).toBeTruthy();
@@ -49,7 +72,18 @@ describe('Error component', () => {
   });
 
   it('should have set not found error on routing', () => {
-    error.beforeRouteEnter({ meta: { error404: true } }, null, cb => cb(error));
+    route = {
+      meta: { error404: true },
+    };
+    const wrapper = shallowMount(Error, {
+      global: {
+        provide: {
+          loginService,
+          authenticated,
+        },
+      },
+    });
+    error = wrapper.vm;
 
     expect(error.errorMessage).toBeNull();
     expect(error.error403).toBeFalsy();
@@ -57,35 +91,16 @@ describe('Error component', () => {
     expect(loginService.openLogin).toHaveBeenCalledTimes(0);
   });
 
-  it('should have retrieve custom error on init', () => {
-    error.init(customErrorMsg, false, false);
-
-    expect(error.errorMessage).toBe(customErrorMsg);
-    expect(error.error403).toBeFalsy();
-    expect(error.error404).toBeFalsy();
-    expect(loginService.openLogin).toHaveBeenCalledTimes(0);
-  });
-
-  it('should have set forbidden error on init', () => {
-    error.init(null, true, false);
-
-    expect(error.errorMessage).toBeNull();
-    expect(error.error403).toBeTruthy();
-    expect(error.error404).toBeFalsy();
-    expect(loginService.openLogin).toHaveBeenCalled();
-  });
-
-  it('should have set not found error on init', () => {
-    error.init(null, false, true);
-
-    expect(error.errorMessage).toBeNull();
-    expect(error.error403).toBeFalsy();
-    expect(error.error404).toBeTruthy();
-    expect(loginService.openLogin).toHaveBeenCalledTimes(0);
-  });
-
-  it('should have set default on init', () => {
-    error.init();
+  it('should have set default on no error', () => {
+    const wrapper = shallowMount(Error, {
+      global: {
+        provide: {
+          loginService,
+          authenticated,
+        },
+      },
+    });
+    error = wrapper.vm;
 
     expect(error.errorMessage).toBeNull();
     expect(error.error403).toBeFalsy();
