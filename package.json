@@ -135,7 +135,7 @@
     "eslint-plugin-vue": "8.7.1",
     "folder-hash": "4.0.2",
     "fork-ts-checker-webpack-plugin": "7.2.13",
-    "generator-jhipster": "7.9.3",
+    "generator-jhipster": "7.9.4",
     "html-webpack-plugin": "5.5.0",
     "husky": "7.0.4",
     "jest": "28.1.3",
