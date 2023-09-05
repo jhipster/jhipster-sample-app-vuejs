@@ -1,19 +1,12 @@
-import { defineComponent, computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useStore } from '@/store';
+import { Component, Vue } from 'vue-property-decorator';
 
-export default defineComponent({
-  compatConfig: { MODE: 3 },
-  name: 'Ribbon',
-  setup(prop) {
-    const store = useStore();
-    const ribbonEnv = computed(() => store.ribbonOnProfiles);
-    const ribbonEnabled = computed(() => store.ribbonOnProfiles && store.activeProfiles.indexOf(store.ribbonOnProfiles) > -1);
+@Component
+export default class Ribbon extends Vue {
+  public get ribbonEnv(): string {
+    return this.$store.getters.ribbonOnProfiles;
+  }
 
-    return {
-      ribbonEnv,
-      ribbonEnabled,
-      t$: useI18n().t,
-    };
-  },
-});
+  public get ribbonEnabled(): boolean {
+    return this.$store.getters.ribbonOnProfiles && this.$store.getters.activeProfiles.indexOf(this.$store.getters.ribbonOnProfiles) > -1;
+  }
+}

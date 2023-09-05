@@ -13,7 +13,7 @@ export interface IBankAccountMySuffix {
   openingDay?: Date | null;
   lastOperationDate?: Date | null;
   active?: boolean | null;
-  accountType?: keyof typeof BankAccountType | null;
+  accountType?: BankAccountType | null;
   attachmentContentType?: string | null;
   attachment?: string | null;
   description?: string | null;
@@ -33,7 +33,7 @@ export class BankAccountMySuffix implements IBankAccountMySuffix {
     public openingDay?: Date | null,
     public lastOperationDate?: Date | null,
     public active?: boolean | null,
-    public accountType?: keyof typeof BankAccountType | null,
+    public accountType?: BankAccountType | null,
     public attachmentContentType?: string | null,
     public attachment?: string | null,
     public description?: string | null,

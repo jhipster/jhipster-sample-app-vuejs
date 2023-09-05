@@ -1,7 +1,10 @@
+import { Component, Vue } from 'vue-property-decorator';
+
 /**
- * An composable utility for data.
+ * An utility service for data.
  */
-const useDataUtils = () => ({
+@Component
+export default class JhiDataUtils extends Vue {
   /**
    * Method to abbreviate the text given
    */
@@ -10,14 +13,14 @@ const useDataUtils = () => ({
       return text;
     }
     return text ? text.substring(0, 15) + append + text.slice(-10) : '';
-  },
+  }
 
   /**
    * Method to find the byte size of the string provides
    */
   byteSize(base64String) {
     return this.formatAsBytes(this.size(base64String));
-  },
+  }
 
   /**
    * Method to open file
@@ -37,7 +40,7 @@ const useDataUtils = () => ({
     if (win) {
       win.onload = () => URL.revokeObjectURL(objectURL);
     }
-  },
+  }
 
   /**
    * Method to convert the file to base64
@@ -49,7 +52,7 @@ const useDataUtils = () => ({
       const base64Data = e.target.result.substring(e.target.result.indexOf('base64,') + 'base64,'.length);
       cb(base64Data);
     };
-  },
+  }
 
   /**
    * Method to clear the input
@@ -66,11 +69,11 @@ const useDataUtils = () => ({
         elementRef.nativeElement.querySelector('#' + idInput).value = null;
       }
     }
-  },
+  }
 
   endsWith(suffix, str) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
-  },
+  }
 
   paddingSize(value) {
     if (this.endsWith('==', value)) {
@@ -80,15 +83,15 @@ const useDataUtils = () => ({
       return 1;
     }
     return 0;
-  },
+  }
 
   size(value) {
     return (value.length / 4) * 3 - this.paddingSize(value);
-  },
+  }
 
   formatAsBytes(size) {
     return size.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' bytes';
-  },
+  }
 
   setFileData(event, entity, field, isImage) {
     if (event && event.target.files && event.target.files[0]) {
@@ -101,7 +104,7 @@ const useDataUtils = () => ({
         entity[`${field}ContentType`] = file.type;
       });
     }
-  },
+  }
 
   /**
    * Method to download file
@@ -121,7 +124,7 @@ const useDataUtils = () => ({
     tempLink.download = fileName;
     tempLink.target = '_blank';
     tempLink.click();
-  },
+  }
 
   /**
    * Method to parse header links
@@ -129,7 +132,7 @@ const useDataUtils = () => ({
   parseLinks(header) {
     const links = {};
 
-    if ((header?.indexOf(',') ?? -1) === -1) {
+    if (header === null || header.indexOf(',') === -1) {
       return links;
     }
     // Split parts by comma
@@ -154,7 +157,5 @@ const useDataUtils = () => ({
       links[name] = page;
     });
     return links;
-  },
-});
-
-export default useDataUtils;
+  }
+}

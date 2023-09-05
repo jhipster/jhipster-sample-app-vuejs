@@ -1,134 +1,120 @@
-import { defineComponent, inject, onMounted, ref, Ref, watch, watchEffect } from 'vue';
-import { useI18n } from 'vue-i18n';
-
+import { Component, Vue, Inject } from 'vue-property-decorator';
+import Vue2Filters from 'vue2-filters';
 import { ILabel } from '@/shared/model/test-root/label.model';
+
 import LabelService from './label.service';
-import { useAlertService } from '@/shared/alert/alert.service';
+import AlertService from '@/shared/alert/alert.service';
 
-export default defineComponent({
-  compatConfig: { MODE: 3 },
-  name: 'Label',
-  setup() {
-    const { t: t$ } = useI18n();
-    const labelService = inject('labelService', () => new LabelService());
-    const alertService = inject('alertService', () => useAlertService(), true);
+@Component({
+  mixins: [Vue2Filters.mixin],
+})
+export default class Label extends Vue {
+  @Inject('labelService') private labelService: () => LabelService;
+  @Inject('alertService') private alertService: () => AlertService;
 
-    const itemsPerPage = ref(20);
-    const queryCount: Ref<number> = ref(null);
-    const page: Ref<number> = ref(1);
-    const propOrder = ref('id');
-    const reverse = ref(false);
-    const totalItems = ref(0);
+  private removeId: number = null;
+  public itemsPerPage = 20;
+  public queryCount: number = null;
+  public page = 1;
+  public previousPage = 1;
+  public propOrder = 'id';
+  public reverse = false;
+  public totalItems = 0;
 
-    const labels: Ref<ILabel[]> = ref([]);
+  public labels: ILabel[] = [];
 
-    const isFetching = ref(false);
+  public isFetching = false;
 
-    const clear = () => {
-      page.value = 1;
+  public mounted(): void {
+    this.retrieveAllLabels();
+  }
+
+  public clear(): void {
+    this.page = 1;
+    this.retrieveAllLabels();
+  }
+
+  public retrieveAllLabels(): void {
+    this.isFetching = true;
+    const paginationQuery = {
+      page: this.page - 1,
+      size: this.itemsPerPage,
+      sort: this.sort(),
     };
+    this.labelService()
+      .retrieve(paginationQuery)
+      .then(
+        res => {
+          this.labels = res.data;
+          this.totalItems = Number(res.headers['x-total-count']);
+          this.queryCount = this.totalItems;
+          this.isFetching = false;
+        },
+        err => {
+          this.isFetching = false;
+          this.alertService().showHttpError(this, err.response);
+        }
+      );
+  }
 
-    const sort = (): Array<any> => {
-      const result = [propOrder.value + ',' + (reverse.value ? 'desc' : 'asc')];
-      if (propOrder.value !== 'id') {
-        result.push('id');
-      }
-      return result;
-    };
+  public handleSyncList(): void {
+    this.clear();
+  }
 
-    const retrieveLabels = async () => {
-      isFetching.value = true;
-      try {
-        const paginationQuery = {
-          page: page.value - 1,
-          size: itemsPerPage.value,
-          sort: sort(),
-        };
-        const res = await labelService().retrieve(paginationQuery);
-        totalItems.value = Number(res.headers['x-total-count']);
-        queryCount.value = totalItems.value;
-        labels.value = res.data;
-      } catch (err) {
-        alertService.showHttpError(err.response);
-      } finally {
-        isFetching.value = false;
-      }
-    };
+  public prepareRemove(instance: ILabel): void {
+    this.removeId = instance.id;
+    if (<any>this.$refs.removeEntity) {
+      (<any>this.$refs.removeEntity).show();
+    }
+  }
 
-    const handleSyncList = () => {
-      retrieveLabels();
-    };
+  public removeLabel(): void {
+    this.labelService()
+      .delete(this.removeId)
+      .then(() => {
+        const message = this.$t('jhipsterSampleApplicationVueApp.testRootLabel.deleted', { param: this.removeId });
+        this.$bvToast.toast(message.toString(), {
+          toaster: 'b-toaster-top-center',
+          title: 'Info',
+          variant: 'danger',
+          solid: true,
+          autoHideDelay: 5000,
+        });
+        this.removeId = null;
+        this.retrieveAllLabels();
+        this.closeDialog();
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
+      });
+  }
 
-    onMounted(async () => {
-      await retrieveLabels();
-    });
+  public sort(): Array<any> {
+    const result = [this.propOrder + ',' + (this.reverse ? 'desc' : 'asc')];
+    if (this.propOrder !== 'id') {
+      result.push('id');
+    }
+    return result;
+  }
 
-    const removeId: Ref<number> = ref(null);
-    const removeEntity = ref<any>(null);
-    const prepareRemove = (instance: ILabel) => {
-      removeId.value = instance.id;
-      removeEntity.value.show();
-    };
-    const closeDialog = () => {
-      removeEntity.value.hide();
-    };
-    const removeLabel = async () => {
-      try {
-        await labelService().delete(removeId.value);
-        const message = t$('jhipsterSampleApplicationVueApp.testRootLabel.deleted', { param: removeId.value }).toString();
-        alertService.showInfo(message, { variant: 'danger' });
-        removeId.value = null;
-        retrieveLabels();
-        closeDialog();
-      } catch (error) {
-        alertService.showHttpError(error.response);
-      }
-    };
+  public loadPage(page: number): void {
+    if (page !== this.previousPage) {
+      this.previousPage = page;
+      this.transition();
+    }
+  }
 
-    const changeOrder = (newOrder: string) => {
-      if (propOrder.value === newOrder) {
-        reverse.value = !reverse.value;
-      } else {
-        reverse.value = false;
-      }
-      propOrder.value = newOrder;
-    };
+  public transition(): void {
+    this.retrieveAllLabels();
+  }
 
-    // Whenever order changes, reset the pagination
-    watch([propOrder, reverse], async () => {
-      if (page.value === 1) {
-        // first page, retrieve new data
-        await retrieveLabels();
-      } else {
-        // reset the pagination
-        clear();
-      }
-    });
+  public changeOrder(propOrder): void {
+    this.propOrder = propOrder;
+    this.reverse = !this.reverse;
+    this.transition();
+  }
 
-    // Whenever page changes, switch to the new page.
-    watch(page, async () => {
-      await retrieveLabels();
-    });
-
-    return {
-      labels,
-      handleSyncList,
-      isFetching,
-      retrieveLabels,
-      clear,
-      removeId,
-      removeEntity,
-      prepareRemove,
-      closeDialog,
-      removeLabel,
-      itemsPerPage,
-      queryCount,
-      page,
-      propOrder,
-      reverse,
-      totalItems,
-      changeOrder,
-      t$,
-    };
-  },
-});
+  public closeDialog(): void {
+    (<any>this.$refs.removeEntity).hide();
+  }
+}

@@ -1,7 +1,7 @@
 {
   "logs": {
     "title": "Logs",
-    "nbloggers": "There are { total } loggers.",
+    "nbloggers": "There are {{ total }} loggers.",
     "filter": "Filter",
     "table": {
       "name": "Name",

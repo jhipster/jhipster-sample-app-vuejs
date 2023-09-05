@@ -2,14 +2,14 @@ package io.github.jhipster.sample.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.github.jhipster.sample.domain.enumeration.BankAccountType;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -73,10 +73,10 @@ public class BankAccount implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bankAccount")
+    @OneToMany(mappedBy = "bankAccount")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "bankAccount", "labels" }, allowSetters = true)
     private Set<Operation> operations = new HashSet<>();

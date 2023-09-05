@@ -14,7 +14,6 @@ const cssLoaders = options => {
   const cssLoader = {
     loader: 'css-loader',
     options: {
-      url: false,
       sourceMap: options.sourceMap,
       esModule: false,
     },

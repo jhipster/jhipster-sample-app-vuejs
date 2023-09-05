@@ -1,13 +1,26 @@
 /* tslint:disable max-line-length */
-import { vitest } from 'vitest';
-import { shallowMount, MountingOptions } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
+import { ToastPlugin } from 'bootstrap-vue';
 
-import Label from '../../..../......mainwebappapp/entities/test-root/label/label.vue';
-import LabelService from '../../..../......mainwebappapp/entities/test-root/label/label.service';
-import AlertService from '../../..../......mainwebappapp/shared/alert/alert.service';
+import * as config from '@/shared/config/config';
+import LabelComponent from '@/entities/test-root/label/label.vue';
+import LabelClass from '@/entities/test-root/label/label.component';
+import LabelService from '@/entities/test-root/label/label.service';
+import AlertService from '@/shared/alert/alert.service';
 
-type LabelComponentType = InstanceType<typeof Label>;
+const localVue = createLocalVue();
+localVue.use(ToastPlugin);
+
+config.initVueApp(localVue);
+const i18n = config.initI18N(localVue);
+const store = config.initVueXStore(localVue);
+localVue.component('font-awesome-icon', {});
+localVue.component('b-badge', {});
+localVue.component('jhi-sort-indicator', {});
+localVue.directive('b-modal', {});
+localVue.component('b-button', {});
+localVue.component('router-link', {});
 
 const bModalStub = {
   render: () => {},
@@ -18,148 +31,116 @@ const bModalStub = {
 };
 
 describe('Component Tests', () => {
-  let alertService: AlertService;
-
   describe('Label Management Component', () => {
+    let wrapper: Wrapper<LabelClass>;
+    let comp: LabelClass;
     let labelServiceStub: SinonStubbedInstance<LabelService>;
-    let mountOptions: MountingOptions<LabelComponentType>['global'];
 
     beforeEach(() => {
       labelServiceStub = sinon.createStubInstance<LabelService>(LabelService);
       labelServiceStub.retrieve.resolves({ headers: {} });
 
-      alertService = new AlertService({
-        i18n: { t: vitest.fn() } as any,
-        bvToast: {
-          toast: vitest.fn(),
-        } as any,
-      });
-
-      mountOptions = {
-        stubs: {
-          jhiItemCount: true,
-          bPagination: true,
-          bModal: bModalStub as any,
-          'font-awesome-icon': true,
-          'b-badge': true,
-          'jhi-sort-indicator': true,
-          'b-button': true,
-          'router-link': true,
-        },
-        directives: {
-          'b-modal': {},
-        },
+      wrapper = shallowMount<LabelClass>(LabelComponent, {
+        store,
+        i18n,
+        localVue,
+        stubs: { jhiItemCount: true, bPagination: true, bModal: bModalStub as any },
         provide: {
-          alertService,
           labelService: () => labelServiceStub,
+          alertService: () => new AlertService(),
         },
-      };
+      });
+      comp = wrapper.vm;
     });
 
-    describe('Mount', () => {
-      it('Should call load all on init', async () => {
-        // GIVEN
-        labelServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
+    it('Should call load all on init', async () => {
+      // GIVEN
+      labelServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
 
-        // WHEN
-        const wrapper = shallowMount(Label, { global: mountOptions });
-        const comp = wrapper.vm;
-        await comp.$nextTick();
+      // WHEN
+      comp.retrieveAllLabels();
+      await comp.$nextTick();
 
-        // THEN
-        expect(labelServiceStub.retrieve.calledOnce).toBeTruthy();
-        expect(comp.labels[0]).toEqual(expect.objectContaining({ id: 123 }));
-      });
-
-      it('should calculate the sort attribute for an id', async () => {
-        // WHEN
-        const wrapper = shallowMount(Label, { global: mountOptions });
-        const comp = wrapper.vm;
-        await comp.$nextTick();
-
-        // THEN
-        expect(labelServiceStub.retrieve.lastCall.firstArg).toMatchObject({
-          sort: ['id,asc'],
-        });
-      });
+      // THEN
+      expect(labelServiceStub.retrieve.called).toBeTruthy();
+      expect(comp.labels[0]).toEqual(expect.objectContaining({ id: 123 }));
     });
-    describe('Handles', () => {
-      let comp: LabelComponentType;
 
-      beforeEach(async () => {
-        const wrapper = shallowMount(Label, { global: mountOptions });
-        comp = wrapper.vm;
-        await comp.$nextTick();
-        labelServiceStub.retrieve.reset();
-        labelServiceStub.retrieve.resolves({ headers: {}, data: [] });
-      });
+    it('should load a page', async () => {
+      // GIVEN
+      labelServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
+      comp.previousPage = 1;
 
-      it('should load a page', async () => {
-        // GIVEN
-        labelServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
+      // WHEN
+      comp.loadPage(2);
+      await comp.$nextTick();
 
-        // WHEN
-        comp.page = 2;
-        await comp.$nextTick();
+      // THEN
+      expect(labelServiceStub.retrieve.called).toBeTruthy();
+      expect(comp.labels[0]).toEqual(expect.objectContaining({ id: 123 }));
+    });
 
-        // THEN
-        expect(labelServiceStub.retrieve.called).toBeTruthy();
-        expect(comp.labels[0]).toEqual(expect.objectContaining({ id: 123 }));
-      });
+    it('should not load a page if the page is the same as the previous page', () => {
+      // GIVEN
+      labelServiceStub.retrieve.reset();
+      comp.previousPage = 1;
 
-      it('should not load a page if the page is the same as the previous page', () => {
-        // WHEN
-        comp.page = 1;
+      // WHEN
+      comp.loadPage(1);
 
-        // THEN
-        expect(labelServiceStub.retrieve.called).toBeFalsy();
-      });
+      // THEN
+      expect(labelServiceStub.retrieve.called).toBeFalsy();
+    });
 
-      it('should re-initialize the page', async () => {
-        // GIVEN
-        comp.page = 2;
-        await comp.$nextTick();
-        labelServiceStub.retrieve.reset();
-        labelServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
+    it('should re-initialize the page', async () => {
+      // GIVEN
+      labelServiceStub.retrieve.reset();
+      labelServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
 
-        // WHEN
-        comp.clear();
-        await comp.$nextTick();
+      // WHEN
+      comp.loadPage(2);
+      await comp.$nextTick();
+      comp.clear();
+      await comp.$nextTick();
 
-        // THEN
-        expect(comp.page).toEqual(1);
-        expect(labelServiceStub.retrieve.callCount).toEqual(1);
-        expect(comp.labels[0]).toEqual(expect.objectContaining({ id: 123 }));
-      });
+      // THEN
+      expect(labelServiceStub.retrieve.callCount).toEqual(3);
+      expect(comp.page).toEqual(1);
+      expect(comp.labels[0]).toEqual(expect.objectContaining({ id: 123 }));
+    });
 
-      it('should calculate the sort attribute for a non-id attribute', async () => {
-        // WHEN
-        comp.propOrder = 'name';
-        await comp.$nextTick();
+    it('should calculate the sort attribute for an id', () => {
+      // WHEN
+      const result = comp.sort();
 
-        // THEN
-        expect(labelServiceStub.retrieve.lastCall.firstArg).toMatchObject({
-          sort: ['name,asc', 'id'],
-        });
-      });
+      // THEN
+      expect(result).toEqual(['id,asc']);
+    });
 
-      it('Should call delete service on confirmDelete', async () => {
-        // GIVEN
-        labelServiceStub.delete.resolves({});
+    it('should calculate the sort attribute for a non-id attribute', () => {
+      // GIVEN
+      comp.propOrder = 'name';
 
-        // WHEN
-        comp.prepareRemove({ id: 123 });
+      // WHEN
+      const result = comp.sort();
 
-        comp.removeLabel();
-        await comp.$nextTick(); // clear components
+      // THEN
+      expect(result).toEqual(['name,asc', 'id']);
+    });
+    it('Should call delete service on confirmDelete', async () => {
+      // GIVEN
+      labelServiceStub.delete.resolves({});
 
-        // THEN
-        expect(labelServiceStub.delete.called).toBeTruthy();
+      // WHEN
+      comp.prepareRemove({ id: 123 });
+      expect(labelServiceStub.retrieve.callCount).toEqual(1);
 
-        // THEN
-        await comp.$nextTick(); // handle component clear watch
-        expect(labelServiceStub.retrieve.callCount).toEqual(1);
-      });
+      comp.removeLabel();
+      await comp.$nextTick();
+
+      // THEN
+      expect(labelServiceStub.delete.called).toBeTruthy();
+      expect(labelServiceStub.retrieve.callCount).toEqual(2);
     });
   });
 });

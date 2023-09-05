@@ -1,33 +1,31 @@
 import axios from 'axios';
-import { defineComponent, inject, ref, Ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
-import AccountService from '../account.service';
-import LoginService from '@/account/login.service';
+import Component from 'vue-class-component';
+import { Vue, Inject } from 'vue-property-decorator';
+import AccountService from '@/account/account.service';
+@Component({
+  watch: {
+    $route() {
+      (this.$root as any).$emit('bv::hide::modal', 'login-page');
+    },
+  },
+})
+export default class LoginForm extends Vue {
+  @Inject('accountService')
+  private accountService: () => AccountService;
+  public authenticationError = null;
+  public login = null;
+  public password = null;
+  public rememberMe: boolean = null;
 
-export default defineComponent({
-  compatConfig: { MODE: 3 },
-  setup() {
-    const authenticationError: Ref<boolean> = ref(false);
-    const login: Ref<string> = ref(null);
-    const password: Ref<string> = ref(null);
-    const rememberMe: Ref<boolean> = ref(false);
-    const route = useRoute();
-    const router = useRouter();
-
-    const previousState = () => router.go(-1);
-
-    const accountService = inject<AccountService>('accountService');
-    const loginService = inject<LoginService>('loginService');
-
-    const doLogin = async () => {
-      const data = { username: login.value, password: password.value, rememberMe: rememberMe.value };
-      try {
-        const result = await axios.post('api/authenticate', data);
+  public doLogin(): void {
+    const data = { username: this.login, password: this.password, rememberMe: this.rememberMe };
+    axios
+      .post('api/authenticate', data)
+      .then(result => {
         const bearerToken = result.headers.authorization;
         if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
           const jwt = bearerToken.slice(7, bearerToken.length);
-          if (rememberMe.value) {
+          if (this.rememberMe) {
             localStorage.setItem('jhi-authenticationToken', jwt);
             sessionStorage.removeItem('jhi-authenticationToken');
           } else {
@@ -35,25 +33,12 @@ export default defineComponent({
             localStorage.removeItem('jhi-authenticationToken');
           }
         }
-
-        authenticationError.value = false;
-        loginService.hideLogin();
-        await accountService.retrieveAccount();
-        if (route.path === '/forbidden') {
-          previousState();
-        }
-      } catch (_error) {
-        authenticationError.value = true;
-      }
-    };
-    return {
-      authenticationError,
-      login,
-      password,
-      rememberMe,
-      accountService,
-      doLogin,
-      t$: useI18n().t,
-    };
-  },
-});
+        this.authenticationError = false;
+        (this.$root as any).$emit('bv::hide::modal', 'login-page');
+        this.accountService().retrieveAccount();
+      })
+      .catch(() => {
+        this.authenticationError = true;
+      });
+  }
+}

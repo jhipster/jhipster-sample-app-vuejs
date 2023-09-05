@@ -3,9 +3,9 @@ import axios from 'axios';
 import sinon from 'sinon';
 import dayjs from 'dayjs';
 
-import { DATE_TIME_FORMAT } from '../../..../......mainwebappapp/shared/composables/date-format';
-import OperationService from '../../..../......mainwebappapp/entities/test-root/operation/operation.service';
-import { Operation } from '../../..../......mainwebappapp/shared/model/test-root/operation.model';
+import { DATE_TIME_FORMAT } from '@/shared/date/filters';
+import OperationService from '@/entities/test-root/operation/operation.service';
+import { Operation } from '@/shared/model/test-root/operation.model';
 
 const error = {
   response: {

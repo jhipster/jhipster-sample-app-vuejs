@@ -1,35 +1,38 @@
 import axios from 'axios';
-import { Composer } from 'vue-i18n';
+import VueI18n from 'vue-i18n';
+import { Store } from 'vuex';
 import dayjs from 'dayjs';
-import languages from '@/shared/config/languages';
 
 export default class TranslationService {
-  private i18n: Composer;
-  private languages = languages();
+  private store: Store<unknown>;
+  private i18n: VueI18n;
 
-  constructor(i18n: Composer) {
+  constructor(store: Store<unknown>, i18n: VueI18n) {
+    this.store = store;
     this.i18n = i18n;
   }
 
-  public async refreshTranslation(newLanguage: string) {
-    if (this.i18n && !this.i18n.messages[newLanguage]) {
-      const res = await axios.get(`i18n/${newLanguage}.json?_=${I18N_HASH}`);
-      this.i18n.setLocaleMessage(newLanguage, res.data);
+  public refreshTranslation(newLanguage: string) {
+    let currentLanguage = this.store.getters.currentLanguage;
+    currentLanguage = newLanguage ? newLanguage : 'en';
+    if (this.i18n && !this.i18n.messages[currentLanguage]) {
+      this.i18n.setLocaleMessage(currentLanguage, {});
+      axios.get(`i18n/${currentLanguage}.json?_=${I18N_HASH}`).then((res: any) => {
+        if (res.data) {
+          this.i18n.setLocaleMessage(currentLanguage, res.data);
+          this.setLocale(currentLanguage);
+        }
+      });
+    } else if (this.i18n) {
+      this.setLocale(currentLanguage);
     }
   }
 
-  public setLocale(lang: string) {
+  private setLocale(lang: string) {
     dayjs.locale(lang);
-    this.i18n.locale.value = lang;
+    this.i18n.locale = lang;
+    this.store.commit('currentLanguage', lang);
     axios.defaults.headers.common['Accept-Language'] = lang;
     document.querySelector('html').setAttribute('lang', lang);
-  }
-
-  public isLanguageSupported(lang: string) {
-    return Boolean(this.languages[lang]);
-  }
-
-  public getLocalStoreLanguage(): string | null {
-    return localStorage.getItem('currentLanguage');
   }
 }

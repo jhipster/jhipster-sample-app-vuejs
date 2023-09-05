@@ -1,13 +1,25 @@
-import { vitest } from 'vitest';
-import { ref } from 'vue';
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { ToastPlugin } from 'bootstrap-vue';
 
-import AlertService from '../../../......mainwebappapp/shared/alert/alert.service';
-import UserManagement from '../../../......mainwebappapp/admin/user-management/user-management.vue';
+import * as config from '@/shared/config/config';
+import UserManagement from '@/admin/user-management/user-management.vue';
+import UserManagementClass from '@/admin/user-management/user-management.component';
+import UserManagementService from '@/admin/user-management/user-management.service';
+import AlertService from '@/shared/alert/alert.service';
 
-type UserManagementComponentType = InstanceType<typeof UserManagement>;
+const localVue = createLocalVue();
+
+localVue.use(ToastPlugin);
+config.initVueApp(localVue);
+const i18n = config.initI18N(localVue);
+const store = config.initVueXStore(localVue);
+localVue.component('font-awesome-icon', FontAwesomeIcon);
+localVue.component('router-link', {});
+localVue.component('jhi-sort-indicator', {});
+localVue.directive('b-modal', {});
 
 const axiosStub = {
   delete: sinon.stub(axios, 'delete'),
@@ -16,39 +28,33 @@ const axiosStub = {
 };
 
 describe('UserManagement Component', () => {
-  let userManagement: UserManagementComponentType;
-  let alertService: AlertService;
+  let wrapper: Wrapper<UserManagementClass>;
+  let userManagement: UserManagementClass;
+
+  const account = {
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@jhipster.org',
+  };
 
   beforeEach(() => {
     axiosStub.put.reset();
     axiosStub.get.reset();
     axiosStub.get.resolves({ headers: {} });
 
-    alertService = new AlertService({
-      i18n: { t: vitest.fn() } as any,
-      bvToast: {
-        toast: vitest.fn(),
-      } as any,
-    });
-
-    const wrapper = shallowMount(UserManagement, {
-      global: {
-        stubs: {
-          bPagination: true,
-          jhiItemCount: true,
-          bModal: true,
-          'router-link': true,
-          'jhi-sort-indicator': true,
-          'font-awesome-icon': true,
-          'b-button': true,
-        },
-        directives: {
-          'b-modal': {},
-        },
-        provide: {
-          alertService,
-          currentUsername: ref(''),
-        },
+    store.commit('authenticated', account);
+    wrapper = shallowMount<UserManagementClass>(UserManagement, {
+      store,
+      i18n,
+      localVue,
+      stubs: {
+        bPagination: true,
+        jhiItemCount: true,
+        bModal: true,
+      },
+      provide: {
+        userManagementService: () => new UserManagementService(),
+        alertService: () => new AlertService(),
       },
     });
     userManagement = wrapper.vm;

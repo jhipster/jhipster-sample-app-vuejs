@@ -1,11 +1,10 @@
-import { vitest } from 'vitest';
-import useDataUtils from '../../../......mainwebappapp/shared/data/data-utils.service';
+import JhiDataUtils from '@/shared/data/data-utils.service';
 
 describe('Formatter i18n', () => {
-  let dataUtilsService: ReturnType<typeof useDataUtils>;
+  let dataUtilsService: JhiDataUtils;
 
   beforeEach(() => {
-    dataUtilsService = useDataUtils();
+    dataUtilsService = new JhiDataUtils();
   });
 
   it('should not abbreviate text shorter than 30 characters', () => {
@@ -35,9 +34,9 @@ describe('Formatter i18n', () => {
   });
 
   it('should open file', () => {
-    window.open = vitest.fn().mockReturnValue({});
+    window.open = jest.fn().mockReturnValue({});
     const objectURL = 'blob:http://localhost:9000/xxx';
-    URL.createObjectURL = vitest.fn().mockImplementationOnce(() => {
+    URL.createObjectURL = jest.fn().mockImplementationOnce(() => {
       return objectURL;
     });
 

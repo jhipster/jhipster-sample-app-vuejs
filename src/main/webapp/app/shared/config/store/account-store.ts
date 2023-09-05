@@ -1,50 +1,49 @@
-import { defineStore } from 'pinia';
+import { Module } from 'vuex';
 
 export interface AccountStateStorable {
   logon: boolean;
   userIdentity: null | any;
   authenticated: boolean;
-  profilesLoaded: boolean;
   ribbonOnProfiles: string;
   activeProfiles: string;
 }
 
 export const defaultAccountState: AccountStateStorable = {
-  logon: null,
+  logon: false,
   userIdentity: null,
   authenticated: false,
-  profilesLoaded: false,
   ribbonOnProfiles: '',
   activeProfiles: '',
 };
 
-export const useAccountStore = defineStore('main', {
-  state: (): AccountStateStorable => ({ ...defaultAccountState }),
+export const accountStore: Module<AccountStateStorable, any> = {
+  state: { ...defaultAccountState },
   getters: {
+    logon: state => state.logon,
     account: state => state.userIdentity,
+    authenticated: state => state.authenticated,
+    activeProfiles: state => state.activeProfiles,
+    ribbonOnProfiles: state => state.ribbonOnProfiles,
   },
-  actions: {
-    authenticate(promise) {
-      this.logon = promise;
+  mutations: {
+    authenticate(state) {
+      state.logon = true;
     },
-    setAuthentication(identity) {
-      this.userIdentity = identity;
-      this.authenticated = true;
-      this.logon = null;
+    authenticated(state, identity) {
+      state.userIdentity = identity;
+      state.authenticated = true;
+      state.logon = false;
     },
-    logout() {
-      this.userIdentity = null;
-      this.authenticated = false;
-      this.logon = null;
+    logout(state) {
+      state.userIdentity = null;
+      state.authenticated = false;
+      state.logon = false;
     },
-    setProfilesLoaded() {
-      this.profilesLoaded = true;
+    setActiveProfiles(state, profile) {
+      state.activeProfiles = profile;
     },
-    setActiveProfiles(profile) {
-      this.activeProfiles = profile;
-    },
-    setRibbonOnProfiles(ribbon) {
-      this.ribbonOnProfiles = ribbon;
+    setRibbonOnProfiles(state, ribbon) {
+      state.ribbonOnProfiles = ribbon;
     },
   },
-});
+};

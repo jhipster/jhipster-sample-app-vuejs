@@ -1,25 +1,21 @@
-import { ComputedRef, defineComponent, inject } from 'vue';
-import { useI18n } from 'vue-i18n';
-
+import Component from 'vue-class-component';
+import { Inject, Vue } from 'vue-property-decorator';
 import LoginService from '@/account/login.service';
 
-export default defineComponent({
-  compatConfig: { MODE: 3 },
-  setup() {
-    const loginService = inject<LoginService>('loginService');
+@Component
+export default class Home extends Vue {
+  @Inject('loginService')
+  private loginService: () => LoginService;
 
-    const authenticated = inject<ComputedRef<boolean>>('authenticated');
-    const username = inject<ComputedRef<string>>('currentUsername');
+  public openLogin(): void {
+    this.loginService().openLogin((<any>this).$root);
+  }
 
-    const openLogin = () => {
-      loginService.openLogin();
-    };
+  public get authenticated(): boolean {
+    return this.$store.getters.authenticated;
+  }
 
-    return {
-      authenticated,
-      username,
-      openLogin,
-      t$: useI18n().t,
-    };
-  },
-});
+  public get username(): string {
+    return this.$store.getters.account?.login ?? '';
+  }
+}

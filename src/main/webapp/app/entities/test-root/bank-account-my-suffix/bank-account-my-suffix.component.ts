@@ -1,84 +1,83 @@
-import { defineComponent, inject, onMounted, ref, Ref, watch, watchEffect } from 'vue';
-import { useI18n } from 'vue-i18n';
-
+import { mixins } from 'vue-class-component';
+import { Component, Vue, Inject } from 'vue-property-decorator';
+import Vue2Filters from 'vue2-filters';
 import { IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
-import useDataUtils from '@/shared/data/data-utils.service';
-import { useDateFormat } from '@/shared/composables';
+
+import JhiDataUtils from '@/shared/data/data-utils.service';
+
 import BankAccountMySuffixService from './bank-account-my-suffix.service';
-import { useAlertService } from '@/shared/alert/alert.service';
+import AlertService from '@/shared/alert/alert.service';
 
-export default defineComponent({
-  compatConfig: { MODE: 3 },
-  name: 'BankAccountMySuffix',
-  setup() {
-    const { t: t$ } = useI18n();
-    const dateFormat = useDateFormat();
-    const dataUtils = useDataUtils();
-    const bankAccountService = inject('bankAccountService', () => new BankAccountMySuffixService());
-    const alertService = inject('alertService', () => useAlertService(), true);
+@Component({
+  mixins: [Vue2Filters.mixin],
+})
+export default class BankAccountMySuffix extends mixins(JhiDataUtils) {
+  @Inject('bankAccountService') private bankAccountService: () => BankAccountMySuffixService;
+  @Inject('alertService') private alertService: () => AlertService;
 
-    const bankAccounts: Ref<IBankAccountMySuffix[]> = ref([]);
+  private removeId: number = null;
 
-    const isFetching = ref(false);
+  public bankAccounts: IBankAccountMySuffix[] = [];
 
-    const clear = () => {};
+  public isFetching = false;
 
-    const retrieveBankAccountMySuffixs = async () => {
-      isFetching.value = true;
-      try {
-        const res = await bankAccountService().retrieve();
-        bankAccounts.value = res.data;
-      } catch (err) {
-        alertService.showHttpError(err.response);
-      } finally {
-        isFetching.value = false;
-      }
-    };
+  public mounted(): void {
+    this.retrieveAllBankAccountMySuffixs();
+  }
 
-    const handleSyncList = () => {
-      retrieveBankAccountMySuffixs();
-    };
+  public clear(): void {
+    this.retrieveAllBankAccountMySuffixs();
+  }
 
-    onMounted(async () => {
-      await retrieveBankAccountMySuffixs();
-    });
+  public retrieveAllBankAccountMySuffixs(): void {
+    this.isFetching = true;
+    this.bankAccountService()
+      .retrieve()
+      .then(
+        res => {
+          this.bankAccounts = res.data;
+          this.isFetching = false;
+        },
+        err => {
+          this.isFetching = false;
+          this.alertService().showHttpError(this, err.response);
+        }
+      );
+  }
 
-    const removeId: Ref<number> = ref(null);
-    const removeEntity = ref<any>(null);
-    const prepareRemove = (instance: IBankAccountMySuffix) => {
-      removeId.value = instance.id;
-      removeEntity.value.show();
-    };
-    const closeDialog = () => {
-      removeEntity.value.hide();
-    };
-    const removeBankAccountMySuffix = async () => {
-      try {
-        await bankAccountService().delete(removeId.value);
-        const message = t$('jhipsterSampleApplicationVueApp.testRootBankAccount.deleted', { param: removeId.value }).toString();
-        alertService.showInfo(message, { variant: 'danger' });
-        removeId.value = null;
-        retrieveBankAccountMySuffixs();
-        closeDialog();
-      } catch (error) {
-        alertService.showHttpError(error.response);
-      }
-    };
+  public handleSyncList(): void {
+    this.clear();
+  }
 
-    return {
-      bankAccounts,
-      handleSyncList,
-      isFetching,
-      retrieveBankAccountMySuffixs,
-      clear,
-      ...dateFormat,
-      removeId,
-      removeEntity,
-      prepareRemove,
-      closeDialog,
-      removeBankAccountMySuffix,
-      t$,
-      ...dataUtils,
-    };
-  },
-});
+  public prepareRemove(instance: IBankAccountMySuffix): void {
+    this.removeId = instance.id;
+    if (<any>this.$refs.removeEntity) {
+      (<any>this.$refs.removeEntity).show();
+    }
+  }
+
+  public removeBankAccountMySuffix(): void {
+    this.bankAccountService()
+      .delete(this.removeId)
+      .then(() => {
+        const message = this.$t('jhipsterSampleApplicationVueApp.testRootBankAccount.deleted', { param: this.removeId });
+        this.$bvToast.toast(message.toString(), {
+          toaster: 'b-toaster-top-center',
+          title: 'Info',
+          variant: 'danger',
+          solid: true,
+          autoHideDelay: 5000,
+        });
+        this.removeId = null;
+        this.retrieveAllBankAccountMySuffixs();
+        this.closeDialog();
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
+      });
+  }
+
+  public closeDialog(): void {
+    (<any>this.$refs.removeEntity).hide();
+  }
+}

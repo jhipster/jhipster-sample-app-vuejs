@@ -1,9 +1,14 @@
-import { shallowMount } from '@vue/test-utils';
+import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
-import ResetPasswordInit from '../../../../......mainwebappapp/account/reset-password/init/reset-password-init.vue';
+import * as config from '@/shared/config/config';
+import ResetPasswordInit from '@/account/reset-password/init/reset-password-init.vue';
+import ResetPasswordInitClass from '@/account/reset-password/init/reset-password-init.component';
 
-type ResetPasswordInitComponentType = InstanceType<typeof ResetPasswordInit>;
+const localVue = createLocalVue();
+
+config.initVueApp(localVue);
+const i18n = config.initI18N(localVue);
 
 const axiosStub = {
   get: sinon.stub(axios, 'get'),
@@ -11,11 +16,15 @@ const axiosStub = {
 };
 
 describe('Reset Component Init', () => {
-  let resetPasswordInit: ResetPasswordInitComponentType;
+  let wrapper: Wrapper<ResetPasswordInitClass>;
+  let resetPasswordInit: ResetPasswordInitClass;
 
   beforeEach(() => {
     axiosStub.post.reset();
-    const wrapper = shallowMount(ResetPasswordInit, {});
+    wrapper = shallowMount<ResetPasswordInitClass>(ResetPasswordInit, {
+      i18n,
+      localVue,
+    });
     resetPasswordInit = wrapper.vm;
   });
 
@@ -42,11 +51,11 @@ describe('Reset Component Init', () => {
     });
 
     // When
-    await resetPasswordInit.requestReset();
+    resetPasswordInit.requestReset();
     await resetPasswordInit.$nextTick();
 
     // Then
-    expect(resetPasswordInit.success).toBe(false);
+    expect(resetPasswordInit.success).toBeNull();
     expect(resetPasswordInit.error).toEqual('ERROR');
   });
 });

@@ -1,89 +1,79 @@
 /* tslint:disable max-line-length */
-import { vitest } from 'vitest';
-import { shallowMount, MountingOptions } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
-import { RouteLocation } from 'vue-router';
+import VueRouter from 'vue-router';
 
-import LabelDetails from '../../..../......mainwebappapp/entities/test-root/label/label-details.vue';
-import LabelService from '../../..../......mainwebappapp/entities/test-root/label/label.service';
-import AlertService from '../../..../......mainwebappapp/shared/alert/alert.service';
+import * as config from '@/shared/config/config';
+import LabelDetailComponent from '@/entities/test-root/label/label-details.vue';
+import LabelClass from '@/entities/test-root/label/label-details.component';
+import LabelService from '@/entities/test-root/label/label.service';
+import router from '@/router';
+import AlertService from '@/shared/alert/alert.service';
 
-type LabelDetailsComponentType = InstanceType<typeof LabelDetails>;
+const localVue = createLocalVue();
+localVue.use(VueRouter);
 
-let route: Partial<RouteLocation>;
-const routerGoMock = vitest.fn();
-
-vitest.mock('vue-router', () => ({
-  useRoute: () => route,
-  useRouter: () => ({ go: routerGoMock }),
-}));
-
-const labelSample = { id: 123 };
+config.initVueApp(localVue);
+const i18n = config.initI18N(localVue);
+const store = config.initVueXStore(localVue);
+localVue.component('font-awesome-icon', {});
+localVue.component('router-link', {});
 
 describe('Component Tests', () => {
-  let alertService: AlertService;
-
-  afterEach(() => {
-    vitest.resetAllMocks();
-  });
-
   describe('Label Management Detail Component', () => {
+    let wrapper: Wrapper<LabelClass>;
+    let comp: LabelClass;
     let labelServiceStub: SinonStubbedInstance<LabelService>;
-    let mountOptions: MountingOptions<LabelDetailsComponentType>['global'];
 
     beforeEach(() => {
-      route = {};
       labelServiceStub = sinon.createStubInstance<LabelService>(LabelService);
 
-      alertService = new AlertService({
-        i18n: { t: vitest.fn() } as any,
-        bvToast: {
-          toast: vitest.fn(),
-        } as any,
+      wrapper = shallowMount<LabelClass>(LabelDetailComponent, {
+        store,
+        i18n,
+        localVue,
+        router,
+        provide: { labelService: () => labelServiceStub, alertService: () => new AlertService() },
       });
-
-      mountOptions = {
-        stubs: {
-          'font-awesome-icon': true,
-          'router-link': true,
-        },
-        provide: {
-          alertService,
-          labelService: () => labelServiceStub,
-        },
-      };
+      comp = wrapper.vm;
     });
 
-    describe('Navigate to details', () => {
+    describe('OnInit', () => {
       it('Should call load all on init', async () => {
         // GIVEN
-        labelServiceStub.find.resolves(labelSample);
-        route = {
-          params: {
-            labelId: '' + 123,
-          },
-        };
-        const wrapper = shallowMount(LabelDetails, { global: mountOptions });
-        const comp = wrapper.vm;
+        const foundLabel = { id: 123 };
+        labelServiceStub.find.resolves(foundLabel);
+
         // WHEN
+        comp.retrieveLabel(123);
         await comp.$nextTick();
 
         // THEN
-        expect(comp.label).toMatchObject(labelSample);
+        expect(comp.label).toBe(foundLabel);
+      });
+    });
+
+    describe('Before route enter', () => {
+      it('Should retrieve data', async () => {
+        // GIVEN
+        const foundLabel = { id: 123 };
+        labelServiceStub.find.resolves(foundLabel);
+
+        // WHEN
+        comp.beforeRouteEnter({ params: { labelId: 123 } }, null, cb => cb(comp));
+        await comp.$nextTick();
+
+        // THEN
+        expect(comp.label).toBe(foundLabel);
       });
     });
 
     describe('Previous state', () => {
       it('Should go previous state', async () => {
-        labelServiceStub.find.resolves(labelSample);
-        const wrapper = shallowMount(LabelDetails, { global: mountOptions });
-        const comp = wrapper.vm;
-        await comp.$nextTick();
-
         comp.previousState();
         await comp.$nextTick();
 
-        expect(routerGoMock).toHaveBeenCalledWith(-1);
+        expect(comp.$router.currentRoute.fullPath).toContain('/');
       });
     });
   });

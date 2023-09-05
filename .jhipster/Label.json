@@ -24,6 +24,6 @@
       "relationshipType": "many-to-many"
     }
   ],
-  "searchEngine": "no",
+  "searchEngine": false,
   "service": "serviceClass"
 }

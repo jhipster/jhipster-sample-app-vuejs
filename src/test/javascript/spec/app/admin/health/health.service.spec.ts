@@ -1,4 +1,4 @@
-import HealthService from '../../../......mainwebappapp/admin/health/health.service';
+import HealthService from '@/admin/health/health.service';
 
 describe('Health Service', () => {
   let healthService: HealthService;

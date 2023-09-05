@@ -3,9 +3,9 @@ import axios from 'axios';
 import sinon from 'sinon';
 import dayjs from 'dayjs';
 
-import { DATE_FORMAT, DATE_TIME_FORMAT } from '../../..../......mainwebappapp/shared/composables/date-format';
-import BankAccountMySuffixService from '../../..../......mainwebappapp/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
-import { BankAccountMySuffix } from '../../..../......mainwebappapp/shared/model/test-root/bank-account-my-suffix.model';
+import { DATE_FORMAT, DATE_TIME_FORMAT } from '@/shared/date/filters';
+import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
+import { BankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
 import { BankAccountType } from '@/shared/model/enumerations/bank-account-type.model';
 
 const error = {
@@ -45,7 +45,7 @@ describe('Service Tests', () => {
         currentDate,
         currentDate,
         false,
-        'CHECKING',
+        BankAccountType.CHECKING,
         'image/png',
         'AAAAAAA',
         'AAAAAAA'
@@ -159,10 +159,11 @@ describe('Service Tests', () => {
       it('should partial update a BankAccountMySuffix', async () => {
         const patchObject = Object.assign(
           {
-            bankNumber: 1,
-            lastOperationDuration: 1,
-            meanOperationDuration: 1,
+            name: 'BBBBBB',
+            balance: 1,
             lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
+            active: true,
+            attachment: 'BBBBBB',
             description: 'BBBBBB',
           },
           new BankAccountMySuffix()

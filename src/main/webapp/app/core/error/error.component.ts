@@ -1,33 +1,44 @@
-import { ComputedRef, defineComponent, inject, Ref, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
+import Component from 'vue-class-component';
+import { Vue, Inject } from 'vue-property-decorator';
 import LoginService from '@/account/login.service';
-import { useRoute } from 'vue-router';
 
-export default defineComponent({
-  compatConfig: { MODE: 3 },
-  name: 'Error',
-  setup() {
-    const loginService = inject<LoginService>('loginService');
-    const authenticated = inject<ComputedRef<boolean>>('authenticated');
-    const errorMessage: Ref<string> = ref(null);
-    const error403: Ref<boolean> = ref(false);
-    const error404: Ref<boolean> = ref(false);
-    const route = useRoute();
+@Component
+export default class Error extends Vue {
+  @Inject('loginService')
+  private loginService: () => LoginService;
+  errorMessage: string = null;
+  error403 = false;
+  error404 = false;
 
-    if (route.meta) {
-      errorMessage.value = route.meta.errorMessage ?? null;
-      error403.value = route.meta.error403 ?? false;
-      error404.value = route.meta.error404 ?? false;
-      if (!authenticated.value && error403.value) {
-        loginService.openLogin();
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      let errorMessage = null;
+      let error403 = false;
+      let error404 = false;
+
+      if (to.meta.errorMessage) {
+        errorMessage = to.meta.errorMessage;
       }
-    }
 
-    return {
-      errorMessage,
-      error403,
-      error404,
-      t$: useI18n().t,
-    };
-  },
-});
+      if (to.meta.error403) {
+        error403 = to.meta.error403;
+      }
+
+      if (to.meta.error404) {
+        error404 = to.meta.error404;
+      }
+
+      vm.init(errorMessage, error403, error404);
+    });
+  }
+
+  public init(errorMessage: string = null, error403 = false, error404 = false) {
+    this.errorMessage = errorMessage;
+    this.error403 = error403;
+    this.error404 = error404;
+
+    if (!this.$store.getters.authenticated && this.error403) {
+      this.loginService().openLogin((<any>this).$root);
+    }
+  }
+}

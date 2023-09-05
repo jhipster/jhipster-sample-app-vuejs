@@ -1,89 +1,79 @@
 /* tslint:disable max-line-length */
-import { vitest } from 'vitest';
-import { shallowMount, MountingOptions } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import sinon, { SinonStubbedInstance } from 'sinon';
-import { RouteLocation } from 'vue-router';
+import VueRouter from 'vue-router';
 
-import OperationDetails from '../../..../......mainwebappapp/entities/test-root/operation/operation-details.vue';
-import OperationService from '../../..../......mainwebappapp/entities/test-root/operation/operation.service';
-import AlertService from '../../..../......mainwebappapp/shared/alert/alert.service';
+import * as config from '@/shared/config/config';
+import OperationDetailComponent from '@/entities/test-root/operation/operation-details.vue';
+import OperationClass from '@/entities/test-root/operation/operation-details.component';
+import OperationService from '@/entities/test-root/operation/operation.service';
+import router from '@/router';
+import AlertService from '@/shared/alert/alert.service';
 
-type OperationDetailsComponentType = InstanceType<typeof OperationDetails>;
+const localVue = createLocalVue();
+localVue.use(VueRouter);
 
-let route: Partial<RouteLocation>;
-const routerGoMock = vitest.fn();
-
-vitest.mock('vue-router', () => ({
-  useRoute: () => route,
-  useRouter: () => ({ go: routerGoMock }),
-}));
-
-const operationSample = { id: 123 };
+config.initVueApp(localVue);
+const i18n = config.initI18N(localVue);
+const store = config.initVueXStore(localVue);
+localVue.component('font-awesome-icon', {});
+localVue.component('router-link', {});
 
 describe('Component Tests', () => {
-  let alertService: AlertService;
-
-  afterEach(() => {
-    vitest.resetAllMocks();
-  });
-
   describe('Operation Management Detail Component', () => {
+    let wrapper: Wrapper<OperationClass>;
+    let comp: OperationClass;
     let operationServiceStub: SinonStubbedInstance<OperationService>;
-    let mountOptions: MountingOptions<OperationDetailsComponentType>['global'];
 
     beforeEach(() => {
-      route = {};
       operationServiceStub = sinon.createStubInstance<OperationService>(OperationService);
 
-      alertService = new AlertService({
-        i18n: { t: vitest.fn() } as any,
-        bvToast: {
-          toast: vitest.fn(),
-        } as any,
+      wrapper = shallowMount<OperationClass>(OperationDetailComponent, {
+        store,
+        i18n,
+        localVue,
+        router,
+        provide: { operationService: () => operationServiceStub, alertService: () => new AlertService() },
       });
-
-      mountOptions = {
-        stubs: {
-          'font-awesome-icon': true,
-          'router-link': true,
-        },
-        provide: {
-          alertService,
-          operationService: () => operationServiceStub,
-        },
-      };
+      comp = wrapper.vm;
     });
 
-    describe('Navigate to details', () => {
+    describe('OnInit', () => {
       it('Should call load all on init', async () => {
         // GIVEN
-        operationServiceStub.find.resolves(operationSample);
-        route = {
-          params: {
-            operationId: '' + 123,
-          },
-        };
-        const wrapper = shallowMount(OperationDetails, { global: mountOptions });
-        const comp = wrapper.vm;
+        const foundOperation = { id: 123 };
+        operationServiceStub.find.resolves(foundOperation);
+
         // WHEN
+        comp.retrieveOperation(123);
         await comp.$nextTick();
 
         // THEN
-        expect(comp.operation).toMatchObject(operationSample);
+        expect(comp.operation).toBe(foundOperation);
+      });
+    });
+
+    describe('Before route enter', () => {
+      it('Should retrieve data', async () => {
+        // GIVEN
+        const foundOperation = { id: 123 };
+        operationServiceStub.find.resolves(foundOperation);
+
+        // WHEN
+        comp.beforeRouteEnter({ params: { operationId: 123 } }, null, cb => cb(comp));
+        await comp.$nextTick();
+
+        // THEN
+        expect(comp.operation).toBe(foundOperation);
       });
     });
 
     describe('Previous state', () => {
       it('Should go previous state', async () => {
-        operationServiceStub.find.resolves(operationSample);
-        const wrapper = shallowMount(OperationDetails, { global: mountOptions });
-        const comp = wrapper.vm;
-        await comp.$nextTick();
-
         comp.previousState();
         await comp.$nextTick();
 
-        expect(routerGoMock).toHaveBeenCalledWith(-1);
+        expect(comp.$router.currentRoute.fullPath).toContain('/');
       });
     });
   });

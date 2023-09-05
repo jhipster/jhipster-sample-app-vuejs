@@ -1,48 +1,27 @@
-import { computed, defineComponent, inject, ref, Ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-
-import { orderAndFilterBy } from '@/shared/computables';
+import { Component, Vue, Inject } from 'vue-property-decorator';
+import Vue2Filters from 'vue2-filters';
 import ConfigurationService from './configuration.service';
 
-export default defineComponent({
-  compatConfig: { MODE: 3 },
-  name: 'JhiConfiguration',
-  setup() {
-    const configurationService = inject('configurationService', () => new ConfigurationService(), true);
+@Component({
+  mixins: [Vue2Filters.mixin],
+})
+export default class JhiConfiguration extends Vue {
+  public orderProp = 'prefix';
+  public reverse = false;
+  public allConfiguration: any = false;
+  public configuration: any = false;
+  public configKeys: any[] = [];
+  public filtered = '';
+  @Inject('configurationService') private configurationService: () => ConfigurationService;
 
-    const orderProp = ref('prefix');
-    const reverse = ref(false);
-    const allConfiguration: Ref<any> = ref({});
-    const configuration: Ref<any[]> = ref([]);
-    const configKeys: Ref<any[]> = ref([]);
-    const filtered = ref('');
-
-    const filteredConfiguration = computed(() =>
-      orderAndFilterBy(configuration.value, {
-        filterByTerm: filtered.value,
-        orderByProp: orderProp.value,
-        reverse: reverse.value,
-      })
-    );
-
-    return {
-      configurationService,
-      orderProp,
-      reverse,
-      allConfiguration,
-      configuration,
-      configKeys,
-      filtered,
-      filteredConfiguration,
-      t$: useI18n().t,
-    };
-  },
-  mounted() {
+  public mounted(): void {
     this.init();
-  },
-  methods: {
-    init(): void {
-      this.configurationService.loadConfiguration().then(res => {
+  }
+
+  public init(): void {
+    this.configurationService()
+      .loadConfiguration()
+      .then(res => {
         this.configuration = res;
 
         for (const config of this.configuration) {
@@ -52,16 +31,19 @@ export default defineComponent({
         }
       });
 
-      this.configurationService.loadEnvConfiguration().then(res => {
+    this.configurationService()
+      .loadEnvConfiguration()
+      .then(res => {
         this.allConfiguration = res;
       });
-    },
-    changeOrder(prop: string): void {
-      this.orderProp = prop;
-      this.reverse = !this.reverse;
-    },
-    keys(dict: any): string[] {
-      return dict === undefined ? [] : Object.keys(dict);
-    },
-  },
-});
+  }
+
+  public changeOrder(prop: string): void {
+    this.orderProp = prop;
+    this.reverse = !this.reverse;
+  }
+
+  public keys(dict: any): string[] {
+    return dict === undefined ? [] : Object.keys(dict);
+  }
+}

@@ -1,6 +1,4 @@
-import { defineComponent } from 'vue';
+import { Component, Vue } from 'vue-property-decorator';
 
-export default defineComponent({
-  compatConfig: { MODE: 3 },
-  name: 'JhiDocs',
-});
+@Component
+export default class JhiDocs extends Vue {}

@@ -1,24 +1,37 @@
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
 
-import Configuration from '../../../......mainwebappapp/admin/configuration/configuration.vue';
+import * as config from '@/shared/config/config';
+import Configuration from '@/admin/configuration/configuration.vue';
+import ConfigurationClass from '@/admin/configuration/configuration.component';
+import ConfigurationService from '@/admin/configuration/configuration.service';
 
-type ConfigurationComponentType = InstanceType<typeof Configuration>;
+const localVue = createLocalVue();
+
+config.initVueApp(localVue);
+const i18n = config.initI18N(localVue);
+const store = config.initVueXStore(localVue);
 
 const axiosStub = {
   get: sinon.stub(axios, 'get'),
 };
 
 describe('Configuration Component', () => {
-  let configuration: ConfigurationComponentType;
+  let wrapper: Wrapper<ConfigurationClass>;
+  let configuration: ConfigurationClass;
 
   beforeEach(() => {
     axiosStub.get.reset();
     axiosStub.get.resolves({
       data: { contexts: [{ beans: [{ prefix: 'A' }, { prefix: 'B' }] }], propertySources: [{ properties: { key1: { value: 'value' } } }] },
     });
-    const wrapper = shallowMount(Configuration);
+    wrapper = shallowMount<ConfigurationClass>(Configuration, {
+      store,
+      i18n,
+      localVue,
+      provide: { configurationService: () => new ConfigurationService() },
+    });
     configuration = wrapper.vm;
   });
 

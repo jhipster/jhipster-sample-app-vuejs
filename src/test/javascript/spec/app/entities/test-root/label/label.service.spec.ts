@@ -2,8 +2,8 @@
 import axios from 'axios';
 import sinon from 'sinon';
 
-import LabelService from '../../..../......mainwebappapp/entities/test-root/label/label.service';
-import { Label } from '../../..../......mainwebappapp/shared/model/test-root/label.model';
+import LabelService from '@/entities/test-root/label/label.service';
+import { Label } from '@/shared/model/test-root/label.model';
 
 const error = {
   response: {
@@ -106,7 +106,12 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a Label', async () => {
-        const patchObject = Object.assign({}, new Label());
+        const patchObject = Object.assign(
+          {
+            labelName: 'BBBBBB',
+          },
+          new Label()
+        );
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
         const expected = Object.assign({}, returnedFromService);

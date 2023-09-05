@@ -1,99 +1,121 @@
-import { computed, defineComponent, inject, ref, Ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
-import { useVuelidate } from '@vuelidate/core';
+import { Component, Vue, Inject } from 'vue-property-decorator';
 
-import { useValidation } from '@/shared/composables';
-import { useAlertService } from '@/shared/alert/alert.service';
+import { required, minLength } from 'vuelidate/lib/validators';
+
+import AlertService from '@/shared/alert/alert.service';
+
+import OperationService from '@/entities/test-root/operation/operation.service';
+import { IOperation } from '@/shared/model/test-root/operation.model';
 
 import { ILabel, Label } from '@/shared/model/test-root/label.model';
 import LabelService from './label.service';
 
-export default defineComponent({
-  compatConfig: { MODE: 3 },
-  name: 'LabelUpdate',
-  setup() {
-    const labelService = inject('labelService', () => new LabelService());
-    const alertService = inject('alertService', () => useAlertService(), true);
-
-    const label: Ref<ILabel> = ref(new Label());
-    const isSaving = ref(false);
-    const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'en'), true);
-
-    const route = useRoute();
-    const router = useRouter();
-
-    const previousState = () => router.go(-1);
-
-    const retrieveLabel = async labelId => {
-      try {
-        const res = await labelService().find(labelId);
-        label.value = res;
-      } catch (error) {
-        alertService.showHttpError(error.response);
-      }
-    };
-
-    if (route.params?.labelId) {
-      retrieveLabel(route.params.labelId);
-    }
-
-    const initRelationships = () => {};
-
-    initRelationships();
-
-    const { t: t$ } = useI18n();
-    const validations = useValidation();
-    const validationRules = {
-      labelName: {
-        required: validations.required(t$('entity.validation.required').toString()),
-        minLength: validations.minLength(t$('entity.validation.minlength', { min: 3 }).toString(), 3),
-      },
-      operations: {},
-    };
-    const v$ = useVuelidate(validationRules, label as any);
-    v$.value.$validate();
-
-    return {
-      labelService,
-      alertService,
-      label,
-      previousState,
-      isSaving,
-      currentLanguage,
-      v$,
-      t$,
-    };
-  },
-  created(): void {},
-  methods: {
-    save(): void {
-      this.isSaving = true;
-      if (this.label.id) {
-        this.labelService()
-          .update(this.label)
-          .then(param => {
-            this.isSaving = false;
-            this.previousState();
-            this.alertService.showInfo(this.t$('jhipsterSampleApplicationVueApp.testRootLabel.updated', { param: param.id }));
-          })
-          .catch(error => {
-            this.isSaving = false;
-            this.alertService.showHttpError(error.response);
-          });
-      } else {
-        this.labelService()
-          .create(this.label)
-          .then(param => {
-            this.isSaving = false;
-            this.previousState();
-            this.alertService.showSuccess(this.t$('jhipsterSampleApplicationVueApp.testRootLabel.created', { param: param.id }).toString());
-          })
-          .catch(error => {
-            this.isSaving = false;
-            this.alertService.showHttpError(error.response);
-          });
-      }
+const validations: any = {
+  label: {
+    labelName: {
+      required,
+      minLength: minLength(3),
     },
   },
-});
+};
+
+@Component({
+  validations,
+})
+export default class LabelUpdate extends Vue {
+  @Inject('labelService') private labelService: () => LabelService;
+  @Inject('alertService') private alertService: () => AlertService;
+
+  public label: ILabel = new Label();
+
+  @Inject('operationService') private operationService: () => OperationService;
+
+  public operations: IOperation[] = [];
+  public isSaving = false;
+  public currentLanguage = '';
+
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      if (to.params.labelId) {
+        vm.retrieveLabel(to.params.labelId);
+      }
+      vm.initRelationships();
+    });
+  }
+
+  created(): void {
+    this.currentLanguage = this.$store.getters.currentLanguage;
+    this.$store.watch(
+      () => this.$store.getters.currentLanguage,
+      () => {
+        this.currentLanguage = this.$store.getters.currentLanguage;
+      }
+    );
+  }
+
+  public save(): void {
+    this.isSaving = true;
+    if (this.label.id) {
+      this.labelService()
+        .update(this.label)
+        .then(param => {
+          this.isSaving = false;
+          this.$router.go(-1);
+          const message = this.$t('jhipsterSampleApplicationVueApp.testRootLabel.updated', { param: param.id });
+          return (this.$root as any).$bvToast.toast(message.toString(), {
+            toaster: 'b-toaster-top-center',
+            title: 'Info',
+            variant: 'info',
+            solid: true,
+            autoHideDelay: 5000,
+          });
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error.response);
+        });
+    } else {
+      this.labelService()
+        .create(this.label)
+        .then(param => {
+          this.isSaving = false;
+          this.$router.go(-1);
+          const message = this.$t('jhipsterSampleApplicationVueApp.testRootLabel.created', { param: param.id });
+          (this.$root as any).$bvToast.toast(message.toString(), {
+            toaster: 'b-toaster-top-center',
+            title: 'Success',
+            variant: 'success',
+            solid: true,
+            autoHideDelay: 5000,
+          });
+        })
+        .catch(error => {
+          this.isSaving = false;
+          this.alertService().showHttpError(this, error.response);
+        });
+    }
+  }
+
+  public retrieveLabel(labelId): void {
+    this.labelService()
+      .find(labelId)
+      .then(res => {
+        this.label = res;
+      })
+      .catch(error => {
+        this.alertService().showHttpError(this, error.response);
+      });
+  }
+
+  public previousState(): void {
+    this.$router.go(-1);
+  }
+
+  public initRelationships(): void {
+    this.operationService()
+      .retrieve()
+      .then(res => {
+        this.operations = res.data;
+      });
+  }
+}

@@ -1,63 +1,49 @@
-import { computed, defineComponent, inject, ref, Ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-
-import { orderAndFilterBy } from '@/shared/computables';
+import { Component, Vue, Inject } from 'vue-property-decorator';
+import Vue2Filters from 'vue2-filters';
 import LogsService from './logs.service';
 
-export default defineComponent({
-  compatConfig: { MODE: 3 },
-  name: 'JhiLogs',
-  setup() {
-    const logsService = inject('logsService', () => new LogsService(), true);
+@Component({
+  mixins: [Vue2Filters.mixin],
+})
+export default class JhiLogs extends Vue {
+  @Inject('logsService') private logsService: () => LogsService;
+  private loggers: any[] = [];
+  public filtered = '';
+  public orderProp = 'name';
+  public reverse = false;
 
-    const loggers: Ref<any[]> = ref([]);
-    const filtered = ref('');
-    const orderProp = ref('name');
-    const reverse = ref(false);
-    const filteredLoggers = computed(() =>
-      orderAndFilterBy(loggers.value, {
-        filterByTerm: filtered.value,
-        orderByProp: orderProp.value,
-        reverse: reverse.value,
-      })
-    );
-
-    return {
-      logsService,
-      loggers,
-      filtered,
-      orderProp,
-      reverse,
-      filteredLoggers,
-      t$: useI18n().t,
-    };
-  },
-  mounted() {
+  public mounted(): void {
     this.init();
-  },
-  methods: {
-    init(): void {
-      this.logsService.findAll().then(response => {
+  }
+
+  public init(): void {
+    this.logsService()
+      .findAll()
+      .then(response => {
         this.extractLoggers(response);
       });
-    },
-    updateLevel(name: string, level: string): void {
-      this.logsService.changeLevel(name, level).then(() => {
+  }
+
+  public updateLevel(name: string, level: string): void {
+    this.logsService()
+      .changeLevel(name, level)
+      .then(() => {
         this.init();
       });
-    },
-    changeOrder(orderProp: string): void {
-      this.orderProp = orderProp;
-      this.reverse = !this.reverse;
-    },
-    extractLoggers(response) {
-      this.loggers = [];
-      if (response.data) {
-        for (const key of Object.keys(response.data.loggers)) {
-          const logger = response.data.loggers[key];
-          this.loggers.push({ name: key, level: logger.effectiveLevel });
-        }
+  }
+
+  public changeOrder(orderProp: string): void {
+    this.orderProp = orderProp;
+    this.reverse = !this.reverse;
+  }
+
+  private extractLoggers(response) {
+    this.loggers = [];
+    if (response.data) {
+      for (const key of Object.keys(response.data.loggers)) {
+        const logger = response.data.loggers[key];
+        this.loggers.push({ name: key, level: logger.effectiveLevel });
       }
-    },
-  },
-});
+    }
+  }
+}

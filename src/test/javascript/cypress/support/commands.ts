@@ -78,15 +78,12 @@ export const classInvalid = 'invalid';
 export const classValid = 'valid';
 Cypress.Commands.add('authenticatedRequest', data => {
   const bearerToken = sessionStorage.getItem(Cypress.env('jwtStorageName'));
-  if (bearerToken) {
-    return cy.request({
-      ...data,
-      auth: {
-        bearer: bearerToken,
-      },
-    });
-  }
-  return cy.request(data);
+  return cy.request({
+    ...data,
+    auth: {
+      bearer: bearerToken,
+    },
+  });
 });
 
 Cypress.Commands.add('login', (username: string, password: string) => {

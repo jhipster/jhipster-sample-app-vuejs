@@ -1,44 +1,49 @@
-import { shallowMount } from '@vue/test-utils';
-import Ribbon from '../../../......mainwebappapp/core/ribbon/ribbon.vue';
+import { createLocalVue, shallowMount, Wrapper } from '@vue/test-utils';
+import Ribbon from '@/core/ribbon/ribbon.vue';
+import RibbonClass from '@/core/ribbon/ribbon.component';
 
-import { createTestingPinia } from '@pinia/testing';
-import { AccountStore, useStore } from '../../../......mainwebappapp/store';
+import * as config from '@/shared/config/config';
 
-type RibbonComponentType = InstanceType<typeof Ribbon>;
+const localVue = createLocalVue();
+config.initVueApp(localVue);
+const store = config.initVueXStore(localVue);
 
-const pinia = createTestingPinia({ stubActions: false });
+const i18n = config.initI18N(localVue);
 
 describe('Ribbon', () => {
-  let ribbon: RibbonComponentType;
-  let store: AccountStore;
+  let ribbon: RibbonClass;
+  let wrapper: Wrapper<RibbonClass>;
 
-  beforeEach(async () => {
-    const wrapper = shallowMount(Ribbon, {
-      global: {
-        plugins: [pinia],
-      },
+  const wrap = async (managementInfo?: any) => {
+    wrapper = shallowMount<RibbonClass>(Ribbon, {
+      i18n,
+      store,
+      localVue,
     });
     ribbon = wrapper.vm;
     await ribbon.$nextTick();
-    store = useStore();
-    store.setRibbonOnProfiles(null);
+  };
+
+  beforeEach(() => {
+    store.commit('setRibbonOnProfiles', null);
   });
 
-  it('should not have ribbonEnabled when no data', () => {
+  it('should not have ribbonEnabled when no data', async () => {
+    await wrap();
     expect(ribbon.ribbonEnabled).toBeFalsy();
   });
 
   it('should have ribbonEnabled set to value in store', async () => {
     const profile = 'dev';
-    store.setActiveProfiles(['foo', profile, 'bar']);
-    store.setRibbonOnProfiles(profile);
+    store.commit('setActiveProfiles', ['foo', profile, 'bar']);
+    store.commit('setRibbonOnProfiles', profile);
     expect(ribbon.ribbonEnabled).toBeTruthy();
   });
 
   it('should not have ribbonEnabled when profile not activated', async () => {
     const profile = 'dev';
-    store.setActiveProfiles(['foo', 'bar']);
-    store.setRibbonOnProfiles(profile);
+    store.commit('setActiveProfiles', ['foo', 'bar']);
+    store.commit('setRibbonOnProfiles', profile);
     expect(ribbon.ribbonEnabled).toBeFalsy();
   });
 });

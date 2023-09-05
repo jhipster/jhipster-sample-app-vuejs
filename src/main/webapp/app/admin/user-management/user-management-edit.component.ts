@@ -1,12 +1,8 @@
-import { defineComponent, inject, ref, Ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useVuelidate } from '@vuelidate/core';
-import { email, maxLength, minLength, required } from '@vuelidate/validators';
+import { email, maxLength, minLength, required } from 'vuelidate/lib/validators';
+import { Component, Inject, Vue } from 'vue-property-decorator';
 import UserManagementService from './user-management.service';
 import { IUser, User } from '@/shared/model/user.model';
-import { useAlertService } from '@/shared/alert/alert.service';
-import { useRoute, useRouter } from 'vue-router';
-import languages from '@/shared/config/languages';
+import AlertService from '@/shared/alert/alert.service';
 
 const loginValidator = (value: string) => {
   if (!value) {
@@ -37,87 +33,100 @@ const validations: any = {
   },
 };
 
-export default defineComponent({
-  compatConfig: { MODE: 3 },
-  name: 'JhiUserManagementEdit',
+@Component({
   validations,
-  setup() {
-    const route = useRoute();
-    const router = useRouter();
+})
+export default class JhiUserManagementEdit extends Vue {
+  @Inject('userManagementService') private userManagementService: () => UserManagementService;
+  @Inject('alertService') private alertService: () => AlertService;
 
-    const alertService = inject('alertService', () => useAlertService(), true);
-    const userManagementService = inject('userManagementService', () => new UserManagementService(), true);
-    const previousState = () => router.go(-1);
+  public userAccount: IUser;
+  public isSaving = false;
+  public authorities: any[] = [];
+  public languages: any = this.$store.getters.languages;
 
-    const userAccount: Ref<IUser> = ref({ ...new User(), authorities: [] });
-    const isSaving: Ref<boolean> = ref(false);
-    const authorities: Ref<string[]> = ref([]);
-
-    const initAuthorities = async () => {
-      const response = await userManagementService.retrieveAuthorities();
-      authorities.value = response.data;
-    };
-
-    const loadUser = async (userId: string) => {
-      const response = await userManagementService.get(userId);
-      userAccount.value = response.data;
-    };
-
-    initAuthorities();
-    const userId = route.params?.userId;
-    if (userId) {
-      loadUser(userId);
-    }
-
-    return {
-      alertService,
-      userAccount,
-      isSaving,
-      authorities,
-      userManagementService,
-      previousState,
-      v$: useVuelidate(),
-      languages: languages(),
-      t$: useI18n().t,
-    };
-  },
-  methods: {
-    save(): void {
-      this.isSaving = true;
-      if (this.userAccount.id) {
-        this.userManagementService
-          .update(this.userAccount)
-          .then(res => {
-            this.returnToList();
-            this.alertService.showInfo(this.getToastMessageFromHeader(res));
-          })
-          .catch(error => {
-            this.isSaving = true;
-            this.alertService.showHttpError(error.response);
-          });
-      } else {
-        this.userManagementService
-          .create(this.userAccount)
-          .then(res => {
-            this.returnToList();
-            this.alertService.showSuccess(this.getToastMessageFromHeader(res));
-          })
-          .catch(error => {
-            this.isSaving = true;
-            this.alertService.showHttpError(error.response);
-          });
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.initAuthorities();
+      if (to.params.userId) {
+        vm.init(to.params.userId);
       }
-    },
+    });
+  }
 
-    returnToList(): void {
-      this.isSaving = false;
-      this.previousState();
-    },
+  public constructor() {
+    super();
+    this.userAccount = new User();
+    this.userAccount.authorities = [];
+  }
 
-    getToastMessageFromHeader(res: any): string {
-      return this.t$(res.headers['x-jhipstersampleapplicationvueapp-alert'], {
-        param: decodeURIComponent(res.headers['x-jhipstersampleapplicationvueapp-params'].replace(/\+/g, ' ')),
-      }).toString();
-    },
-  },
-});
+  public initAuthorities() {
+    this.userManagementService()
+      .retrieveAuthorities()
+      .then(_res => {
+        this.authorities = _res.data;
+      });
+  }
+
+  public init(userId: number): void {
+    this.userManagementService()
+      .get(userId)
+      .then(res => {
+        this.userAccount = res.data;
+      });
+  }
+
+  public previousState(): void {
+    (<any>this).$router.go(-1);
+  }
+
+  public save(): void {
+    this.isSaving = true;
+    if (this.userAccount.id) {
+      this.userManagementService()
+        .update(this.userAccount)
+        .then(res => {
+          this.returnToList();
+          (this.$root as any).$bvToast.toast(this.getMessageFromHeader(res).toString(), {
+            toaster: 'b-toaster-top-center',
+            title: 'Info',
+            variant: 'info',
+            solid: true,
+            autoHideDelay: 5000,
+          });
+        })
+        .catch(error => {
+          this.isSaving = true;
+          this.alertService().showHttpError(this, error.response);
+        });
+    } else {
+      this.userManagementService()
+        .create(this.userAccount)
+        .then(res => {
+          this.returnToList();
+          (this.$root as any).$bvToast.toast(this.getMessageFromHeader(res).toString(), {
+            toaster: 'b-toaster-top-center',
+            title: 'Success',
+            variant: 'success',
+            solid: true,
+            autoHideDelay: 5000,
+          });
+        })
+        .catch(error => {
+          this.isSaving = true;
+          this.alertService().showHttpError(this, error.response);
+        });
+    }
+  }
+
+  private returnToList(): void {
+    this.isSaving = false;
+    (<any>this).$router.go(-1);
+  }
+
+  private getMessageFromHeader(res: any): any {
+    return this.$t(res.headers['x-jhipstersampleapplicationvueapp-alert'], {
+      param: decodeURIComponent(res.headers['x-jhipstersampleapplicationvueapp-params'].replace(/\+/g, ' ')),
+    });
+  }
+}

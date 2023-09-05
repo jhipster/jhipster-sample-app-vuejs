@@ -1,18 +1,18 @@
-import { vitest } from 'vitest';
-import { shallowMount, ComponentMountingOptions } from '@vue/test-utils';
+import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
 
-import Activate from '../../../......mainwebappapp/account/activate/activate.vue';
-import LoginService from '../../../......mainwebappapp/account/login.service';
+import * as config from '@/shared/config/config';
+import Activate from '@/account/activate/activate.vue';
+import ActivateClass from '@/account/activate/activate.component';
+import ActivateService from '@/account/activate/activate.service';
+import LoginService from '@/account/login.service';
 
-type ActivateComponentType = InstanceType<typeof Activate>;
+const localVue = createLocalVue();
 
-const route = { query: { key: 'key' } };
-
-vitest.mock('vue-router', () => ({
-  useRoute: () => route,
-}));
+config.initVueApp(localVue);
+const i18n = config.initI18N(localVue);
+const store = config.initVueXStore(localVue);
 
 const axiosStub = {
   get: sinon.stub(axios, 'get'),
@@ -20,30 +20,35 @@ const axiosStub = {
 };
 
 describe('Activate Component', () => {
-  let activate: ActivateComponentType;
-  let loginService: LoginService;
-  let mountOptions: ComponentMountingOptions<ActivateComponentType>;
+  let wrapper: Wrapper<ActivateClass>;
+  let activate: ActivateClass;
 
   beforeEach(() => {
-    loginService = new LoginService({ emit: vitest.fn() });
-    mountOptions = {
-      global: {
-        provide: {
-          loginService,
-        },
+    axiosStub.get.resolves({});
+
+    wrapper = shallowMount<ActivateClass>(Activate, {
+      i18n,
+      localVue,
+      provide: {
+        activateService: () => new ActivateService(),
+        loginService: () => new LoginService(),
       },
-    };
+    });
+    activate = wrapper.vm;
   });
 
-  afterAll(() => {
-    sinon.restore();
+  it('should display error when activation fails using route', async () => {
+    axiosStub.get.rejects({});
+    activate.beforeRouteEnter({ query: { key: 'invalid-key' } }, null, cb => cb(activate));
+    await activate.$nextTick();
+
+    expect(activate.error).toBeTruthy();
+    expect(activate.success).toBeFalsy();
   });
 
   it('should display error when activation fails', async () => {
     axiosStub.get.rejects({});
-
-    const wrapper = shallowMount(Activate as any, mountOptions);
-    activate = wrapper.vm;
+    activate.init('invalid-key');
     await activate.$nextTick();
 
     expect(activate.error).toBeTruthy();
@@ -53,8 +58,7 @@ describe('Activate Component', () => {
   it('should display success when activation succeeds', async () => {
     axiosStub.get.resolves({});
 
-    const wrapper = shallowMount(Activate as any, mountOptions);
-    activate = wrapper.vm;
+    activate.init('valid-key');
     await activate.$nextTick();
 
     expect(activate.error).toBeFalsy();

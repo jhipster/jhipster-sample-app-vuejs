@@ -7,7 +7,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { hashElement } = require('folder-hash');
 const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
 
-const { DefinePlugin } = require('webpack');
+const { DefinePlugin, EnvironmentPlugin } = require('webpack');
 const { vueLoaderConfig } = require('./vue.utils');
 const config = require('./config');
 
@@ -36,7 +36,7 @@ module.exports = async (env, options) => {
       resolve: {
         extensions: ['.ts', '.js', '.vue', '.json'],
         alias: {
-          vue$: '@vue/compat/dist/vue.esm-bundler.js',
+          vue$: 'vue/dist/vue.esm.js',
           '@': resolve('src/main/webapp/app'),
         },
       },
@@ -75,14 +75,7 @@ module.exports = async (env, options) => {
           {
             test: /\.vue$/,
             loader: 'vue-loader',
-            options: {
-              ...vueLoaderConfig(!development),
-              compilerOptions: {
-                compatConfig: {
-                  MODE: 2,
-                },
-              },
-            },
+            options: vueLoaderConfig(!development),
           },
           {
             test: /\.ts$/,
@@ -105,6 +98,10 @@ module.exports = async (env, options) => {
         ],
       },
       plugins: [
+        new EnvironmentPlugin({
+          // Required by vuelidate https://github.com/vuelidate/vuelidate/issues/365
+          BUILD: 'web',
+        }),
         new DefinePlugin({
           I18N_HASH: JSON.stringify(languagesHash.hash),
           VERSION: JSON.stringify(config.version),
@@ -125,7 +122,7 @@ module.exports = async (env, options) => {
               globOptions: { ignore: ['**/index.html'] },
             },
             {
-              from: path.join(path.dirname(require.resolve('axios/package.json')), 'dist/axios.min.js'),
+              from: require.resolve('axios/dist/axios.min.js'),
               to: 'swagger-ui/',
             },
             { from: './src/main/webapp/swagger-ui/', to: 'swagger-ui/' },

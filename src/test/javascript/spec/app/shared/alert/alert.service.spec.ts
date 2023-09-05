@@ -1,37 +1,50 @@
-import { vitest } from 'vitest';
-import AlertService from '../../../......mainwebappapp/shared/alert/alert.service';
+import sinon from 'sinon';
+
+import AlertService from '@/shared/alert/alert.service';
+import Vue from 'vue';
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils';
+const translationStub = sinon.stub();
+const toastStub = sinon.stub();
+
+const vueInstance = {
+  $t: translationStub,
+  $root: {
+    $bvToast: {
+      toast: toastStub,
+    },
+  },
+};
 
 describe('Alert Service test suite', () => {
-  let translationStub: vitest.Mock;
-  let toastStub: vitest.Mock;
   let alertService: AlertService;
 
   beforeEach(() => {
-    translationStub = vitest.fn();
-    toastStub = vitest.fn();
-    alertService = new AlertService({
-      i18n: { t: translationStub } as any,
-      bvToast: {
-        toast: toastStub,
-      } as any,
-    });
+    translationStub.reset();
+    toastStub.reset();
+    alertService = new AlertService();
   });
 
   it('should show error toast with translation/message', async () => {
     const message = 'translatedMessage';
+    const translationKey = 'err.code';
+
+    // GIVEN
+    translationStub.withArgs(translationKey).returns(message);
 
     // WHEN
-    alertService.showError(message);
+    alertService.showError((<any>vueInstance) as Vue, translationKey);
 
     // THEN
-    expect(toastStub).toBeCalledTimes(1);
-    expect(toastStub).toBeCalledWith(message, {
-      toaster: 'b-toaster-top-center',
-      title: 'Error',
-      variant: 'danger',
-      solid: true,
-      autoHideDelay: 5000,
-    });
+    expect(translationStub.withArgs(translationKey).callCount).toEqual(1);
+    expect(
+      toastStub.calledOnceWith(message, {
+        toaster: 'b-toaster-top-center',
+        title: 'Error',
+        variant: 'danger',
+        solid: true,
+        autoHideDelay: 5000,
+      })
+    ).toBeTruthy();
   });
 
   it('should show not reachable toast when http status = 0', async () => {
@@ -41,22 +54,22 @@ describe('Alert Service test suite', () => {
       status: 0,
     };
     // GIVEN
-    translationStub.mockReturnValueOnce(message);
+    translationStub.withArgs(translationKey).returns(message);
 
     // WHEN
-    alertService.showHttpError(httpErrorResponse);
+    alertService.showHttpError((<any>vueInstance) as Vue, httpErrorResponse);
 
     // THEN
-    expect(translationStub).toBeCalledTimes(1);
-    expect(translationStub).toHaveBeenCalledWith(translationKey);
-    expect(toastStub).toBeCalledTimes(1);
-    expect(toastStub).toBeCalledWith(message, {
-      toaster: 'b-toaster-top-center',
-      title: 'Error',
-      variant: 'danger',
-      solid: true,
-      autoHideDelay: 5000,
-    });
+    expect(translationStub.withArgs(translationKey).callCount).toEqual(1);
+    expect(
+      toastStub.calledOnceWith(message, {
+        toaster: 'b-toaster-top-center',
+        title: 'Error',
+        variant: 'danger',
+        solid: true,
+        autoHideDelay: 5000,
+      })
+    ).toBeTruthy();
   });
 
   it('should show parameterized error toast when http status = 400 and entity headers', async () => {
@@ -70,30 +83,23 @@ describe('Alert Service test suite', () => {
       },
     };
     // GIVEN
-    translationStub.mockImplementation(key => {
-      if (key === translationKey) {
-        return message;
-      }
-      if (key === 'global.menu.entities.dummyEntity') {
-        return 'DummyEntity';
-      }
-      throw new Error();
-    });
+    translationStub.withArgs(translationKey).returns(message);
+    translationStub.withArgs('global.menu.entities.dummyEntity').returns('DummyEntity');
 
     // WHEN
-    alertService.showHttpError(httpErrorResponse);
+    alertService.showHttpError((<any>vueInstance) as Vue, httpErrorResponse);
 
     // THEN
-    expect(translationStub).toBeCalledTimes(2);
-    expect(translationStub).toBeCalledWith(translationKey, { entityName: 'DummyEntity' });
-    expect(translationStub).toBeCalledWith('global.menu.entities.dummyEntity');
-    expect(toastStub).toBeCalledWith(message, {
-      toaster: 'b-toaster-top-center',
-      title: 'Error',
-      variant: 'danger',
-      solid: true,
-      autoHideDelay: 5000,
-    });
+    expect(translationStub.withArgs(translationKey, { entityName: 'DummyEntity' }).callCount).toEqual(1);
+    expect(
+      toastStub.calledOnceWith(message, {
+        toaster: 'b-toaster-top-center',
+        title: 'Error',
+        variant: 'danger',
+        solid: true,
+        autoHideDelay: 5000,
+      })
+    ).toBeTruthy();
   });
 
   it('should show error toast with data.message when http status = 400 and entity headers', async () => {
@@ -113,48 +119,48 @@ describe('Alert Service test suite', () => {
     };
 
     // GIVEN
-    translationStub.mockReturnValueOnce(message);
+    translationStub.withArgs(message).returns(message);
 
     // WHEN
-    alertService.showHttpError(httpErrorResponse);
+    alertService.showHttpError((<any>vueInstance) as Vue, httpErrorResponse);
 
     // THEN
-    expect(translationStub).toBeCalledTimes(1);
-    expect(translationStub).toHaveBeenCalledWith(message);
-    expect(toastStub).toBeCalledTimes(1);
-    expect(toastStub).toBeCalledWith(message, {
-      toaster: 'b-toaster-top-center',
-      title: 'Error',
-      variant: 'danger',
-      solid: true,
-      autoHideDelay: 5000,
-    });
+    expect(translationStub.withArgs(message).callCount).toEqual(1);
+    expect(
+      toastStub.calledOnceWith(message, {
+        toaster: 'b-toaster-top-center',
+        title: 'Error',
+        variant: 'danger',
+        solid: true,
+        autoHideDelay: 5000,
+      })
+    ).toBeTruthy();
   });
 
   it('should show error toast when http status = 404', async () => {
     const translationKey = 'error.http.404';
-    const message = 'The page does not exist.';
+    const message = 'Not found';
     const httpErrorResponse = {
       status: 404,
     };
 
     // GIVEN
-    translationStub.mockReturnValueOnce(message);
+    translationStub.withArgs(translationKey).returns(message);
 
     // WHEN
-    alertService.showHttpError(httpErrorResponse);
+    alertService.showHttpError((<any>vueInstance) as Vue, httpErrorResponse);
 
     // THEN
-    expect(translationStub).toBeCalledTimes(1);
-    expect(translationStub).toHaveBeenCalledWith(translationKey);
-    expect(toastStub).toBeCalledTimes(1);
-    expect(toastStub).toBeCalledWith(message, {
-      toaster: 'b-toaster-top-center',
-      title: 'Error',
-      variant: 'danger',
-      solid: true,
-      autoHideDelay: 5000,
-    });
+    expect(translationStub.withArgs(translationKey).callCount).toEqual(1);
+    expect(
+      toastStub.calledOnceWith(message, {
+        toaster: 'b-toaster-top-center',
+        title: 'Error',
+        variant: 'danger',
+        solid: true,
+        autoHideDelay: 5000,
+      })
+    ).toBeTruthy();
   });
 
   it('should show error toast when http status != 400,404', async () => {
@@ -167,21 +173,21 @@ describe('Alert Service test suite', () => {
     };
 
     // GIVEN
-    translationStub.mockReturnValueOnce(message);
+    translationStub.withArgs(message).returns(message);
 
     // WHEN
-    alertService.showHttpError(httpErrorResponse);
+    alertService.showHttpError((<any>vueInstance) as Vue, httpErrorResponse);
 
     // THEN
-    expect(translationStub).toBeCalledTimes(1);
-    expect(translationStub).toHaveBeenCalledWith(message);
-    expect(toastStub).toBeCalledTimes(1);
-    expect(toastStub).toBeCalledWith(message, {
-      toaster: 'b-toaster-top-center',
-      title: 'Error',
-      variant: 'danger',
-      solid: true,
-      autoHideDelay: 5000,
-    });
+    expect(translationStub.withArgs(message).callCount).toEqual(1);
+    expect(
+      toastStub.calledOnceWith(message, {
+        toaster: 'b-toaster-top-center',
+        title: 'Error',
+        variant: 'danger',
+        solid: true,
+        autoHideDelay: 5000,
+      })
+    ).toBeTruthy();
   });
 });

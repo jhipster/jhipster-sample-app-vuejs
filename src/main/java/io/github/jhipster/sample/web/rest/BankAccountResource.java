@@ -6,13 +6,13 @@ import io.github.jhipster.sample.service.BankAccountService;
 import io.github.jhipster.sample.service.criteria.BankAccountCriteria;
 import io.github.jhipster.sample.service.dto.BankAccountDTO;
 import io.github.jhipster.sample.web.rest.errors.BadRequestAlertException;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -150,7 +150,6 @@ public class BankAccountResource {
     @GetMapping("/bank-accounts")
     public ResponseEntity<List<BankAccountDTO>> getAllBankAccounts(BankAccountCriteria criteria) {
         log.debug("REST request to get BankAccounts by criteria: {}", criteria);
-
         List<BankAccountDTO> entityList = bankAccountQueryService.findByCriteria(criteria);
         return ResponseEntity.ok().body(entityList);
     }

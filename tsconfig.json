@@ -18,9 +18,6 @@
     "importHelpers": false,
     "allowJs": true
   },
-  "vueCompilerOptions": {
-    "target": 3.3
-  },
   "include": ["src/main/webapp/app"],
   "exclude": ["node_modules"]
 }

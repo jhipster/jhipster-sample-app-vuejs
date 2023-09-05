@@ -1,13 +1,4 @@
-import { defineComponent } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { Component, Inject, Vue } from 'vue-property-decorator';
 
-export default defineComponent({
-  compatConfig: { MODE: 3 },
-  name: 'EntitiesMenu',
-  setup() {
-    const i18n = useI18n();
-    return {
-      t$: i18n.t,
-    };
-  },
-});
+@Component
+export default class EntitiesMenu extends Vue {}
