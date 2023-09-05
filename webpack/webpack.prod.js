@@ -4,7 +4,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const { styleLoaders } = require('./vue.utils');
 const config = require('./config');
@@ -80,20 +79,6 @@ const webpackConfig = {
       filename: 'content/[name].[contenthash].css',
       chunkFilename: 'content/[id].css',
     }),
-    // keep module.id stable when vendor modules does not change
-    new ForkTsCheckerWebpackPlugin({
-      typescript: {
-        vue: {
-          enabled: true,
-          compiler: 'vue-template-compiler',
-        },
-        diagnosticOptions: {
-          semantic: true,
-          syntactic: true,
-        },
-      },
-      formatter: 'codeframe',
-    }),
     new WorkboxPlugin.GenerateSW({
       clientsClaim: true,
       skipWaiting: true,
@@ -112,7 +97,7 @@ if (config.build.productionGzip) {
       test: new RegExp('\\.(' + config.build.productionGzipExtensions.join('|') + ')$'),
       threshold: 10240,
       minRatio: 0.8,
-    })
+    }),
   );
 }
 

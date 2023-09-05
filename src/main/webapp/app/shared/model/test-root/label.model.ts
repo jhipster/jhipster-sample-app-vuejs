@@ -7,5 +7,9 @@ export interface ILabel {
 }
 
 export class Label implements ILabel {
-  constructor(public id?: number, public labelName?: string, public operations?: IOperation[] | null) {}
+  constructor(
+    public id?: number,
+    public labelName?: string,
+    public operations?: IOperation[] | null,
+  ) {}
 }

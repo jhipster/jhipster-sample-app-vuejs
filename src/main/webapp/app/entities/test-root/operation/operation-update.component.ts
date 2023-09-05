@@ -1,171 +1,137 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { computed, defineComponent, inject, ref, Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import { useVuelidate } from '@vuelidate/core';
 
-import { required, decimal } from 'vuelidate/lib/validators';
-import dayjs from 'dayjs';
-import { DATE_TIME_LONG_FORMAT } from '@/shared/date/filters';
-
-import AlertService from '@/shared/alert/alert.service';
+import OperationService from './operation.service';
+import { useValidation, useDateFormat } from '@/shared/composables';
+import { useAlertService } from '@/shared/alert/alert.service';
 
 import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
 import { IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
-
 import LabelService from '@/entities/test-root/label/label.service';
 import { ILabel } from '@/shared/model/test-root/label.model';
-
 import { IOperation, Operation } from '@/shared/model/test-root/operation.model';
-import OperationService from './operation.service';
 
-const validations: any = {
-  operation: {
-    date: {
-      required,
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'OperationUpdate',
+  setup() {
+    const operationService = inject('operationService', () => new OperationService());
+    const alertService = inject('alertService', () => useAlertService(), true);
+
+    const operation: Ref<IOperation> = ref(new Operation());
+    const bankAccountService = inject('bankAccountService', () => new BankAccountMySuffixService());
+    const bankAccounts: Ref<IBankAccountMySuffix[]> = ref([]);
+    const labelService = inject('labelService', () => new LabelService());
+    const labels: Ref<ILabel[]> = ref([]);
+    const isSaving = ref(false);
+    const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'en'), true);
+
+    const route = useRoute();
+    const router = useRouter();
+
+    const previousState = () => router.go(-1);
+
+    const retrieveOperation = async operationId => {
+      try {
+        const res = await operationService().find(operationId);
+        res.date = new Date(res.date);
+        operation.value = res;
+      } catch (error) {
+        alertService.showHttpError(error.response);
+      }
+    };
+
+    if (route.params?.operationId) {
+      retrieveOperation(route.params.operationId);
+    }
+
+    const initRelationships = () => {
+      bankAccountService()
+        .retrieve()
+        .then(res => {
+          bankAccounts.value = res.data;
+        });
+      labelService()
+        .retrieve()
+        .then(res => {
+          labels.value = res.data;
+        });
+    };
+
+    initRelationships();
+
+    const { t: t$ } = useI18n();
+    const validations = useValidation();
+    const validationRules = {
+      date: {
+        required: validations.required(t$('entity.validation.required').toString()),
+      },
+      description: {},
+      amount: {
+        required: validations.required(t$('entity.validation.required').toString()),
+      },
+      bankAccount: {},
+      labels: {},
+    };
+    const v$ = useVuelidate(validationRules, operation as any);
+    v$.value.$validate();
+
+    return {
+      operationService,
+      alertService,
+      operation,
+      previousState,
+      isSaving,
+      currentLanguage,
+      bankAccounts,
+      labels,
+      v$,
+      ...useDateFormat({ entityRef: operation }),
+      t$,
+    };
+  },
+  created(): void {
+    this.operation.labels = [];
+  },
+  methods: {
+    save(): void {
+      this.isSaving = true;
+      if (this.operation.id) {
+        this.operationService()
+          .update(this.operation)
+          .then(param => {
+            this.isSaving = false;
+            this.previousState();
+            this.alertService.showInfo(this.t$('jhipsterSampleApplicationVueApp.testRootOperation.updated', { param: param.id }));
+          })
+          .catch(error => {
+            this.isSaving = false;
+            this.alertService.showHttpError(error.response);
+          });
+      } else {
+        this.operationService()
+          .create(this.operation)
+          .then(param => {
+            this.isSaving = false;
+            this.previousState();
+            this.alertService.showSuccess(
+              this.t$('jhipsterSampleApplicationVueApp.testRootOperation.created', { param: param.id }).toString(),
+            );
+          })
+          .catch(error => {
+            this.isSaving = false;
+            this.alertService.showHttpError(error.response);
+          });
+      }
     },
-    description: {},
-    amount: {
-      required,
-      decimal,
+
+    getSelected(selectedVals, option): any {
+      if (selectedVals) {
+        return selectedVals.find(value => option.id === value.id) ?? option;
+      }
+      return option;
     },
   },
-};
-
-@Component({
-  validations,
-})
-export default class OperationUpdate extends Vue {
-  @Inject('operationService') private operationService: () => OperationService;
-  @Inject('alertService') private alertService: () => AlertService;
-
-  public operation: IOperation = new Operation();
-
-  @Inject('bankAccountService') private bankAccountService: () => BankAccountMySuffixService;
-
-  public bankAccounts: IBankAccountMySuffix[] = [];
-
-  @Inject('labelService') private labelService: () => LabelService;
-
-  public labels: ILabel[] = [];
-  public isSaving = false;
-  public currentLanguage = '';
-
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (to.params.operationId) {
-        vm.retrieveOperation(to.params.operationId);
-      }
-      vm.initRelationships();
-    });
-  }
-
-  created(): void {
-    this.currentLanguage = this.$store.getters.currentLanguage;
-    this.$store.watch(
-      () => this.$store.getters.currentLanguage,
-      () => {
-        this.currentLanguage = this.$store.getters.currentLanguage;
-      }
-    );
-    this.operation.labels = [];
-  }
-
-  public save(): void {
-    this.isSaving = true;
-    if (this.operation.id) {
-      this.operationService()
-        .update(this.operation)
-        .then(param => {
-          this.isSaving = false;
-          this.$router.go(-1);
-          const message = this.$t('jhipsterSampleApplicationVueApp.testRootOperation.updated', { param: param.id });
-          return (this.$root as any).$bvToast.toast(message.toString(), {
-            toaster: 'b-toaster-top-center',
-            title: 'Info',
-            variant: 'info',
-            solid: true,
-            autoHideDelay: 5000,
-          });
-        })
-        .catch(error => {
-          this.isSaving = false;
-          this.alertService().showHttpError(this, error.response);
-        });
-    } else {
-      this.operationService()
-        .create(this.operation)
-        .then(param => {
-          this.isSaving = false;
-          this.$router.go(-1);
-          const message = this.$t('jhipsterSampleApplicationVueApp.testRootOperation.created', { param: param.id });
-          (this.$root as any).$bvToast.toast(message.toString(), {
-            toaster: 'b-toaster-top-center',
-            title: 'Success',
-            variant: 'success',
-            solid: true,
-            autoHideDelay: 5000,
-          });
-        })
-        .catch(error => {
-          this.isSaving = false;
-          this.alertService().showHttpError(this, error.response);
-        });
-    }
-  }
-
-  public convertDateTimeFromServer(date: Date): string {
-    if (date && dayjs(date).isValid()) {
-      return dayjs(date).format(DATE_TIME_LONG_FORMAT);
-    }
-    return null;
-  }
-
-  public updateInstantField(field, event) {
-    if (event.target.value) {
-      this.operation[field] = dayjs(event.target.value, DATE_TIME_LONG_FORMAT);
-    } else {
-      this.operation[field] = null;
-    }
-  }
-
-  public updateZonedDateTimeField(field, event) {
-    if (event.target.value) {
-      this.operation[field] = dayjs(event.target.value, DATE_TIME_LONG_FORMAT);
-    } else {
-      this.operation[field] = null;
-    }
-  }
-
-  public retrieveOperation(operationId): void {
-    this.operationService()
-      .find(operationId)
-      .then(res => {
-        res.date = new Date(res.date);
-        this.operation = res;
-      })
-      .catch(error => {
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
-
-  public previousState(): void {
-    this.$router.go(-1);
-  }
-
-  public initRelationships(): void {
-    this.bankAccountService()
-      .retrieve()
-      .then(res => {
-        this.bankAccounts = res.data;
-      });
-    this.labelService()
-      .retrieve()
-      .then(res => {
-        this.labels = res.data;
-      });
-  }
-
-  public getSelected(selectedVals, option): any {
-    if (selectedVals) {
-      return selectedVals.find(value => option.id === value.id) ?? option;
-    }
-    return option;
-  }
-}
+});

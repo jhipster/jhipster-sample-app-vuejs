@@ -14,9 +14,9 @@ import io.github.jhipster.sample.domain.User;
 import io.github.jhipster.sample.domain.enumeration.BankAccountType;
 import io.github.jhipster.sample.repository.BankAccountRepository;
 import io.github.jhipster.sample.service.BankAccountService;
-import io.github.jhipster.sample.service.criteria.BankAccountCriteria;
 import io.github.jhipster.sample.service.dto.BankAccountDTO;
 import io.github.jhipster.sample.service.mapper.BankAccountMapper;
+import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
-import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +34,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -1103,7 +1101,6 @@ class BankAccountResourceIT {
         bankAccount.setUser(user);
         bankAccountRepository.saveAndFlush(bankAccount);
         Long userId = user.getId();
-
         // Get all the bankAccountList where user equals to userId
         defaultBankAccountShouldBeFound("userId.equals=" + userId);
 
@@ -1126,7 +1123,6 @@ class BankAccountResourceIT {
         bankAccount.addOperation(operation);
         bankAccountRepository.saveAndFlush(bankAccount);
         Long operationId = operation.getId();
-
         // Get all the bankAccountList where operation equals to operationId
         defaultBankAccountShouldBeFound("operationId.equals=" + operationId);
 
@@ -1200,7 +1196,7 @@ class BankAccountResourceIT {
         int databaseSizeBeforeUpdate = bankAccountRepository.findAll().size();
 
         // Update the bankAccount
-        BankAccount updatedBankAccount = bankAccountRepository.findById(bankAccount.getId()).get();
+        BankAccount updatedBankAccount = bankAccountRepository.findById(bankAccount.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedBankAccount are not directly saved in db
         em.detach(updatedBankAccount);
         updatedBankAccount
@@ -1326,11 +1322,15 @@ class BankAccountResourceIT {
         partialUpdatedBankAccount
             .name(UPDATED_NAME)
             .bankNumber(UPDATED_BANK_NUMBER)
+            .agencyNumber(UPDATED_AGENCY_NUMBER)
             .lastOperationDuration(UPDATED_LAST_OPERATION_DURATION)
+            .meanOperationDuration(UPDATED_MEAN_OPERATION_DURATION)
             .balance(UPDATED_BALANCE)
+            .openingDay(UPDATED_OPENING_DAY)
             .lastOperationDate(UPDATED_LAST_OPERATION_DATE)
-            .attachment(UPDATED_ATTACHMENT)
-            .attachmentContentType(UPDATED_ATTACHMENT_CONTENT_TYPE);
+            .active(UPDATED_ACTIVE)
+            .accountType(UPDATED_ACCOUNT_TYPE)
+            .description(UPDATED_DESCRIPTION);
 
         restBankAccountMockMvc
             .perform(
@@ -1346,17 +1346,17 @@ class BankAccountResourceIT {
         BankAccount testBankAccount = bankAccountList.get(bankAccountList.size() - 1);
         assertThat(testBankAccount.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testBankAccount.getBankNumber()).isEqualTo(UPDATED_BANK_NUMBER);
-        assertThat(testBankAccount.getAgencyNumber()).isEqualTo(DEFAULT_AGENCY_NUMBER);
+        assertThat(testBankAccount.getAgencyNumber()).isEqualTo(UPDATED_AGENCY_NUMBER);
         assertThat(testBankAccount.getLastOperationDuration()).isEqualTo(UPDATED_LAST_OPERATION_DURATION);
-        assertThat(testBankAccount.getMeanOperationDuration()).isEqualTo(DEFAULT_MEAN_OPERATION_DURATION);
+        assertThat(testBankAccount.getMeanOperationDuration()).isEqualTo(UPDATED_MEAN_OPERATION_DURATION);
         assertThat(testBankAccount.getBalance()).isEqualByComparingTo(UPDATED_BALANCE);
-        assertThat(testBankAccount.getOpeningDay()).isEqualTo(DEFAULT_OPENING_DAY);
+        assertThat(testBankAccount.getOpeningDay()).isEqualTo(UPDATED_OPENING_DAY);
         assertThat(testBankAccount.getLastOperationDate()).isEqualTo(UPDATED_LAST_OPERATION_DATE);
-        assertThat(testBankAccount.getActive()).isEqualTo(DEFAULT_ACTIVE);
-        assertThat(testBankAccount.getAccountType()).isEqualTo(DEFAULT_ACCOUNT_TYPE);
-        assertThat(testBankAccount.getAttachment()).isEqualTo(UPDATED_ATTACHMENT);
-        assertThat(testBankAccount.getAttachmentContentType()).isEqualTo(UPDATED_ATTACHMENT_CONTENT_TYPE);
-        assertThat(testBankAccount.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testBankAccount.getActive()).isEqualTo(UPDATED_ACTIVE);
+        assertThat(testBankAccount.getAccountType()).isEqualTo(UPDATED_ACCOUNT_TYPE);
+        assertThat(testBankAccount.getAttachment()).isEqualTo(DEFAULT_ATTACHMENT);
+        assertThat(testBankAccount.getAttachmentContentType()).isEqualTo(DEFAULT_ATTACHMENT_CONTENT_TYPE);
+        assertThat(testBankAccount.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
     @Test

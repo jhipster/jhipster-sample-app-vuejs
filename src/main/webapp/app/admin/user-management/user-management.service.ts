@@ -3,7 +3,7 @@ import buildPaginationQueryOpts from '@/shared/sort/sorts';
 import { IUser } from '@/shared/model/user.model';
 
 export default class UserManagementService {
-  public get(userId: number): Promise<any> {
+  public get(userId: string): Promise<any> {
     return axios.get(`api/admin/users/${userId}`);
   }
 

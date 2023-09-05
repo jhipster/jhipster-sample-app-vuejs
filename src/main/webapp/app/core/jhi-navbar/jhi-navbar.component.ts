@@ -1,80 +1,84 @@
-import { Component, Inject, Vue } from 'vue-property-decorator';
+import { computed, defineComponent, inject, ref, Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import LoginService from '@/account/login.service';
-import AccountService from '@/account/account.service';
-import TranslationService from '@/locale/translation.service';
-
+import type AccountService from '@/account/account.service';
+import languages from '@/shared/config/languages';
 import EntitiesMenu from '@/entities/entities-menu.vue';
 
-@Component({
+import { useStore } from '@/store';
+
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'JhiNavbar',
   components: {
     'entities-menu': EntitiesMenu,
   },
-})
-export default class JhiNavbar extends Vue {
-  @Inject('loginService')
-  private loginService: () => LoginService;
-  @Inject('translationService') private translationService: () => TranslationService;
+  setup() {
+    const loginService = inject<LoginService>('loginService');
+    const accountService = inject<AccountService>('accountService');
+    const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'en'), true);
+    const changeLanguage = inject<(string) => Promise<void>>('changeLanguage');
 
-  @Inject('accountService') private accountService: () => AccountService;
-  public version = 'v' + VERSION;
-  private currentLanguage = this.$store.getters.currentLanguage;
-  private languages: any = this.$store.getters.languages;
-  private hasAnyAuthorityValues = {};
+    const isActiveLanguage = (key: string) => {
+      return key === currentLanguage.value;
+    };
 
-  created() {
-    const currentLanguage = Object.keys(this.languages).includes(navigator.language) ? navigator.language : this.currentLanguage;
-    this.translationService().refreshTranslation(currentLanguage);
-  }
+    const router = useRouter();
+    const store = useStore();
 
-  public subIsActive(input) {
-    const paths = Array.isArray(input) ? input : [input];
-    return paths.some(path => {
-      return this.$route.path.indexOf(path) === 0; // current path starts with this path string
-    });
-  }
+    const version = 'v' + VERSION;
+    const hasAnyAuthorityValues: Ref<any> = ref({});
 
-  public changeLanguage(newLanguage: string): void {
-    this.translationService().refreshTranslation(newLanguage);
-  }
+    const openAPIEnabled = computed(() => store.activeProfiles.indexOf('api-docs') > -1);
+    const inProduction = computed(() => store.activeProfiles.indexOf('prod') > -1);
+    const authenticated = computed(() => store.authenticated);
 
-  public isActiveLanguage(key: string): boolean {
-    return key === this.$store.getters.currentLanguage;
-  }
+    const openLogin = () => {
+      loginService.openLogin();
+    };
 
-  public logout(): Promise<any> {
-    localStorage.removeItem('jhi-authenticationToken');
-    sessionStorage.removeItem('jhi-authenticationToken');
-    this.$store.commit('logout');
-    if (this.$route.path !== '/') {
-      return this.$router.push('/');
-    }
-    return Promise.resolve(this.$router.currentRoute);
-  }
+    const subIsActive = (input: string | string[]) => {
+      const paths = Array.isArray(input) ? input : [input];
+      return paths.some(path => {
+        return router.currentRoute.value.path.indexOf(path) === 0; // current path starts with this path string
+      });
+    };
 
-  public openLogin(): void {
-    this.loginService().openLogin((<any>this).$root);
-  }
+    const logout = async () => {
+      localStorage.removeItem('jhi-authenticationToken');
+      sessionStorage.removeItem('jhi-authenticationToken');
+      store.logout();
+      if (router.currentRoute.value.path !== '/') {
+        router.push('/');
+      }
+    };
 
-  public get authenticated(): boolean {
-    return this.$store.getters.authenticated;
-  }
-
-  public hasAnyAuthority(authorities: any): boolean {
-    this.accountService()
-      .hasAnyAuthorityAndCheckAuth(authorities)
-      .then(value => {
+    return {
+      logout,
+      subIsActive,
+      accountService,
+      openLogin,
+      changeLanguage,
+      languages: languages(),
+      isActiveLanguage,
+      version,
+      currentLanguage,
+      hasAnyAuthorityValues,
+      openAPIEnabled,
+      inProduction,
+      authenticated,
+      t$: useI18n().t,
+    };
+  },
+  methods: {
+    hasAnyAuthority(authorities: any): boolean {
+      this.accountService.hasAnyAuthorityAndCheckAuth(authorities).then(value => {
         if (this.hasAnyAuthorityValues[authorities] !== value) {
           this.hasAnyAuthorityValues = { ...this.hasAnyAuthorityValues, [authorities]: value };
         }
       });
-    return this.hasAnyAuthorityValues[authorities] ?? false;
-  }
-
-  public get openAPIEnabled(): boolean {
-    return this.$store.getters.activeProfiles.indexOf('api-docs') > -1;
-  }
-
-  public get inProduction(): boolean {
-    return this.$store.getters.activeProfiles.indexOf('prod') > -1;
-  }
-}
+      return this.hasAnyAuthorityValues[authorities] ?? false;
+    },
+  },
+});

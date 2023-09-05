@@ -1,36 +1,46 @@
-import { Component, Vue, Inject } from 'vue-property-decorator';
+import { defineComponent, inject, ref, Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
 
-import { IOperation } from '@/shared/model/test-root/operation.model';
 import OperationService from './operation.service';
-import AlertService from '@/shared/alert/alert.service';
+import { useDateFormat } from '@/shared/composables';
+import { IOperation } from '@/shared/model/test-root/operation.model';
+import { useAlertService } from '@/shared/alert/alert.service';
 
-@Component
-export default class OperationDetails extends Vue {
-  @Inject('operationService') private operationService: () => OperationService;
-  @Inject('alertService') private alertService: () => AlertService;
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'OperationDetails',
+  setup() {
+    const dateFormat = useDateFormat();
+    const operationService = inject('operationService', () => new OperationService());
+    const alertService = inject('alertService', () => useAlertService(), true);
 
-  public operation: IOperation = {};
+    const route = useRoute();
+    const router = useRouter();
 
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (to.params.operationId) {
-        vm.retrieveOperation(to.params.operationId);
+    const previousState = () => router.go(-1);
+    const operation: Ref<IOperation> = ref({});
+
+    const retrieveOperation = async operationId => {
+      try {
+        const res = await operationService().find(operationId);
+        operation.value = res;
+      } catch (error) {
+        alertService.showHttpError(error.response);
       }
-    });
-  }
+    };
 
-  public retrieveOperation(operationId) {
-    this.operationService()
-      .find(operationId)
-      .then(res => {
-        this.operation = res;
-      })
-      .catch(error => {
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
+    if (route.params?.operationId) {
+      retrieveOperation(route.params.operationId);
+    }
 
-  public previousState() {
-    this.$router.go(-1);
-  }
-}
+    return {
+      ...dateFormat,
+      alertService,
+      operation,
+
+      previousState,
+      t$: useI18n().t,
+    };
+  },
+});

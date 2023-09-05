@@ -5,55 +5,46 @@
         <h2
           id="jhipsterSampleApplicationVueApp.testRootLabel.home.createOrEditLabel"
           data-cy="LabelCreateUpdateHeading"
-          v-text="$t('jhipsterSampleApplicationVueApp.testRootLabel.home.createOrEditLabel')"
-        >
-          Create or edit a Label
-        </h2>
+          v-text="t$('jhipsterSampleApplicationVueApp.testRootLabel.home.createOrEditLabel')"
+        ></h2>
         <div>
           <div class="form-group" v-if="label.id">
-            <label for="id" v-text="$t('global.field.id')">ID</label>
+            <label for="id" v-text="t$('global.field.id')"></label>
             <input type="text" class="form-control" id="id" name="id" v-model="label.id" readonly />
           </div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('jhipsterSampleApplicationVueApp.testRootLabel.labelName')" for="label-labelName"
-              >Label Name</label
-            >
+            <label
+              class="form-control-label"
+              v-text="t$('jhipsterSampleApplicationVueApp.testRootLabel.labelName')"
+              for="label-labelName"
+            ></label>
             <input
               type="text"
               class="form-control"
               name="labelName"
               id="label-labelName"
               data-cy="labelName"
-              :class="{ valid: !$v.label.labelName.$invalid, invalid: $v.label.labelName.$invalid }"
-              v-model="$v.label.labelName.$model"
+              :class="{ valid: !v$.labelName.$invalid, invalid: v$.labelName.$invalid }"
+              v-model="v$.labelName.$model"
               required
             />
-            <div v-if="$v.label.labelName.$anyDirty && $v.label.labelName.$invalid">
-              <small class="form-text text-danger" v-if="!$v.label.labelName.required" v-text="$t('entity.validation.required')">
-                This field is required.
-              </small>
-              <small
-                class="form-text text-danger"
-                v-if="!$v.label.labelName.minLength"
-                v-text="$t('entity.validation.minlength', { min: 3 })"
-              >
-                This field is required to be at least 3 characters.
-              </small>
+            <div v-if="v$.labelName.$anyDirty && v$.labelName.$invalid">
+              <small class="form-text text-danger" v-for="error of v$.labelName.$errors" :key="error.$uid">{{ error.$message }}</small>
             </div>
           </div>
         </div>
         <div>
           <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" v-on:click="previousState()">
-            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.cancel')"></span>
           </button>
           <button
             type="submit"
             id="save-entity"
             data-cy="entityCreateSaveButton"
-            :disabled="$v.label.$invalid || isSaving"
+            :disabled="v$.$invalid || isSaving"
             class="btn btn-primary"
           >
-            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.save')"></span>
           </button>
         </div>
       </form>

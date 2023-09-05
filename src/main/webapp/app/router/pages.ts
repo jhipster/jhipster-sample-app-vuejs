@@ -1,4 +1,3 @@
-import { Authority } from '@/shared/security/authority';
 /* tslint:disable */
 // prettier-ignore
 

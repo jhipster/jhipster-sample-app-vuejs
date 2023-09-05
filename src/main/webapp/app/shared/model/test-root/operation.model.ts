@@ -17,6 +17,6 @@ export class Operation implements IOperation {
     public description?: string | null,
     public amount?: number,
     public bankAccount?: IBankAccountMySuffix | null,
-    public labels?: ILabel[] | null
+    public labels?: ILabel[] | null,
   ) {}
 }

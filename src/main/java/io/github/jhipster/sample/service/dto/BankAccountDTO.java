@@ -1,13 +1,13 @@
 package io.github.jhipster.sample.service.dto;
 
 import io.github.jhipster.sample.domain.enumeration.BankAccountType;
+import jakarta.persistence.Lob;
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
-import javax.persistence.Lob;
-import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link io.github.jhipster.sample.domain.BankAccount} entity.

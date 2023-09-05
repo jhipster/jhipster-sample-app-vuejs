@@ -1,30 +1,40 @@
-import Vue from 'vue';
-import { Component, Inject } from 'vue-property-decorator';
+import { defineComponent, inject, ref, Ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
+
 import UserManagementService from './user-management.service';
-import AlertService from '@/shared/alert/alert.service';
+import { useDateFormat } from '@/shared/composables';
+import { useAlertService } from '@/shared/alert/alert.service';
 
-@Component
-export default class JhiUserManagementView extends Vue {
-  @Inject('userManagementService') private userManagementService: () => UserManagementService;
-  @Inject('alertService') private alertService: () => AlertService;
+export default defineComponent({
+  compatConfig: { MODE: 3 },
+  name: 'JhiUserManagementView',
+  setup() {
+    const route = useRoute();
+    const { formatDateLong: formatDate } = useDateFormat();
 
-  public user: any = null;
+    const alertService = inject('alertService', () => useAlertService(), true);
+    const userManagementService = inject('userManagementService', () => new UserManagementService(), true);
 
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      if (to.params.userId) {
-        vm.init(to.params.userId);
+    const user: Ref<any> = ref(null);
+
+    async function loadUser(userId: string) {
+      try {
+        const response = await userManagementService.get(userId);
+        user.value = response.data;
+      } catch (error) {
+        alertService.showHttpError(error.response);
       }
-    });
-  }
-  public init(userId: number): void {
-    this.userManagementService()
-      .get(userId)
-      .then(res => {
-        this.user = res.data;
-      })
-      .catch(error => {
-        this.alertService().showHttpError(this, error.response);
-      });
-  }
-}
+    }
+
+    loadUser(route.params?.userId);
+
+    return {
+      formatDate,
+      alertService,
+      userManagementService,
+      user,
+      t$: useI18n().t,
+    };
+  },
+});

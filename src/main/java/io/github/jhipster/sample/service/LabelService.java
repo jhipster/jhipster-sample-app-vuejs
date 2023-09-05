@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link Label}.
+ * Service Implementation for managing {@link io.github.jhipster.sample.domain.Label}.
  */
 @Service
 @Transactional

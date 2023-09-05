@@ -78,12 +78,15 @@ export const classInvalid = 'invalid';
 export const classValid = 'valid';
 Cypress.Commands.add('authenticatedRequest', data => {
   const bearerToken = sessionStorage.getItem(Cypress.env('jwtStorageName'));
-  return cy.request({
-    ...data,
-    auth: {
-      bearer: bearerToken,
-    },
-  });
+  if (bearerToken) {
+    return cy.request({
+      ...data,
+      auth: {
+        bearer: bearerToken,
+      },
+    });
+  }
+  return cy.request(data);
 });
 
 Cypress.Commands.add('login', (username: string, password: string) => {
@@ -107,7 +110,7 @@ Cypress.Commands.add('login', (username: string, password: string) => {
       validate() {
         cy.authenticatedRequest({ url: '/api/account' }).its('status').should('eq', 200);
       },
-    }
+    },
   );
 });
 

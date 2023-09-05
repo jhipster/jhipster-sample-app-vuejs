@@ -1,6 +1,5 @@
 package io.github.jhipster.sample;
 
-import io.github.jhipster.sample.JhipsterSampleApplicationVueApp;
 import io.github.jhipster.sample.config.AsyncSyncConfiguration;
 import io.github.jhipster.sample.config.EmbeddedSQL;
 import java.lang.annotation.ElementType;

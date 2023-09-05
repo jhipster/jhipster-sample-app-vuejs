@@ -1,21 +1,21 @@
 <template>
   <div class="table-responsive">
-    <h2 id="logs-page-heading" v-text="$t('logs.title')" data-cy="logsPageHeading">Logs</h2>
+    <h2 id="logs-page-heading" v-text="t$('logs.title')" data-cy="logsPageHeading"></h2>
 
     <div v-if="loggers">
-      <p v-text="$t('logs.nbloggers', { total: loggers.length })">There are {{ loggers.length }} loggers.</p>
+      <p v-text="t$('logs.nbloggers', { total: loggers.length })"></p>
 
-      <span v-text="$t('logs.filter')">Filter</span> <input type="text" v-model="filtered" class="form-control" />
+      <span v-text="t$('logs.filter')"></span> <input type="text" v-model="filtered" class="form-control" />
 
       <table class="table table-sm table-striped table-bordered" aria-describedby="Logs">
         <thead>
           <tr title="click to order">
-            <th v-on:click="changeOrder('name')" scope="col"><span v-text="$t('logs.table.name')">Name</span></th>
-            <th v-on:click="changeOrder('level')" scope="col"><span v-text="$t('logs.table.level')">Level</span></th>
+            <th v-on:click="changeOrder('name')" scope="col"><span v-text="t$('logs.table.name')"></span></th>
+            <th v-on:click="changeOrder('level')" scope="col"><span v-text="t$('logs.table.level')"></span></th>
           </tr>
         </thead>
 
-        <tr v-for="logger in orderBy(filterBy(loggers, filtered), orderProp, reverse === true ? 1 : -1)" :key="logger.name">
+        <tr v-for="logger in filteredLoggers" :key="logger.name">
           <td>
             <small>{{ logger.name }}</small>
           </td>

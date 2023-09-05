@@ -5,19 +5,19 @@
         <h2
           id="jhipsterSampleApplicationVueApp.testRootOperation.home.createOrEditLabel"
           data-cy="OperationCreateUpdateHeading"
-          v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.home.createOrEditLabel')"
-        >
-          Create or edit a Operation
-        </h2>
+          v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.home.createOrEditLabel')"
+        ></h2>
         <div>
           <div class="form-group" v-if="operation.id">
-            <label for="id" v-text="$t('global.field.id')">ID</label>
+            <label for="id" v-text="t$('global.field.id')"></label>
             <input type="text" class="form-control" id="id" name="id" v-model="operation.id" readonly />
           </div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.date')" for="operation-date"
-              >Date</label
-            >
+            <label
+              class="form-control-label"
+              v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.date')"
+              for="operation-date"
+            ></label>
             <div class="d-flex">
               <input
                 id="operation-date"
@@ -25,72 +25,58 @@
                 type="datetime-local"
                 class="form-control"
                 name="date"
-                :class="{ valid: !$v.operation.date.$invalid, invalid: $v.operation.date.$invalid }"
+                :class="{ valid: !v$.date.$invalid, invalid: v$.date.$invalid }"
                 required
-                :value="convertDateTimeFromServer($v.operation.date.$model)"
+                :value="convertDateTimeFromServer(v$.date.$model)"
                 @change="updateInstantField('date', $event)"
               />
             </div>
-            <div v-if="$v.operation.date.$anyDirty && $v.operation.date.$invalid">
-              <small class="form-text text-danger" v-if="!$v.operation.date.required" v-text="$t('entity.validation.required')">
-                This field is required.
-              </small>
-              <small
-                class="form-text text-danger"
-                v-if="!$v.operation.date.ZonedDateTimelocal"
-                v-text="$t('entity.validation.ZonedDateTimelocal')"
-              >
-                This field should be a date and time.
-              </small>
+            <div v-if="v$.date.$anyDirty && v$.date.$invalid">
+              <small class="form-text text-danger" v-for="error of v$.date.$errors" :key="error.$uid">{{ error.$message }}</small>
             </div>
           </div>
           <div class="form-group">
             <label
               class="form-control-label"
-              v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.description')"
+              v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.description')"
               for="operation-description"
-              >Description</label
-            >
+            ></label>
             <input
               type="text"
               class="form-control"
               name="description"
               id="operation-description"
               data-cy="description"
-              :class="{ valid: !$v.operation.description.$invalid, invalid: $v.operation.description.$invalid }"
-              v-model="$v.operation.description.$model"
+              :class="{ valid: !v$.description.$invalid, invalid: v$.description.$invalid }"
+              v-model="v$.description.$model"
             />
           </div>
           <div class="form-group">
-            <label class="form-control-label" v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.amount')" for="operation-amount"
-              >Amount</label
-            >
+            <label
+              class="form-control-label"
+              v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.amount')"
+              for="operation-amount"
+            ></label>
             <input
               type="number"
               class="form-control"
               name="amount"
               id="operation-amount"
               data-cy="amount"
-              :class="{ valid: !$v.operation.amount.$invalid, invalid: $v.operation.amount.$invalid }"
-              v-model.number="$v.operation.amount.$model"
+              :class="{ valid: !v$.amount.$invalid, invalid: v$.amount.$invalid }"
+              v-model.number="v$.amount.$model"
               required
             />
-            <div v-if="$v.operation.amount.$anyDirty && $v.operation.amount.$invalid">
-              <small class="form-text text-danger" v-if="!$v.operation.amount.required" v-text="$t('entity.validation.required')">
-                This field is required.
-              </small>
-              <small class="form-text text-danger" v-if="!$v.operation.amount.numeric" v-text="$t('entity.validation.number')">
-                This field should be a number.
-              </small>
+            <div v-if="v$.amount.$anyDirty && v$.amount.$invalid">
+              <small class="form-text text-danger" v-for="error of v$.amount.$errors" :key="error.$uid">{{ error.$message }}</small>
             </div>
           </div>
           <div class="form-group">
             <label
               class="form-control-label"
-              v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.bankAccount')"
+              v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.bankAccount')"
               for="operation-bankAccount"
-              >Bank Account</label
-            >
+            ></label>
             <select
               class="form-control"
               id="operation-bankAccount"
@@ -111,7 +97,7 @@
             </select>
           </div>
           <div class="form-group">
-            <label v-text="$t('jhipsterSampleApplicationVueApp.testRootOperation.label')" for="operation-label">Label</label>
+            <label v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.label')" for="operation-label"></label>
             <select
               class="form-control"
               id="operation-labels"
@@ -129,16 +115,16 @@
         </div>
         <div>
           <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" v-on:click="previousState()">
-            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.cancel')">Cancel</span>
+            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.cancel')"></span>
           </button>
           <button
             type="submit"
             id="save-entity"
             data-cy="entityCreateSaveButton"
-            :disabled="$v.operation.$invalid || isSaving"
+            :disabled="v$.$invalid || isSaving"
             class="btn btn-primary"
           >
-            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="$t('entity.action.save')">Save</span>
+            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.save')"></span>
           </button>
         </div>
       </form>

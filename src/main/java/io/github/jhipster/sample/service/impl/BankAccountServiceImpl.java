@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service Implementation for managing {@link BankAccount}.
+ * Service Implementation for managing {@link io.github.jhipster.sample.domain.BankAccount}.
  */
 @Service
 @Transactional

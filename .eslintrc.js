@@ -8,7 +8,7 @@ module.exports = {
   extends: ['plugin:vue/essential', '@vue/eslint-config-typescript/recommended', '@vue/eslint-config-prettier'],
   parserOptions: {
     ecmaVersion: 2020,
-    project: ['./tsconfig.json', './tsconfig.spec.json', './src/test/javascript/cypress/tsconfig.json'],
+    project: ['./tsconfig.json', './tsconfig.test.json', './src/test/javascript/cypress/tsconfig.json'],
   },
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',

@@ -46,8 +46,8 @@ module.exports = (env, options) => {
       },
       {
         reload: true,
-      }
-    )
+      },
+    ),
   );
   return devConfig;
 };
