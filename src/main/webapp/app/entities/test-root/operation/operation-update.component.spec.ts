@@ -1,8 +1,8 @@
 /* tslint:disable max-line-length */
 import { vitest } from 'vitest';
-import { shallowMount, MountingOptions } from '@vue/test-utils';
-import sinon, { SinonStubbedInstance } from 'sinon';
-import { RouteLocation } from 'vue-router';
+import { shallowMount, type MountingOptions } from '@vue/test-utils';
+import sinon, { type SinonStubbedInstance } from 'sinon';
+import { type RouteLocation } from 'vue-router';
 
 import dayjs from 'dayjs';
 import OperationUpdate from './operation-update.vue';
@@ -36,6 +36,7 @@ describe('Component Tests', () => {
     beforeEach(() => {
       route = {};
       operationServiceStub = sinon.createStubInstance<OperationService>(OperationService);
+      operationServiceStub.retrieve.onFirstCall().resolves(Promise.resolve([]));
 
       alertService = new AlertService({
         i18n: { t: vitest.fn() } as any,

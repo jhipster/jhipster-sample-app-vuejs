@@ -1,4 +1,4 @@
-import { ComputedRef, defineComponent, inject, ref, Ref } from 'vue';
+import { type ComputedRef, defineComponent, inject, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useVuelidate } from '@vuelidate/core';
 import { maxLength, minLength, required, sameAs } from '@vuelidate/validators';

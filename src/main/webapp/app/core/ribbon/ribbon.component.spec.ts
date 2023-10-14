@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import Ribbon from './ribbon.vue';
 
-import { AccountStore, useStore } from '@/store';
+import { type AccountStore, useStore } from '@/store';
 
 type RibbonComponentType = InstanceType<typeof Ribbon>;
 

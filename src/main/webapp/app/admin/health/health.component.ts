@@ -1,4 +1,4 @@
-import { defineComponent, inject, ref, Ref } from 'vue';
+import { defineComponent, inject, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import HealthService from './health.service';

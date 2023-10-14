@@ -1,9 +1,9 @@
-import { defineComponent, inject, ref, Ref } from 'vue';
+import { defineComponent, inject, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
 import LabelService from './label.service';
-import { ILabel } from '@/shared/model/test-root/label.model';
+import { type ILabel } from '@/shared/model/test-root/label.model';
 import { useAlertService } from '@/shared/alert/alert.service';
 
 export default defineComponent({

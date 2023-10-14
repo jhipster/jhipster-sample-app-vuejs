@@ -2,7 +2,7 @@ import { vitest } from 'vitest';
 import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
-import { RouteLocation, Router } from 'vue-router';
+import { type RouteLocation, type Router } from 'vue-router';
 
 import UserManagementView from './user-management-view.vue';
 import AlertService from '@/shared/alert/alert.service';

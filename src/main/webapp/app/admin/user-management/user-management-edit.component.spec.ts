@@ -1,8 +1,8 @@
 import { vitest } from 'vitest';
-import { shallowMount, MountingOptions } from '@vue/test-utils';
+import { shallowMount, type MountingOptions } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
-import { RouteLocation } from 'vue-router';
+import { type RouteLocation } from 'vue-router';
 
 import UserManagementEdit from './user-management-edit.vue';
 import AlertService from '@/shared/alert/alert.service';

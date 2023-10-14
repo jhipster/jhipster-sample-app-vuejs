@@ -1,8 +1,8 @@
-import { defineComponent, inject, onMounted, ref, Ref } from 'vue';
+import { defineComponent, inject, onMounted, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import BankAccountMySuffixService from './bank-account-my-suffix.service';
-import { IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
+import { type IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
 import useDataUtils from '@/shared/data/data-utils.service';
 import { useDateFormat } from '@/shared/composables';
 import { useAlertService } from '@/shared/alert/alert.service';

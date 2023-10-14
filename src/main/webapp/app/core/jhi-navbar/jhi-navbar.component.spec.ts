@@ -1,7 +1,7 @@
 import { vitest } from 'vitest';
 import { computed } from 'vue';
 import { shallowMount } from '@vue/test-utils';
-import { Router } from 'vue-router';
+import { type Router } from 'vue-router';
 import { createTestingPinia } from '@pinia/testing';
 import JhiNavbar from './jhi-navbar.vue';
 

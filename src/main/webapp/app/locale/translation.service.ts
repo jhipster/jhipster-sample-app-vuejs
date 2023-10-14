@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Composer } from 'vue-i18n';
+import { type Composer } from 'vue-i18n';
 import dayjs from 'dayjs';
 import languages from '@/shared/config/languages';
 
@@ -13,8 +13,8 @@ export default class TranslationService {
 
   public async refreshTranslation(newLanguage: string) {
     if (this.i18n && !this.i18n.messages[newLanguage]) {
-      const res = await axios.get(`i18n/${newLanguage}.json?_=${I18N_HASH}`);
-      this.i18n.setLocaleMessage(newLanguage, res.data);
+      const translations = (await import(`../../i18n/${newLanguage}/${newLanguage}.js`)).default;
+      this.i18n.setLocaleMessage(newLanguage, translations);
     }
   }
 

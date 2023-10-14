@@ -11,6 +11,12 @@
     <link rel="icon" href="favicon.ico" />
     <link rel="manifest" href="manifest.webapp" />
     <link rel="stylesheet" href="content/css/loading.css" />
+    <!-- Workaround https://github.com/axios/axios/issues/5622 -->
+    <script>
+      const global = globalThis;
+    </script>
+    <!-- Load vue main -->
+    <script type="module" src="./app/main.ts"></script>
     <!-- jhipster-needle-add-resources-to-root - JHipster will add new resources here -->
   </head>
   <body>

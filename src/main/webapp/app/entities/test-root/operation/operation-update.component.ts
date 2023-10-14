@@ -1,4 +1,4 @@
-import { computed, defineComponent, inject, ref, Ref } from 'vue';
+import { computed, defineComponent, inject, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useVuelidate } from '@vuelidate/core';
@@ -8,10 +8,10 @@ import { useValidation, useDateFormat } from '@/shared/composables';
 import { useAlertService } from '@/shared/alert/alert.service';
 
 import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
-import { IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
+import { type IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
 import LabelService from '@/entities/test-root/label/label.service';
-import { ILabel } from '@/shared/model/test-root/label.model';
-import { IOperation, Operation } from '@/shared/model/test-root/operation.model';
+import { type ILabel } from '@/shared/model/test-root/label.model';
+import { type IOperation, Operation } from '@/shared/model/test-root/operation.model';
 
 export default defineComponent({
   compatConfig: { MODE: 3 },
@@ -21,9 +21,13 @@ export default defineComponent({
     const alertService = inject('alertService', () => useAlertService(), true);
 
     const operation: Ref<IOperation> = ref(new Operation());
+
     const bankAccountService = inject('bankAccountService', () => new BankAccountMySuffixService());
+
     const bankAccounts: Ref<IBankAccountMySuffix[]> = ref([]);
+
     const labelService = inject('labelService', () => new LabelService());
+
     const labels: Ref<ILabel[]> = ref([]);
     const isSaving = ref(false);
     const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'en'), true);

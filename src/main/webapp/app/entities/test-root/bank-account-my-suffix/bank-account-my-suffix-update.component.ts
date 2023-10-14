@@ -1,4 +1,4 @@
-import { computed, defineComponent, inject, ref, Ref } from 'vue';
+import { computed, defineComponent, inject, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useVuelidate } from '@vuelidate/core';
@@ -9,7 +9,7 @@ import { useValidation, useDateFormat } from '@/shared/composables';
 import { useAlertService } from '@/shared/alert/alert.service';
 
 import UserService from '@/entities/user/user.service';
-import { IBankAccountMySuffix, BankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
+import { type IBankAccountMySuffix, BankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
 import { BankAccountType } from '@/shared/model/enumerations/bank-account-type.model';
 
 export default defineComponent({

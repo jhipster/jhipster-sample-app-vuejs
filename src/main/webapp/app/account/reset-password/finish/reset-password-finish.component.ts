@@ -1,9 +1,9 @@
-import { defineComponent, inject, ref, Ref } from 'vue';
+import { defineComponent, inject, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import axios from 'axios';
 import { useVuelidate } from '@vuelidate/core';
 import { maxLength, minLength, required, sameAs } from '@vuelidate/validators';
-import LoginService from '@/account/login.service';
+import type LoginService from '@/account/login.service';
 
 export default defineComponent({
   compatConfig: { MODE: 3 },

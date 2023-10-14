@@ -1,7 +1,7 @@
 import { vitest } from 'vitest';
-import { Ref, ref } from 'vue';
+import { type Ref, ref } from 'vue';
 import { shallowMount } from '@vue/test-utils';
-import { RouteLocation } from 'vue-router';
+import { type RouteLocation } from 'vue-router';
 
 import Error from './error.vue';
 

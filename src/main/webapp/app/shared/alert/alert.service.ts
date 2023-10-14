@@ -1,6 +1,6 @@
 import type { BvToast } from 'bootstrap-vue';
 import { getCurrentInstance } from 'vue';
-import { Composer, useI18n } from 'vue-i18n';
+import { type Composer, useI18n } from 'vue-i18n';
 
 export const useAlertService = () => {
   const bvToast = getCurrentInstance().root.proxy['_bv__toast'];

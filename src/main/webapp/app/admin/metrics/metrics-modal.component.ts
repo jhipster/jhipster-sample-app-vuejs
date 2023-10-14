@@ -1,4 +1,4 @@
-import { defineComponent, ref, Ref, computed, PropType } from 'vue';
+import { defineComponent, ref, type Ref, computed, type PropType } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { filterBy } from '@/shared/computables';

@@ -1,7 +1,7 @@
-import { IUser } from '@/shared/model/user.model';
-import { IOperation } from '@/shared/model/test-root/operation.model';
+import { type IUser } from '@/shared/model/user.model';
+import { type IOperation } from '@/shared/model/test-root/operation.model';
 
-import { BankAccountType } from '@/shared/model/enumerations/bank-account-type.model';
+import { type BankAccountType } from '@/shared/model/enumerations/bank-account-type.model';
 export interface IBankAccountMySuffix {
   id?: number;
   name?: string;

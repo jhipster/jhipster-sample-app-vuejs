@@ -1,9 +1,9 @@
-import { defineComponent, inject, onMounted, ref, Ref, watch, watchEffect } from 'vue';
+import { defineComponent, inject, onMounted, ref, type Ref, watch, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useIntersectionObserver } from '@vueuse/core';
 
 import OperationService from './operation.service';
-import { IOperation } from '@/shared/model/test-root/operation.model';
+import { type IOperation } from '@/shared/model/test-root/operation.model';
 import useDataUtils from '@/shared/data/data-utils.service';
 import { useDateFormat } from '@/shared/composables';
 import { useAlertService } from '@/shared/alert/alert.service';

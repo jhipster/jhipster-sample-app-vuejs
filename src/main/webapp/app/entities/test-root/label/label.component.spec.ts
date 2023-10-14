@@ -1,7 +1,7 @@
 /* tslint:disable max-line-length */
 import { vitest } from 'vitest';
-import { shallowMount, MountingOptions } from '@vue/test-utils';
-import sinon, { SinonStubbedInstance } from 'sinon';
+import { shallowMount, type MountingOptions } from '@vue/test-utils';
+import sinon, { type SinonStubbedInstance } from 'sinon';
 
 import Label from './label.vue';
 import LabelService from './label.service';

@@ -1,8 +1,8 @@
-import { defineComponent, inject, onMounted, ref, Ref } from 'vue';
+import { defineComponent, inject, onMounted, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import ActivateService from './activate.service';
-import LoginService from '@/account/login.service';
+import type LoginService from '@/account/login.service';
 
 export default defineComponent({
   compatConfig: { MODE: 3 },

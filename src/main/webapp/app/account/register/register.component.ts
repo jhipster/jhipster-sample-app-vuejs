@@ -1,8 +1,8 @@
-import { computed, defineComponent, inject, ref, Ref } from 'vue';
+import { computed, defineComponent, inject, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useVuelidate } from '@vuelidate/core';
 import { email, helpers, maxLength, minLength, required, sameAs } from '@vuelidate/validators';
-import LoginService from '@/account/login.service';
+import type LoginService from '@/account/login.service';
 import RegisterService from '@/account/register/register.service';
 import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from '@/constants';
 

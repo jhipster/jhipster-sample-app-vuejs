@@ -1,5 +1,5 @@
-import { IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
-import { ILabel } from '@/shared/model/test-root/label.model';
+import { type IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
+import { type ILabel } from '@/shared/model/test-root/label.model';
 
 export interface IOperation {
   id?: number;

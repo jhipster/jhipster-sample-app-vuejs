@@ -1,7 +1,7 @@
 /* tslint:disable max-line-length */
 import { vitest } from 'vitest';
-import { shallowMount, MountingOptions } from '@vue/test-utils';
-import sinon, { SinonStubbedInstance } from 'sinon';
+import { shallowMount, type MountingOptions } from '@vue/test-utils';
+import sinon, { type SinonStubbedInstance } from 'sinon';
 
 import BankAccountMySuffix from './bank-account-my-suffix.vue';
 import BankAccountMySuffixService from './bank-account-my-suffix.service';

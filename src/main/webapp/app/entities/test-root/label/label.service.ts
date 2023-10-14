@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import buildPaginationQueryOpts from '@/shared/sort/sorts';
 
-import { ILabel } from '@/shared/model/test-root/label.model';
+import { type ILabel } from '@/shared/model/test-root/label.model';
 
 const baseApiUrl = 'api/labels';
 

@@ -1,8 +1,8 @@
 /* tslint:disable max-line-length */
 import { vitest } from 'vitest';
-import { shallowMount, MountingOptions } from '@vue/test-utils';
-import sinon, { SinonStubbedInstance } from 'sinon';
-import { RouteLocation } from 'vue-router';
+import { shallowMount, type MountingOptions } from '@vue/test-utils';
+import sinon, { type SinonStubbedInstance } from 'sinon';
+import { type RouteLocation } from 'vue-router';
 
 import LabelUpdate from './label-update.vue';
 import LabelService from './label.service';
@@ -31,6 +31,7 @@ describe('Component Tests', () => {
     beforeEach(() => {
       route = {};
       labelServiceStub = sinon.createStubInstance<LabelService>(LabelService);
+      labelServiceStub.retrieve.onFirstCall().resolves(Promise.resolve([]));
 
       alertService = new AlertService({
         i18n: { t: vitest.fn() } as any,

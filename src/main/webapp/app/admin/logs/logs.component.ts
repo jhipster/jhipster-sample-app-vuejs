@@ -1,4 +1,4 @@
-import { computed, defineComponent, inject, ref, Ref } from 'vue';
+import { computed, defineComponent, inject, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import LogsService from './logs.service';

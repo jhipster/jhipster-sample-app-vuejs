@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
+import { type IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
 
 const baseApiUrl = 'api/bank-accounts';
 

@@ -1,4 +1,4 @@
-import { computed, defineComponent, inject, ref, Ref } from 'vue';
+import { computed, defineComponent, inject, ref, type Ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useVuelidate } from '@vuelidate/core';
@@ -7,7 +7,7 @@ import LabelService from './label.service';
 import { useValidation } from '@/shared/composables';
 import { useAlertService } from '@/shared/alert/alert.service';
 
-import { ILabel, Label } from '@/shared/model/test-root/label.model';
+import { type ILabel, Label } from '@/shared/model/test-root/label.model';
 
 export default defineComponent({
   compatConfig: { MODE: 3 },

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import buildPaginationQueryOpts from '@/shared/sort/sorts';
 
-import { IOperation } from '@/shared/model/test-root/operation.model';
+import { type IOperation } from '@/shared/model/test-root/operation.model';
 
 const baseApiUrl = 'api/operations';
 

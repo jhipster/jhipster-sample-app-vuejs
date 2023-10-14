@@ -1,8 +1,8 @@
-import { defineComponent, inject, onMounted, ref, Ref, watch } from 'vue';
+import { defineComponent, inject, onMounted, ref, type Ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import LabelService from './label.service';
-import { ILabel } from '@/shared/model/test-root/label.model';
+import { type ILabel } from '@/shared/model/test-root/label.model';
 import { useAlertService } from '@/shared/alert/alert.service';
 
 export default defineComponent({
