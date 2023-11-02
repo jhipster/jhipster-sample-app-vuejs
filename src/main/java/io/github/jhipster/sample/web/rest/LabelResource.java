@@ -28,7 +28,7 @@ import tech.jhipster.web.util.ResponseUtil;
  * REST controller for managing {@link io.github.jhipster.sample.domain.Label}.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/labels")
 public class LabelResource {
 
     private final Logger log = LoggerFactory.getLogger(LabelResource.class);
@@ -54,7 +54,7 @@ public class LabelResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new label, or with status {@code 400 (Bad Request)} if the label has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/labels")
+    @PostMapping("")
     public ResponseEntity<Label> createLabel(@Valid @RequestBody Label label) throws URISyntaxException {
         log.debug("REST request to save Label : {}", label);
         if (label.getId() != null) {
@@ -77,7 +77,7 @@ public class LabelResource {
      * or with status {@code 500 (Internal Server Error)} if the label couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/labels/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Label> updateLabel(@PathVariable(value = "id", required = false) final Long id, @Valid @RequestBody Label label)
         throws URISyntaxException {
         log.debug("REST request to update Label : {}, {}", id, label);
@@ -110,7 +110,7 @@ public class LabelResource {
      * or with status {@code 500 (Internal Server Error)} if the label couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/labels/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<Label> partialUpdateLabel(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody Label label
@@ -141,7 +141,7 @@ public class LabelResource {
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of labels in body.
      */
-    @GetMapping("/labels")
+    @GetMapping("")
     public ResponseEntity<List<Label>> getAllLabels(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Labels");
         Page<Label> page = labelService.findAll(pageable);
@@ -155,7 +155,7 @@ public class LabelResource {
      * @param id the id of the label to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the label, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/labels/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Label> getLabel(@PathVariable Long id) {
         log.debug("REST request to get Label : {}", id);
         Optional<Label> label = labelService.findOne(id);
@@ -168,7 +168,7 @@ public class LabelResource {
      * @param id the id of the label to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/labels/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLabel(@PathVariable Long id) {
         log.debug("REST request to delete Label : {}", id);
         labelService.delete(id);
