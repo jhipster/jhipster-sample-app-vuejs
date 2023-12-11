@@ -156,7 +156,7 @@ public class LabelResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the label, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Label> getLabel(@PathVariable Long id) {
+    public ResponseEntity<Label> getLabel(@PathVariable("id") Long id) {
         log.debug("REST request to get Label : {}", id);
         Optional<Label> label = labelService.findOne(id);
         return ResponseUtil.wrapOrNotFound(label);
@@ -169,7 +169,7 @@ public class LabelResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLabel(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteLabel(@PathVariable("id") Long id) {
         log.debug("REST request to delete Label : {}", id);
         labelService.delete(id);
         return ResponseEntity

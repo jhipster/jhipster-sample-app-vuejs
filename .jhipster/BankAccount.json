@@ -1,5 +1,8 @@
 {
   "angularJSSuffix": "mySuffix",
+  "annotations": {
+    "changelogDate": "20150805124838"
+  },
   "changelogDate": "20150805124838",
   "clientRootFolder": "test-root",
   "dto": "mapstruct",
