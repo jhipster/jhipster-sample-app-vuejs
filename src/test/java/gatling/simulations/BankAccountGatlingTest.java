@@ -107,7 +107,8 @@ public class BankAccountGatlingTest extends Simulation {
     ScenarioBuilder users = scenario("Test the BankAccount entity").exec(scn);
 
     {
-        setUp(users.injectOpen(rampUsers(Integer.getInteger("users", 100)).during(Duration.ofMinutes(Integer.getInteger("ramp", 1)))))
-            .protocols(httpConf);
+        setUp(
+            users.injectOpen(rampUsers(Integer.getInteger("users", 100)).during(Duration.ofMinutes(Integer.getInteger("ramp", 1))))
+        ).protocols(httpConf);
     }
 }

@@ -10,8 +10,6 @@ import jakarta.persistence.criteria.JoinType;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +19,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link BankAccount} entities in the database.
  * The main input is a {@link BankAccountCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link List} of {@link BankAccountDTO} or a {@link Page} of {@link BankAccountDTO} which fulfills the criteria.
+ * It returns a {@link List} of {@link BankAccountDTO} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -48,19 +46,6 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
         log.debug("find by criteria : {}", criteria);
         final Specification<BankAccount> specification = createSpecification(criteria);
         return bankAccountMapper.toDto(bankAccountRepository.findAll(specification));
-    }
-
-    /**
-     * Return a {@link Page} of {@link BankAccountDTO} which matches the criteria from the database.
-     * @param criteria The object which holds all the filters, which the entities should match.
-     * @param page The page, which should be returned.
-     * @return the matching entities.
-     */
-    @Transactional(readOnly = true)
-    public Page<BankAccountDTO> findByCriteria(BankAccountCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria, page);
-        final Specification<BankAccount> specification = createSpecification(criteria);
-        return bankAccountRepository.findAll(specification, page).map(bankAccountMapper::toDto);
     }
 
     /**
@@ -100,12 +85,14 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
                 specification = specification.and(buildRangeSpecification(criteria.getAgencyNumber(), BankAccount_.agencyNumber));
             }
             if (criteria.getLastOperationDuration() != null) {
-                specification =
-                    specification.and(buildRangeSpecification(criteria.getLastOperationDuration(), BankAccount_.lastOperationDuration));
+                specification = specification.and(
+                    buildRangeSpecification(criteria.getLastOperationDuration(), BankAccount_.lastOperationDuration)
+                );
             }
             if (criteria.getMeanOperationDuration() != null) {
-                specification =
-                    specification.and(buildRangeSpecification(criteria.getMeanOperationDuration(), BankAccount_.meanOperationDuration));
+                specification = specification.and(
+                    buildRangeSpecification(criteria.getMeanOperationDuration(), BankAccount_.meanOperationDuration)
+                );
             }
             if (criteria.getBalance() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getBalance(), BankAccount_.balance));
@@ -123,19 +110,17 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
                 specification = specification.and(buildSpecification(criteria.getAccountType(), BankAccount_.accountType));
             }
             if (criteria.getUserId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(criteria.getUserId(), root -> root.join(BankAccount_.user, JoinType.LEFT).get(User_.id))
-                    );
+                specification = specification.and(
+                    buildSpecification(criteria.getUserId(), root -> root.join(BankAccount_.user, JoinType.LEFT).get(User_.id))
+                );
             }
             if (criteria.getOperationId() != null) {
-                specification =
-                    specification.and(
-                        buildSpecification(
-                            criteria.getOperationId(),
-                            root -> root.join(BankAccount_.operations, JoinType.LEFT).get(Operation_.id)
-                        )
-                    );
+                specification = specification.and(
+                    buildSpecification(
+                        criteria.getOperationId(),
+                        root -> root.join(BankAccount_.operations, JoinType.LEFT).get(Operation_.id)
+                    )
+                );
             }
         }
         return specification;

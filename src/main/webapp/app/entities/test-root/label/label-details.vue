@@ -12,6 +12,15 @@
           <dd>
             <span>{{ label.labelName }}</span>
           </dd>
+          <dt>
+            <span v-text="t$('jhipsterSampleApplicationVueApp.testRootLabel.operation')"></span>
+          </dt>
+          <dd>
+            <span v-for="(operation, i) in label.operations" :key="operation.id"
+              >{{ i > 0 ? ', ' : '' }}
+              <router-link :to="{ name: 'OperationView', params: { operationId: operation.id } }">{{ operation.id }}</router-link>
+            </span>
+          </dd>
         </dl>
         <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
           <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.back')"></span>

@@ -7,6 +7,8 @@ import LabelService from './label.service';
 import { useValidation } from '@/shared/composables';
 import { useAlertService } from '@/shared/alert/alert.service';
 
+import OperationService from '@/entities/test-root/operation/operation.service';
+import { type IOperation } from '@/shared/model/test-root/operation.model';
 import { type ILabel, Label } from '@/shared/model/test-root/label.model';
 
 export default defineComponent({
@@ -17,6 +19,10 @@ export default defineComponent({
     const alertService = inject('alertService', () => useAlertService(), true);
 
     const label: Ref<ILabel> = ref(new Label());
+
+    const operationService = inject('operationService', () => new OperationService());
+
+    const operations: Ref<IOperation[]> = ref([]);
     const isSaving = ref(false);
     const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'en'), true);
 
@@ -38,7 +44,13 @@ export default defineComponent({
       retrieveLabel(route.params.labelId);
     }
 
-    const initRelationships = () => {};
+    const initRelationships = () => {
+      operationService()
+        .retrieve()
+        .then(res => {
+          operations.value = res.data;
+        });
+    };
 
     initRelationships();
 
@@ -61,11 +73,14 @@ export default defineComponent({
       previousState,
       isSaving,
       currentLanguage,
+      operations,
       v$,
       t$,
     };
   },
-  created(): void {},
+  created(): void {
+    this.label.operations = [];
+  },
   methods: {
     save(): void {
       this.isSaving = true;
@@ -94,6 +109,13 @@ export default defineComponent({
             this.alertService.showHttpError(error.response);
           });
       }
+    },
+
+    getSelected(selectedVals, option, pkField = 'id'): any {
+      if (selectedVals) {
+        return selectedVals.find(value => option[pkField] === value[pkField]) ?? option;
+      }
+      return option;
     },
   },
 });

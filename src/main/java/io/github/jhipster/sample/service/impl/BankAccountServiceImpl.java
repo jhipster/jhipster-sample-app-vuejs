@@ -5,10 +5,7 @@ import io.github.jhipster.sample.repository.BankAccountRepository;
 import io.github.jhipster.sample.service.BankAccountService;
 import io.github.jhipster.sample.service.dto.BankAccountDTO;
 import io.github.jhipster.sample.service.mapper.BankAccountMapper;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -63,13 +60,6 @@ public class BankAccountServiceImpl implements BankAccountService {
             })
             .map(bankAccountRepository::save)
             .map(bankAccountMapper::toDto);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<BankAccountDTO> findAll() {
-        log.debug("Request to get all BankAccounts");
-        return bankAccountRepository.findAll().stream().map(bankAccountMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
     }
 
     public Page<BankAccountDTO> findAllWithEagerRelationships(Pageable pageable) {

@@ -8,6 +8,8 @@ import LabelUpdate from './label-update.vue';
 import LabelService from './label.service';
 import AlertService from '@/shared/alert/alert.service';
 
+import OperationService from '@/entities/test-root/operation/operation.service';
+
 type LabelUpdateComponentType = InstanceType<typeof LabelUpdate>;
 
 let route: Partial<RouteLocation>;
@@ -51,6 +53,10 @@ describe('Component Tests', () => {
         provide: {
           alertService,
           labelService: () => labelServiceStub,
+          operationService: () =>
+            sinon.createStubInstance<OperationService>(OperationService, {
+              retrieve: sinon.stub().resolves({}),
+            } as any),
         },
       };
     });

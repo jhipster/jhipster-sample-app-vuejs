@@ -32,6 +32,26 @@
               <small class="form-text text-danger" v-for="error of v$.labelName.$errors" :key="error.$uid">{{ error.$message }}</small>
             </div>
           </div>
+          <div class="form-group">
+            <label v-text="t$('jhipsterSampleApplicationVueApp.testRootLabel.operation')" for="label-operation"></label>
+            <select
+              class="form-control"
+              id="label-operations"
+              data-cy="operation"
+              multiple
+              name="operation"
+              v-if="label.operations !== undefined"
+              v-model="label.operations"
+            >
+              <option
+                v-bind:value="getSelected(label.operations, operationOption, 'id')"
+                v-for="operationOption in operations"
+                :key="operationOption.id"
+              >
+                {{ operationOption.id }}
+              </option>
+            </select>
+          </div>
         </div>
         <div>
           <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" v-on:click="previousState()">

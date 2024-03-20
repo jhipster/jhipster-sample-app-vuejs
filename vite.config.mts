@@ -3,38 +3,32 @@ import { existsSync } from 'node:fs';
 
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import copy from 'rollup-plugin-copy';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 const getFileFromRepo = (file: string) =>
   existsSync(fileURLToPath(new URL(`../node_modules/${file}`, import.meta.url)))
     ? fileURLToPath(new URL(`../node_modules/${file}`, import.meta.url))
     : fileURLToPath(new URL(`./node_modules/${file}`, import.meta.url));
 
+const { getAbsoluteFSPath } = await import('swagger-ui-dist');
+const swaggerUiPath = getAbsoluteFSPath();
+
 // eslint-disable-next-line prefer-const
 let config = defineConfig({
   plugins: [
-    vue({
-      template: {
-        compilerOptions: {
-          compatConfig: {
-            MODE: 2,
-          },
-        },
-      },
-    }),
-    copy({
+    vue(),
+    viteStaticCopy({
       targets: [
         {
           src: [
-            `${require('swagger-ui-dist').getAbsoluteFSPath()}/*.{js,css,html,png}`,
-            `!${require('swagger-ui-dist').getAbsoluteFSPath()}/**/index.html`,
+            `${swaggerUiPath}/*.{js,css,html,png}`,
+            `!${swaggerUiPath}/**/index.html`,
             getFileFromRepo('axios/dist/axios.min.js'),
             fileURLToPath(new URL('./src/main/webapp/swagger-ui/index.html', import.meta.url)),
           ],
-          dest: 'target/classes/static/swagger-ui',
+          dest: 'swagger-ui',
         },
       ],
-      hook: 'writeBundle',
     }),
   ],
   root: fileURLToPath(new URL('./src/main/webapp/', import.meta.url)),
@@ -61,6 +55,8 @@ let config = defineConfig({
     APP_VERSION: `"${process.env.APP_VERSION ? process.env.APP_VERSION : 'DEV'}"`,
   },
   server: {
+    host: true,
+    port: 9000,
     proxy: Object.fromEntries(
       ['/api', '/management', '/v3/api-docs', '/h2-console'].map(res => [
         res,

@@ -1,5 +1,7 @@
 package io.github.jhipster.sample.web.rest;
 
+import static io.github.jhipster.sample.domain.BankAccountAsserts.*;
+import static io.github.jhipster.sample.web.rest.TestUtil.createUpdateProxyForBean;
 import static io.github.jhipster.sample.web.rest.TestUtil.sameNumber;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -7,9 +9,9 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.jhipster.sample.IntegrationTest;
 import io.github.jhipster.sample.domain.BankAccount;
-import io.github.jhipster.sample.domain.Operation;
 import io.github.jhipster.sample.domain.User;
 import io.github.jhipster.sample.domain.enumeration.BankAccountType;
 import io.github.jhipster.sample.repository.BankAccountRepository;
@@ -24,7 +26,6 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.BeforeEach;
@@ -99,6 +100,9 @@ class BankAccountResourceIT {
 
     private static Random random = new Random();
     private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
+    @Autowired
+    private ObjectMapper om;
 
     @Autowired
     private BankAccountRepository bankAccountRepository;
@@ -176,32 +180,23 @@ class BankAccountResourceIT {
     @Test
     @Transactional
     void createBankAccount() throws Exception {
-        int databaseSizeBeforeCreate = bankAccountRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the BankAccount
         BankAccountDTO bankAccountDTO = bankAccountMapper.toDto(bankAccount);
-        restBankAccountMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(bankAccountDTO))
-            )
-            .andExpect(status().isCreated());
+        var returnedBankAccountDTO = om.readValue(
+            restBankAccountMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bankAccountDTO)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            BankAccountDTO.class
+        );
 
         // Validate the BankAccount in the database
-        List<BankAccount> bankAccountList = bankAccountRepository.findAll();
-        assertThat(bankAccountList).hasSize(databaseSizeBeforeCreate + 1);
-        BankAccount testBankAccount = bankAccountList.get(bankAccountList.size() - 1);
-        assertThat(testBankAccount.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testBankAccount.getBankNumber()).isEqualTo(DEFAULT_BANK_NUMBER);
-        assertThat(testBankAccount.getAgencyNumber()).isEqualTo(DEFAULT_AGENCY_NUMBER);
-        assertThat(testBankAccount.getLastOperationDuration()).isEqualTo(DEFAULT_LAST_OPERATION_DURATION);
-        assertThat(testBankAccount.getMeanOperationDuration()).isEqualTo(DEFAULT_MEAN_OPERATION_DURATION);
-        assertThat(testBankAccount.getBalance()).isEqualByComparingTo(DEFAULT_BALANCE);
-        assertThat(testBankAccount.getOpeningDay()).isEqualTo(DEFAULT_OPENING_DAY);
-        assertThat(testBankAccount.getLastOperationDate()).isEqualTo(DEFAULT_LAST_OPERATION_DATE);
-        assertThat(testBankAccount.getActive()).isEqualTo(DEFAULT_ACTIVE);
-        assertThat(testBankAccount.getAccountType()).isEqualTo(DEFAULT_ACCOUNT_TYPE);
-        assertThat(testBankAccount.getAttachment()).isEqualTo(DEFAULT_ATTACHMENT);
-        assertThat(testBankAccount.getAttachmentContentType()).isEqualTo(DEFAULT_ATTACHMENT_CONTENT_TYPE);
-        assertThat(testBankAccount.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedBankAccount = bankAccountMapper.toEntity(returnedBankAccountDTO);
+        assertBankAccountUpdatableFieldsEquals(returnedBankAccount, getPersistedBankAccount(returnedBankAccount));
     }
 
     @Test
@@ -211,24 +206,21 @@ class BankAccountResourceIT {
         bankAccount.setId(1L);
         BankAccountDTO bankAccountDTO = bankAccountMapper.toDto(bankAccount);
 
-        int databaseSizeBeforeCreate = bankAccountRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restBankAccountMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(bankAccountDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bankAccountDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the BankAccount in the database
-        List<BankAccount> bankAccountList = bankAccountRepository.findAll();
-        assertThat(bankAccountList).hasSize(databaseSizeBeforeCreate);
+        assertSameRepositoryCount(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     void checkNameIsRequired() throws Exception {
-        int databaseSizeBeforeTest = bankAccountRepository.findAll().size();
+        long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         bankAccount.setName(null);
 
@@ -236,19 +228,16 @@ class BankAccountResourceIT {
         BankAccountDTO bankAccountDTO = bankAccountMapper.toDto(bankAccount);
 
         restBankAccountMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(bankAccountDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bankAccountDTO)))
             .andExpect(status().isBadRequest());
 
-        List<BankAccount> bankAccountList = bankAccountRepository.findAll();
-        assertThat(bankAccountList).hasSize(databaseSizeBeforeTest);
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     void checkBalanceIsRequired() throws Exception {
-        int databaseSizeBeforeTest = bankAccountRepository.findAll().size();
+        long databaseSizeBeforeTest = getRepositoryCount();
         // set the field null
         bankAccount.setBalance(null);
 
@@ -256,13 +245,10 @@ class BankAccountResourceIT {
         BankAccountDTO bankAccountDTO = bankAccountMapper.toDto(bankAccount);
 
         restBankAccountMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(bankAccountDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bankAccountDTO)))
             .andExpect(status().isBadRequest());
 
-        List<BankAccount> bankAccountList = bankAccountRepository.findAll();
-        assertThat(bankAccountList).hasSize(databaseSizeBeforeTest);
+        assertSameRepositoryCount(databaseSizeBeforeTest);
     }
 
     @Test
@@ -344,14 +330,11 @@ class BankAccountResourceIT {
 
         Long id = bankAccount.getId();
 
-        defaultBankAccountShouldBeFound("id.equals=" + id);
-        defaultBankAccountShouldNotBeFound("id.notEquals=" + id);
+        defaultBankAccountFiltering("id.equals=" + id, "id.notEquals=" + id);
 
-        defaultBankAccountShouldBeFound("id.greaterThanOrEqual=" + id);
-        defaultBankAccountShouldNotBeFound("id.greaterThan=" + id);
+        defaultBankAccountFiltering("id.greaterThanOrEqual=" + id, "id.greaterThan=" + id);
 
-        defaultBankAccountShouldBeFound("id.lessThanOrEqual=" + id);
-        defaultBankAccountShouldNotBeFound("id.lessThan=" + id);
+        defaultBankAccountFiltering("id.lessThanOrEqual=" + id, "id.lessThan=" + id);
     }
 
     @Test
@@ -360,11 +343,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where name equals to DEFAULT_NAME
-        defaultBankAccountShouldBeFound("name.equals=" + DEFAULT_NAME);
-
-        // Get all the bankAccountList where name equals to UPDATED_NAME
-        defaultBankAccountShouldNotBeFound("name.equals=" + UPDATED_NAME);
+        // Get all the bankAccountList where name equals to
+        defaultBankAccountFiltering("name.equals=" + DEFAULT_NAME, "name.equals=" + UPDATED_NAME);
     }
 
     @Test
@@ -373,11 +353,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where name in DEFAULT_NAME or UPDATED_NAME
-        defaultBankAccountShouldBeFound("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME);
-
-        // Get all the bankAccountList where name equals to UPDATED_NAME
-        defaultBankAccountShouldNotBeFound("name.in=" + UPDATED_NAME);
+        // Get all the bankAccountList where name in
+        defaultBankAccountFiltering("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME, "name.in=" + UPDATED_NAME);
     }
 
     @Test
@@ -387,10 +364,7 @@ class BankAccountResourceIT {
         bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where name is not null
-        defaultBankAccountShouldBeFound("name.specified=true");
-
-        // Get all the bankAccountList where name is null
-        defaultBankAccountShouldNotBeFound("name.specified=false");
+        defaultBankAccountFiltering("name.specified=true", "name.specified=false");
     }
 
     @Test
@@ -399,11 +373,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where name contains DEFAULT_NAME
-        defaultBankAccountShouldBeFound("name.contains=" + DEFAULT_NAME);
-
-        // Get all the bankAccountList where name contains UPDATED_NAME
-        defaultBankAccountShouldNotBeFound("name.contains=" + UPDATED_NAME);
+        // Get all the bankAccountList where name contains
+        defaultBankAccountFiltering("name.contains=" + DEFAULT_NAME, "name.contains=" + UPDATED_NAME);
     }
 
     @Test
@@ -412,11 +383,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where name does not contain DEFAULT_NAME
-        defaultBankAccountShouldNotBeFound("name.doesNotContain=" + DEFAULT_NAME);
-
-        // Get all the bankAccountList where name does not contain UPDATED_NAME
-        defaultBankAccountShouldBeFound("name.doesNotContain=" + UPDATED_NAME);
+        // Get all the bankAccountList where name does not contain
+        defaultBankAccountFiltering("name.doesNotContain=" + UPDATED_NAME, "name.doesNotContain=" + DEFAULT_NAME);
     }
 
     @Test
@@ -425,11 +393,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where bankNumber equals to DEFAULT_BANK_NUMBER
-        defaultBankAccountShouldBeFound("bankNumber.equals=" + DEFAULT_BANK_NUMBER);
-
-        // Get all the bankAccountList where bankNumber equals to UPDATED_BANK_NUMBER
-        defaultBankAccountShouldNotBeFound("bankNumber.equals=" + UPDATED_BANK_NUMBER);
+        // Get all the bankAccountList where bankNumber equals to
+        defaultBankAccountFiltering("bankNumber.equals=" + DEFAULT_BANK_NUMBER, "bankNumber.equals=" + UPDATED_BANK_NUMBER);
     }
 
     @Test
@@ -438,11 +403,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where bankNumber in DEFAULT_BANK_NUMBER or UPDATED_BANK_NUMBER
-        defaultBankAccountShouldBeFound("bankNumber.in=" + DEFAULT_BANK_NUMBER + "," + UPDATED_BANK_NUMBER);
-
-        // Get all the bankAccountList where bankNumber equals to UPDATED_BANK_NUMBER
-        defaultBankAccountShouldNotBeFound("bankNumber.in=" + UPDATED_BANK_NUMBER);
+        // Get all the bankAccountList where bankNumber in
+        defaultBankAccountFiltering(
+            "bankNumber.in=" + DEFAULT_BANK_NUMBER + "," + UPDATED_BANK_NUMBER,
+            "bankNumber.in=" + UPDATED_BANK_NUMBER
+        );
     }
 
     @Test
@@ -452,10 +417,7 @@ class BankAccountResourceIT {
         bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where bankNumber is not null
-        defaultBankAccountShouldBeFound("bankNumber.specified=true");
-
-        // Get all the bankAccountList where bankNumber is null
-        defaultBankAccountShouldNotBeFound("bankNumber.specified=false");
+        defaultBankAccountFiltering("bankNumber.specified=true", "bankNumber.specified=false");
     }
 
     @Test
@@ -464,11 +426,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where bankNumber is greater than or equal to DEFAULT_BANK_NUMBER
-        defaultBankAccountShouldBeFound("bankNumber.greaterThanOrEqual=" + DEFAULT_BANK_NUMBER);
-
-        // Get all the bankAccountList where bankNumber is greater than or equal to UPDATED_BANK_NUMBER
-        defaultBankAccountShouldNotBeFound("bankNumber.greaterThanOrEqual=" + UPDATED_BANK_NUMBER);
+        // Get all the bankAccountList where bankNumber is greater than or equal to
+        defaultBankAccountFiltering(
+            "bankNumber.greaterThanOrEqual=" + DEFAULT_BANK_NUMBER,
+            "bankNumber.greaterThanOrEqual=" + UPDATED_BANK_NUMBER
+        );
     }
 
     @Test
@@ -477,11 +439,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where bankNumber is less than or equal to DEFAULT_BANK_NUMBER
-        defaultBankAccountShouldBeFound("bankNumber.lessThanOrEqual=" + DEFAULT_BANK_NUMBER);
-
-        // Get all the bankAccountList where bankNumber is less than or equal to SMALLER_BANK_NUMBER
-        defaultBankAccountShouldNotBeFound("bankNumber.lessThanOrEqual=" + SMALLER_BANK_NUMBER);
+        // Get all the bankAccountList where bankNumber is less than or equal to
+        defaultBankAccountFiltering(
+            "bankNumber.lessThanOrEqual=" + DEFAULT_BANK_NUMBER,
+            "bankNumber.lessThanOrEqual=" + SMALLER_BANK_NUMBER
+        );
     }
 
     @Test
@@ -490,11 +452,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where bankNumber is less than DEFAULT_BANK_NUMBER
-        defaultBankAccountShouldNotBeFound("bankNumber.lessThan=" + DEFAULT_BANK_NUMBER);
-
-        // Get all the bankAccountList where bankNumber is less than UPDATED_BANK_NUMBER
-        defaultBankAccountShouldBeFound("bankNumber.lessThan=" + UPDATED_BANK_NUMBER);
+        // Get all the bankAccountList where bankNumber is less than
+        defaultBankAccountFiltering("bankNumber.lessThan=" + UPDATED_BANK_NUMBER, "bankNumber.lessThan=" + DEFAULT_BANK_NUMBER);
     }
 
     @Test
@@ -503,11 +462,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where bankNumber is greater than DEFAULT_BANK_NUMBER
-        defaultBankAccountShouldNotBeFound("bankNumber.greaterThan=" + DEFAULT_BANK_NUMBER);
-
-        // Get all the bankAccountList where bankNumber is greater than SMALLER_BANK_NUMBER
-        defaultBankAccountShouldBeFound("bankNumber.greaterThan=" + SMALLER_BANK_NUMBER);
+        // Get all the bankAccountList where bankNumber is greater than
+        defaultBankAccountFiltering("bankNumber.greaterThan=" + SMALLER_BANK_NUMBER, "bankNumber.greaterThan=" + DEFAULT_BANK_NUMBER);
     }
 
     @Test
@@ -516,11 +472,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where agencyNumber equals to DEFAULT_AGENCY_NUMBER
-        defaultBankAccountShouldBeFound("agencyNumber.equals=" + DEFAULT_AGENCY_NUMBER);
-
-        // Get all the bankAccountList where agencyNumber equals to UPDATED_AGENCY_NUMBER
-        defaultBankAccountShouldNotBeFound("agencyNumber.equals=" + UPDATED_AGENCY_NUMBER);
+        // Get all the bankAccountList where agencyNumber equals to
+        defaultBankAccountFiltering("agencyNumber.equals=" + DEFAULT_AGENCY_NUMBER, "agencyNumber.equals=" + UPDATED_AGENCY_NUMBER);
     }
 
     @Test
@@ -529,11 +482,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where agencyNumber in DEFAULT_AGENCY_NUMBER or UPDATED_AGENCY_NUMBER
-        defaultBankAccountShouldBeFound("agencyNumber.in=" + DEFAULT_AGENCY_NUMBER + "," + UPDATED_AGENCY_NUMBER);
-
-        // Get all the bankAccountList where agencyNumber equals to UPDATED_AGENCY_NUMBER
-        defaultBankAccountShouldNotBeFound("agencyNumber.in=" + UPDATED_AGENCY_NUMBER);
+        // Get all the bankAccountList where agencyNumber in
+        defaultBankAccountFiltering(
+            "agencyNumber.in=" + DEFAULT_AGENCY_NUMBER + "," + UPDATED_AGENCY_NUMBER,
+            "agencyNumber.in=" + UPDATED_AGENCY_NUMBER
+        );
     }
 
     @Test
@@ -543,10 +496,7 @@ class BankAccountResourceIT {
         bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where agencyNumber is not null
-        defaultBankAccountShouldBeFound("agencyNumber.specified=true");
-
-        // Get all the bankAccountList where agencyNumber is null
-        defaultBankAccountShouldNotBeFound("agencyNumber.specified=false");
+        defaultBankAccountFiltering("agencyNumber.specified=true", "agencyNumber.specified=false");
     }
 
     @Test
@@ -555,11 +505,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where agencyNumber is greater than or equal to DEFAULT_AGENCY_NUMBER
-        defaultBankAccountShouldBeFound("agencyNumber.greaterThanOrEqual=" + DEFAULT_AGENCY_NUMBER);
-
-        // Get all the bankAccountList where agencyNumber is greater than or equal to UPDATED_AGENCY_NUMBER
-        defaultBankAccountShouldNotBeFound("agencyNumber.greaterThanOrEqual=" + UPDATED_AGENCY_NUMBER);
+        // Get all the bankAccountList where agencyNumber is greater than or equal to
+        defaultBankAccountFiltering(
+            "agencyNumber.greaterThanOrEqual=" + DEFAULT_AGENCY_NUMBER,
+            "agencyNumber.greaterThanOrEqual=" + UPDATED_AGENCY_NUMBER
+        );
     }
 
     @Test
@@ -568,11 +518,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where agencyNumber is less than or equal to DEFAULT_AGENCY_NUMBER
-        defaultBankAccountShouldBeFound("agencyNumber.lessThanOrEqual=" + DEFAULT_AGENCY_NUMBER);
-
-        // Get all the bankAccountList where agencyNumber is less than or equal to SMALLER_AGENCY_NUMBER
-        defaultBankAccountShouldNotBeFound("agencyNumber.lessThanOrEqual=" + SMALLER_AGENCY_NUMBER);
+        // Get all the bankAccountList where agencyNumber is less than or equal to
+        defaultBankAccountFiltering(
+            "agencyNumber.lessThanOrEqual=" + DEFAULT_AGENCY_NUMBER,
+            "agencyNumber.lessThanOrEqual=" + SMALLER_AGENCY_NUMBER
+        );
     }
 
     @Test
@@ -581,11 +531,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where agencyNumber is less than DEFAULT_AGENCY_NUMBER
-        defaultBankAccountShouldNotBeFound("agencyNumber.lessThan=" + DEFAULT_AGENCY_NUMBER);
-
-        // Get all the bankAccountList where agencyNumber is less than UPDATED_AGENCY_NUMBER
-        defaultBankAccountShouldBeFound("agencyNumber.lessThan=" + UPDATED_AGENCY_NUMBER);
+        // Get all the bankAccountList where agencyNumber is less than
+        defaultBankAccountFiltering("agencyNumber.lessThan=" + UPDATED_AGENCY_NUMBER, "agencyNumber.lessThan=" + DEFAULT_AGENCY_NUMBER);
     }
 
     @Test
@@ -594,11 +541,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where agencyNumber is greater than DEFAULT_AGENCY_NUMBER
-        defaultBankAccountShouldNotBeFound("agencyNumber.greaterThan=" + DEFAULT_AGENCY_NUMBER);
-
-        // Get all the bankAccountList where agencyNumber is greater than SMALLER_AGENCY_NUMBER
-        defaultBankAccountShouldBeFound("agencyNumber.greaterThan=" + SMALLER_AGENCY_NUMBER);
+        // Get all the bankAccountList where agencyNumber is greater than
+        defaultBankAccountFiltering(
+            "agencyNumber.greaterThan=" + SMALLER_AGENCY_NUMBER,
+            "agencyNumber.greaterThan=" + DEFAULT_AGENCY_NUMBER
+        );
     }
 
     @Test
@@ -607,11 +554,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where lastOperationDuration equals to DEFAULT_LAST_OPERATION_DURATION
-        defaultBankAccountShouldBeFound("lastOperationDuration.equals=" + DEFAULT_LAST_OPERATION_DURATION);
-
-        // Get all the bankAccountList where lastOperationDuration equals to UPDATED_LAST_OPERATION_DURATION
-        defaultBankAccountShouldNotBeFound("lastOperationDuration.equals=" + UPDATED_LAST_OPERATION_DURATION);
+        // Get all the bankAccountList where lastOperationDuration equals to
+        defaultBankAccountFiltering(
+            "lastOperationDuration.equals=" + DEFAULT_LAST_OPERATION_DURATION,
+            "lastOperationDuration.equals=" + UPDATED_LAST_OPERATION_DURATION
+        );
     }
 
     @Test
@@ -620,13 +567,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where lastOperationDuration in DEFAULT_LAST_OPERATION_DURATION or UPDATED_LAST_OPERATION_DURATION
-        defaultBankAccountShouldBeFound(
-            "lastOperationDuration.in=" + DEFAULT_LAST_OPERATION_DURATION + "," + UPDATED_LAST_OPERATION_DURATION
+        // Get all the bankAccountList where lastOperationDuration in
+        defaultBankAccountFiltering(
+            "lastOperationDuration.in=" + DEFAULT_LAST_OPERATION_DURATION + "," + UPDATED_LAST_OPERATION_DURATION,
+            "lastOperationDuration.in=" + UPDATED_LAST_OPERATION_DURATION
         );
-
-        // Get all the bankAccountList where lastOperationDuration equals to UPDATED_LAST_OPERATION_DURATION
-        defaultBankAccountShouldNotBeFound("lastOperationDuration.in=" + UPDATED_LAST_OPERATION_DURATION);
     }
 
     @Test
@@ -636,10 +581,7 @@ class BankAccountResourceIT {
         bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where lastOperationDuration is not null
-        defaultBankAccountShouldBeFound("lastOperationDuration.specified=true");
-
-        // Get all the bankAccountList where lastOperationDuration is null
-        defaultBankAccountShouldNotBeFound("lastOperationDuration.specified=false");
+        defaultBankAccountFiltering("lastOperationDuration.specified=true", "lastOperationDuration.specified=false");
     }
 
     @Test
@@ -648,11 +590,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where lastOperationDuration is greater than or equal to DEFAULT_LAST_OPERATION_DURATION
-        defaultBankAccountShouldBeFound("lastOperationDuration.greaterThanOrEqual=" + DEFAULT_LAST_OPERATION_DURATION);
-
-        // Get all the bankAccountList where lastOperationDuration is greater than or equal to UPDATED_LAST_OPERATION_DURATION
-        defaultBankAccountShouldNotBeFound("lastOperationDuration.greaterThanOrEqual=" + UPDATED_LAST_OPERATION_DURATION);
+        // Get all the bankAccountList where lastOperationDuration is greater than or equal to
+        defaultBankAccountFiltering(
+            "lastOperationDuration.greaterThanOrEqual=" + DEFAULT_LAST_OPERATION_DURATION,
+            "lastOperationDuration.greaterThanOrEqual=" + UPDATED_LAST_OPERATION_DURATION
+        );
     }
 
     @Test
@@ -661,11 +603,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where lastOperationDuration is less than or equal to DEFAULT_LAST_OPERATION_DURATION
-        defaultBankAccountShouldBeFound("lastOperationDuration.lessThanOrEqual=" + DEFAULT_LAST_OPERATION_DURATION);
-
-        // Get all the bankAccountList where lastOperationDuration is less than or equal to SMALLER_LAST_OPERATION_DURATION
-        defaultBankAccountShouldNotBeFound("lastOperationDuration.lessThanOrEqual=" + SMALLER_LAST_OPERATION_DURATION);
+        // Get all the bankAccountList where lastOperationDuration is less than or equal to
+        defaultBankAccountFiltering(
+            "lastOperationDuration.lessThanOrEqual=" + DEFAULT_LAST_OPERATION_DURATION,
+            "lastOperationDuration.lessThanOrEqual=" + SMALLER_LAST_OPERATION_DURATION
+        );
     }
 
     @Test
@@ -674,11 +616,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where lastOperationDuration is less than DEFAULT_LAST_OPERATION_DURATION
-        defaultBankAccountShouldNotBeFound("lastOperationDuration.lessThan=" + DEFAULT_LAST_OPERATION_DURATION);
-
-        // Get all the bankAccountList where lastOperationDuration is less than UPDATED_LAST_OPERATION_DURATION
-        defaultBankAccountShouldBeFound("lastOperationDuration.lessThan=" + UPDATED_LAST_OPERATION_DURATION);
+        // Get all the bankAccountList where lastOperationDuration is less than
+        defaultBankAccountFiltering(
+            "lastOperationDuration.lessThan=" + UPDATED_LAST_OPERATION_DURATION,
+            "lastOperationDuration.lessThan=" + DEFAULT_LAST_OPERATION_DURATION
+        );
     }
 
     @Test
@@ -687,11 +629,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where lastOperationDuration is greater than DEFAULT_LAST_OPERATION_DURATION
-        defaultBankAccountShouldNotBeFound("lastOperationDuration.greaterThan=" + DEFAULT_LAST_OPERATION_DURATION);
-
-        // Get all the bankAccountList where lastOperationDuration is greater than SMALLER_LAST_OPERATION_DURATION
-        defaultBankAccountShouldBeFound("lastOperationDuration.greaterThan=" + SMALLER_LAST_OPERATION_DURATION);
+        // Get all the bankAccountList where lastOperationDuration is greater than
+        defaultBankAccountFiltering(
+            "lastOperationDuration.greaterThan=" + SMALLER_LAST_OPERATION_DURATION,
+            "lastOperationDuration.greaterThan=" + DEFAULT_LAST_OPERATION_DURATION
+        );
     }
 
     @Test
@@ -700,11 +642,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where meanOperationDuration equals to DEFAULT_MEAN_OPERATION_DURATION
-        defaultBankAccountShouldBeFound("meanOperationDuration.equals=" + DEFAULT_MEAN_OPERATION_DURATION);
-
-        // Get all the bankAccountList where meanOperationDuration equals to UPDATED_MEAN_OPERATION_DURATION
-        defaultBankAccountShouldNotBeFound("meanOperationDuration.equals=" + UPDATED_MEAN_OPERATION_DURATION);
+        // Get all the bankAccountList where meanOperationDuration equals to
+        defaultBankAccountFiltering(
+            "meanOperationDuration.equals=" + DEFAULT_MEAN_OPERATION_DURATION,
+            "meanOperationDuration.equals=" + UPDATED_MEAN_OPERATION_DURATION
+        );
     }
 
     @Test
@@ -713,13 +655,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where meanOperationDuration in DEFAULT_MEAN_OPERATION_DURATION or UPDATED_MEAN_OPERATION_DURATION
-        defaultBankAccountShouldBeFound(
-            "meanOperationDuration.in=" + DEFAULT_MEAN_OPERATION_DURATION + "," + UPDATED_MEAN_OPERATION_DURATION
+        // Get all the bankAccountList where meanOperationDuration in
+        defaultBankAccountFiltering(
+            "meanOperationDuration.in=" + DEFAULT_MEAN_OPERATION_DURATION + "," + UPDATED_MEAN_OPERATION_DURATION,
+            "meanOperationDuration.in=" + UPDATED_MEAN_OPERATION_DURATION
         );
-
-        // Get all the bankAccountList where meanOperationDuration equals to UPDATED_MEAN_OPERATION_DURATION
-        defaultBankAccountShouldNotBeFound("meanOperationDuration.in=" + UPDATED_MEAN_OPERATION_DURATION);
     }
 
     @Test
@@ -729,10 +669,7 @@ class BankAccountResourceIT {
         bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where meanOperationDuration is not null
-        defaultBankAccountShouldBeFound("meanOperationDuration.specified=true");
-
-        // Get all the bankAccountList where meanOperationDuration is null
-        defaultBankAccountShouldNotBeFound("meanOperationDuration.specified=false");
+        defaultBankAccountFiltering("meanOperationDuration.specified=true", "meanOperationDuration.specified=false");
     }
 
     @Test
@@ -741,11 +678,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where meanOperationDuration is greater than or equal to DEFAULT_MEAN_OPERATION_DURATION
-        defaultBankAccountShouldBeFound("meanOperationDuration.greaterThanOrEqual=" + DEFAULT_MEAN_OPERATION_DURATION);
-
-        // Get all the bankAccountList where meanOperationDuration is greater than or equal to UPDATED_MEAN_OPERATION_DURATION
-        defaultBankAccountShouldNotBeFound("meanOperationDuration.greaterThanOrEqual=" + UPDATED_MEAN_OPERATION_DURATION);
+        // Get all the bankAccountList where meanOperationDuration is greater than or equal to
+        defaultBankAccountFiltering(
+            "meanOperationDuration.greaterThanOrEqual=" + DEFAULT_MEAN_OPERATION_DURATION,
+            "meanOperationDuration.greaterThanOrEqual=" + UPDATED_MEAN_OPERATION_DURATION
+        );
     }
 
     @Test
@@ -754,11 +691,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where meanOperationDuration is less than or equal to DEFAULT_MEAN_OPERATION_DURATION
-        defaultBankAccountShouldBeFound("meanOperationDuration.lessThanOrEqual=" + DEFAULT_MEAN_OPERATION_DURATION);
-
-        // Get all the bankAccountList where meanOperationDuration is less than or equal to SMALLER_MEAN_OPERATION_DURATION
-        defaultBankAccountShouldNotBeFound("meanOperationDuration.lessThanOrEqual=" + SMALLER_MEAN_OPERATION_DURATION);
+        // Get all the bankAccountList where meanOperationDuration is less than or equal to
+        defaultBankAccountFiltering(
+            "meanOperationDuration.lessThanOrEqual=" + DEFAULT_MEAN_OPERATION_DURATION,
+            "meanOperationDuration.lessThanOrEqual=" + SMALLER_MEAN_OPERATION_DURATION
+        );
     }
 
     @Test
@@ -767,11 +704,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where meanOperationDuration is less than DEFAULT_MEAN_OPERATION_DURATION
-        defaultBankAccountShouldNotBeFound("meanOperationDuration.lessThan=" + DEFAULT_MEAN_OPERATION_DURATION);
-
-        // Get all the bankAccountList where meanOperationDuration is less than UPDATED_MEAN_OPERATION_DURATION
-        defaultBankAccountShouldBeFound("meanOperationDuration.lessThan=" + UPDATED_MEAN_OPERATION_DURATION);
+        // Get all the bankAccountList where meanOperationDuration is less than
+        defaultBankAccountFiltering(
+            "meanOperationDuration.lessThan=" + UPDATED_MEAN_OPERATION_DURATION,
+            "meanOperationDuration.lessThan=" + DEFAULT_MEAN_OPERATION_DURATION
+        );
     }
 
     @Test
@@ -780,11 +717,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where meanOperationDuration is greater than DEFAULT_MEAN_OPERATION_DURATION
-        defaultBankAccountShouldNotBeFound("meanOperationDuration.greaterThan=" + DEFAULT_MEAN_OPERATION_DURATION);
-
-        // Get all the bankAccountList where meanOperationDuration is greater than SMALLER_MEAN_OPERATION_DURATION
-        defaultBankAccountShouldBeFound("meanOperationDuration.greaterThan=" + SMALLER_MEAN_OPERATION_DURATION);
+        // Get all the bankAccountList where meanOperationDuration is greater than
+        defaultBankAccountFiltering(
+            "meanOperationDuration.greaterThan=" + SMALLER_MEAN_OPERATION_DURATION,
+            "meanOperationDuration.greaterThan=" + DEFAULT_MEAN_OPERATION_DURATION
+        );
     }
 
     @Test
@@ -793,11 +730,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where balance equals to DEFAULT_BALANCE
-        defaultBankAccountShouldBeFound("balance.equals=" + DEFAULT_BALANCE);
-
-        // Get all the bankAccountList where balance equals to UPDATED_BALANCE
-        defaultBankAccountShouldNotBeFound("balance.equals=" + UPDATED_BALANCE);
+        // Get all the bankAccountList where balance equals to
+        defaultBankAccountFiltering("balance.equals=" + DEFAULT_BALANCE, "balance.equals=" + UPDATED_BALANCE);
     }
 
     @Test
@@ -806,11 +740,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where balance in DEFAULT_BALANCE or UPDATED_BALANCE
-        defaultBankAccountShouldBeFound("balance.in=" + DEFAULT_BALANCE + "," + UPDATED_BALANCE);
-
-        // Get all the bankAccountList where balance equals to UPDATED_BALANCE
-        defaultBankAccountShouldNotBeFound("balance.in=" + UPDATED_BALANCE);
+        // Get all the bankAccountList where balance in
+        defaultBankAccountFiltering("balance.in=" + DEFAULT_BALANCE + "," + UPDATED_BALANCE, "balance.in=" + UPDATED_BALANCE);
     }
 
     @Test
@@ -820,10 +751,7 @@ class BankAccountResourceIT {
         bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where balance is not null
-        defaultBankAccountShouldBeFound("balance.specified=true");
-
-        // Get all the bankAccountList where balance is null
-        defaultBankAccountShouldNotBeFound("balance.specified=false");
+        defaultBankAccountFiltering("balance.specified=true", "balance.specified=false");
     }
 
     @Test
@@ -832,11 +760,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where balance is greater than or equal to DEFAULT_BALANCE
-        defaultBankAccountShouldBeFound("balance.greaterThanOrEqual=" + DEFAULT_BALANCE);
-
-        // Get all the bankAccountList where balance is greater than or equal to UPDATED_BALANCE
-        defaultBankAccountShouldNotBeFound("balance.greaterThanOrEqual=" + UPDATED_BALANCE);
+        // Get all the bankAccountList where balance is greater than or equal to
+        defaultBankAccountFiltering("balance.greaterThanOrEqual=" + DEFAULT_BALANCE, "balance.greaterThanOrEqual=" + UPDATED_BALANCE);
     }
 
     @Test
@@ -845,11 +770,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where balance is less than or equal to DEFAULT_BALANCE
-        defaultBankAccountShouldBeFound("balance.lessThanOrEqual=" + DEFAULT_BALANCE);
-
-        // Get all the bankAccountList where balance is less than or equal to SMALLER_BALANCE
-        defaultBankAccountShouldNotBeFound("balance.lessThanOrEqual=" + SMALLER_BALANCE);
+        // Get all the bankAccountList where balance is less than or equal to
+        defaultBankAccountFiltering("balance.lessThanOrEqual=" + DEFAULT_BALANCE, "balance.lessThanOrEqual=" + SMALLER_BALANCE);
     }
 
     @Test
@@ -858,11 +780,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where balance is less than DEFAULT_BALANCE
-        defaultBankAccountShouldNotBeFound("balance.lessThan=" + DEFAULT_BALANCE);
-
-        // Get all the bankAccountList where balance is less than UPDATED_BALANCE
-        defaultBankAccountShouldBeFound("balance.lessThan=" + UPDATED_BALANCE);
+        // Get all the bankAccountList where balance is less than
+        defaultBankAccountFiltering("balance.lessThan=" + UPDATED_BALANCE, "balance.lessThan=" + DEFAULT_BALANCE);
     }
 
     @Test
@@ -871,11 +790,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where balance is greater than DEFAULT_BALANCE
-        defaultBankAccountShouldNotBeFound("balance.greaterThan=" + DEFAULT_BALANCE);
-
-        // Get all the bankAccountList where balance is greater than SMALLER_BALANCE
-        defaultBankAccountShouldBeFound("balance.greaterThan=" + SMALLER_BALANCE);
+        // Get all the bankAccountList where balance is greater than
+        defaultBankAccountFiltering("balance.greaterThan=" + SMALLER_BALANCE, "balance.greaterThan=" + DEFAULT_BALANCE);
     }
 
     @Test
@@ -884,11 +800,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where openingDay equals to DEFAULT_OPENING_DAY
-        defaultBankAccountShouldBeFound("openingDay.equals=" + DEFAULT_OPENING_DAY);
-
-        // Get all the bankAccountList where openingDay equals to UPDATED_OPENING_DAY
-        defaultBankAccountShouldNotBeFound("openingDay.equals=" + UPDATED_OPENING_DAY);
+        // Get all the bankAccountList where openingDay equals to
+        defaultBankAccountFiltering("openingDay.equals=" + DEFAULT_OPENING_DAY, "openingDay.equals=" + UPDATED_OPENING_DAY);
     }
 
     @Test
@@ -897,11 +810,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where openingDay in DEFAULT_OPENING_DAY or UPDATED_OPENING_DAY
-        defaultBankAccountShouldBeFound("openingDay.in=" + DEFAULT_OPENING_DAY + "," + UPDATED_OPENING_DAY);
-
-        // Get all the bankAccountList where openingDay equals to UPDATED_OPENING_DAY
-        defaultBankAccountShouldNotBeFound("openingDay.in=" + UPDATED_OPENING_DAY);
+        // Get all the bankAccountList where openingDay in
+        defaultBankAccountFiltering(
+            "openingDay.in=" + DEFAULT_OPENING_DAY + "," + UPDATED_OPENING_DAY,
+            "openingDay.in=" + UPDATED_OPENING_DAY
+        );
     }
 
     @Test
@@ -911,10 +824,7 @@ class BankAccountResourceIT {
         bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where openingDay is not null
-        defaultBankAccountShouldBeFound("openingDay.specified=true");
-
-        // Get all the bankAccountList where openingDay is null
-        defaultBankAccountShouldNotBeFound("openingDay.specified=false");
+        defaultBankAccountFiltering("openingDay.specified=true", "openingDay.specified=false");
     }
 
     @Test
@@ -923,11 +833,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where openingDay is greater than or equal to DEFAULT_OPENING_DAY
-        defaultBankAccountShouldBeFound("openingDay.greaterThanOrEqual=" + DEFAULT_OPENING_DAY);
-
-        // Get all the bankAccountList where openingDay is greater than or equal to UPDATED_OPENING_DAY
-        defaultBankAccountShouldNotBeFound("openingDay.greaterThanOrEqual=" + UPDATED_OPENING_DAY);
+        // Get all the bankAccountList where openingDay is greater than or equal to
+        defaultBankAccountFiltering(
+            "openingDay.greaterThanOrEqual=" + DEFAULT_OPENING_DAY,
+            "openingDay.greaterThanOrEqual=" + UPDATED_OPENING_DAY
+        );
     }
 
     @Test
@@ -936,11 +846,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where openingDay is less than or equal to DEFAULT_OPENING_DAY
-        defaultBankAccountShouldBeFound("openingDay.lessThanOrEqual=" + DEFAULT_OPENING_DAY);
-
-        // Get all the bankAccountList where openingDay is less than or equal to SMALLER_OPENING_DAY
-        defaultBankAccountShouldNotBeFound("openingDay.lessThanOrEqual=" + SMALLER_OPENING_DAY);
+        // Get all the bankAccountList where openingDay is less than or equal to
+        defaultBankAccountFiltering(
+            "openingDay.lessThanOrEqual=" + DEFAULT_OPENING_DAY,
+            "openingDay.lessThanOrEqual=" + SMALLER_OPENING_DAY
+        );
     }
 
     @Test
@@ -949,11 +859,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where openingDay is less than DEFAULT_OPENING_DAY
-        defaultBankAccountShouldNotBeFound("openingDay.lessThan=" + DEFAULT_OPENING_DAY);
-
-        // Get all the bankAccountList where openingDay is less than UPDATED_OPENING_DAY
-        defaultBankAccountShouldBeFound("openingDay.lessThan=" + UPDATED_OPENING_DAY);
+        // Get all the bankAccountList where openingDay is less than
+        defaultBankAccountFiltering("openingDay.lessThan=" + UPDATED_OPENING_DAY, "openingDay.lessThan=" + DEFAULT_OPENING_DAY);
     }
 
     @Test
@@ -962,11 +869,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where openingDay is greater than DEFAULT_OPENING_DAY
-        defaultBankAccountShouldNotBeFound("openingDay.greaterThan=" + DEFAULT_OPENING_DAY);
-
-        // Get all the bankAccountList where openingDay is greater than SMALLER_OPENING_DAY
-        defaultBankAccountShouldBeFound("openingDay.greaterThan=" + SMALLER_OPENING_DAY);
+        // Get all the bankAccountList where openingDay is greater than
+        defaultBankAccountFiltering("openingDay.greaterThan=" + SMALLER_OPENING_DAY, "openingDay.greaterThan=" + DEFAULT_OPENING_DAY);
     }
 
     @Test
@@ -975,11 +879,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where lastOperationDate equals to DEFAULT_LAST_OPERATION_DATE
-        defaultBankAccountShouldBeFound("lastOperationDate.equals=" + DEFAULT_LAST_OPERATION_DATE);
-
-        // Get all the bankAccountList where lastOperationDate equals to UPDATED_LAST_OPERATION_DATE
-        defaultBankAccountShouldNotBeFound("lastOperationDate.equals=" + UPDATED_LAST_OPERATION_DATE);
+        // Get all the bankAccountList where lastOperationDate equals to
+        defaultBankAccountFiltering(
+            "lastOperationDate.equals=" + DEFAULT_LAST_OPERATION_DATE,
+            "lastOperationDate.equals=" + UPDATED_LAST_OPERATION_DATE
+        );
     }
 
     @Test
@@ -988,11 +892,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where lastOperationDate in DEFAULT_LAST_OPERATION_DATE or UPDATED_LAST_OPERATION_DATE
-        defaultBankAccountShouldBeFound("lastOperationDate.in=" + DEFAULT_LAST_OPERATION_DATE + "," + UPDATED_LAST_OPERATION_DATE);
-
-        // Get all the bankAccountList where lastOperationDate equals to UPDATED_LAST_OPERATION_DATE
-        defaultBankAccountShouldNotBeFound("lastOperationDate.in=" + UPDATED_LAST_OPERATION_DATE);
+        // Get all the bankAccountList where lastOperationDate in
+        defaultBankAccountFiltering(
+            "lastOperationDate.in=" + DEFAULT_LAST_OPERATION_DATE + "," + UPDATED_LAST_OPERATION_DATE,
+            "lastOperationDate.in=" + UPDATED_LAST_OPERATION_DATE
+        );
     }
 
     @Test
@@ -1002,10 +906,7 @@ class BankAccountResourceIT {
         bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where lastOperationDate is not null
-        defaultBankAccountShouldBeFound("lastOperationDate.specified=true");
-
-        // Get all the bankAccountList where lastOperationDate is null
-        defaultBankAccountShouldNotBeFound("lastOperationDate.specified=false");
+        defaultBankAccountFiltering("lastOperationDate.specified=true", "lastOperationDate.specified=false");
     }
 
     @Test
@@ -1014,11 +915,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where active equals to DEFAULT_ACTIVE
-        defaultBankAccountShouldBeFound("active.equals=" + DEFAULT_ACTIVE);
-
-        // Get all the bankAccountList where active equals to UPDATED_ACTIVE
-        defaultBankAccountShouldNotBeFound("active.equals=" + UPDATED_ACTIVE);
+        // Get all the bankAccountList where active equals to
+        defaultBankAccountFiltering("active.equals=" + DEFAULT_ACTIVE, "active.equals=" + UPDATED_ACTIVE);
     }
 
     @Test
@@ -1027,11 +925,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where active in DEFAULT_ACTIVE or UPDATED_ACTIVE
-        defaultBankAccountShouldBeFound("active.in=" + DEFAULT_ACTIVE + "," + UPDATED_ACTIVE);
-
-        // Get all the bankAccountList where active equals to UPDATED_ACTIVE
-        defaultBankAccountShouldNotBeFound("active.in=" + UPDATED_ACTIVE);
+        // Get all the bankAccountList where active in
+        defaultBankAccountFiltering("active.in=" + DEFAULT_ACTIVE + "," + UPDATED_ACTIVE, "active.in=" + UPDATED_ACTIVE);
     }
 
     @Test
@@ -1041,10 +936,7 @@ class BankAccountResourceIT {
         bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where active is not null
-        defaultBankAccountShouldBeFound("active.specified=true");
-
-        // Get all the bankAccountList where active is null
-        defaultBankAccountShouldNotBeFound("active.specified=false");
+        defaultBankAccountFiltering("active.specified=true", "active.specified=false");
     }
 
     @Test
@@ -1053,11 +945,8 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where accountType equals to DEFAULT_ACCOUNT_TYPE
-        defaultBankAccountShouldBeFound("accountType.equals=" + DEFAULT_ACCOUNT_TYPE);
-
-        // Get all the bankAccountList where accountType equals to UPDATED_ACCOUNT_TYPE
-        defaultBankAccountShouldNotBeFound("accountType.equals=" + UPDATED_ACCOUNT_TYPE);
+        // Get all the bankAccountList where accountType equals to
+        defaultBankAccountFiltering("accountType.equals=" + DEFAULT_ACCOUNT_TYPE, "accountType.equals=" + UPDATED_ACCOUNT_TYPE);
     }
 
     @Test
@@ -1066,11 +955,11 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        // Get all the bankAccountList where accountType in DEFAULT_ACCOUNT_TYPE or UPDATED_ACCOUNT_TYPE
-        defaultBankAccountShouldBeFound("accountType.in=" + DEFAULT_ACCOUNT_TYPE + "," + UPDATED_ACCOUNT_TYPE);
-
-        // Get all the bankAccountList where accountType equals to UPDATED_ACCOUNT_TYPE
-        defaultBankAccountShouldNotBeFound("accountType.in=" + UPDATED_ACCOUNT_TYPE);
+        // Get all the bankAccountList where accountType in
+        defaultBankAccountFiltering(
+            "accountType.in=" + DEFAULT_ACCOUNT_TYPE + "," + UPDATED_ACCOUNT_TYPE,
+            "accountType.in=" + UPDATED_ACCOUNT_TYPE
+        );
     }
 
     @Test
@@ -1080,10 +969,7 @@ class BankAccountResourceIT {
         bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where accountType is not null
-        defaultBankAccountShouldBeFound("accountType.specified=true");
-
-        // Get all the bankAccountList where accountType is null
-        defaultBankAccountShouldNotBeFound("accountType.specified=false");
+        defaultBankAccountFiltering("accountType.specified=true", "accountType.specified=false");
     }
 
     @Test
@@ -1108,26 +994,9 @@ class BankAccountResourceIT {
         defaultBankAccountShouldNotBeFound("userId.equals=" + (userId + 1));
     }
 
-    @Test
-    @Transactional
-    void getAllBankAccountsByOperationIsEqualToSomething() throws Exception {
-        Operation operation;
-        if (TestUtil.findAll(em, Operation.class).isEmpty()) {
-            bankAccountRepository.saveAndFlush(bankAccount);
-            operation = OperationResourceIT.createEntity(em);
-        } else {
-            operation = TestUtil.findAll(em, Operation.class).get(0);
-        }
-        em.persist(operation);
-        em.flush();
-        bankAccount.addOperation(operation);
-        bankAccountRepository.saveAndFlush(bankAccount);
-        Long operationId = operation.getId();
-        // Get all the bankAccountList where operation equals to operationId
-        defaultBankAccountShouldBeFound("operationId.equals=" + operationId);
-
-        // Get all the bankAccountList where operation equals to (operationId + 1)
-        defaultBankAccountShouldNotBeFound("operationId.equals=" + (operationId + 1));
+    private void defaultBankAccountFiltering(String shouldBeFound, String shouldNotBeFound) throws Exception {
+        defaultBankAccountShouldBeFound(shouldBeFound);
+        defaultBankAccountShouldNotBeFound(shouldNotBeFound);
     }
 
     /**
@@ -1193,7 +1062,7 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        int databaseSizeBeforeUpdate = bankAccountRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the bankAccount
         BankAccount updatedBankAccount = bankAccountRepository.findById(bankAccount.getId()).orElseThrow();
@@ -1219,33 +1088,19 @@ class BankAccountResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, bankAccountDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(bankAccountDTO))
+                    .content(om.writeValueAsBytes(bankAccountDTO))
             )
             .andExpect(status().isOk());
 
         // Validate the BankAccount in the database
-        List<BankAccount> bankAccountList = bankAccountRepository.findAll();
-        assertThat(bankAccountList).hasSize(databaseSizeBeforeUpdate);
-        BankAccount testBankAccount = bankAccountList.get(bankAccountList.size() - 1);
-        assertThat(testBankAccount.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testBankAccount.getBankNumber()).isEqualTo(UPDATED_BANK_NUMBER);
-        assertThat(testBankAccount.getAgencyNumber()).isEqualTo(UPDATED_AGENCY_NUMBER);
-        assertThat(testBankAccount.getLastOperationDuration()).isEqualTo(UPDATED_LAST_OPERATION_DURATION);
-        assertThat(testBankAccount.getMeanOperationDuration()).isEqualTo(UPDATED_MEAN_OPERATION_DURATION);
-        assertThat(testBankAccount.getBalance()).isEqualByComparingTo(UPDATED_BALANCE);
-        assertThat(testBankAccount.getOpeningDay()).isEqualTo(UPDATED_OPENING_DAY);
-        assertThat(testBankAccount.getLastOperationDate()).isEqualTo(UPDATED_LAST_OPERATION_DATE);
-        assertThat(testBankAccount.getActive()).isEqualTo(UPDATED_ACTIVE);
-        assertThat(testBankAccount.getAccountType()).isEqualTo(UPDATED_ACCOUNT_TYPE);
-        assertThat(testBankAccount.getAttachment()).isEqualTo(UPDATED_ATTACHMENT);
-        assertThat(testBankAccount.getAttachmentContentType()).isEqualTo(UPDATED_ATTACHMENT_CONTENT_TYPE);
-        assertThat(testBankAccount.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertPersistedBankAccountToMatchAllProperties(updatedBankAccount);
     }
 
     @Test
     @Transactional
     void putNonExistingBankAccount() throws Exception {
-        int databaseSizeBeforeUpdate = bankAccountRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         bankAccount.setId(longCount.incrementAndGet());
 
         // Create the BankAccount
@@ -1256,19 +1111,18 @@ class BankAccountResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, bankAccountDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(bankAccountDTO))
+                    .content(om.writeValueAsBytes(bankAccountDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the BankAccount in the database
-        List<BankAccount> bankAccountList = bankAccountRepository.findAll();
-        assertThat(bankAccountList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithIdMismatchBankAccount() throws Exception {
-        int databaseSizeBeforeUpdate = bankAccountRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         bankAccount.setId(longCount.incrementAndGet());
 
         // Create the BankAccount
@@ -1279,19 +1133,18 @@ class BankAccountResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(bankAccountDTO))
+                    .content(om.writeValueAsBytes(bankAccountDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the BankAccount in the database
-        List<BankAccount> bankAccountList = bankAccountRepository.findAll();
-        assertThat(bankAccountList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithMissingIdPathParamBankAccount() throws Exception {
-        int databaseSizeBeforeUpdate = bankAccountRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         bankAccount.setId(longCount.incrementAndGet());
 
         // Create the BankAccount
@@ -1299,12 +1152,11 @@ class BankAccountResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBankAccountMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(bankAccountDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(bankAccountDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the BankAccount in the database
-        List<BankAccount> bankAccountList = bankAccountRepository.findAll();
-        assertThat(bankAccountList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -1313,7 +1165,7 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        int databaseSizeBeforeUpdate = bankAccountRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the bankAccount using partial update
         BankAccount partialUpdatedBankAccount = new BankAccount();
@@ -1321,42 +1173,26 @@ class BankAccountResourceIT {
 
         partialUpdatedBankAccount
             .name(UPDATED_NAME)
-            .bankNumber(UPDATED_BANK_NUMBER)
-            .agencyNumber(UPDATED_AGENCY_NUMBER)
-            .lastOperationDuration(UPDATED_LAST_OPERATION_DURATION)
-            .meanOperationDuration(UPDATED_MEAN_OPERATION_DURATION)
             .balance(UPDATED_BALANCE)
             .openingDay(UPDATED_OPENING_DAY)
-            .lastOperationDate(UPDATED_LAST_OPERATION_DATE)
             .active(UPDATED_ACTIVE)
-            .accountType(UPDATED_ACCOUNT_TYPE)
-            .description(UPDATED_DESCRIPTION);
+            .accountType(UPDATED_ACCOUNT_TYPE);
 
         restBankAccountMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedBankAccount.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedBankAccount))
+                    .content(om.writeValueAsBytes(partialUpdatedBankAccount))
             )
             .andExpect(status().isOk());
 
         // Validate the BankAccount in the database
-        List<BankAccount> bankAccountList = bankAccountRepository.findAll();
-        assertThat(bankAccountList).hasSize(databaseSizeBeforeUpdate);
-        BankAccount testBankAccount = bankAccountList.get(bankAccountList.size() - 1);
-        assertThat(testBankAccount.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testBankAccount.getBankNumber()).isEqualTo(UPDATED_BANK_NUMBER);
-        assertThat(testBankAccount.getAgencyNumber()).isEqualTo(UPDATED_AGENCY_NUMBER);
-        assertThat(testBankAccount.getLastOperationDuration()).isEqualTo(UPDATED_LAST_OPERATION_DURATION);
-        assertThat(testBankAccount.getMeanOperationDuration()).isEqualTo(UPDATED_MEAN_OPERATION_DURATION);
-        assertThat(testBankAccount.getBalance()).isEqualByComparingTo(UPDATED_BALANCE);
-        assertThat(testBankAccount.getOpeningDay()).isEqualTo(UPDATED_OPENING_DAY);
-        assertThat(testBankAccount.getLastOperationDate()).isEqualTo(UPDATED_LAST_OPERATION_DATE);
-        assertThat(testBankAccount.getActive()).isEqualTo(UPDATED_ACTIVE);
-        assertThat(testBankAccount.getAccountType()).isEqualTo(UPDATED_ACCOUNT_TYPE);
-        assertThat(testBankAccount.getAttachment()).isEqualTo(DEFAULT_ATTACHMENT);
-        assertThat(testBankAccount.getAttachmentContentType()).isEqualTo(DEFAULT_ATTACHMENT_CONTENT_TYPE);
-        assertThat(testBankAccount.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertBankAccountUpdatableFieldsEquals(
+            createUpdateProxyForBean(partialUpdatedBankAccount, bankAccount),
+            getPersistedBankAccount(bankAccount)
+        );
     }
 
     @Test
@@ -1365,7 +1201,7 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        int databaseSizeBeforeUpdate = bankAccountRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the bankAccount using partial update
         BankAccount partialUpdatedBankAccount = new BankAccount();
@@ -1390,33 +1226,20 @@ class BankAccountResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedBankAccount.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedBankAccount))
+                    .content(om.writeValueAsBytes(partialUpdatedBankAccount))
             )
             .andExpect(status().isOk());
 
         // Validate the BankAccount in the database
-        List<BankAccount> bankAccountList = bankAccountRepository.findAll();
-        assertThat(bankAccountList).hasSize(databaseSizeBeforeUpdate);
-        BankAccount testBankAccount = bankAccountList.get(bankAccountList.size() - 1);
-        assertThat(testBankAccount.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testBankAccount.getBankNumber()).isEqualTo(UPDATED_BANK_NUMBER);
-        assertThat(testBankAccount.getAgencyNumber()).isEqualTo(UPDATED_AGENCY_NUMBER);
-        assertThat(testBankAccount.getLastOperationDuration()).isEqualTo(UPDATED_LAST_OPERATION_DURATION);
-        assertThat(testBankAccount.getMeanOperationDuration()).isEqualTo(UPDATED_MEAN_OPERATION_DURATION);
-        assertThat(testBankAccount.getBalance()).isEqualByComparingTo(UPDATED_BALANCE);
-        assertThat(testBankAccount.getOpeningDay()).isEqualTo(UPDATED_OPENING_DAY);
-        assertThat(testBankAccount.getLastOperationDate()).isEqualTo(UPDATED_LAST_OPERATION_DATE);
-        assertThat(testBankAccount.getActive()).isEqualTo(UPDATED_ACTIVE);
-        assertThat(testBankAccount.getAccountType()).isEqualTo(UPDATED_ACCOUNT_TYPE);
-        assertThat(testBankAccount.getAttachment()).isEqualTo(UPDATED_ATTACHMENT);
-        assertThat(testBankAccount.getAttachmentContentType()).isEqualTo(UPDATED_ATTACHMENT_CONTENT_TYPE);
-        assertThat(testBankAccount.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertBankAccountUpdatableFieldsEquals(partialUpdatedBankAccount, getPersistedBankAccount(partialUpdatedBankAccount));
     }
 
     @Test
     @Transactional
     void patchNonExistingBankAccount() throws Exception {
-        int databaseSizeBeforeUpdate = bankAccountRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         bankAccount.setId(longCount.incrementAndGet());
 
         // Create the BankAccount
@@ -1427,19 +1250,18 @@ class BankAccountResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, bankAccountDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(bankAccountDTO))
+                    .content(om.writeValueAsBytes(bankAccountDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the BankAccount in the database
-        List<BankAccount> bankAccountList = bankAccountRepository.findAll();
-        assertThat(bankAccountList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithIdMismatchBankAccount() throws Exception {
-        int databaseSizeBeforeUpdate = bankAccountRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         bankAccount.setId(longCount.incrementAndGet());
 
         // Create the BankAccount
@@ -1450,19 +1272,18 @@ class BankAccountResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(bankAccountDTO))
+                    .content(om.writeValueAsBytes(bankAccountDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the BankAccount in the database
-        List<BankAccount> bankAccountList = bankAccountRepository.findAll();
-        assertThat(bankAccountList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithMissingIdPathParamBankAccount() throws Exception {
-        int databaseSizeBeforeUpdate = bankAccountRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         bankAccount.setId(longCount.incrementAndGet());
 
         // Create the BankAccount
@@ -1470,14 +1291,11 @@ class BankAccountResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBankAccountMockMvc
-            .perform(
-                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(bankAccountDTO))
-            )
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(bankAccountDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the BankAccount in the database
-        List<BankAccount> bankAccountList = bankAccountRepository.findAll();
-        assertThat(bankAccountList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -1486,7 +1304,7 @@ class BankAccountResourceIT {
         // Initialize the database
         bankAccountRepository.saveAndFlush(bankAccount);
 
-        int databaseSizeBeforeDelete = bankAccountRepository.findAll().size();
+        long databaseSizeBeforeDelete = getRepositoryCount();
 
         // Delete the bankAccount
         restBankAccountMockMvc
@@ -1494,7 +1312,34 @@ class BankAccountResourceIT {
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
-        List<BankAccount> bankAccountList = bankAccountRepository.findAll();
-        assertThat(bankAccountList).hasSize(databaseSizeBeforeDelete - 1);
+        assertDecrementedRepositoryCount(databaseSizeBeforeDelete);
+    }
+
+    protected long getRepositoryCount() {
+        return bankAccountRepository.count();
+    }
+
+    protected void assertIncrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore + 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertDecrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore - 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertSameRepositoryCount(long countBefore) {
+        assertThat(countBefore).isEqualTo(getRepositoryCount());
+    }
+
+    protected BankAccount getPersistedBankAccount(BankAccount bankAccount) {
+        return bankAccountRepository.findById(bankAccount.getId()).orElseThrow();
+    }
+
+    protected void assertPersistedBankAccountToMatchAllProperties(BankAccount expectedBankAccount) {
+        assertBankAccountAllPropertiesEquals(expectedBankAccount, getPersistedBankAccount(expectedBankAccount));
+    }
+
+    protected void assertPersistedBankAccountToMatchUpdatableProperties(BankAccount expectedBankAccount) {
+        assertBankAccountAllUpdatablePropertiesEquals(expectedBankAccount, getPersistedBankAccount(expectedBankAccount));
     }
 }

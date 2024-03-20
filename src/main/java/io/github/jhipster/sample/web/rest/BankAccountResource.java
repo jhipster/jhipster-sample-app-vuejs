@@ -64,11 +64,10 @@ public class BankAccountResource {
         if (bankAccountDTO.getId() != null) {
             throw new BadRequestAlertException("A new bankAccount cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        BankAccountDTO result = bankAccountService.save(bankAccountDTO);
-        return ResponseEntity
-            .created(new URI("/api/bank-accounts/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        bankAccountDTO = bankAccountService.save(bankAccountDTO);
+        return ResponseEntity.created(new URI("/api/bank-accounts/" + bankAccountDTO.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, bankAccountDTO.getId().toString()))
+            .body(bankAccountDTO);
     }
 
     /**
@@ -98,11 +97,10 @@ public class BankAccountResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        BankAccountDTO result = bankAccountService.update(bankAccountDTO);
-        return ResponseEntity
-            .ok()
+        bankAccountDTO = bankAccountService.update(bankAccountDTO);
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, bankAccountDTO.getId().toString()))
-            .body(result);
+            .body(bankAccountDTO);
     }
 
     /**
@@ -190,8 +188,7 @@ public class BankAccountResource {
     public ResponseEntity<Void> deleteBankAccount(@PathVariable("id") Long id) {
         log.debug("REST request to delete BankAccount : {}", id);
         bankAccountService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }

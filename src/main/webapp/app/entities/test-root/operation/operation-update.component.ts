@@ -131,9 +131,9 @@ export default defineComponent({
       }
     },
 
-    getSelected(selectedVals, option): any {
+    getSelected(selectedVals, option, pkField = 'id'): any {
       if (selectedVals) {
-        return selectedVals.find(value => option.id === value.id) ?? option;
+        return selectedVals.find(value => option[pkField] === value[pkField]) ?? option;
       }
       return option;
     },

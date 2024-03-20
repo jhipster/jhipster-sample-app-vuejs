@@ -1,7 +1,6 @@
 package io.github.jhipster.sample.service;
 
 import io.github.jhipster.sample.service.dto.BankAccountDTO;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,13 +32,6 @@ public interface BankAccountService {
      * @return the persisted entity.
      */
     Optional<BankAccountDTO> partialUpdate(BankAccountDTO bankAccountDTO);
-
-    /**
-     * Get all the bankAccounts.
-     *
-     * @return the list of entities.
-     */
-    List<BankAccountDTO> findAll();
 
     /**
      * Get all the bankAccounts with eager load of many-to-many relationships.

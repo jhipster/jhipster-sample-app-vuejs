@@ -1,5 +1,4 @@
 import { type IUser } from '@/shared/model/user.model';
-import { type IOperation } from '@/shared/model/test-root/operation.model';
 
 import { type BankAccountType } from '@/shared/model/enumerations/bank-account-type.model';
 export interface IBankAccountMySuffix {
@@ -18,7 +17,6 @@ export interface IBankAccountMySuffix {
   attachment?: string | null;
   description?: string | null;
   user?: IUser | null;
-  operations?: IOperation[] | null;
 }
 
 export class BankAccountMySuffix implements IBankAccountMySuffix {
@@ -38,7 +36,6 @@ export class BankAccountMySuffix implements IBankAccountMySuffix {
     public attachment?: string | null,
     public description?: string | null,
     public user?: IUser | null,
-    public operations?: IOperation[] | null,
   ) {
     this.active = this.active ?? false;
   }

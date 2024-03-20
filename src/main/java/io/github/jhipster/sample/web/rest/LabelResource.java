@@ -60,11 +60,10 @@ public class LabelResource {
         if (label.getId() != null) {
             throw new BadRequestAlertException("A new label cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Label result = labelService.save(label);
-        return ResponseEntity
-            .created(new URI("/api/labels/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        label = labelService.save(label);
+        return ResponseEntity.created(new URI("/api/labels/" + label.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, label.getId().toString()))
+            .body(label);
     }
 
     /**
@@ -92,11 +91,10 @@ public class LabelResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Label result = labelService.update(label);
-        return ResponseEntity
-            .ok()
+        label = labelService.update(label);
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, label.getId().toString()))
-            .body(result);
+            .body(label);
     }
 
     /**
@@ -172,8 +170,7 @@ public class LabelResource {
     public ResponseEntity<Void> deleteLabel(@PathVariable("id") Long id) {
         log.debug("REST request to delete Label : {}", id);
         labelService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }

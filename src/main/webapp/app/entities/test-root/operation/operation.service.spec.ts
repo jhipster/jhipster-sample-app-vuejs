@@ -128,7 +128,13 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a Operation', async () => {
-        const patchObject = Object.assign({}, new Operation());
+        const patchObject = Object.assign(
+          {
+            date: dayjs(currentDate).format(DATE_TIME_FORMAT),
+            amount: 1,
+          },
+          new Operation(),
+        );
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
         const expected = Object.assign(

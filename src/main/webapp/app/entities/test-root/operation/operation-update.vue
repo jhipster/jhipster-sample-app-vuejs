@@ -107,7 +107,7 @@
               v-if="operation.labels !== undefined"
               v-model="operation.labels"
             >
-              <option v-bind:value="getSelected(operation.labels, labelOption)" v-for="labelOption in labels" :key="labelOption.id">
+              <option v-bind:value="getSelected(operation.labels, labelOption, 'id')" v-for="labelOption in labels" :key="labelOption.id">
                 {{ labelOption.labelName }}
               </option>
             </select>
