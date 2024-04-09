@@ -1,7 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.common with an alias.
 import Vue, { createApp, provide, computed, watch, onMounted } from 'vue';
-import { createPinia } from 'pinia';
+import { createPinia, storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 
 import App from './app.vue';
@@ -141,10 +141,8 @@ const app = createApp({
       },
     );
 
-    provide(
-      'authenticated',
-      computed(() => store.authenticated),
-    );
+    const { authenticated } = storeToRefs(store);
+    provide('authenticated', authenticated);
     provide(
       'currentUsername',
       computed(() => store.account?.login),
