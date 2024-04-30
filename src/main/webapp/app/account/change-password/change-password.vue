@@ -11,7 +11,7 @@
 
         <div class="alert alert-danger" role="alert" v-if="doNotMatch" v-text="t$('global.messages.error.dontmatch')"></div>
 
-        <form name="form" role="form" id="password-form" v-on:submit.prevent="changePassword()">
+        <form name="form" id="password-form" v-on:submit.prevent="changePassword()">
           <div class="form-group">
             <label class="form-control-label" for="currentPassword" v-text="t$('global.form[\'currentpassword.label\']')"></label>
             <input

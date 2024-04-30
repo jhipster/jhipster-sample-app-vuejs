@@ -10,7 +10,7 @@
 
         <div class="alert alert-danger" role="alert" v-if="errorEmailExists" v-html="t$('register.messages.error.emailexists')"></div>
 
-        <form name="form" id="settings-form" role="form" v-on:submit.prevent="save()" v-if="settingsAccount" novalidate>
+        <form name="form" id="settings-form" v-on:submit.prevent="save()" v-if="settingsAccount" novalidate>
           <div class="form-group">
             <label class="form-control-label" for="firstName" v-text="t$('settings.form.firstname')"></label>
             <input

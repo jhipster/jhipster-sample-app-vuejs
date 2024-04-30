@@ -12,7 +12,7 @@
           <p v-text="t$('reset.request.messages.success')"></p>
         </div>
 
-        <form v-if="!success" name="form" role="form" v-on:submit.prevent="requestReset()">
+        <form v-if="!success" name="form" v-on:submit.prevent="requestReset()">
           <div class="form-group">
             <label class="form-control-label" for="email" v-text="t$('global.form[\'email.label\']')"></label>
             <input

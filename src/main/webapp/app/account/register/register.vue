@@ -15,7 +15,7 @@
     </div>
     <div class="row justify-content-center">
       <div class="col-md-8">
-        <form id="register-form" name="registerForm" role="form" v-on:submit.prevent="register()" v-if="!success" no-validate>
+        <form id="register-form" name="registerForm" v-on:submit.prevent="register()" v-if="!success" no-validate>
           <div class="form-group">
             <label class="form-control-label" for="username" v-text="t$('global.form[\'username.label\']')"></label>
             <input

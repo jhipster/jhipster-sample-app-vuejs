@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-content-center">
     <div class="col-8">
-      <form name="editForm" role="form" novalidate v-on:submit.prevent="save()" v-if="userAccount">
+      <form name="editForm" novalidate v-on:submit.prevent="save()" v-if="userAccount">
         <h2 id="myUserLabel" v-text="t$('userManagement.home.createOrEditLabel')"></h2>
         <div>
           <div class="form-group" :hidden="!userAccount.id">
