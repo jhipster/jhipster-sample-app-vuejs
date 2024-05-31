@@ -15,6 +15,7 @@ import io.github.jhipster.sample.domain.BankAccount;
 import io.github.jhipster.sample.domain.User;
 import io.github.jhipster.sample.domain.enumeration.BankAccountType;
 import io.github.jhipster.sample.repository.BankAccountRepository;
+import io.github.jhipster.sample.repository.UserRepository;
 import io.github.jhipster.sample.service.BankAccountService;
 import io.github.jhipster.sample.service.dto.BankAccountDTO;
 import io.github.jhipster.sample.service.mapper.BankAccountMapper;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -107,6 +109,9 @@ class BankAccountResourceIT {
     @Autowired
     private BankAccountRepository bankAccountRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Mock
     private BankAccountRepository bankAccountRepositoryMock;
 
@@ -123,6 +128,8 @@ class BankAccountResourceIT {
     private MockMvc restBankAccountMockMvc;
 
     private BankAccount bankAccount;
+
+    private BankAccount insertedBankAccount;
 
     /**
      * Create an entity for this test.
@@ -177,6 +184,14 @@ class BankAccountResourceIT {
         bankAccount = createEntity(em);
     }
 
+    @AfterEach
+    public void cleanup() {
+        if (insertedBankAccount != null) {
+            bankAccountRepository.delete(insertedBankAccount);
+            insertedBankAccount = null;
+        }
+    }
+
     @Test
     @Transactional
     void createBankAccount() throws Exception {
@@ -197,6 +212,8 @@ class BankAccountResourceIT {
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
         var returnedBankAccount = bankAccountMapper.toEntity(returnedBankAccountDTO);
         assertBankAccountUpdatableFieldsEquals(returnedBankAccount, getPersistedBankAccount(returnedBankAccount));
+
+        insertedBankAccount = returnedBankAccount;
     }
 
     @Test
@@ -255,7 +272,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccounts() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList
         restBankAccountMockMvc
@@ -299,7 +316,7 @@ class BankAccountResourceIT {
     @Transactional
     void getBankAccount() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get the bankAccount
         restBankAccountMockMvc
@@ -326,7 +343,7 @@ class BankAccountResourceIT {
     @Transactional
     void getBankAccountsByIdFiltering() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         Long id = bankAccount.getId();
 
@@ -341,7 +358,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByNameIsEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where name equals to
         defaultBankAccountFiltering("name.equals=" + DEFAULT_NAME, "name.equals=" + UPDATED_NAME);
@@ -351,7 +368,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByNameIsInShouldWork() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where name in
         defaultBankAccountFiltering("name.in=" + DEFAULT_NAME + "," + UPDATED_NAME, "name.in=" + UPDATED_NAME);
@@ -361,7 +378,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByNameIsNullOrNotNull() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where name is not null
         defaultBankAccountFiltering("name.specified=true", "name.specified=false");
@@ -371,7 +388,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByNameContainsSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where name contains
         defaultBankAccountFiltering("name.contains=" + DEFAULT_NAME, "name.contains=" + UPDATED_NAME);
@@ -381,7 +398,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByNameNotContainsSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where name does not contain
         defaultBankAccountFiltering("name.doesNotContain=" + UPDATED_NAME, "name.doesNotContain=" + DEFAULT_NAME);
@@ -391,7 +408,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByBankNumberIsEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where bankNumber equals to
         defaultBankAccountFiltering("bankNumber.equals=" + DEFAULT_BANK_NUMBER, "bankNumber.equals=" + UPDATED_BANK_NUMBER);
@@ -401,7 +418,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByBankNumberIsInShouldWork() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where bankNumber in
         defaultBankAccountFiltering(
@@ -414,7 +431,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByBankNumberIsNullOrNotNull() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where bankNumber is not null
         defaultBankAccountFiltering("bankNumber.specified=true", "bankNumber.specified=false");
@@ -424,7 +441,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByBankNumberIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where bankNumber is greater than or equal to
         defaultBankAccountFiltering(
@@ -437,7 +454,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByBankNumberIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where bankNumber is less than or equal to
         defaultBankAccountFiltering(
@@ -450,7 +467,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByBankNumberIsLessThanSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where bankNumber is less than
         defaultBankAccountFiltering("bankNumber.lessThan=" + UPDATED_BANK_NUMBER, "bankNumber.lessThan=" + DEFAULT_BANK_NUMBER);
@@ -460,7 +477,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByBankNumberIsGreaterThanSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where bankNumber is greater than
         defaultBankAccountFiltering("bankNumber.greaterThan=" + SMALLER_BANK_NUMBER, "bankNumber.greaterThan=" + DEFAULT_BANK_NUMBER);
@@ -470,7 +487,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByAgencyNumberIsEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where agencyNumber equals to
         defaultBankAccountFiltering("agencyNumber.equals=" + DEFAULT_AGENCY_NUMBER, "agencyNumber.equals=" + UPDATED_AGENCY_NUMBER);
@@ -480,7 +497,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByAgencyNumberIsInShouldWork() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where agencyNumber in
         defaultBankAccountFiltering(
@@ -493,7 +510,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByAgencyNumberIsNullOrNotNull() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where agencyNumber is not null
         defaultBankAccountFiltering("agencyNumber.specified=true", "agencyNumber.specified=false");
@@ -503,7 +520,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByAgencyNumberIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where agencyNumber is greater than or equal to
         defaultBankAccountFiltering(
@@ -516,7 +533,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByAgencyNumberIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where agencyNumber is less than or equal to
         defaultBankAccountFiltering(
@@ -529,7 +546,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByAgencyNumberIsLessThanSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where agencyNumber is less than
         defaultBankAccountFiltering("agencyNumber.lessThan=" + UPDATED_AGENCY_NUMBER, "agencyNumber.lessThan=" + DEFAULT_AGENCY_NUMBER);
@@ -539,7 +556,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByAgencyNumberIsGreaterThanSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where agencyNumber is greater than
         defaultBankAccountFiltering(
@@ -552,7 +569,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByLastOperationDurationIsEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where lastOperationDuration equals to
         defaultBankAccountFiltering(
@@ -565,7 +582,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByLastOperationDurationIsInShouldWork() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where lastOperationDuration in
         defaultBankAccountFiltering(
@@ -578,7 +595,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByLastOperationDurationIsNullOrNotNull() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where lastOperationDuration is not null
         defaultBankAccountFiltering("lastOperationDuration.specified=true", "lastOperationDuration.specified=false");
@@ -588,7 +605,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByLastOperationDurationIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where lastOperationDuration is greater than or equal to
         defaultBankAccountFiltering(
@@ -601,7 +618,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByLastOperationDurationIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where lastOperationDuration is less than or equal to
         defaultBankAccountFiltering(
@@ -614,7 +631,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByLastOperationDurationIsLessThanSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where lastOperationDuration is less than
         defaultBankAccountFiltering(
@@ -627,7 +644,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByLastOperationDurationIsGreaterThanSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where lastOperationDuration is greater than
         defaultBankAccountFiltering(
@@ -640,7 +657,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByMeanOperationDurationIsEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where meanOperationDuration equals to
         defaultBankAccountFiltering(
@@ -653,7 +670,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByMeanOperationDurationIsInShouldWork() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where meanOperationDuration in
         defaultBankAccountFiltering(
@@ -666,7 +683,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByMeanOperationDurationIsNullOrNotNull() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where meanOperationDuration is not null
         defaultBankAccountFiltering("meanOperationDuration.specified=true", "meanOperationDuration.specified=false");
@@ -676,7 +693,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByMeanOperationDurationIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where meanOperationDuration is greater than or equal to
         defaultBankAccountFiltering(
@@ -689,7 +706,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByMeanOperationDurationIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where meanOperationDuration is less than or equal to
         defaultBankAccountFiltering(
@@ -702,7 +719,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByMeanOperationDurationIsLessThanSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where meanOperationDuration is less than
         defaultBankAccountFiltering(
@@ -715,7 +732,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByMeanOperationDurationIsGreaterThanSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where meanOperationDuration is greater than
         defaultBankAccountFiltering(
@@ -728,7 +745,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByBalanceIsEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where balance equals to
         defaultBankAccountFiltering("balance.equals=" + DEFAULT_BALANCE, "balance.equals=" + UPDATED_BALANCE);
@@ -738,7 +755,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByBalanceIsInShouldWork() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where balance in
         defaultBankAccountFiltering("balance.in=" + DEFAULT_BALANCE + "," + UPDATED_BALANCE, "balance.in=" + UPDATED_BALANCE);
@@ -748,7 +765,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByBalanceIsNullOrNotNull() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where balance is not null
         defaultBankAccountFiltering("balance.specified=true", "balance.specified=false");
@@ -758,7 +775,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByBalanceIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where balance is greater than or equal to
         defaultBankAccountFiltering("balance.greaterThanOrEqual=" + DEFAULT_BALANCE, "balance.greaterThanOrEqual=" + UPDATED_BALANCE);
@@ -768,7 +785,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByBalanceIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where balance is less than or equal to
         defaultBankAccountFiltering("balance.lessThanOrEqual=" + DEFAULT_BALANCE, "balance.lessThanOrEqual=" + SMALLER_BALANCE);
@@ -778,7 +795,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByBalanceIsLessThanSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where balance is less than
         defaultBankAccountFiltering("balance.lessThan=" + UPDATED_BALANCE, "balance.lessThan=" + DEFAULT_BALANCE);
@@ -788,7 +805,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByBalanceIsGreaterThanSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where balance is greater than
         defaultBankAccountFiltering("balance.greaterThan=" + SMALLER_BALANCE, "balance.greaterThan=" + DEFAULT_BALANCE);
@@ -798,7 +815,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByOpeningDayIsEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where openingDay equals to
         defaultBankAccountFiltering("openingDay.equals=" + DEFAULT_OPENING_DAY, "openingDay.equals=" + UPDATED_OPENING_DAY);
@@ -808,7 +825,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByOpeningDayIsInShouldWork() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where openingDay in
         defaultBankAccountFiltering(
@@ -821,7 +838,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByOpeningDayIsNullOrNotNull() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where openingDay is not null
         defaultBankAccountFiltering("openingDay.specified=true", "openingDay.specified=false");
@@ -831,7 +848,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByOpeningDayIsGreaterThanOrEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where openingDay is greater than or equal to
         defaultBankAccountFiltering(
@@ -844,7 +861,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByOpeningDayIsLessThanOrEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where openingDay is less than or equal to
         defaultBankAccountFiltering(
@@ -857,7 +874,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByOpeningDayIsLessThanSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where openingDay is less than
         defaultBankAccountFiltering("openingDay.lessThan=" + UPDATED_OPENING_DAY, "openingDay.lessThan=" + DEFAULT_OPENING_DAY);
@@ -867,7 +884,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByOpeningDayIsGreaterThanSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where openingDay is greater than
         defaultBankAccountFiltering("openingDay.greaterThan=" + SMALLER_OPENING_DAY, "openingDay.greaterThan=" + DEFAULT_OPENING_DAY);
@@ -877,7 +894,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByLastOperationDateIsEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where lastOperationDate equals to
         defaultBankAccountFiltering(
@@ -890,7 +907,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByLastOperationDateIsInShouldWork() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where lastOperationDate in
         defaultBankAccountFiltering(
@@ -903,7 +920,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByLastOperationDateIsNullOrNotNull() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where lastOperationDate is not null
         defaultBankAccountFiltering("lastOperationDate.specified=true", "lastOperationDate.specified=false");
@@ -913,7 +930,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByActiveIsEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where active equals to
         defaultBankAccountFiltering("active.equals=" + DEFAULT_ACTIVE, "active.equals=" + UPDATED_ACTIVE);
@@ -923,7 +940,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByActiveIsInShouldWork() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where active in
         defaultBankAccountFiltering("active.in=" + DEFAULT_ACTIVE + "," + UPDATED_ACTIVE, "active.in=" + UPDATED_ACTIVE);
@@ -933,7 +950,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByActiveIsNullOrNotNull() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where active is not null
         defaultBankAccountFiltering("active.specified=true", "active.specified=false");
@@ -943,7 +960,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByAccountTypeIsEqualToSomething() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where accountType equals to
         defaultBankAccountFiltering("accountType.equals=" + DEFAULT_ACCOUNT_TYPE, "accountType.equals=" + UPDATED_ACCOUNT_TYPE);
@@ -953,7 +970,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByAccountTypeIsInShouldWork() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where accountType in
         defaultBankAccountFiltering(
@@ -966,7 +983,7 @@ class BankAccountResourceIT {
     @Transactional
     void getAllBankAccountsByAccountTypeIsNullOrNotNull() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         // Get all the bankAccountList where accountType is not null
         defaultBankAccountFiltering("accountType.specified=true", "accountType.specified=false");
@@ -1060,7 +1077,7 @@ class BankAccountResourceIT {
     @Transactional
     void putExistingBankAccount() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -1163,7 +1180,7 @@ class BankAccountResourceIT {
     @Transactional
     void partialUpdateBankAccountWithPatch() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -1173,10 +1190,16 @@ class BankAccountResourceIT {
 
         partialUpdatedBankAccount
             .name(UPDATED_NAME)
+            .bankNumber(UPDATED_BANK_NUMBER)
+            .agencyNumber(UPDATED_AGENCY_NUMBER)
+            .lastOperationDuration(UPDATED_LAST_OPERATION_DURATION)
+            .meanOperationDuration(UPDATED_MEAN_OPERATION_DURATION)
             .balance(UPDATED_BALANCE)
             .openingDay(UPDATED_OPENING_DAY)
+            .lastOperationDate(UPDATED_LAST_OPERATION_DATE)
             .active(UPDATED_ACTIVE)
-            .accountType(UPDATED_ACCOUNT_TYPE);
+            .accountType(UPDATED_ACCOUNT_TYPE)
+            .description(UPDATED_DESCRIPTION);
 
         restBankAccountMockMvc
             .perform(
@@ -1199,7 +1222,7 @@ class BankAccountResourceIT {
     @Transactional
     void fullUpdateBankAccountWithPatch() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         long databaseSizeBeforeUpdate = getRepositoryCount();
 
@@ -1302,7 +1325,7 @@ class BankAccountResourceIT {
     @Transactional
     void deleteBankAccount() throws Exception {
         // Initialize the database
-        bankAccountRepository.saveAndFlush(bankAccount);
+        insertedBankAccount = bankAccountRepository.saveAndFlush(bankAccount);
 
         long databaseSizeBeforeDelete = getRepositoryCount();
 

@@ -1,5 +1,6 @@
 import { fileURLToPath, URL } from 'node:url';
 import { existsSync } from 'node:fs';
+import { normalizePath } from 'vite';
 
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
@@ -21,10 +22,10 @@ let config = defineConfig({
       targets: [
         {
           src: [
-            `${swaggerUiPath}/*.{js,css,html,png}`,
-            `!${swaggerUiPath}/**/index.html`,
-            getFileFromRepo('axios/dist/axios.min.js'),
-            fileURLToPath(new URL('./src/main/webapp/swagger-ui/index.html', import.meta.url)),
+            `${normalizePath(swaggerUiPath)}/*.{js,css,html,png}`,
+            `!${normalizePath(swaggerUiPath)}/**/index.html`,
+            normalizePath(getFileFromRepo('axios/dist/axios.min.js')),
+            normalizePath(fileURLToPath(new URL('./src/main/webapp/swagger-ui/index.html', import.meta.url))),
           ],
           dest: 'swagger-ui',
         },

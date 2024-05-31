@@ -15,7 +15,7 @@ describe('BankAccount e2e test', () => {
   const bankAccountPageUrlPattern = new RegExp('/bank-account-my-suffix(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const bankAccountSample = { name: 'forenenst well-lit inside', balance: 29525.23 };
+  const bankAccountSample = { name: 'athwart filthy willfully', balance: 23414.28 };
 
   let bankAccount;
 
@@ -44,7 +44,7 @@ describe('BankAccount e2e test', () => {
     cy.visit('/');
     cy.clickOnEntityMenuItem('bank-account-my-suffix');
     cy.wait('@entitiesRequest').then(({ response }) => {
-      if (response.body.length === 0) {
+      if (response?.body.length === 0) {
         cy.get(entityTableSelector).should('not.exist');
       } else {
         cy.get(entityTableSelector).should('exist');
@@ -68,7 +68,7 @@ describe('BankAccount e2e test', () => {
         cy.get(entityCreateSaveButtonSelector).should('exist');
         cy.get(entityCreateCancelButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
-          expect(response.statusCode).to.equal(200);
+          expect(response?.statusCode).to.equal(200);
         });
         cy.url().should('match', bankAccountPageUrlPattern);
       });
@@ -106,7 +106,7 @@ describe('BankAccount e2e test', () => {
         cy.getEntityDetailsHeading('bankAccount');
         cy.get(entityDetailsBackButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
-          expect(response.statusCode).to.equal(200);
+          expect(response?.statusCode).to.equal(200);
         });
         cy.url().should('match', bankAccountPageUrlPattern);
       });
@@ -117,7 +117,7 @@ describe('BankAccount e2e test', () => {
         cy.get(entityCreateSaveButtonSelector).should('exist');
         cy.get(entityCreateCancelButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
-          expect(response.statusCode).to.equal(200);
+          expect(response?.statusCode).to.equal(200);
         });
         cy.url().should('match', bankAccountPageUrlPattern);
       });
@@ -127,7 +127,7 @@ describe('BankAccount e2e test', () => {
         cy.getEntityCreateUpdateHeading('BankAccount');
         cy.get(entityCreateSaveButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
-          expect(response.statusCode).to.equal(200);
+          expect(response?.statusCode).to.equal(200);
         });
         cy.url().should('match', bankAccountPageUrlPattern);
       });
@@ -137,10 +137,10 @@ describe('BankAccount e2e test', () => {
         cy.getEntityDeleteDialogHeading('bankAccount').should('exist');
         cy.get(entityConfirmDeleteButtonSelector).click();
         cy.wait('@deleteEntityRequest').then(({ response }) => {
-          expect(response.statusCode).to.equal(204);
+          expect(response?.statusCode).to.equal(204);
         });
         cy.wait('@entitiesRequest').then(({ response }) => {
-          expect(response.statusCode).to.equal(200);
+          expect(response?.statusCode).to.equal(200);
         });
         cy.url().should('match', bankAccountPageUrlPattern);
 
@@ -157,37 +157,37 @@ describe('BankAccount e2e test', () => {
     });
 
     it('should create an instance of BankAccount', () => {
-      cy.get(`[data-cy="name"]`).type('gosh');
-      cy.get(`[data-cy="name"]`).should('have.value', 'gosh');
+      cy.get(`[data-cy="name"]`).type('provided');
+      cy.get(`[data-cy="name"]`).should('have.value', 'provided');
 
-      cy.get(`[data-cy="bankNumber"]`).type('21732');
-      cy.get(`[data-cy="bankNumber"]`).should('have.value', '21732');
+      cy.get(`[data-cy="bankNumber"]`).type('14666');
+      cy.get(`[data-cy="bankNumber"]`).should('have.value', '14666');
 
-      cy.get(`[data-cy="agencyNumber"]`).type('30373');
-      cy.get(`[data-cy="agencyNumber"]`).should('have.value', '30373');
+      cy.get(`[data-cy="agencyNumber"]`).type('21893');
+      cy.get(`[data-cy="agencyNumber"]`).should('have.value', '21893');
 
-      cy.get(`[data-cy="lastOperationDuration"]`).type('1181.88');
-      cy.get(`[data-cy="lastOperationDuration"]`).should('have.value', '1181.88');
+      cy.get(`[data-cy="lastOperationDuration"]`).type('14301.84');
+      cy.get(`[data-cy="lastOperationDuration"]`).should('have.value', '14301.84');
 
-      cy.get(`[data-cy="meanOperationDuration"]`).type('4472.94');
-      cy.get(`[data-cy="meanOperationDuration"]`).should('have.value', '4472.94');
+      cy.get(`[data-cy="meanOperationDuration"]`).type('10400.62');
+      cy.get(`[data-cy="meanOperationDuration"]`).should('have.value', '10400.62');
 
-      cy.get(`[data-cy="balance"]`).type('517.82');
-      cy.get(`[data-cy="balance"]`).should('have.value', '517.82');
+      cy.get(`[data-cy="balance"]`).type('9187.83');
+      cy.get(`[data-cy="balance"]`).should('have.value', '9187.83');
 
-      cy.get(`[data-cy="openingDay"]`).type('2015-08-04');
+      cy.get(`[data-cy="openingDay"]`).type('2015-08-05');
       cy.get(`[data-cy="openingDay"]`).blur();
-      cy.get(`[data-cy="openingDay"]`).should('have.value', '2015-08-04');
+      cy.get(`[data-cy="openingDay"]`).should('have.value', '2015-08-05');
 
-      cy.get(`[data-cy="lastOperationDate"]`).type('2015-08-05T03:12');
+      cy.get(`[data-cy="lastOperationDate"]`).type('2015-08-04T19:06');
       cy.get(`[data-cy="lastOperationDate"]`).blur();
-      cy.get(`[data-cy="lastOperationDate"]`).should('have.value', '2015-08-05T03:12');
+      cy.get(`[data-cy="lastOperationDate"]`).should('have.value', '2015-08-04T19:06');
 
       cy.get(`[data-cy="active"]`).should('not.be.checked');
       cy.get(`[data-cy="active"]`).click();
       cy.get(`[data-cy="active"]`).should('be.checked');
 
-      cy.get(`[data-cy="accountType"]`).select('SAVINGS');
+      cy.get(`[data-cy="accountType"]`).select('LOAN');
 
       cy.setFieldImageAsBytesOfEntity('attachment', 'integration-test.png', 'image/png');
 
@@ -199,11 +199,11 @@ describe('BankAccount e2e test', () => {
       cy.get(entityCreateSaveButtonSelector).click();
 
       cy.wait('@postEntityRequest').then(({ response }) => {
-        expect(response.statusCode).to.equal(201);
+        expect(response?.statusCode).to.equal(201);
         bankAccount = response.body;
       });
       cy.wait('@entitiesRequest').then(({ response }) => {
-        expect(response.statusCode).to.equal(200);
+        expect(response?.statusCode).to.equal(200);
       });
       cy.url().should('match', bankAccountPageUrlPattern);
     });

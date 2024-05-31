@@ -7,7 +7,7 @@
     "baseUrl": "src/main/webapp/app",
     "outDir": "target/out-tsc/dist",
     "paths": {
-      "@/*": ["./src/main/webapp/app/*"]
+      "@/*": ["./*"]
     }
   }
 }

@@ -158,14 +158,10 @@ describe('Service Tests', () => {
       it('should partial update a BankAccountMySuffix', async () => {
         const patchObject = Object.assign(
           {
-            name: 'BBBBBB',
+            bankNumber: 1,
             lastOperationDuration: 1,
             meanOperationDuration: 1,
-            openingDay: dayjs(currentDate).format(DATE_FORMAT),
             lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            active: true,
-            accountType: 'BBBBBB',
-            attachment: 'BBBBBB',
             description: 'BBBBBB',
           },
           new BankAccountMySuffix(),

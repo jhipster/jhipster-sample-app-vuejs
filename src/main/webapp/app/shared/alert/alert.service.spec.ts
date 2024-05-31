@@ -25,7 +25,7 @@ describe('Alert Service test suite', () => {
 
     // THEN
     expect(toastStub).toBeCalledTimes(1);
-    expect(toastStub).toBeCalledWith(message, {
+    expect(toastStub).toHaveBeenCalledWith(message, {
       toaster: 'b-toaster-top-center',
       title: 'Error',
       variant: 'danger',
@@ -50,7 +50,7 @@ describe('Alert Service test suite', () => {
     expect(translationStub).toBeCalledTimes(1);
     expect(translationStub).toHaveBeenCalledWith(translationKey);
     expect(toastStub).toBeCalledTimes(1);
-    expect(toastStub).toBeCalledWith(message, {
+    expect(toastStub).toHaveBeenCalledWith(message, {
       toaster: 'b-toaster-top-center',
       title: 'Error',
       variant: 'danger',
@@ -85,9 +85,9 @@ describe('Alert Service test suite', () => {
 
     // THEN
     expect(translationStub).toBeCalledTimes(2);
-    expect(translationStub).toBeCalledWith(translationKey, { entityName: 'DummyEntity' });
-    expect(translationStub).toBeCalledWith('global.menu.entities.dummyEntity');
-    expect(toastStub).toBeCalledWith(message, {
+    expect(translationStub).toHaveBeenCalledWith(translationKey, { entityName: 'DummyEntity' });
+    expect(translationStub).toHaveBeenCalledWith('global.menu.entities.dummyEntity');
+    expect(toastStub).toHaveBeenCalledWith(message, {
       toaster: 'b-toaster-top-center',
       title: 'Error',
       variant: 'danger',
@@ -122,7 +122,7 @@ describe('Alert Service test suite', () => {
     expect(translationStub).toBeCalledTimes(1);
     expect(translationStub).toHaveBeenCalledWith(message);
     expect(toastStub).toBeCalledTimes(1);
-    expect(toastStub).toBeCalledWith(message, {
+    expect(toastStub).toHaveBeenCalledWith(message, {
       toaster: 'b-toaster-top-center',
       title: 'Error',
       variant: 'danger',
@@ -148,7 +148,7 @@ describe('Alert Service test suite', () => {
     expect(translationStub).toBeCalledTimes(1);
     expect(translationStub).toHaveBeenCalledWith(translationKey);
     expect(toastStub).toBeCalledTimes(1);
-    expect(toastStub).toBeCalledWith(message, {
+    expect(toastStub).toHaveBeenCalledWith(message, {
       toaster: 'b-toaster-top-center',
       title: 'Error',
       variant: 'danger',
@@ -176,7 +176,7 @@ describe('Alert Service test suite', () => {
     expect(translationStub).toBeCalledTimes(1);
     expect(translationStub).toHaveBeenCalledWith(message);
     expect(toastStub).toBeCalledTimes(1);
-    expect(toastStub).toBeCalledWith(message, {
+    expect(toastStub).toHaveBeenCalledWith(message, {
       toaster: 'b-toaster-top-center',
       title: 'Error',
       variant: 'danger',

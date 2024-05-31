@@ -85,6 +85,6 @@ describe('/register', () => {
     cy.get(firstPasswordRegisterSelector).type('jondoe');
     cy.get(secondPasswordRegisterSelector).type('jondoe');
     cy.get(submitRegisterSelector).click();
-    cy.wait('@registerSave').then(({ response }) => expect(response.statusCode).to.equal(201));
+    cy.wait('@registerSave').then(({ response }) => expect(response?.statusCode).to.equal(201));
   });
 });
