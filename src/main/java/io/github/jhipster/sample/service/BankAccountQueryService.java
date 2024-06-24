@@ -25,7 +25,7 @@ import tech.jhipster.service.QueryService;
 @Transactional(readOnly = true)
 public class BankAccountQueryService extends QueryService<BankAccount> {
 
-    private final Logger log = LoggerFactory.getLogger(BankAccountQueryService.class);
+    private static final Logger log = LoggerFactory.getLogger(BankAccountQueryService.class);
 
     private final BankAccountRepository bankAccountRepository;
 

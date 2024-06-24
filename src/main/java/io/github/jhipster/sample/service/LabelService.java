@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class LabelService {
 
-    private final Logger log = LoggerFactory.getLogger(LabelService.class);
+    private static final Logger log = LoggerFactory.getLogger(LabelService.class);
 
     private final LabelRepository labelRepository;
 

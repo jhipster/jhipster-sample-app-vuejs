@@ -31,7 +31,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/labels")
 public class LabelResource {
 
-    private final Logger log = LoggerFactory.getLogger(LabelResource.class);
+    private static final Logger log = LoggerFactory.getLogger(LabelResource.class);
 
     private static final String ENTITY_NAME = "testRootLabel";
 

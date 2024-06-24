@@ -15,7 +15,9 @@ module.exports = {
       extends: ['plugin:cypress/recommended'],
     },
   ],
+  parser: 'vue-eslint-parser',
   parserOptions: {
+    parser: '@typescript-eslint/parser',
     ecmaVersion: 'latest',
   },
   rules: {
@@ -29,6 +31,8 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/consistent-type-imports': 'error',
+    'vue/no-v-text-v-html-on-component': ['error', { allow: ['router-link', 'b-alert', 'b-badge', 'b-button', 'b-link'] }],
+    'vue/no-reserved-component-names': 'off',
   },
   ignorePatterns: ['target/'],
 };

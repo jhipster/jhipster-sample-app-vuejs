@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class BankAccountServiceImpl implements BankAccountService {
 
-    private final Logger log = LoggerFactory.getLogger(BankAccountServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(BankAccountServiceImpl.class);
 
     private final BankAccountRepository bankAccountRepository;
 

@@ -1,10 +1,5 @@
 node_modules/
 src/main/docker/
-src/test/javascript/jest.conf.js
-webpack/
 target/
-build/
-node/
 coverage/
-postcss.config.js
 target/classes/static/
