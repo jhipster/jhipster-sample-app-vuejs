@@ -12,7 +12,7 @@ export const useDateFormat = ({ entityRef }: { entityRef?: Ref<Record<string, an
   const dateFormatUtils = {
     convertDateTimeFromServer: (date: Date): string => (date && dayjs(date).isValid() ? dayjs(date).format(DATE_TIME_LONG_FORMAT) : null),
     formatDate,
-    formatDuration: value => (value ? dayjs.duration(value).humanize() ?? value : ''),
+    formatDuration: value => (value ? (dayjs.duration(value).humanize() ?? value) : ''),
   };
   const entityUtils = entityRef
     ? {

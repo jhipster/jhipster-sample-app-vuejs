@@ -4,7 +4,7 @@
       <span id="user-management-page-heading" v-text="t$('userManagement.home.title')" data-cy="userManagementPageHeading"></span>
 
       <div class="d-flex justify-content-end">
-        <button class="btn btn-info mr-2" v-on:click="handleSyncList" :disabled="isLoading">
+        <button class="btn btn-info mr-2" @click="handleSyncList" :disabled="isLoading">
           <font-awesome-icon icon="sync" :spin="isLoading"></font-awesome-icon>
           <span v-text="t$('userManagement.home.refreshListLabel')"></span>
         </button>
@@ -19,33 +19,33 @@
       <table class="table table-striped" aria-describedby="Users">
         <thead>
           <tr>
-            <th scope="col" v-on:click="changeOrder('id')">
+            <th scope="col" @click="changeOrder('id')">
               <span v-text="t$('global.field.id')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'id'"></jhi-sort-indicator>
             </th>
-            <th scope="col" v-on:click="changeOrder('login')">
+            <th scope="col" @click="changeOrder('login')">
               <span v-text="t$('userManagement.login')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'login'"></jhi-sort-indicator>
             </th>
-            <th scope="col" v-on:click="changeOrder('email')">
+            <th scope="col" @click="changeOrder('email')">
               <span v-text="t$('userManagement.email')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'email'"></jhi-sort-indicator>
             </th>
             <th scope="col"></th>
-            <th scope="col" v-on:click="changeOrder('langKey')">
+            <th scope="col" @click="changeOrder('langKey')">
               <span v-text="t$('userManagement.langKey')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'langKey'"></jhi-sort-indicator>
             </th>
             <th scope="col"><span v-text="t$('userManagement.profiles')"></span></th>
-            <th scope="col" v-on:click="changeOrder('createdDate')">
+            <th scope="col" @click="changeOrder('createdDate')">
               <span v-text="t$('userManagement.createdDate')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'createdDate'"></jhi-sort-indicator>
             </th>
-            <th scope="col" v-on:click="changeOrder('lastModifiedBy')">
+            <th scope="col" @click="changeOrder('lastModifiedBy')">
               <span v-text="t$('userManagement.lastModifiedBy')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'lastModifiedBy'"></jhi-sort-indicator>
             </th>
-            <th scope="col" id="modified-date-sort" v-on:click="changeOrder('lastModifiedDate')">
+            <th scope="col" id="modified-date-sort" @click="changeOrder('lastModifiedDate')">
               <span v-text="t$('userManagement.lastModifiedDate')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'lastModifiedDate'"></jhi-sort-indicator>
             </th>
@@ -62,13 +62,13 @@
             <td>
               <button
                 class="btn btn-danger btn-sm deactivated"
-                v-on:click="setActive(user, true)"
+                @click="setActive(user, true)"
                 v-if="!user.activated"
                 v-text="t$('userManagement.deactivated')"
               ></button>
               <button
                 class="btn btn-success btn-sm"
-                v-on:click="setActive(user, false)"
+                @click="setActive(user, false)"
                 v-if="user.activated"
                 :disabled="username === user.login"
                 v-text="t$('userManagement.activated')"
@@ -97,7 +97,7 @@
                     <span class="d-none d-md-inline" v-text="t$('entity.action.edit')"></span>
                   </button>
                 </router-link>
-                <b-button v-on:click="prepareRemove(user)" variant="danger" class="btn btn-sm delete" :disabled="username === user.login">
+                <b-button @click="prepareRemove(user)" variant="danger" class="btn btn-sm delete" :disabled="username === user.login">
                   <font-awesome-icon icon="times"></font-awesome-icon>
                   <span class="d-none d-md-inline" v-text="t$('entity.action.delete')"></span>
                 </b-button>
@@ -106,19 +106,19 @@
           </tr>
         </tbody>
       </table>
-      <b-modal ref="removeUser" id="removeUser" v-bind:title="t$('entity.delete.title')" @ok="deleteUser()">
+      <b-modal ref="removeUser" id="removeUser" :title="t$('entity.delete.title')" @ok="deleteUser()">
         <div class="modal-body">
           <p id="jhi-delete-user-heading" v-text="t$('userManagement.delete.question', { login: removeId })"></p>
         </div>
         <template #modal-footer>
           <div>
-            <button type="button" class="btn btn-secondary" v-text="t$('entity.action.cancel')" v-on:click="closeDialog()"></button>
+            <button type="button" class="btn btn-secondary" v-text="t$('entity.action.cancel')" @click="closeDialog()"></button>
             <button
               type="button"
               class="btn btn-primary"
               id="confirm-delete-user"
               v-text="t$('entity.action.delete')"
-              v-on:click="deleteUser()"
+              @click="deleteUser()"
             ></button>
           </div>
         </template>

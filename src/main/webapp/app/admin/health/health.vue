@@ -2,7 +2,7 @@
   <div>
     <h2>
       <span id="health-page-heading" v-text="t$('health.title')" data-cy="healthPageHeading"></span>
-      <button class="btn btn-primary float-right" v-on:click="refresh()" :disabled="updatingHealth">
+      <button class="btn btn-primary float-right" @click="refresh()" :disabled="updatingHealth">
         <font-awesome-icon icon="sync"></font-awesome-icon> <span v-text="t$('health[\'refresh.button\']')"></span>
       </button>
     </h2>
@@ -22,7 +22,7 @@
               <span class="badge" :class="getBadgeClass(health.status)" v-text="t$('health.status.' + health.status)"></span>
             </td>
             <td class="text-center">
-              <a class="hand" v-on:click="showHealth(health)" v-if="health.details || health.error">
+              <a class="hand" @click="showHealth(health)" v-if="health.details || health.error">
                 <font-awesome-icon icon="eye"></font-awesome-icon>
               </a>
             </td>

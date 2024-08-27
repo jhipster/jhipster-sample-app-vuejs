@@ -1,5 +1,5 @@
 import { vitest } from 'vitest';
-import { shallowMount, type MountingOptions } from '@vue/test-utils';
+import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
 import { type RouteLocation } from 'vue-router';
@@ -52,11 +52,11 @@ describe('UserManagementEdit Component', () => {
   describe('init', () => {
     it('Should load user', async () => {
       // GIVEN
-      axiosStub.get.withArgs('api/admin/users/' + 123).resolves({});
+      axiosStub.get.withArgs(`api/admin/users/${123}`).resolves({});
       axiosStub.get.withArgs('api/authorities').resolves({ data: [] });
       route = {
         params: {
-          userId: '' + 123,
+          userId: `${123}`,
         },
       };
       const wrapper = shallowMount(UserManagementEdit, { global: mountOptions });
@@ -67,7 +67,7 @@ describe('UserManagementEdit Component', () => {
 
       // THEN
       expect(axiosStub.get.calledWith('api/authorities')).toBeTruthy();
-      expect(axiosStub.get.calledWith('api/admin/users/' + 123)).toBeTruthy();
+      expect(axiosStub.get.calledWith(`api/admin/users/${123}`)).toBeTruthy();
     });
     it('Should open create user', async () => {
       // GIVEN
@@ -97,13 +97,13 @@ describe('UserManagementEdit Component', () => {
           'x-jhipstersampleapplicationvueapp-params': '',
         },
       });
-      axiosStub.get.withArgs('api/admin/users/' + 123).resolves({
+      axiosStub.get.withArgs(`api/admin/users/${123}`).resolves({
         data: { id: 123, authorities: [] },
       });
       axiosStub.get.withArgs('api/authorities').resolves({ data: [] });
       route = {
         params: {
-          userId: '' + 123,
+          userId: `${123}`,
         },
       };
       const wrapper = shallowMount(UserManagementEdit, { global: mountOptions });

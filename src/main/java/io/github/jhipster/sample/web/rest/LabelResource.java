@@ -31,7 +31,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/labels")
 public class LabelResource {
 
-    private static final Logger log = LoggerFactory.getLogger(LabelResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LabelResource.class);
 
     private static final String ENTITY_NAME = "testRootLabel";
 
@@ -56,7 +56,7 @@ public class LabelResource {
      */
     @PostMapping("")
     public ResponseEntity<Label> createLabel(@Valid @RequestBody Label label) throws URISyntaxException {
-        log.debug("REST request to save Label : {}", label);
+        LOG.debug("REST request to save Label : {}", label);
         if (label.getId() != null) {
             throw new BadRequestAlertException("A new label cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -79,7 +79,7 @@ public class LabelResource {
     @PutMapping("/{id}")
     public ResponseEntity<Label> updateLabel(@PathVariable(value = "id", required = false) final Long id, @Valid @RequestBody Label label)
         throws URISyntaxException {
-        log.debug("REST request to update Label : {}, {}", id, label);
+        LOG.debug("REST request to update Label : {}, {}", id, label);
         if (label.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -113,7 +113,7 @@ public class LabelResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody Label label
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Label partially : {}, {}", id, label);
+        LOG.debug("REST request to partial update Label partially : {}, {}", id, label);
         if (label.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -141,7 +141,7 @@ public class LabelResource {
      */
     @GetMapping("")
     public ResponseEntity<List<Label>> getAllLabels(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
-        log.debug("REST request to get a page of Labels");
+        LOG.debug("REST request to get a page of Labels");
         Page<Label> page = labelService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -155,7 +155,7 @@ public class LabelResource {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Label> getLabel(@PathVariable("id") Long id) {
-        log.debug("REST request to get Label : {}", id);
+        LOG.debug("REST request to get Label : {}", id);
         Optional<Label> label = labelService.findOne(id);
         return ResponseUtil.wrapOrNotFound(label);
     }
@@ -168,7 +168,7 @@ public class LabelResource {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLabel(@PathVariable("id") Long id) {
-        log.debug("REST request to delete Label : {}", id);
+        LOG.debug("REST request to delete Label : {}", id);
         labelService.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

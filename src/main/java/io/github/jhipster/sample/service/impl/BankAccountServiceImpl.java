@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class BankAccountServiceImpl implements BankAccountService {
 
-    private static final Logger log = LoggerFactory.getLogger(BankAccountServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BankAccountServiceImpl.class);
 
     private final BankAccountRepository bankAccountRepository;
 
@@ -33,7 +33,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public BankAccountDTO save(BankAccountDTO bankAccountDTO) {
-        log.debug("Request to save BankAccount : {}", bankAccountDTO);
+        LOG.debug("Request to save BankAccount : {}", bankAccountDTO);
         BankAccount bankAccount = bankAccountMapper.toEntity(bankAccountDTO);
         bankAccount = bankAccountRepository.save(bankAccount);
         return bankAccountMapper.toDto(bankAccount);
@@ -41,7 +41,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public BankAccountDTO update(BankAccountDTO bankAccountDTO) {
-        log.debug("Request to update BankAccount : {}", bankAccountDTO);
+        LOG.debug("Request to update BankAccount : {}", bankAccountDTO);
         BankAccount bankAccount = bankAccountMapper.toEntity(bankAccountDTO);
         bankAccount = bankAccountRepository.save(bankAccount);
         return bankAccountMapper.toDto(bankAccount);
@@ -49,7 +49,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public Optional<BankAccountDTO> partialUpdate(BankAccountDTO bankAccountDTO) {
-        log.debug("Request to partially update BankAccount : {}", bankAccountDTO);
+        LOG.debug("Request to partially update BankAccount : {}", bankAccountDTO);
 
         return bankAccountRepository
             .findById(bankAccountDTO.getId())
@@ -69,13 +69,13 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     @Transactional(readOnly = true)
     public Optional<BankAccountDTO> findOne(Long id) {
-        log.debug("Request to get BankAccount : {}", id);
+        LOG.debug("Request to get BankAccount : {}", id);
         return bankAccountRepository.findOneWithEagerRelationships(id).map(bankAccountMapper::toDto);
     }
 
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete BankAccount : {}", id);
+        LOG.debug("Request to delete BankAccount : {}", id);
         bankAccountRepository.deleteById(id);
     }
 }

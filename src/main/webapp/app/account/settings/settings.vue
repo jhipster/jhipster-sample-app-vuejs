@@ -10,7 +10,7 @@
 
         <div class="alert alert-danger" role="alert" v-if="errorEmailExists" v-html="t$('register.messages.error.emailexists')"></div>
 
-        <form name="form" id="settings-form" v-on:submit.prevent="save()" v-if="settingsAccount" novalidate>
+        <form name="form" id="settings-form" @submit.prevent="save()" v-if="settingsAccount" novalidate>
           <div class="form-group">
             <label class="form-control-label" for="firstName" v-text="t$('settings.form.firstname')"></label>
             <input
@@ -18,7 +18,7 @@
               class="form-control"
               id="firstName"
               name="firstName"
-              v-bind:placeholder="t$('settings.form[\'firstname.placeholder\']')"
+              :placeholder="t$('settings.form[\'firstname.placeholder\']')"
               :class="{ valid: !v$.settingsAccount.firstName.$invalid, invalid: v$.settingsAccount.firstName.$invalid }"
               v-model="v$.settingsAccount.firstName.$model"
               minlength="1"
@@ -51,7 +51,7 @@
               class="form-control"
               id="lastName"
               name="lastName"
-              v-bind:placeholder="t$('settings.form[\'lastname.placeholder\']')"
+              :placeholder="t$('settings.form[\'lastname.placeholder\']')"
               :class="{ valid: !v$.settingsAccount.lastName.$invalid, invalid: v$.settingsAccount.lastName.$invalid }"
               v-model="v$.settingsAccount.lastName.$model"
               minlength="1"
@@ -84,7 +84,7 @@
               class="form-control"
               id="email"
               name="email"
-              v-bind:placeholder="t$('global.form[\'email.placeholder\']')"
+              :placeholder="t$('global.form[\'email.placeholder\']')"
               :class="{ valid: !v$.settingsAccount.email.$invalid, invalid: v$.settingsAccount.email.$invalid }"
               v-model="v$.settingsAccount.email.$model"
               minlength="5"

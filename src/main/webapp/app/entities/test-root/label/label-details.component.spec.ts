@@ -1,6 +1,6 @@
 /* tslint:disable max-line-length */
 import { vitest } from 'vitest';
-import { shallowMount, type MountingOptions } from '@vue/test-utils';
+import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import sinon, { type SinonStubbedInstance } from 'sinon';
 import { type RouteLocation } from 'vue-router';
 
@@ -60,7 +60,7 @@ describe('Component Tests', () => {
         labelServiceStub.find.resolves(labelSample);
         route = {
           params: {
-            labelId: '' + 123,
+            labelId: `${123}`,
           },
         };
         const wrapper = shallowMount(LabelDetails, { global: mountOptions });

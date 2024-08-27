@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-content-center">
     <div class="col-8">
-      <form name="editForm" novalidate v-on:submit.prevent="save()">
+      <form name="editForm" novalidate @submit.prevent="save()">
         <h2
           id="jhipsterSampleApplicationVueApp.testRootBankAccount.home.createOrEditLabel"
           data-cy="BankAccountCreateUpdateHeading"
@@ -200,8 +200,8 @@
               <option
                 v-for="bankAccountType in bankAccountTypeValues"
                 :key="bankAccountType"
-                v-bind:value="bankAccountType"
-                v-bind:label="t$('jhipsterSampleApplicationVueApp.BankAccountType.' + bankAccountType)"
+                :value="bankAccountType"
+                :label="t$('jhipsterSampleApplicationVueApp.BankAccountType.' + bankAccountType)"
               >
                 {{ bankAccountType }}
               </option>
@@ -217,14 +217,14 @@
               <div v-if="bankAccount.attachment" class="form-text text-danger clearfix">
                 <a
                   class="pull-left"
-                  v-on:click="openFile(bankAccount.attachmentContentType, bankAccount.attachment)"
+                  @click="openFile(bankAccount.attachmentContentType, bankAccount.attachment)"
                   v-text="t$('entity.action.open')"
                 ></a
                 ><br />
                 <span class="pull-left">{{ bankAccount.attachmentContentType }}, {{ byteSize(bankAccount.attachment) }}</span>
                 <button
                   type="button"
-                  v-on:click="
+                  @click="
                     bankAccount.attachment = null;
                     bankAccount.attachmentContentType = null;
                   "
@@ -240,7 +240,7 @@
                 id="file_attachment"
                 style="display: none"
                 data-cy="attachment"
-                v-on:change="setFileData($event, bankAccount, 'attachment', false)"
+                @change="setFileData($event, bankAccount, 'attachment', false)"
               />
             </div>
             <input
@@ -282,9 +282,9 @@
               for="bank-account-my-suffix-user"
             ></label>
             <select class="form-control" id="bank-account-my-suffix-user" data-cy="user" name="user" v-model="bankAccount.user">
-              <option v-bind:value="null"></option>
+              <option :value="null"></option>
               <option
-                v-bind:value="bankAccount.user && userOption.id === bankAccount.user.id ? bankAccount.user : userOption"
+                :value="bankAccount.user && userOption.id === bankAccount.user.id ? bankAccount.user : userOption"
                 v-for="userOption in users"
                 :key="userOption.id"
               >
@@ -294,7 +294,7 @@
           </div>
         </div>
         <div>
-          <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" v-on:click="previousState()">
+          <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" @click="previousState()">
             <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.cancel')"></span>
           </button>
           <button

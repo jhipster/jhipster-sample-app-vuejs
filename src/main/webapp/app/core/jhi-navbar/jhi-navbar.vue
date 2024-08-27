@@ -86,7 +86,7 @@
           <b-dropdown-item
             v-for="(value, key) in languages"
             :key="`lang-${key}`"
-            v-on:click="changeLanguage(key)"
+            @click="changeLanguage(key)"
             :class="{ active: isActiveLanguage(key) }"
           >
             {{ value.name }}
@@ -115,11 +115,11 @@
             <font-awesome-icon icon="lock" />
             <span v-text="t$('global.menu.account.password')"></span>
           </b-dropdown-item>
-          <b-dropdown-item data-cy="logout" v-if="authenticated" v-on:click="logout()" id="logout" active-class="active">
+          <b-dropdown-item data-cy="logout" v-if="authenticated" @click="logout()" id="logout" active-class="active">
             <font-awesome-icon icon="sign-out-alt" />
             <span v-text="t$('global.menu.account.logout')"></span>
           </b-dropdown-item>
-          <b-dropdown-item data-cy="login" v-if="!authenticated" v-on:click="openLogin()" id="login" active-class="active">
+          <b-dropdown-item data-cy="login" v-if="!authenticated" @click="openLogin()" id="login" active-class="active">
             <font-awesome-icon icon="sign-in-alt" />
             <span v-text="t$('global.menu.account.login')"></span>
           </b-dropdown-item>

@@ -6,7 +6,7 @@ const compareString = (a: string, b: string): number => {
 };
 
 const asString = (val): string => {
-  return typeof val === 'string' ? val : '' + val;
+  return typeof val === 'string' ? val : `${val}`;
 };
 
 const compareAny = (a, b): number => {
@@ -48,7 +48,7 @@ const filterObject = (val: any, opts: FilterByOptions): boolean => {
     }
     return false;
   }
-  return ('' + val).toLocaleLowerCase().startsWith(filterByTerm);
+  return `${val}`.toLocaleLowerCase().startsWith(filterByTerm);
 };
 
 export const filterBy = (array: any, opts: FilterByOptions) => {

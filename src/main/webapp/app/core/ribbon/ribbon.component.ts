@@ -1,4 +1,4 @@
-import { defineComponent, computed } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useStore } from '@/store';
 

@@ -1,4 +1,4 @@
-import { type ComputedRef, defineComponent, inject, type Ref, ref } from 'vue';
+import { type ComputedRef, type Ref, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import type LoginService from '@/account/login.service';

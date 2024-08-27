@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { defineComponent, inject, ref, type Ref } from 'vue';
+import { type Ref, defineComponent, inject, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import type AccountService from '../account.service';

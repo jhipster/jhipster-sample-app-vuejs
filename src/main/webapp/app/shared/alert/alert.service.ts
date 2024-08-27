@@ -3,7 +3,7 @@ import { getCurrentInstance } from 'vue';
 import { type Composer, useI18n } from 'vue-i18n';
 
 export const useAlertService = () => {
-  const bvToast = getCurrentInstance().root.proxy['_bv__toast'];
+  const bvToast = getCurrentInstance().root.proxy._bv__toast;
   if (!bvToast) {
     throw new Error('BootstrapVue toast component was not found');
   }

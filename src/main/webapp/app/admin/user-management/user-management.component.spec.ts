@@ -96,7 +96,7 @@ describe('UserManagement Component', () => {
       await userManagement.$nextTick();
 
       // THEN
-      expect(axiosStub.delete.calledWith('api/admin/users/' + 123)).toBeTruthy();
+      expect(axiosStub.delete.calledWith(`api/admin/users/${123}`)).toBeTruthy();
       expect(axiosStub.get.calledWith(`api/admin/users?sort=id,asc&page=0&size=20`)).toBeTruthy();
     });
   });

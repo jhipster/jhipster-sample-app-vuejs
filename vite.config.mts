@@ -1,8 +1,7 @@
-import { fileURLToPath, URL } from 'node:url';
+import { URL, fileURLToPath } from 'node:url';
 import { existsSync } from 'node:fs';
-import { normalizePath } from 'vite';
+import { defineConfig, normalizePath } from 'vite';
 
-import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
@@ -15,7 +14,7 @@ const { getAbsoluteFSPath } = await import('swagger-ui-dist');
 const swaggerUiPath = getAbsoluteFSPath();
 
 // eslint-disable-next-line prefer-const
-let config = defineConfig({
+const config = defineConfig({
   plugins: [
     vue(),
     viteStaticCopy({

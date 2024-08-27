@@ -1,4 +1,4 @@
-import { computed, defineComponent, inject, ref, type Ref } from 'vue';
+import { type Ref, computed, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import type LoginService from '@/account/login.service';
@@ -27,7 +27,7 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
 
-    const version = 'v' + APP_VERSION;
+    const version = `v${APP_VERSION}`;
     const hasAnyAuthorityValues: Ref<any> = ref({});
 
     const openAPIEnabled = computed(() => store.activeProfiles.indexOf('api-docs') > -1);

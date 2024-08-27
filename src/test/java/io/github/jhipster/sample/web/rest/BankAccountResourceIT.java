@@ -137,8 +137,8 @@ class BankAccountResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static BankAccount createEntity(EntityManager em) {
-        BankAccount bankAccount = new BankAccount()
+    public static BankAccount createEntity() {
+        return new BankAccount()
             .name(DEFAULT_NAME)
             .bankNumber(DEFAULT_BANK_NUMBER)
             .agencyNumber(DEFAULT_AGENCY_NUMBER)
@@ -152,7 +152,6 @@ class BankAccountResourceIT {
             .attachment(DEFAULT_ATTACHMENT)
             .attachmentContentType(DEFAULT_ATTACHMENT_CONTENT_TYPE)
             .description(DEFAULT_DESCRIPTION);
-        return bankAccount;
     }
 
     /**
@@ -161,8 +160,8 @@ class BankAccountResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static BankAccount createUpdatedEntity(EntityManager em) {
-        BankAccount bankAccount = new BankAccount()
+    public static BankAccount createUpdatedEntity() {
+        return new BankAccount()
             .name(UPDATED_NAME)
             .bankNumber(UPDATED_BANK_NUMBER)
             .agencyNumber(UPDATED_AGENCY_NUMBER)
@@ -176,12 +175,11 @@ class BankAccountResourceIT {
             .attachment(UPDATED_ATTACHMENT)
             .attachmentContentType(UPDATED_ATTACHMENT_CONTENT_TYPE)
             .description(UPDATED_DESCRIPTION);
-        return bankAccount;
     }
 
     @BeforeEach
     public void initTest() {
-        bankAccount = createEntity(em);
+        bankAccount = createEntity();
     }
 
     @AfterEach
@@ -995,7 +993,7 @@ class BankAccountResourceIT {
         User user;
         if (TestUtil.findAll(em, User.class).isEmpty()) {
             bankAccountRepository.saveAndFlush(bankAccount);
-            user = UserResourceIT.createEntity(em);
+            user = UserResourceIT.createEntity();
         } else {
             user = TestUtil.findAll(em, User.class).get(0);
         }

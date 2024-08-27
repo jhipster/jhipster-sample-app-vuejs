@@ -3,7 +3,7 @@
     <h2 id="page-heading" data-cy="LabelHeading">
       <span v-text="t$('jhipsterSampleApplicationVueApp.testRootLabel.home.title')" id="label-heading"></span>
       <div class="d-flex justify-content-end">
-        <button class="btn btn-info mr-2" v-on:click="handleSyncList" :disabled="isFetching">
+        <button class="btn btn-info mr-2" @click="handleSyncList" :disabled="isFetching">
           <font-awesome-icon icon="sync" :spin="isFetching"></font-awesome-icon>
           <span v-text="t$('jhipsterSampleApplicationVueApp.testRootLabel.home.refreshListLabel')"></span>
         </button>
@@ -28,11 +28,11 @@
       <table class="table table-striped" aria-describedby="labels">
         <thead>
           <tr>
-            <th scope="row" v-on:click="changeOrder('id')">
+            <th scope="row" @click="changeOrder('id')">
               <span v-text="t$('global.field.id')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'id'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('labelName')">
+            <th scope="row" @click="changeOrder('labelName')">
               <span v-text="t$('jhipsterSampleApplicationVueApp.testRootLabel.labelName')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'labelName'"></jhi-sort-indicator>
             </th>
@@ -60,7 +60,7 @@
                   </button>
                 </router-link>
                 <b-button
-                  v-on:click="prepareRemove(label)"
+                  @click="prepareRemove(label)"
                   variant="danger"
                   class="btn btn-sm"
                   data-cy="entityDeleteButton"
@@ -88,14 +88,14 @@
       </div>
       <template #modal-footer>
         <div>
-          <button type="button" class="btn btn-secondary" v-text="t$('entity.action.cancel')" v-on:click="closeDialog()"></button>
+          <button type="button" class="btn btn-secondary" v-text="t$('entity.action.cancel')" @click="closeDialog()"></button>
           <button
             type="button"
             class="btn btn-primary"
             id="jhi-confirm-delete-label"
             data-cy="entityConfirmDeleteButton"
             v-text="t$('entity.action.delete')"
-            v-on:click="removeLabel()"
+            @click="removeLabel()"
           ></button>
         </div>
       </template>

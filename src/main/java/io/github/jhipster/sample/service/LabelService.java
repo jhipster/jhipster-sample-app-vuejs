@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class LabelService {
 
-    private static final Logger log = LoggerFactory.getLogger(LabelService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LabelService.class);
 
     private final LabelRepository labelRepository;
 
@@ -32,7 +32,7 @@ public class LabelService {
      * @return the persisted entity.
      */
     public Label save(Label label) {
-        log.debug("Request to save Label : {}", label);
+        LOG.debug("Request to save Label : {}", label);
         return labelRepository.save(label);
     }
 
@@ -43,7 +43,7 @@ public class LabelService {
      * @return the persisted entity.
      */
     public Label update(Label label) {
-        log.debug("Request to update Label : {}", label);
+        LOG.debug("Request to update Label : {}", label);
         return labelRepository.save(label);
     }
 
@@ -54,7 +54,7 @@ public class LabelService {
      * @return the persisted entity.
      */
     public Optional<Label> partialUpdate(Label label) {
-        log.debug("Request to partially update Label : {}", label);
+        LOG.debug("Request to partially update Label : {}", label);
 
         return labelRepository
             .findById(label.getId())
@@ -76,7 +76,7 @@ public class LabelService {
      */
     @Transactional(readOnly = true)
     public Page<Label> findAll(Pageable pageable) {
-        log.debug("Request to get all Labels");
+        LOG.debug("Request to get all Labels");
         return labelRepository.findAll(pageable);
     }
 
@@ -88,7 +88,7 @@ public class LabelService {
      */
     @Transactional(readOnly = true)
     public Optional<Label> findOne(Long id) {
-        log.debug("Request to get Label : {}", id);
+        LOG.debug("Request to get Label : {}", id);
         return labelRepository.findById(id);
     }
 
@@ -98,7 +98,7 @@ public class LabelService {
      * @param id the id of the entity.
      */
     public void delete(Long id) {
-        log.debug("Request to delete Label : {}", id);
+        LOG.debug("Request to delete Label : {}", id);
         labelRepository.deleteById(id);
     }
 }

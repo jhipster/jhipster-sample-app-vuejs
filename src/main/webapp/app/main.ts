@@ -1,6 +1,6 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.common with an alias.
-import Vue, { createApp, provide, computed, watch, onMounted } from 'vue';
+import Vue, { computed, createApp, onMounted, provide, watch } from 'vue';
 import { createPinia, storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 
@@ -52,6 +52,7 @@ Vue.configureCompat({
   OPTIONS_DESTROYED: 'suppress-warning',
   RENDER_FUNCTION: 'suppress-warning',
   WATCH_ARRAY: 'suppress-warning',
+  PRIVATE_APIS: 'suppress-warning',
 });
 
 const i18n = initI18N();

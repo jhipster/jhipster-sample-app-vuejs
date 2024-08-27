@@ -3,7 +3,7 @@
     <h2 id="page-heading" data-cy="BankAccountHeading">
       <span v-text="t$('jhipsterSampleApplicationVueApp.testRootBankAccount.home.title')" id="bank-account-my-suffix-heading"></span>
       <div class="d-flex justify-content-end">
-        <button class="btn btn-info mr-2" v-on:click="handleSyncList" :disabled="isFetching">
+        <button class="btn btn-info mr-2" @click="handleSyncList" :disabled="isFetching">
           <font-awesome-icon icon="sync" :spin="isFetching"></font-awesome-icon>
           <span v-text="t$('jhipsterSampleApplicationVueApp.testRootBankAccount.home.refreshListLabel')"></span>
         </button>
@@ -65,7 +65,7 @@
             <td>
               <a
                 v-if="bankAccount.attachment"
-                v-on:click="openFile(bankAccount.attachmentContentType, bankAccount.attachment)"
+                @click="openFile(bankAccount.attachmentContentType, bankAccount.attachment)"
                 v-text="t$('entity.action.open')"
               ></a>
               <span v-if="bankAccount.attachment">{{ bankAccount.attachmentContentType }}, {{ byteSize(bankAccount.attachment) }}</span>
@@ -97,7 +97,7 @@
                   </button>
                 </router-link>
                 <b-button
-                  v-on:click="prepareRemove(bankAccount)"
+                  @click="prepareRemove(bankAccount)"
                   variant="danger"
                   class="btn btn-sm"
                   data-cy="entityDeleteButton"
@@ -128,14 +128,14 @@
       </div>
       <template #modal-footer>
         <div>
-          <button type="button" class="btn btn-secondary" v-text="t$('entity.action.cancel')" v-on:click="closeDialog()"></button>
+          <button type="button" class="btn btn-secondary" v-text="t$('entity.action.cancel')" @click="closeDialog()"></button>
           <button
             type="button"
             class="btn btn-primary"
             id="jhi-confirm-delete-bankAccount"
             data-cy="entityConfirmDeleteButton"
             v-text="t$('entity.action.delete')"
-            v-on:click="removeBankAccountMySuffix()"
+            @click="removeBankAccountMySuffix()"
           ></button>
         </div>
       </template>

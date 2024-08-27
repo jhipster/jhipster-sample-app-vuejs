@@ -1,4 +1,4 @@
-import { defineComponent, inject, ref, type Ref } from 'vue';
+import { type Ref, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 

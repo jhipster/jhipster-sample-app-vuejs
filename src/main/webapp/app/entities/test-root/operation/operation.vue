@@ -3,7 +3,7 @@
     <h2 id="page-heading" data-cy="OperationHeading">
       <span v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.home.title')" id="operation-heading"></span>
       <div class="d-flex justify-content-end">
-        <button class="btn btn-info mr-2" v-on:click="handleSyncList" :disabled="isFetching">
+        <button class="btn btn-info mr-2" @click="handleSyncList" :disabled="isFetching">
           <font-awesome-icon icon="sync" :spin="isFetching"></font-awesome-icon>
           <span v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.home.refreshListLabel')"></span>
         </button>
@@ -28,23 +28,23 @@
       <table class="table table-striped" aria-describedby="operations">
         <thead>
           <tr>
-            <th scope="row" v-on:click="changeOrder('id')">
+            <th scope="row" @click="changeOrder('id')">
               <span v-text="t$('global.field.id')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'id'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('date')">
+            <th scope="row" @click="changeOrder('date')">
               <span v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.date')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'date'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('description')">
+            <th scope="row" @click="changeOrder('description')">
               <span v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.description')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'description'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('amount')">
+            <th scope="row" @click="changeOrder('amount')">
               <span v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.amount')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'amount'"></jhi-sort-indicator>
             </th>
-            <th scope="row" v-on:click="changeOrder('bankAccount.name')">
+            <th scope="row" @click="changeOrder('bankAccount.name')">
               <span v-text="t$('jhipsterSampleApplicationVueApp.testRootOperation.bankAccount')"></span>
               <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'bankAccount.name'"></jhi-sort-indicator>
             </th>
@@ -81,7 +81,7 @@
                   </button>
                 </router-link>
                 <b-button
-                  v-on:click="prepareRemove(operation)"
+                  @click="prepareRemove(operation)"
                   variant="danger"
                   class="btn btn-sm"
                   data-cy="entityDeleteButton"
@@ -113,14 +113,14 @@
       </div>
       <template #modal-footer>
         <div>
-          <button type="button" class="btn btn-secondary" v-text="t$('entity.action.cancel')" v-on:click="closeDialog()"></button>
+          <button type="button" class="btn btn-secondary" v-text="t$('entity.action.cancel')" @click="closeDialog()"></button>
           <button
             type="button"
             class="btn btn-primary"
             id="jhi-confirm-delete-operation"
             data-cy="entityConfirmDeleteButton"
             v-text="t$('entity.action.delete')"
-            v-on:click="removeOperation()"
+            @click="removeOperation()"
           ></button>
         </div>
       </template>

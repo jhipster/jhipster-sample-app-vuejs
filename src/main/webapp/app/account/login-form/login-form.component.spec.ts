@@ -1,5 +1,5 @@
 import { vitest } from 'vitest';
-import { shallowMount, type MountingOptions } from '@vue/test-utils';
+import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
 import { type RouteLocation } from 'vue-router';
@@ -88,7 +88,7 @@ describe('LoginForm Component', () => {
     loginForm.password = 'pwd';
     loginForm.rememberMe = true;
     const jwtSecret = 'jwt-secret';
-    axiosStub.post.resolves({ headers: { authorization: 'Bearer ' + jwtSecret } });
+    axiosStub.post.resolves({ headers: { authorization: `Bearer ${jwtSecret}` } });
 
     // WHEN
     loginForm.doLogin();
@@ -113,7 +113,7 @@ describe('LoginForm Component', () => {
     loginForm.password = 'pwd';
     loginForm.rememberMe = false;
     const jwtSecret = 'jwt-secret';
-    axiosStub.post.resolves({ headers: { authorization: 'Bearer ' + jwtSecret } });
+    axiosStub.post.resolves({ headers: { authorization: `Bearer ${jwtSecret}` } });
 
     // WHEN
     loginForm.doLogin();

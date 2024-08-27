@@ -38,12 +38,7 @@ describe('Service Tests', () => {
 
     describe('Service methods', () => {
       it('should find an element', async () => {
-        const returnedFromService = Object.assign(
-          {
-            date: dayjs(currentDate).format(DATE_TIME_FORMAT),
-          },
-          elemDefault,
-        );
+        const returnedFromService = { date: dayjs(currentDate).format(DATE_TIME_FORMAT), ...elemDefault };
         axiosStub.get.resolves({ data: returnedFromService });
 
         return service.find(123).then(res => {
@@ -62,19 +57,8 @@ describe('Service Tests', () => {
       });
 
       it('should create a Operation', async () => {
-        const returnedFromService = Object.assign(
-          {
-            id: 123,
-            date: dayjs(currentDate).format(DATE_TIME_FORMAT),
-          },
-          elemDefault,
-        );
-        const expected = Object.assign(
-          {
-            date: currentDate,
-          },
-          returnedFromService,
-        );
+        const returnedFromService = { id: 123, date: dayjs(currentDate).format(DATE_TIME_FORMAT), ...elemDefault };
+        const expected = { date: currentDate, ...returnedFromService };
 
         axiosStub.post.resolves({ data: returnedFromService });
         return service.create({}).then(res => {
@@ -94,21 +78,9 @@ describe('Service Tests', () => {
       });
 
       it('should update a Operation', async () => {
-        const returnedFromService = Object.assign(
-          {
-            date: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            description: 'BBBBBB',
-            amount: 1,
-          },
-          elemDefault,
-        );
+        const returnedFromService = { date: dayjs(currentDate).format(DATE_TIME_FORMAT), description: 'BBBBBB', amount: 1, ...elemDefault };
 
-        const expected = Object.assign(
-          {
-            date: currentDate,
-          },
-          returnedFromService,
-        );
+        const expected = { date: currentDate, ...returnedFromService };
         axiosStub.put.resolves({ data: returnedFromService });
 
         return service.update(expected).then(res => {
@@ -128,15 +100,10 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a Operation', async () => {
-        const patchObject = Object.assign({}, new Operation());
+        const patchObject = { ...new Operation() };
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
-        const expected = Object.assign(
-          {
-            date: currentDate,
-          },
-          returnedFromService,
-        );
+        const expected = { date: currentDate, ...returnedFromService };
         axiosStub.patch.resolves({ data: returnedFromService });
 
         return service.partialUpdate(patchObject).then(res => {
@@ -156,20 +123,8 @@ describe('Service Tests', () => {
       });
 
       it('should return a list of Operation', async () => {
-        const returnedFromService = Object.assign(
-          {
-            date: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            description: 'BBBBBB',
-            amount: 1,
-          },
-          elemDefault,
-        );
-        const expected = Object.assign(
-          {
-            date: currentDate,
-          },
-          returnedFromService,
-        );
+        const returnedFromService = { date: dayjs(currentDate).format(DATE_TIME_FORMAT), description: 'BBBBBB', amount: 1, ...elemDefault };
+        const expected = { date: currentDate, ...returnedFromService };
         axiosStub.get.resolves([returnedFromService]);
         return service.retrieve({ sort: {}, page: 0, size: 10 }).then(res => {
           expect(res).toContainEqual(expected);

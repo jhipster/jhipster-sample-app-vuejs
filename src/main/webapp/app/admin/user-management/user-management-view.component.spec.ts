@@ -57,7 +57,7 @@ describe('UserManagementView Component', () => {
 
       route = {
         params: {
-          userId: '' + 123,
+          userId: `${123}`,
         },
       };
 
@@ -79,7 +79,7 @@ describe('UserManagementView Component', () => {
       await userManagementView.$nextTick();
 
       // THEN
-      expect(axiosStub.get.calledWith('api/admin/users/' + 123)).toBeTruthy();
+      expect(axiosStub.get.calledWith(`api/admin/users/${123}`)).toBeTruthy();
       expect(userManagementView.user).toEqual(userData);
     });
   });

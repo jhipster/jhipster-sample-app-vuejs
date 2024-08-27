@@ -11,7 +11,7 @@
 
         <div class="alert alert-danger" role="alert" v-if="doNotMatch" v-text="t$('global.messages.error.dontmatch')"></div>
 
-        <form name="form" id="password-form" v-on:submit.prevent="changePassword()">
+        <form name="form" id="password-form" @submit.prevent="changePassword()">
           <div class="form-group">
             <label class="form-control-label" for="currentPassword" v-text="t$('global.form[\'currentpassword.label\']')"></label>
             <input
@@ -20,7 +20,7 @@
               id="currentPassword"
               name="currentPassword"
               :class="{ valid: !v$.resetPassword.currentPassword.$invalid, invalid: v$.resetPassword.currentPassword.$invalid }"
-              v-bind:placeholder="t$('global.form[\'currentpassword.placeholder\']')"
+              :placeholder="t$('global.form[\'currentpassword.placeholder\']')"
               v-model="v$.resetPassword.currentPassword.$model"
               required
               data-cy="currentPassword"
@@ -40,7 +40,7 @@
               class="form-control"
               id="newPassword"
               name="newPassword"
-              v-bind:placeholder="t$('global.form[\'newpassword.placeholder\']')"
+              :placeholder="t$('global.form[\'newpassword.placeholder\']')"
               :class="{ valid: !v$.resetPassword.newPassword.$invalid, invalid: v$.resetPassword.newPassword.$invalid }"
               v-model="v$.resetPassword.newPassword.$model"
               minlength="4"
@@ -74,7 +74,7 @@
               id="confirmPassword"
               name="confirmPassword"
               :class="{ valid: !v$.resetPassword.confirmPassword.$invalid, invalid: v$.resetPassword.confirmPassword.$invalid }"
-              v-bind:placeholder="t$('global.form[\'confirmpassword.placeholder\']')"
+              :placeholder="t$('global.form[\'confirmpassword.placeholder\']')"
               v-model="v$.resetPassword.confirmPassword.$model"
               minlength="4"
               maxlength="50"

@@ -12,7 +12,7 @@
 
         <div class="alert alert-success" v-if="success">
           <span v-html="t$('reset.finish.messages.success')"></span>
-          <a class="alert-link" v-on:click="openLogin" v-text="t$('global.messages.info.authenticated.link')"></a>
+          <a class="alert-link" @click="openLogin" v-text="t$('global.messages.info.authenticated.link')"></a>
         </div>
         <div class="alert alert-danger" v-if="doNotMatch">
           <p v-text="t$('global.messages.error.dontmatch')"></p>
@@ -23,7 +23,7 @@
         </div>
 
         <div v-if="!keyMissing">
-          <form v-if="!success" name="form" v-on:submit.prevent="finishReset()">
+          <form v-if="!success" name="form" @submit.prevent="finishReset()">
             <div class="form-group">
               <label class="form-control-label" for="newPassword" v-text="t$('global.form[\'newpassword.label\']')"></label>
               <input
@@ -31,7 +31,7 @@
                 class="form-control"
                 id="newPassword"
                 name="newPassword"
-                v-bind:placeholder="t$('global.form[\'newpassword.placeholder\']')"
+                :placeholder="t$('global.form[\'newpassword.placeholder\']')"
                 :class="{ valid: !v$.resetAccount.newPassword.$invalid, invalid: v$.resetAccount.newPassword.$invalid }"
                 v-model="v$.resetAccount.newPassword.$model"
                 minlength="4"
@@ -65,7 +65,7 @@
                 id="confirmPassword"
                 name="confirmPassword"
                 :class="{ valid: !v$.resetAccount.confirmPassword.$invalid, invalid: v$.resetAccount.confirmPassword.$invalid }"
-                v-bind:placeholder="t$('global.form[\'confirmpassword.placeholder\']')"
+                :placeholder="t$('global.form[\'confirmpassword.placeholder\']')"
                 v-model="v$.resetAccount.confirmPassword.$model"
                 minlength="4"
                 maxlength="50"

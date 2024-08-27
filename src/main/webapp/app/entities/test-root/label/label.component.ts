@@ -1,4 +1,4 @@
-import { defineComponent, inject, onMounted, ref, type Ref, watch } from 'vue';
+import { type Ref, defineComponent, inject, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import LabelService from './label.service';
@@ -29,7 +29,7 @@ export default defineComponent({
     };
 
     const sort = (): Array<any> => {
-      const result = [propOrder.value + ',' + (reverse.value ? 'desc' : 'asc')];
+      const result = [`${propOrder.value},${reverse.value ? 'desc' : 'asc'}`];
       if (propOrder.value !== 'id') {
         result.push('id');
       }

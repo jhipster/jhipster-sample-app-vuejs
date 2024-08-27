@@ -1,4 +1,4 @@
-import { decimal, helpers, required, sameAs, minLength, maxLength, minValue, maxValue, integer } from '@vuelidate/validators';
+import { decimal, helpers, integer, maxLength, maxValue, minLength, minValue, required, sameAs } from '@vuelidate/validators';
 
 export const useValidation = () => {
   return {

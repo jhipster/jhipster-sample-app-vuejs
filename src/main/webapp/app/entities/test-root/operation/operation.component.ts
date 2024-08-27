@@ -1,4 +1,4 @@
-import { defineComponent, inject, onMounted, ref, type Ref, watch, watchEffect } from 'vue';
+import { type Ref, defineComponent, inject, onMounted, ref, watch, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useIntersectionObserver } from '@vueuse/core';
 
@@ -37,7 +37,7 @@ export default defineComponent({
     };
 
     const sort = (): Array<any> => {
-      const result = [propOrder.value + ',' + (reverse.value ? 'desc' : 'asc')];
+      const result = [`${propOrder.value},${reverse.value ? 'desc' : 'asc'}`];
       if (propOrder.value !== 'id') {
         result.push('id');
       }
@@ -55,7 +55,7 @@ export default defineComponent({
         const res = await operationService().retrieve(paginationQuery);
         totalItems.value = Number(res.headers['x-total-count']);
         queryCount.value = totalItems.value;
-        links.value = dataUtils.parseLinks(res.headers?.['link']);
+        links.value = dataUtils.parseLinks(res.headers?.link);
         operations.value.push(...(res.data ?? []));
       } catch (err) {
         alertService.showHttpError(err.response);

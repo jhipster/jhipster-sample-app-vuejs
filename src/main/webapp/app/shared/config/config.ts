@@ -1,4 +1,4 @@
-import { createI18n, type IntlDateTimeFormats } from 'vue-i18n';
+import { type IntlDateTimeFormats, createI18n } from 'vue-i18n';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -112,7 +112,6 @@ export function initFortAwesome(vue) {
     faWrench,
   );
 }
-
 export function initI18N(opts: any = {}) {
   return createI18n({
     missingWarn: false,

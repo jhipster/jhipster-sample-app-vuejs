@@ -71,7 +71,7 @@
           </dt>
           <dd>
             <div v-if="bankAccount.attachment">
-              <a v-on:click="openFile(bankAccount.attachmentContentType, bankAccount.attachment)" v-text="t$('entity.action.open')"></a>
+              <a @click="openFile(bankAccount.attachmentContentType, bankAccount.attachment)" v-text="t$('entity.action.open')"></a>
               {{ bankAccount.attachmentContentType }}, {{ byteSize(bankAccount.attachment) }}
             </div>
           </dd>
@@ -88,7 +88,7 @@
             {{ bankAccount.user ? bankAccount.user.login : '' }}
           </dd>
         </dl>
-        <button type="submit" v-on:click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <button type="submit" @click.prevent="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
           <font-awesome-icon icon="arrow-left"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.back')"></span>
         </button>
         <router-link

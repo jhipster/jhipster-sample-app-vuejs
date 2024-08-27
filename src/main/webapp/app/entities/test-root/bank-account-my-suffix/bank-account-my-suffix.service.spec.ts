@@ -53,13 +53,11 @@ describe('Service Tests', () => {
 
     describe('Service methods', () => {
       it('should find an element', async () => {
-        const returnedFromService = Object.assign(
-          {
-            openingDay: dayjs(currentDate).format(DATE_FORMAT),
-            lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
-          },
-          elemDefault,
-        );
+        const returnedFromService = {
+          openingDay: dayjs(currentDate).format(DATE_FORMAT),
+          lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          ...elemDefault,
+        };
         axiosStub.get.resolves({ data: returnedFromService });
 
         return service.find(123).then(res => {
@@ -78,21 +76,13 @@ describe('Service Tests', () => {
       });
 
       it('should create a BankAccountMySuffix', async () => {
-        const returnedFromService = Object.assign(
-          {
-            id: 123,
-            openingDay: dayjs(currentDate).format(DATE_FORMAT),
-            lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
-          },
-          elemDefault,
-        );
-        const expected = Object.assign(
-          {
-            openingDay: currentDate,
-            lastOperationDate: currentDate,
-          },
-          returnedFromService,
-        );
+        const returnedFromService = {
+          id: 123,
+          openingDay: dayjs(currentDate).format(DATE_FORMAT),
+          lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          ...elemDefault,
+        };
+        const expected = { openingDay: currentDate, lastOperationDate: currentDate, ...returnedFromService };
 
         axiosStub.post.resolves({ data: returnedFromService });
         return service.create({}).then(res => {
@@ -112,31 +102,23 @@ describe('Service Tests', () => {
       });
 
       it('should update a BankAccountMySuffix', async () => {
-        const returnedFromService = Object.assign(
-          {
-            name: 'BBBBBB',
-            bankNumber: 1,
-            agencyNumber: 1,
-            lastOperationDuration: 1,
-            meanOperationDuration: 1,
-            balance: 1,
-            openingDay: dayjs(currentDate).format(DATE_FORMAT),
-            lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            active: true,
-            accountType: 'BBBBBB',
-            attachment: 'BBBBBB',
-            description: 'BBBBBB',
-          },
-          elemDefault,
-        );
+        const returnedFromService = {
+          name: 'BBBBBB',
+          bankNumber: 1,
+          agencyNumber: 1,
+          lastOperationDuration: 1,
+          meanOperationDuration: 1,
+          balance: 1,
+          openingDay: dayjs(currentDate).format(DATE_FORMAT),
+          lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          active: true,
+          accountType: 'BBBBBB',
+          attachment: 'BBBBBB',
+          description: 'BBBBBB',
+          ...elemDefault,
+        };
 
-        const expected = Object.assign(
-          {
-            openingDay: currentDate,
-            lastOperationDate: currentDate,
-          },
-          returnedFromService,
-        );
+        const expected = { openingDay: currentDate, lastOperationDate: currentDate, ...returnedFromService };
         axiosStub.put.resolves({ data: returnedFromService });
 
         return service.update(expected).then(res => {
@@ -156,25 +138,17 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a BankAccountMySuffix', async () => {
-        const patchObject = Object.assign(
-          {
-            bankNumber: 1,
-            lastOperationDuration: 1,
-            meanOperationDuration: 1,
-            lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            description: 'BBBBBB',
-          },
-          new BankAccountMySuffix(),
-        );
+        const patchObject = {
+          bankNumber: 1,
+          lastOperationDuration: 1,
+          meanOperationDuration: 1,
+          lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          description: 'BBBBBB',
+          ...new BankAccountMySuffix(),
+        };
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
-        const expected = Object.assign(
-          {
-            openingDay: currentDate,
-            lastOperationDate: currentDate,
-          },
-          returnedFromService,
-        );
+        const expected = { openingDay: currentDate, lastOperationDate: currentDate, ...returnedFromService };
         axiosStub.patch.resolves({ data: returnedFromService });
 
         return service.partialUpdate(patchObject).then(res => {
@@ -194,30 +168,22 @@ describe('Service Tests', () => {
       });
 
       it('should return a list of BankAccountMySuffix', async () => {
-        const returnedFromService = Object.assign(
-          {
-            name: 'BBBBBB',
-            bankNumber: 1,
-            agencyNumber: 1,
-            lastOperationDuration: 1,
-            meanOperationDuration: 1,
-            balance: 1,
-            openingDay: dayjs(currentDate).format(DATE_FORMAT),
-            lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
-            active: true,
-            accountType: 'BBBBBB',
-            attachment: 'BBBBBB',
-            description: 'BBBBBB',
-          },
-          elemDefault,
-        );
-        const expected = Object.assign(
-          {
-            openingDay: currentDate,
-            lastOperationDate: currentDate,
-          },
-          returnedFromService,
-        );
+        const returnedFromService = {
+          name: 'BBBBBB',
+          bankNumber: 1,
+          agencyNumber: 1,
+          lastOperationDuration: 1,
+          meanOperationDuration: 1,
+          balance: 1,
+          openingDay: dayjs(currentDate).format(DATE_FORMAT),
+          lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          active: true,
+          accountType: 'BBBBBB',
+          attachment: 'BBBBBB',
+          description: 'BBBBBB',
+          ...elemDefault,
+        };
+        const expected = { openingDay: currentDate, lastOperationDate: currentDate, ...returnedFromService };
         axiosStub.get.resolves([returnedFromService]);
         return service.retrieve().then(res => {
           expect(res).toContainEqual(expected);

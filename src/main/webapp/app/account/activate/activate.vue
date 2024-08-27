@@ -5,7 +5,7 @@
         <h1 v-text="t$('activate.title')"></h1>
         <div class="alert alert-success" v-if="success">
           <span v-html="t$('activate.messages.success')"></span>
-          <a class="alert-link" v-on:click="openLogin" v-text="t$('global.messages.info.authenticated.link')"></a>.
+          <a class="alert-link" @click="openLogin" v-text="t$('global.messages.info.authenticated.link')"></a>.
         </div>
         <div class="alert alert-danger" v-if="error" v-html="t$('activate.messages.error')"></div>
       </div>

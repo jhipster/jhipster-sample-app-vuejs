@@ -28,7 +28,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/bank-accounts")
 public class BankAccountResource {
 
-    private static final Logger log = LoggerFactory.getLogger(BankAccountResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BankAccountResource.class);
 
     private static final String ENTITY_NAME = "testRootBankAccount";
 
@@ -60,7 +60,7 @@ public class BankAccountResource {
      */
     @PostMapping("")
     public ResponseEntity<BankAccountDTO> createBankAccount(@Valid @RequestBody BankAccountDTO bankAccountDTO) throws URISyntaxException {
-        log.debug("REST request to save BankAccount : {}", bankAccountDTO);
+        LOG.debug("REST request to save BankAccount : {}", bankAccountDTO);
         if (bankAccountDTO.getId() != null) {
             throw new BadRequestAlertException("A new bankAccount cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -85,7 +85,7 @@ public class BankAccountResource {
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody BankAccountDTO bankAccountDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update BankAccount : {}, {}", id, bankAccountDTO);
+        LOG.debug("REST request to update BankAccount : {}, {}", id, bankAccountDTO);
         if (bankAccountDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -119,7 +119,7 @@ public class BankAccountResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody BankAccountDTO bankAccountDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update BankAccount partially : {}, {}", id, bankAccountDTO);
+        LOG.debug("REST request to partial update BankAccount partially : {}, {}", id, bankAccountDTO);
         if (bankAccountDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -147,7 +147,7 @@ public class BankAccountResource {
      */
     @GetMapping("")
     public ResponseEntity<List<BankAccountDTO>> getAllBankAccounts(BankAccountCriteria criteria) {
-        log.debug("REST request to get BankAccounts by criteria: {}", criteria);
+        LOG.debug("REST request to get BankAccounts by criteria: {}", criteria);
 
         List<BankAccountDTO> entityList = bankAccountQueryService.findByCriteria(criteria);
         return ResponseEntity.ok().body(entityList);
@@ -161,7 +161,7 @@ public class BankAccountResource {
      */
     @GetMapping("/count")
     public ResponseEntity<Long> countBankAccounts(BankAccountCriteria criteria) {
-        log.debug("REST request to count BankAccounts by criteria: {}", criteria);
+        LOG.debug("REST request to count BankAccounts by criteria: {}", criteria);
         return ResponseEntity.ok().body(bankAccountQueryService.countByCriteria(criteria));
     }
 
@@ -173,7 +173,7 @@ public class BankAccountResource {
      */
     @GetMapping("/{id}")
     public ResponseEntity<BankAccountDTO> getBankAccount(@PathVariable("id") Long id) {
-        log.debug("REST request to get BankAccount : {}", id);
+        LOG.debug("REST request to get BankAccount : {}", id);
         Optional<BankAccountDTO> bankAccountDTO = bankAccountService.findOne(id);
         return ResponseUtil.wrapOrNotFound(bankAccountDTO);
     }
@@ -186,7 +186,7 @@ public class BankAccountResource {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBankAccount(@PathVariable("id") Long id) {
-        log.debug("REST request to delete BankAccount : {}", id);
+        LOG.debug("REST request to delete BankAccount : {}", id);
         bankAccountService.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

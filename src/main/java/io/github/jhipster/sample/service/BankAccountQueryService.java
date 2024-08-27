@@ -25,7 +25,7 @@ import tech.jhipster.service.QueryService;
 @Transactional(readOnly = true)
 public class BankAccountQueryService extends QueryService<BankAccount> {
 
-    private static final Logger log = LoggerFactory.getLogger(BankAccountQueryService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BankAccountQueryService.class);
 
     private final BankAccountRepository bankAccountRepository;
 
@@ -43,7 +43,7 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
      */
     @Transactional(readOnly = true)
     public List<BankAccountDTO> findByCriteria(BankAccountCriteria criteria) {
-        log.debug("find by criteria : {}", criteria);
+        LOG.debug("find by criteria : {}", criteria);
         final Specification<BankAccount> specification = createSpecification(criteria);
         return bankAccountMapper.toDto(bankAccountRepository.findAll(specification));
     }
@@ -55,7 +55,7 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
      */
     @Transactional(readOnly = true)
     public long countByCriteria(BankAccountCriteria criteria) {
-        log.debug("count by criteria : {}", criteria);
+        LOG.debug("count by criteria : {}", criteria);
         final Specification<BankAccount> specification = createSpecification(criteria);
         return bankAccountRepository.count(specification);
     }
@@ -116,9 +116,8 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
             }
             if (criteria.getOperationId() != null) {
                 specification = specification.and(
-                    buildSpecification(
-                        criteria.getOperationId(),
-                        root -> root.join(BankAccount_.operations, JoinType.LEFT).get(Operation_.id)
+                    buildSpecification(criteria.getOperationId(), root ->
+                        root.join(BankAccount_.operations, JoinType.LEFT).get(Operation_.id)
                     )
                 );
             }

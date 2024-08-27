@@ -15,7 +15,7 @@
     </div>
     <div class="row justify-content-center">
       <div class="col-md-8">
-        <form id="register-form" name="registerForm" v-on:submit.prevent="register()" v-if="!success" no-validate>
+        <form id="register-form" name="registerForm" @submit.prevent="register()" v-if="!success" no-validate>
           <div class="form-group">
             <label class="form-control-label" for="username" v-text="t$('global.form[\'username.label\']')"></label>
             <input
@@ -29,7 +29,7 @@
               minlength="1"
               maxlength="50"
               pattern="^[a-zA-Z0-9!#$&'*+=?^_`{|}~.-]+@?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
-              v-bind:placeholder="t$('global.form[\'username.placeholder\']')"
+              :placeholder="t$('global.form[\'username.placeholder\']')"
               data-cy="username"
             />
             <div v-if="v$.registerAccount.login.$anyDirty && v$.registerAccount.login.$invalid">
@@ -68,7 +68,7 @@
               maxlength="254"
               email
               required
-              v-bind:placeholder="t$('global.form[\'email.placeholder\']')"
+              :placeholder="t$('global.form[\'email.placeholder\']')"
               data-cy="email"
             />
             <div v-if="v$.registerAccount.email.$anyDirty && v$.registerAccount.email.$invalid">
@@ -106,7 +106,7 @@
               minlength="4"
               maxlength="50"
               required
-              v-bind:placeholder="t$('global.form[\'newpassword.placeholder\']')"
+              :placeholder="t$('global.form[\'newpassword.placeholder\']')"
               data-cy="firstPassword"
             />
             <div v-if="v$.registerAccount.password.$anyDirty && v$.registerAccount.password.$invalid">
@@ -139,7 +139,7 @@
               minlength="4"
               maxlength="50"
               required
-              v-bind:placeholder="t$('global.form[\'confirmpassword.placeholder\']')"
+              :placeholder="t$('global.form[\'confirmpassword.placeholder\']')"
               data-cy="secondPassword"
             />
             <div v-if="v$.confirmPassword.$dirty && v$.confirmPassword.$invalid">
@@ -177,7 +177,7 @@
         <p></p>
         <div class="alert alert-warning">
           <span v-text="t$('global.messages.info.authenticated.prefix')"></span>
-          <a class="alert-link" v-on:click="openLogin()" v-text="t$('global.messages.info.authenticated.link')"></a
+          <a class="alert-link" @click="openLogin()" v-text="t$('global.messages.info.authenticated.link')"></a
           ><span v-html="t$('global.messages.info.authenticated.suffix')"></span>
         </div>
       </div>
