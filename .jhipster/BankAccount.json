@@ -53,8 +53,7 @@
     },
     {
       "fieldName": "attachment",
-      "fieldType": "byte[]",
-      "fieldTypeBlobContent": "any"
+      "fieldType": "AnyBlob"
     },
     {
       "fieldName": "description",

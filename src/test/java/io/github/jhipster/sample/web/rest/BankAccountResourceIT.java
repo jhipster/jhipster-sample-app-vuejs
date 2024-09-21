@@ -1192,12 +1192,7 @@ class BankAccountResourceIT {
             .agencyNumber(UPDATED_AGENCY_NUMBER)
             .lastOperationDuration(UPDATED_LAST_OPERATION_DURATION)
             .meanOperationDuration(UPDATED_MEAN_OPERATION_DURATION)
-            .balance(UPDATED_BALANCE)
-            .openingDay(UPDATED_OPENING_DAY)
-            .lastOperationDate(UPDATED_LAST_OPERATION_DATE)
-            .active(UPDATED_ACTIVE)
-            .accountType(UPDATED_ACCOUNT_TYPE)
-            .description(UPDATED_DESCRIPTION);
+            .active(UPDATED_ACTIVE);
 
         restBankAccountMockMvc
             .perform(

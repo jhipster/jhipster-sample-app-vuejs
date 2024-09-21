@@ -100,7 +100,7 @@ describe('Service Tests', () => {
       });
 
       it('should partial update a Operation', async () => {
-        const patchObject = { ...new Operation() };
+        const patchObject = { date: dayjs(currentDate).format(DATE_TIME_FORMAT), description: 'BBBBBB', amount: 1, ...new Operation() };
         const returnedFromService = Object.assign(patchObject, elemDefault);
 
         const expected = { date: currentDate, ...returnedFromService };
