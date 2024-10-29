@@ -1,14 +1,8 @@
 import { URL, fileURLToPath } from 'node:url';
-import { existsSync } from 'node:fs';
 import { defineConfig, normalizePath } from 'vite';
 
 import vue from '@vitejs/plugin-vue';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-
-const getFileFromRepo = (file: string) =>
-  existsSync(fileURLToPath(new URL(`../node_modules/${file}`, import.meta.url)))
-    ? fileURLToPath(new URL(`../node_modules/${file}`, import.meta.url))
-    : fileURLToPath(new URL(`./node_modules/${file}`, import.meta.url));
 
 const { getAbsoluteFSPath } = await import('swagger-ui-dist');
 const swaggerUiPath = getAbsoluteFSPath();
@@ -23,7 +17,7 @@ const config = defineConfig({
           src: [
             `${normalizePath(swaggerUiPath)}/*.{js,css,html,png}`,
             `!${normalizePath(swaggerUiPath)}/**/index.html`,
-            normalizePath(getFileFromRepo('axios/dist/axios.min.js')),
+            normalizePath(fileURLToPath(new URL('./dist/axios.min.js', import.meta.resolve('axios/package.json')))),
             normalizePath(fileURLToPath(new URL('./src/main/webapp/swagger-ui/index.html', import.meta.url))),
           ],
           dest: 'swagger-ui',

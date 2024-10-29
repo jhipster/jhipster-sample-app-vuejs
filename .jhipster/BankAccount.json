@@ -57,8 +57,7 @@
     },
     {
       "fieldName": "description",
-      "fieldType": "byte[]",
-      "fieldTypeBlobContent": "text"
+      "fieldType": "TextBlob"
     }
   ],
   "fluentMethods": true,
