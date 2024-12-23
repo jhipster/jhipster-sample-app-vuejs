@@ -77,6 +77,7 @@ export default defineComponent({
       attachment: {},
       description: {},
       user: {},
+      operations: {},
     };
     const v$ = useVuelidate(validationRules, bankAccount as any);
     v$.value.$validate();
