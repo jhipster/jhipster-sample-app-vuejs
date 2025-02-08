@@ -1,4 +1,3 @@
-/* tslint:disable max-line-length */
 import { vitest } from 'vitest';
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import sinon, { type SinonStubbedInstance } from 'sinon';

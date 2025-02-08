@@ -1,6 +1,4 @@
 import { Authority } from '@/shared/security/authority';
-/* tslint:disable */
-// prettier-ignore
 const Entities = () => import('@/entities/entities.vue');
 
 const BankAccountMySuffix = () => import('@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.vue');

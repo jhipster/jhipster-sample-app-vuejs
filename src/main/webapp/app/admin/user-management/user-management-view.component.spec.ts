@@ -8,8 +8,6 @@ import UserManagementView from './user-management-view.vue';
 import AlertService from '@/shared/alert/alert.service';
 import { Authority } from '@/shared/security/authority';
 
-type UserManagementViewComponentType = InstanceType<typeof UserManagementView>;
-
 let route: Partial<RouteLocation>;
 let router: Router;
 

@@ -1,5 +1,5 @@
 export default class LoginService {
-  private emit: (event: string, ...args: any[]) => void;
+  private readonly emit: (event: string, ...args: any[]) => void;
 
   constructor({ emit }: { emit: (event: string, ...args: any[]) => void }) {
     this.emit = emit;

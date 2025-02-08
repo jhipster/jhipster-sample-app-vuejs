@@ -28,7 +28,7 @@ export default defineComponent({
     }
     this.keyMissing = !this.key;
   },
-  setup(prop) {
+  setup() {
     const loginService = inject<LoginService>('loginService');
 
     const doNotMatch: Ref<string> = ref(null);

@@ -1,4 +1,3 @@
-/* tslint:disable max-line-length */
 import axios from 'axios';
 import sinon from 'sinon';
 import dayjs from 'dayjs';

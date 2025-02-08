@@ -3,5 +3,4 @@ export type AccountStore = ReturnType<typeof useStore>;
 export { useStore };
 
 import { useTranslationStore } from '@/shared/config/store/translation-store';
-export type TranslationStore = ReturnType<typeof useTranslationStore>;
 export { useTranslationStore };
