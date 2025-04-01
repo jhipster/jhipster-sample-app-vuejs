@@ -8,7 +8,7 @@ const { getAbsoluteFSPath } = await import('swagger-ui-dist');
 const swaggerUiPath = getAbsoluteFSPath();
 
 // eslint-disable-next-line prefer-const
-const config = defineConfig({
+let config = defineConfig({
   plugins: [
     vue(),
     viteStaticCopy({

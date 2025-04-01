@@ -69,58 +69,22 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
         Specification<BankAccount> specification = Specification.where(null);
         if (criteria != null) {
             // This has to be called first, because the distinct method returns null
-            if (criteria.getDistinct() != null) {
-                specification = specification.and(distinct(criteria.getDistinct()));
-            }
-            if (criteria.getId() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getId(), BankAccount_.id));
-            }
-            if (criteria.getName() != null) {
-                specification = specification.and(buildStringSpecification(criteria.getName(), BankAccount_.name));
-            }
-            if (criteria.getBankNumber() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getBankNumber(), BankAccount_.bankNumber));
-            }
-            if (criteria.getAgencyNumber() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getAgencyNumber(), BankAccount_.agencyNumber));
-            }
-            if (criteria.getLastOperationDuration() != null) {
-                specification = specification.and(
-                    buildRangeSpecification(criteria.getLastOperationDuration(), BankAccount_.lastOperationDuration)
-                );
-            }
-            if (criteria.getMeanOperationDuration() != null) {
-                specification = specification.and(
-                    buildRangeSpecification(criteria.getMeanOperationDuration(), BankAccount_.meanOperationDuration)
-                );
-            }
-            if (criteria.getBalance() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getBalance(), BankAccount_.balance));
-            }
-            if (criteria.getOpeningDay() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getOpeningDay(), BankAccount_.openingDay));
-            }
-            if (criteria.getLastOperationDate() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getLastOperationDate(), BankAccount_.lastOperationDate));
-            }
-            if (criteria.getActive() != null) {
-                specification = specification.and(buildSpecification(criteria.getActive(), BankAccount_.active));
-            }
-            if (criteria.getAccountType() != null) {
-                specification = specification.and(buildSpecification(criteria.getAccountType(), BankAccount_.accountType));
-            }
-            if (criteria.getUserId() != null) {
-                specification = specification.and(
-                    buildSpecification(criteria.getUserId(), root -> root.join(BankAccount_.user, JoinType.LEFT).get(User_.id))
-                );
-            }
-            if (criteria.getOperationId() != null) {
-                specification = specification.and(
-                    buildSpecification(criteria.getOperationId(), root ->
-                        root.join(BankAccount_.operations, JoinType.LEFT).get(Operation_.id)
-                    )
-                );
-            }
+            specification = Specification.allOf(
+                Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : null,
+                buildRangeSpecification(criteria.getId(), BankAccount_.id),
+                buildStringSpecification(criteria.getName(), BankAccount_.name),
+                buildRangeSpecification(criteria.getBankNumber(), BankAccount_.bankNumber),
+                buildRangeSpecification(criteria.getAgencyNumber(), BankAccount_.agencyNumber),
+                buildRangeSpecification(criteria.getLastOperationDuration(), BankAccount_.lastOperationDuration),
+                buildRangeSpecification(criteria.getMeanOperationDuration(), BankAccount_.meanOperationDuration),
+                buildRangeSpecification(criteria.getBalance(), BankAccount_.balance),
+                buildRangeSpecification(criteria.getOpeningDay(), BankAccount_.openingDay),
+                buildRangeSpecification(criteria.getLastOperationDate(), BankAccount_.lastOperationDate),
+                buildSpecification(criteria.getActive(), BankAccount_.active),
+                buildSpecification(criteria.getAccountType(), BankAccount_.accountType),
+                buildSpecification(criteria.getUserId(), root -> root.join(BankAccount_.user, JoinType.LEFT).get(User_.id)),
+                buildSpecification(criteria.getOperationId(), root -> root.join(BankAccount_.operations, JoinType.LEFT).get(Operation_.id))
+            );
         }
         return specification;
     }
