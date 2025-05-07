@@ -5,7 +5,7 @@ import { type IBankAccountMySuffix } from '@/shared/model/test-root/bank-account
 const baseApiUrl = 'api/bank-accounts';
 
 export default class BankAccountMySuffixService {
-  public find(id: number): Promise<IBankAccountMySuffix> {
+  find(id: number): Promise<IBankAccountMySuffix> {
     return new Promise<IBankAccountMySuffix>((resolve, reject) => {
       axios
         .get(`${baseApiUrl}/${id}`)
@@ -18,7 +18,7 @@ export default class BankAccountMySuffixService {
     });
   }
 
-  public retrieve(): Promise<any> {
+  retrieve(): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .get(baseApiUrl)
@@ -31,7 +31,7 @@ export default class BankAccountMySuffixService {
     });
   }
 
-  public delete(id: number): Promise<any> {
+  delete(id: number): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .delete(`${baseApiUrl}/${id}`)
@@ -44,7 +44,7 @@ export default class BankAccountMySuffixService {
     });
   }
 
-  public create(entity: IBankAccountMySuffix): Promise<IBankAccountMySuffix> {
+  create(entity: IBankAccountMySuffix): Promise<IBankAccountMySuffix> {
     return new Promise<IBankAccountMySuffix>((resolve, reject) => {
       axios
         .post(`${baseApiUrl}`, entity)
@@ -57,7 +57,7 @@ export default class BankAccountMySuffixService {
     });
   }
 
-  public update(entity: IBankAccountMySuffix): Promise<IBankAccountMySuffix> {
+  update(entity: IBankAccountMySuffix): Promise<IBankAccountMySuffix> {
     return new Promise<IBankAccountMySuffix>((resolve, reject) => {
       axios
         .put(`${baseApiUrl}/${entity.id}`, entity)
@@ -70,7 +70,7 @@ export default class BankAccountMySuffixService {
     });
   }
 
-  public partialUpdate(entity: IBankAccountMySuffix): Promise<IBankAccountMySuffix> {
+  partialUpdate(entity: IBankAccountMySuffix): Promise<IBankAccountMySuffix> {
     return new Promise<IBankAccountMySuffix>((resolve, reject) => {
       axios
         .patch(`${baseApiUrl}/${entity.id}`, entity)

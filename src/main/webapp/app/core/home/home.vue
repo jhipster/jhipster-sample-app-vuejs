@@ -9,12 +9,12 @@
 
       <div>
         <div class="alert alert-success" v-if="authenticated">
-          <span v-if="username" v-text="t$('home.logged.message', { username: username })"></span>
+          <span v-if="username" v-text="t$('home.logged.message', { username })"></span>
         </div>
 
         <div class="alert alert-warning" v-if="!authenticated">
           <span v-text="t$('global.messages.info.authenticated.prefix')"></span>
-          <a class="alert-link" @click="openLogin()" v-text="t$('global.messages.info.authenticated.link')"></a
+          <a class="alert-link" @click="showLogin()" v-text="t$('global.messages.info.authenticated.link')"></a
           ><span v-html="t$('global.messages.info.authenticated.suffix')"></span>
         </div>
         <div class="alert alert-warning" v-if="!authenticated">

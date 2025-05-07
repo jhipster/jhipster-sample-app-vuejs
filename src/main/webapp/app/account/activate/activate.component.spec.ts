@@ -1,9 +1,9 @@
 import { vitest } from 'vitest';
 import { type ComponentMountingOptions, shallowMount } from '@vue/test-utils';
+import { createTestingPinia } from '@pinia/testing';
 import axios from 'axios';
 import sinon from 'sinon';
 
-import LoginService from '../login.service';
 import Activate from './activate.vue';
 
 type ActivateComponentType = InstanceType<typeof Activate>;
@@ -21,16 +21,12 @@ const axiosStub = {
 
 describe('Activate Component', () => {
   let activate: ActivateComponentType;
-  let loginService: LoginService;
   let mountOptions: ComponentMountingOptions<ActivateComponentType>;
 
   beforeEach(() => {
-    loginService = new LoginService({ emit: vitest.fn() });
     mountOptions = {
       global: {
-        provide: {
-          loginService,
-        },
+        plugins: [createTestingPinia()],
       },
     };
   });

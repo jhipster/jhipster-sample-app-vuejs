@@ -11,25 +11,25 @@ export default class TranslationService {
     this.i18n = i18n;
   }
 
-  public async refreshTranslation(newLanguage: string) {
+  async refreshTranslation(newLanguage: string) {
     if (this.i18n && !this.i18n.messages[newLanguage]) {
       const translations = (await import(`../../i18n/${newLanguage}/${newLanguage}.js`)).default;
       this.i18n.setLocaleMessage(newLanguage, translations);
     }
   }
 
-  public setLocale(lang: string) {
+  setLocale(lang: string) {
     dayjs.locale(lang);
     this.i18n.locale.value = lang;
     axios.defaults.headers.common['Accept-Language'] = lang;
     document.querySelector('html').setAttribute('lang', lang);
   }
 
-  public isLanguageSupported(lang: string) {
+  isLanguageSupported(lang: string) {
     return Boolean(this.languages[lang]);
   }
 
-  public getLocalStoreLanguage(): string | null {
+  getLocalStoreLanguage(): string | null {
     return localStorage.getItem('currentLanguage');
   }
 }

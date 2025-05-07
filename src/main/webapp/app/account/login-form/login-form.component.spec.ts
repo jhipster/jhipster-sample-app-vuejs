@@ -5,7 +5,6 @@ import sinon from 'sinon';
 import { type RouteLocation } from 'vue-router';
 import { createTestingPinia } from '@pinia/testing';
 
-import LoginService from '../login.service';
 import AccountService from '../account.service';
 import LoginForm from './login-form.vue';
 import { useStore } from '@/store';
@@ -18,10 +17,6 @@ vitest.mock('vue-router', () => ({
   useRoute: () => route,
   useRouter: () => ({ go: routerGoMock }),
 }));
-
-const pinia = createTestingPinia();
-
-const store = useStore();
 
 const axiosStub = {
   get: sinon.stub(axios, 'get'),
@@ -36,7 +31,8 @@ describe('LoginForm Component', () => {
     axiosStub.get.resolves({});
     axiosStub.post.reset();
 
-    const loginService = new LoginService({ emit: vitest.fn() });
+    const pinia = createTestingPinia();
+    const store = useStore();
 
     const globalOptions: MountingOptions<LoginFormComponentType>['global'] = {
       stubs: {
@@ -50,7 +46,6 @@ describe('LoginForm Component', () => {
       },
       plugins: [pinia],
       provide: {
-        loginService,
         accountService: new AccountService(store),
       },
     };

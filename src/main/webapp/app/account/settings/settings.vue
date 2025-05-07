@@ -3,7 +3,7 @@
     <div class="row justify-content-center">
       <div class="col-md-8 toastify-container">
         <h2 v-if="username" id="settings-title">
-          <span v-html="t$('settings.title', { username: username })"></span>
+          <span v-html="t$('settings.title', { username })"></span>
         </h2>
 
         <div class="alert alert-success" role="alert" v-if="success" v-html="t$('settings.messages.success')"></div>

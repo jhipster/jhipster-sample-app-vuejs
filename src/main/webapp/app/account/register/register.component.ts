@@ -2,7 +2,7 @@ import { type Ref, computed, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useVuelidate } from '@vuelidate/core';
 import { email, helpers, maxLength, minLength, required, sameAs } from '@vuelidate/validators';
-import type LoginService from '@/account/login.service';
+import { useLoginModal } from '@/account/login-modal';
 import RegisterService from '@/account/register/register.service';
 import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from '@/constants';
 
@@ -41,7 +41,7 @@ export default defineComponent({
     };
   },
   setup() {
-    const loginService = inject<LoginService>('loginService');
+    const { showLogin } = useLoginModal();
     const registerService = inject('registerService', () => new RegisterService(), true);
     const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'en'), true);
 
@@ -57,12 +57,8 @@ export default defineComponent({
       password: undefined,
     });
 
-    const openLogin = () => {
-      loginService.openLogin();
-    };
-
     return {
-      openLogin,
+      showLogin,
       currentLanguage,
       registerService,
       error,

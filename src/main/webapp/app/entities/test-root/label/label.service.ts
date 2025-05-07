@@ -7,7 +7,7 @@ import { type ILabel } from '@/shared/model/test-root/label.model';
 const baseApiUrl = 'api/labels';
 
 export default class LabelService {
-  public find(id: number): Promise<ILabel> {
+  find(id: number): Promise<ILabel> {
     return new Promise<ILabel>((resolve, reject) => {
       axios
         .get(`${baseApiUrl}/${id}`)
@@ -20,7 +20,7 @@ export default class LabelService {
     });
   }
 
-  public retrieve(paginationQuery?: any): Promise<any> {
+  retrieve(paginationQuery?: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .get(`${baseApiUrl}?${buildPaginationQueryOpts(paginationQuery)}`)
@@ -33,7 +33,7 @@ export default class LabelService {
     });
   }
 
-  public delete(id: number): Promise<any> {
+  delete(id: number): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .delete(`${baseApiUrl}/${id}`)
@@ -46,7 +46,7 @@ export default class LabelService {
     });
   }
 
-  public create(entity: ILabel): Promise<ILabel> {
+  create(entity: ILabel): Promise<ILabel> {
     return new Promise<ILabel>((resolve, reject) => {
       axios
         .post(`${baseApiUrl}`, entity)
@@ -59,7 +59,7 @@ export default class LabelService {
     });
   }
 
-  public update(entity: ILabel): Promise<ILabel> {
+  update(entity: ILabel): Promise<ILabel> {
     return new Promise<ILabel>((resolve, reject) => {
       axios
         .put(`${baseApiUrl}/${entity.id}`, entity)
@@ -72,7 +72,7 @@ export default class LabelService {
     });
   }
 
-  public partialUpdate(entity: ILabel): Promise<ILabel> {
+  partialUpdate(entity: ILabel): Promise<ILabel> {
     return new Promise<ILabel>((resolve, reject) => {
       axios
         .patch(`${baseApiUrl}/${entity.id}`, entity)

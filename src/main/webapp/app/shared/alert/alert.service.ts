@@ -23,7 +23,7 @@ export default class AlertService {
     this.i18n = i18n;
   }
 
-  public showInfo(toastMessage: string, toastOptions?: any) {
+  showInfo(toastMessage: string, toastOptions?: any) {
     this.bvToast.toast(toastMessage, {
       toaster: 'b-toaster-top-center',
       title: 'Info',
@@ -34,7 +34,7 @@ export default class AlertService {
     });
   }
 
-  public showSuccess(toastMessage: string) {
+  showSuccess(toastMessage: string) {
     this.bvToast.toast(toastMessage, {
       toaster: 'b-toaster-top-center',
       title: 'Success',
@@ -44,7 +44,7 @@ export default class AlertService {
     });
   }
 
-  public showError(toastMessage: string) {
+  showError(toastMessage: string) {
     this.bvToast.toast(toastMessage, {
       toaster: 'b-toaster-top-center',
       title: 'Error',
@@ -54,7 +54,7 @@ export default class AlertService {
     });
   }
 
-  public showHttpError(httpErrorResponse: any) {
+  showHttpError(httpErrorResponse: any) {
     let errorMessage: string | null = null;
     switch (httpErrorResponse.status) {
       case 0:

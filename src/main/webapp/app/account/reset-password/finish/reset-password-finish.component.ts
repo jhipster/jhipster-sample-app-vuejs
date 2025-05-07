@@ -1,9 +1,9 @@
-import { type Ref, defineComponent, inject, ref } from 'vue';
+import { type Ref, defineComponent, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import axios from 'axios';
 import { useVuelidate } from '@vuelidate/core';
 import { maxLength, minLength, required, sameAs } from '@vuelidate/validators';
-import type LoginService from '@/account/login.service';
+import { useLoginModal } from '@/account/login-modal';
 
 export default defineComponent({
   compatConfig: { MODE: 3 },
@@ -29,7 +29,7 @@ export default defineComponent({
     this.keyMissing = !this.key;
   },
   setup() {
-    const loginService = inject<LoginService>('loginService');
+    const { showLogin } = useLoginModal();
 
     const doNotMatch: Ref<string> = ref(null);
     const success: Ref<string> = ref(null);
@@ -41,12 +41,8 @@ export default defineComponent({
       confirmPassword: null,
     });
 
-    const openLogin = () => {
-      loginService.openLogin();
-    };
-
     return {
-      openLogin,
+      showLogin,
       doNotMatch,
       success,
       error,

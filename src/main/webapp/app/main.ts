@@ -6,14 +6,15 @@ import { useI18n } from 'vue-i18n';
 
 import App from './app.vue';
 import router from './router';
-import { initFortAwesome, initI18N } from './shared/config/config';
-import { initBootstrapVue } from './shared/config/config-bootstrap-vue';
-import JhiItemCountComponent from './shared/jhi-item-count.vue';
-import JhiSortIndicatorComponent from './shared/sort/jhi-sort-indicator.vue';
-import LoginService from './account/login.service';
-import AccountService from './account/account.service';
-import { setupAxiosInterceptors } from '@/shared/config/axios-interceptor';
 import { useStore, useTranslationStore } from '@/store';
+import { setupAxiosInterceptors } from '@/shared/config/axios-interceptor';
+
+import { initFortAwesome, initI18N } from '@/shared/config/config';
+import { initBootstrapVue } from '@/shared/config/config-bootstrap-vue';
+import JhiItemCountComponent from '@/shared/jhi-item-count.vue';
+import JhiSortIndicatorComponent from '@/shared/sort/jhi-sort-indicator.vue';
+import { useLoginModal } from '@/account/login-modal';
+import AccountService from '@/account/account.service';
 
 import '../content/scss/global.scss';
 import '../content/scss/vendor.scss';
@@ -60,10 +61,8 @@ const i18n = initI18N();
 const app = createApp({
   compatConfig: { MODE: 3 },
   components: { App },
-  template: '<App/>',
-  setup(_props, { emit }) {
-    const loginService = new LoginService({ emit });
-    provide('loginService', loginService);
+  setup() {
+    const { hideLogin, showLogin } = useLoginModal();
     const store = useStore();
     const accountService = new AccountService(store);
     const i18n = useI18n();
@@ -105,7 +104,7 @@ const app = createApp({
 
     router.beforeResolve(async (to, from, next) => {
       // Make sure login modal is closed
-      loginService.hideLogin();
+      hideLogin();
 
       if (!store.authenticated) {
         await accountService.update();
@@ -131,7 +130,7 @@ const app = createApp({
           store.logout();
           if (!url.endsWith('api/account') && !url.endsWith('api/authenticate')) {
             // Ask for a new authentication
-            loginService.openLogin();
+            showLogin();
             return;
           }
         }
@@ -153,6 +152,7 @@ const app = createApp({
     provide('accountService', accountService);
     // jhipster-needle-add-entity-service-to-main - JHipster will import entities services here
   },
+  template: '<App/>',
 });
 
 initFortAwesome(app);

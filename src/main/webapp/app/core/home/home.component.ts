@@ -1,24 +1,19 @@
 import { type ComputedRef, defineComponent, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import type LoginService from '@/account/login.service';
+import { useLoginModal } from '@/account/login-modal';
 
 export default defineComponent({
   compatConfig: { MODE: 3 },
   setup() {
-    const loginService = inject<LoginService>('loginService');
-
+    const { showLogin } = useLoginModal();
     const authenticated = inject<ComputedRef<boolean>>('authenticated');
     const username = inject<ComputedRef<string>>('currentUsername');
-
-    const openLogin = () => {
-      loginService.openLogin();
-    };
 
     return {
       authenticated,
       username,
-      openLogin,
+      showLogin,
       t$: useI18n().t,
     };
   },

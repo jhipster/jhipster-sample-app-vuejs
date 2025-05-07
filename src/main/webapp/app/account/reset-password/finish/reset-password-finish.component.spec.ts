@@ -1,6 +1,7 @@
 import axios from 'axios';
 import sinon from 'sinon';
 import { shallowMount } from '@vue/test-utils';
+import { createTestingPinia } from '@pinia/testing';
 import ResetPasswordFinish from './reset-password-finish.vue';
 
 type ResetPasswordFinishComponentType = InstanceType<typeof ResetPasswordFinish>;
@@ -17,9 +18,7 @@ describe('Reset Component Finish', () => {
     axiosStub.post.reset();
     const wrapper = shallowMount(ResetPasswordFinish, {
       global: {
-        provide: {
-          loginService: {},
-        },
+        plugins: [createTestingPinia()],
       },
     });
     resetPasswordFinish = wrapper.vm;

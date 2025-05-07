@@ -12,7 +12,7 @@
 
         <div class="alert alert-success" v-if="success">
           <span v-html="t$('reset.finish.messages.success')"></span>
-          <a class="alert-link" @click="openLogin" v-text="t$('global.messages.info.authenticated.link')"></a>
+          <a class="alert-link" @click="showLogin()" v-text="t$('global.messages.info.authenticated.link')"></a>
         </div>
         <div class="alert alert-danger" v-if="doNotMatch">
           <p v-text="t$('global.messages.error.dontmatch')"></p>

@@ -7,7 +7,7 @@ import { type IOperation } from '@/shared/model/test-root/operation.model';
 const baseApiUrl = 'api/operations';
 
 export default class OperationService {
-  public find(id: number): Promise<IOperation> {
+  find(id: number): Promise<IOperation> {
     return new Promise<IOperation>((resolve, reject) => {
       axios
         .get(`${baseApiUrl}/${id}`)
@@ -20,7 +20,7 @@ export default class OperationService {
     });
   }
 
-  public retrieve(paginationQuery?: any): Promise<any> {
+  retrieve(paginationQuery?: any): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .get(`${baseApiUrl}?${buildPaginationQueryOpts(paginationQuery)}`)
@@ -33,7 +33,7 @@ export default class OperationService {
     });
   }
 
-  public delete(id: number): Promise<any> {
+  delete(id: number): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       axios
         .delete(`${baseApiUrl}/${id}`)
@@ -46,7 +46,7 @@ export default class OperationService {
     });
   }
 
-  public create(entity: IOperation): Promise<IOperation> {
+  create(entity: IOperation): Promise<IOperation> {
     return new Promise<IOperation>((resolve, reject) => {
       axios
         .post(`${baseApiUrl}`, entity)
@@ -59,7 +59,7 @@ export default class OperationService {
     });
   }
 
-  public update(entity: IOperation): Promise<IOperation> {
+  update(entity: IOperation): Promise<IOperation> {
     return new Promise<IOperation>((resolve, reject) => {
       axios
         .put(`${baseApiUrl}/${entity.id}`, entity)
@@ -72,7 +72,7 @@ export default class OperationService {
     });
   }
 
-  public partialUpdate(entity: IOperation): Promise<IOperation> {
+  partialUpdate(entity: IOperation): Promise<IOperation> {
     return new Promise<IOperation>((resolve, reject) => {
       axios
         .patch(`${baseApiUrl}/${entity.id}`, entity)

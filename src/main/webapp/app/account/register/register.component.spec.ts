@@ -1,12 +1,12 @@
-import { vitest } from 'vitest';
 import { computed } from 'vue';
 import { shallowMount } from '@vue/test-utils';
+import { createTestingPinia } from '@pinia/testing';
 import axios from 'axios';
 import sinon from 'sinon';
 
-import LoginService from '../login.service';
 import Register from './register.vue';
 import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from '@/constants';
+import { useLoginModal } from '@/account/login-modal';
 
 type RegisterComponentType = InstanceType<typeof Register>;
 
@@ -17,7 +17,6 @@ const axiosStub = {
 
 describe('Register Component', () => {
   let register: RegisterComponentType;
-  let loginService: LoginService;
   const filledRegisterAccount = {
     email: 'jhi@pster.net',
     langKey: 'en',
@@ -28,13 +27,11 @@ describe('Register Component', () => {
   beforeEach(() => {
     axiosStub.get.resolves({});
     axiosStub.post.reset();
-    loginService = new LoginService({ emit: vitest.fn() });
-    vitest.spyOn(loginService, 'openLogin');
 
     const wrapper = shallowMount(Register, {
       global: {
+        plugins: [createTestingPinia()],
         provide: {
-          loginService,
           currentLanguage: computed(() => 'en'),
         },
       },
@@ -54,8 +51,9 @@ describe('Register Component', () => {
   });
 
   it('should open login modal when asked to', () => {
-    register.openLogin();
-    expect(loginService.openLogin).toBeCalledTimes(1);
+    const login = useLoginModal();
+    register.showLogin();
+    expect(login.showLogin).toHaveBeenCalledOnce();
   });
 
   it('should register when password match', async () => {

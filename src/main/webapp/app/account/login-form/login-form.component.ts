@@ -3,7 +3,7 @@ import { type Ref, defineComponent, inject, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import type AccountService from '../account.service';
-import type LoginService from '@/account/login.service';
+import { useLoginModal } from '@/account/login-modal';
 
 export default defineComponent({
   compatConfig: { MODE: 3 },
@@ -12,13 +12,14 @@ export default defineComponent({
     const login: Ref<string> = ref(null);
     const password: Ref<string> = ref(null);
     const rememberMe: Ref<boolean> = ref(false);
+
+    const { hideLogin } = useLoginModal();
     const route = useRoute();
     const router = useRouter();
 
     const previousState = () => router.go(-1);
 
     const accountService = inject<AccountService>('accountService');
-    const loginService = inject<LoginService>('loginService');
 
     const doLogin = async () => {
       const data = { username: login.value, password: password.value, rememberMe: rememberMe.value };
@@ -37,12 +38,12 @@ export default defineComponent({
         }
 
         authenticationError.value = false;
-        loginService.hideLogin();
+        hideLogin();
         await accountService.retrieveAccount();
         if (route.path === '/forbidden') {
           previousState();
         }
-      } catch (_error) {
+      } catch {
         authenticationError.value = true;
       }
     };

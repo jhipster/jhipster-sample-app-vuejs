@@ -1,7 +1,8 @@
 import { type Ref, computed, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+
 import { useRouter } from 'vue-router';
-import type LoginService from '@/account/login.service';
+import { useLoginModal } from '@/account/login-modal';
 import type AccountService from '@/account/account.service';
 import languages from '@/shared/config/languages';
 import EntitiesMenu from '@/entities/entities-menu.vue';
@@ -15,7 +16,7 @@ export default defineComponent({
     'entities-menu': EntitiesMenu,
   },
   setup() {
-    const loginService = inject<LoginService>('loginService');
+    const { showLogin } = useLoginModal();
     const accountService = inject<AccountService>('accountService');
     const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'en'), true);
     const changeLanguage = inject<(string) => Promise<void>>('changeLanguage');
@@ -33,10 +34,6 @@ export default defineComponent({
     const openAPIEnabled = computed(() => store.activeProfiles.indexOf('api-docs') > -1);
     const inProduction = computed(() => store.activeProfiles.indexOf('prod') > -1);
     const authenticated = computed(() => store.authenticated);
-
-    const openLogin = () => {
-      loginService.openLogin();
-    };
 
     const subIsActive = (input: string | string[]) => {
       const paths = Array.isArray(input) ? input : [input];
@@ -58,7 +55,7 @@ export default defineComponent({
       logout,
       subIsActive,
       accountService,
-      openLogin,
+      showLogin,
       changeLanguage,
       languages: languages(),
       isActiveLanguage,

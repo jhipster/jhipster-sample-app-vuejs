@@ -3,11 +3,11 @@ import { computed } from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import { type Router } from 'vue-router';
 import { createTestingPinia } from '@pinia/testing';
-import JhiNavbar from './jhi-navbar.vue';
 
+import JhiNavbar from './jhi-navbar.vue';
 import { useStore } from '@/store';
 import { createRouter } from '@/router';
-import LoginService from '@/account/login.service';
+import { useLoginModal } from '@/account/login-modal';
 
 type JhiNavbarComponentType = InstanceType<typeof JhiNavbar>;
 
@@ -16,15 +16,13 @@ const store = useStore();
 
 describe('JhiNavbar', () => {
   let jhiNavbar: JhiNavbarComponentType;
-  let loginService: LoginService;
+  let login: ReturnType<typeof useLoginModal>;
   const accountService = { hasAnyAuthorityAndCheckAuth: vitest.fn().mockImplementation(() => Promise.resolve(true)) };
   const changeLanguage = vitest.fn();
   let router: Router;
 
   beforeEach(() => {
     router = createRouter();
-    loginService = new LoginService({ emit: vitest.fn() });
-    vitest.spyOn(loginService, 'openLogin');
     const wrapper = shallowMount(JhiNavbar, {
       global: {
         plugins: [pinia, router],
@@ -40,7 +38,6 @@ describe('JhiNavbar', () => {
           'b-navbar-brand': true,
         },
         provide: {
-          loginService,
           currentLanguage: computed(() => 'foo'),
           changeLanguage,
           accountService,
@@ -48,6 +45,7 @@ describe('JhiNavbar', () => {
       },
     });
     jhiNavbar = wrapper.vm;
+    login = useLoginModal();
   });
 
   it('should not have user data set', () => {
@@ -70,8 +68,9 @@ describe('JhiNavbar', () => {
   });
 
   it('should use login service', () => {
-    jhiNavbar.openLogin();
-    expect(loginService.openLogin).toHaveBeenCalled();
+    jhiNavbar.showLogin();
+
+    expect(login.showLogin).toHaveBeenCalled();
   });
 
   it('should use account service', () => {
@@ -82,6 +81,7 @@ describe('JhiNavbar', () => {
 
   it('logout should clear credentials', async () => {
     store.setAuthentication({ login: 'test' });
+
     await jhiNavbar.logout();
 
     expect(jhiNavbar.authenticated).toBeFalsy();
