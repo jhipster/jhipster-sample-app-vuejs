@@ -1,11 +1,11 @@
 import { type ComputedRef, type Ref, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+
 import { useVuelidate } from '@vuelidate/core';
 import { maxLength, minLength, required, sameAs } from '@vuelidate/validators';
 import axios from 'axios';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   validations() {
     return {
       resetPassword: {

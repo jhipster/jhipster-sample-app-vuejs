@@ -1,18 +1,20 @@
 <template>
   <div>
-    <h2 id="configuration-page-heading" v-text="t$('configuration.title')" data-cy="configurationPageHeading"></h2>
+    <h2 id="configuration-page-heading" data-cy="configurationPageHeading">{{ t$('configuration.title') }}</h2>
 
     <div v-if="allConfiguration && configuration">
-      <span v-text="t$('configuration.filter')"></span> <input type="text" v-model="filtered" class="form-control" />
+      <span>{{ t$('configuration.filter') }}</span> <input type="text" v-model="filtered" class="form-control" />
       <h3>Spring configuration</h3>
       <table class="table table-striped table-bordered table-responsive d-table" aria-describedby="Configuration">
         <thead>
           <tr>
             <th class="w-40" @click="changeOrder('prefix')" scope="col">
-              <span v-text="t$('configuration.table.prefix')"></span>
+              <span>{{ t$('configuration.table.prefix') }}</span>
+              <jhi-sort-indicator :current-order="orderProp" :reverse="reverse" :field-name="'prefix'"></jhi-sort-indicator>
             </th>
             <th class="w-60" @click="changeOrder('properties')" scope="col">
-              <span v-text="t$('configuration.table.properties')"></span>
+              <span>{{ t$('configuration.table.properties') }}</span>
+              <jhi-sort-indicator :current-order="orderProp" :reverse="reverse" :field-name="'properties'"></jhi-sort-indicator>
             </th>
           </tr>
         </thead>
@@ -25,7 +27,7 @@
               <div class="row" v-for="key in keys(entry.properties)" :key="key">
                 <div class="col-md-4">{{ key }}</div>
                 <div class="col-md-8">
-                  <span class="float-right badge-secondary break">{{ entry.properties[key] }}</span>
+                  <span class="float-end bg-secondary break">{{ entry.properties[key] }}</span>
                 </div>
               </div>
             </td>
@@ -47,7 +49,7 @@
             <tr v-for="item of allConfiguration[key]" :key="item.key">
               <td class="break">{{ item.key }}</td>
               <td class="break">
-                <span class="float-right badge-secondary break">{{ item.val }}</span>
+                <span class="float-end bg-secondary break">{{ item.val }}</span>
               </td>
             </tr>
           </tbody>

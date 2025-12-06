@@ -2,14 +2,14 @@ import { type Ref, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
-import BankAccountMySuffixService from './bank-account-my-suffix.service';
-import useDataUtils from '@/shared/data/data-utils.service';
-import { useDateFormat } from '@/shared/composables';
-import { type IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
 import { useAlertService } from '@/shared/alert/alert.service';
+import { useDateFormat } from '@/shared/composables';
+import useDataUtils from '@/shared/data/data-utils.service';
+import { type IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
+
+import BankAccountMySuffixService from './bank-account-my-suffix.service';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'BankAccountMySuffixDetails',
   setup() {
     const dateFormat = useDateFormat();

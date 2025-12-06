@@ -32,7 +32,7 @@ public class BankAccountResource {
 
     private static final String ENTITY_NAME = "testRootBankAccount";
 
-    @Value("${jhipster.clientApp.name}")
+    @Value("${jhipster.clientApp.name:jhipsterSampleApplicationVue}")
     private String applicationName;
 
     private final BankAccountService bankAccountService;

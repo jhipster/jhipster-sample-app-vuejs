@@ -1,10 +1,11 @@
 import axios from 'axios';
-import sinon from 'sinon';
 import dayjs from 'dayjs';
+import sinon from 'sinon';
 
-import OperationService from './operation.service';
 import { DATE_TIME_FORMAT } from '@/shared/composables/date-format';
 import { Operation } from '@/shared/model/test-root/operation.model';
+
+import OperationService from './operation.service';
 
 const error = {
   response: {

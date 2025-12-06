@@ -4,11 +4,11 @@ import { useI18n } from 'vue-i18n';
 import { filterBy } from '@/shared/computables';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'JhiMetricsModal',
   props: {
     threadDump: {
       type: Array as PropType<any[]>,
+      default: () => [],
     },
   },
   setup(props) {
@@ -50,14 +50,15 @@ export default defineComponent({
   methods: {
     getBadgeClass(threadState: string): string {
       if (threadState === 'RUNNABLE') {
-        return 'badge-success';
+        return 'bg-success';
       } else if (threadState === 'WAITING') {
-        return 'badge-info';
+        return 'bg-info';
       } else if (threadState === 'TIMED_WAITING') {
-        return 'badge-warning';
+        return 'bg-warning';
       } else if (threadState === 'BLOCKED') {
-        return 'badge-danger';
+        return 'bg-danger';
       }
+      return '';
     },
   },
 });

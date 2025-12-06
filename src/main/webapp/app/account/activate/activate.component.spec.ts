@@ -1,6 +1,7 @@
 import { vitest } from 'vitest';
-import { type ComponentMountingOptions, shallowMount } from '@vue/test-utils';
+
 import { createTestingPinia } from '@pinia/testing';
+import { type ComponentMountingOptions, shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
 

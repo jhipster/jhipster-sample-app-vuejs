@@ -2,8 +2,8 @@ import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
 
-import Health from './health.vue';
 import HealthService from './health.service';
+import Health from './health.vue';
 
 type HealthComponentType = InstanceType<typeof Health>;
 
@@ -56,8 +56,8 @@ describe('Health Component', () => {
     it('should get badge class', () => {
       const upBadgeClass = health.getBadgeClass('UP');
       const downBadgeClass = health.getBadgeClass('DOWN');
-      expect(upBadgeClass).toEqual('badge-success');
-      expect(downBadgeClass).toEqual('badge-danger');
+      expect(upBadgeClass).toEqual('bg-success');
+      expect(downBadgeClass).toEqual('bg-danger');
     });
   });
 

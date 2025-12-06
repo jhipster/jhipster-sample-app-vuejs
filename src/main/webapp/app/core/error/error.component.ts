@@ -1,10 +1,10 @@
 import { type ComputedRef, type Ref, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
+
 import { useLoginModal } from '@/account/login-modal';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'Error',
   setup() {
     const { showLogin } = useLoginModal();

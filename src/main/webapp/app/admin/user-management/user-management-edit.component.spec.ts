@@ -1,11 +1,13 @@
 import { vitest } from 'vitest';
+import { type RouteLocation } from 'vue-router';
+
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
-import { type RouteLocation } from 'vue-router';
+
+import AlertService from '@/shared/alert/alert.service';
 
 import UserManagementEdit from './user-management-edit.vue';
-import AlertService from '@/shared/alert/alert.service';
 
 type UserManagementEditComponentType = InstanceType<typeof UserManagementEdit>;
 
@@ -30,8 +32,8 @@ describe('UserManagementEdit Component', () => {
     route = {};
     alertService = new AlertService({
       i18n: { t: vitest.fn() } as any,
-      bvToast: {
-        toast: vitest.fn(),
+      toast: {
+        show: vitest.fn(),
       } as any,
     });
 

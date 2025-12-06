@@ -1,12 +1,13 @@
 import { type Ref, defineComponent, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import axios from 'axios';
+
 import { useVuelidate } from '@vuelidate/core';
 import { maxLength, minLength, required, sameAs } from '@vuelidate/validators';
+import axios from 'axios';
+
 import { useLoginModal } from '@/account/login-modal';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'ResetPasswordFinish',
   validations() {
     return {
@@ -21,12 +22,6 @@ export default defineComponent({
         },
       },
     };
-  },
-  created(): void {
-    if (this.$route?.query?.key !== undefined) {
-      this.key = this.$route.query.key;
-    }
-    this.keyMissing = !this.key;
   },
   setup() {
     const { showLogin } = useLoginModal();
@@ -52,6 +47,12 @@ export default defineComponent({
       v$: useVuelidate(),
       t$: useI18n().t,
     };
+  },
+  created(): void {
+    if (this.$route?.query?.key !== undefined) {
+      this.key = this.$route.query.key;
+    }
+    this.keyMissing = !this.key;
   },
   methods: {
     finishReset() {

@@ -1,5 +1,5 @@
+import type { App } from 'vue';
 import { type IntlDateTimeFormats, createI18n } from 'vue-i18n';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons/faArrowLeft';
@@ -31,46 +31,27 @@ import { faSync } from '@fortawesome/free-solid-svg-icons/faSync';
 import { faTachometerAlt } from '@fortawesome/free-solid-svg-icons/faTachometerAlt';
 import { faTasks } from '@fortawesome/free-solid-svg-icons/faTasks';
 import { faThList } from '@fortawesome/free-solid-svg-icons/faThList';
-import { faTimesCircle } from '@fortawesome/free-solid-svg-icons/faTimesCircle';
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes';
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons/faTimesCircle';
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash';
 import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons/faUserPlus';
 import { faUsers } from '@fortawesome/free-solid-svg-icons/faUsers';
 import { faUsersCog } from '@fortawesome/free-solid-svg-icons/faUsersCog';
 import { faWrench } from '@fortawesome/free-solid-svg-icons/faWrench';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const datetimeFormats: IntlDateTimeFormats = {
   en: {
-    short: {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-    },
-    medium: {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      weekday: 'short',
-      hour: 'numeric',
-      minute: 'numeric',
-    },
-    long: {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      weekday: 'long',
-      hour: 'numeric',
-      minute: 'numeric',
-    },
+    short: { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' },
+    medium: { year: 'numeric', month: 'short', day: 'numeric', weekday: 'short', hour: 'numeric', minute: 'numeric' },
+    long: { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long', hour: 'numeric', minute: 'numeric' },
   },
   // jhipster-needle-i18n-language-date-time-format - JHipster will add/remove format options in this object
 };
 
-export function initFortAwesome(vue) {
-  vue.component('font-awesome-icon', FontAwesomeIcon);
+export function initFortAwesome(vue: App) {
+  vue.component('FontAwesomeIcon', FontAwesomeIcon);
 
   library.add(
     faArrowLeft,

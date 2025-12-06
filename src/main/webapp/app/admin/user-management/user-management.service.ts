@@ -1,6 +1,7 @@
 import axios from 'axios';
-import buildPaginationQueryOpts from '@/shared/sort/sorts';
+
 import { type IUser } from '@/shared/model/user.model';
+import buildPaginationQueryOpts from '@/shared/sort/sorts';
 
 export default class UserManagementService {
   get(userId: string): Promise<any> {

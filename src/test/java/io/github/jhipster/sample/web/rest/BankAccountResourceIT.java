@@ -101,7 +101,7 @@ class BankAccountResourceIT {
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
     private static Random random = new Random();
-    private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
     private ObjectMapper om;
@@ -1188,11 +1188,15 @@ class BankAccountResourceIT {
 
         partialUpdatedBankAccount
             .name(UPDATED_NAME)
-            .bankNumber(UPDATED_BANK_NUMBER)
-            .agencyNumber(UPDATED_AGENCY_NUMBER)
             .lastOperationDuration(UPDATED_LAST_OPERATION_DURATION)
-            .meanOperationDuration(UPDATED_MEAN_OPERATION_DURATION)
-            .active(UPDATED_ACTIVE);
+            .balance(UPDATED_BALANCE)
+            .openingDay(UPDATED_OPENING_DAY)
+            .lastOperationDate(UPDATED_LAST_OPERATION_DATE)
+            .active(UPDATED_ACTIVE)
+            .accountType(UPDATED_ACCOUNT_TYPE)
+            .attachment(UPDATED_ATTACHMENT)
+            .attachmentContentType(UPDATED_ATTACHMENT_CONTENT_TYPE)
+            .description(UPDATED_DESCRIPTION);
 
         restBankAccountMockMvc
             .perform(

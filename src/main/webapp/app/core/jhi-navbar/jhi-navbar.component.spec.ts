@@ -1,13 +1,15 @@
 import { vitest } from 'vitest';
 import { computed } from 'vue';
-import { shallowMount } from '@vue/test-utils';
 import { type Router } from 'vue-router';
+
 import { createTestingPinia } from '@pinia/testing';
+import { shallowMount } from '@vue/test-utils';
+
+import { useLoginModal } from '@/account/login-modal';
+import { createRouter } from '@/router';
+import { useStore } from '@/store';
 
 import JhiNavbar from './jhi-navbar.vue';
-import { useStore } from '@/store';
-import { createRouter } from '@/router';
-import { useLoginModal } from '@/account/login-modal';
 
 type JhiNavbarComponentType = InstanceType<typeof JhiNavbar>;
 
@@ -88,11 +90,11 @@ describe('JhiNavbar', () => {
   });
 
   it('should determine active route', async () => {
-    await router.push('/toto');
+    await router.push('/forbidden');
 
     expect(jhiNavbar.subIsActive('/titi')).toBeFalsy();
-    expect(jhiNavbar.subIsActive('/toto')).toBeTruthy();
-    expect(jhiNavbar.subIsActive(['/toto', 'toto'])).toBeTruthy();
+    expect(jhiNavbar.subIsActive('/forbidden')).toBeTruthy();
+    expect(jhiNavbar.subIsActive(['/forbidden', 'forbidden'])).toBeTruthy();
   });
 
   it('should call translationService when changing language', () => {

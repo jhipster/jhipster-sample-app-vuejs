@@ -1,12 +1,12 @@
 import { type Ref, defineComponent, inject, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import LabelService from './label.service';
-import { type ILabel } from '@/shared/model/test-root/label.model';
 import { useAlertService } from '@/shared/alert/alert.service';
+import { type ILabel } from '@/shared/model/test-root/label.model';
+
+import LabelService from './label.service';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'Label',
   setup() {
     const { t: t$ } = useI18n();

@@ -1,16 +1,13 @@
 import { type ComputedRef, type Ref, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import UserManagementService from './user-management.service';
-import { useAlertService } from '@/shared/alert/alert.service';
 
+import { useAlertService } from '@/shared/alert/alert.service';
 import { useDateFormat } from '@/shared/composables';
 
+import UserManagementService from './user-management.service';
+
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'JhiUserManagementComponent',
-  mounted(): void {
-    this.loadAll();
-  },
   setup() {
     const alertService = inject('alertService', () => useAlertService(), true);
     const { formatDateShort: formatDate } = useDateFormat();
@@ -49,6 +46,9 @@ export default defineComponent({
       queryCount,
       t$: useI18n().t,
     };
+  },
+  mounted(): void {
+    this.loadAll();
   },
   methods: {
     setActive(user, isActivated): void {

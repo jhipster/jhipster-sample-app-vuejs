@@ -66,7 +66,7 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
      * @return the matching {@link Specification} of the entity.
      */
     protected Specification<BankAccount> createSpecification(BankAccountCriteria criteria) {
-        Specification<BankAccount> specification = Specification.where(null);
+        Specification<BankAccount> specification = Specification.unrestricted();
         if (criteria != null) {
             // This has to be called first, because the distinct method returns null
             specification = Specification.allOf(

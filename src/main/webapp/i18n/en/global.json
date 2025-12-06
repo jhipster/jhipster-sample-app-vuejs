@@ -8,7 +8,7 @@
       "entities": {
         "main": "Entities",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)",
-        "testRootBankAccountMySuffix": "Bank Account",
+        "testRootBankAccount": "Bank Account",
         "testRootLabel": "Label",
         "testRootOperation": "Operation"
       },

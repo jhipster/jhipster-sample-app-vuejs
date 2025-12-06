@@ -1,12 +1,13 @@
-import axios from 'axios';
 import { type Ref, defineComponent, inject, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import type AccountService from '../account.service';
+import { useRoute, useRouter } from 'vue-router';
+
+import axios from 'axios';
+
 import { useLoginModal } from '@/account/login-modal';
+import type AccountService from '../account.service';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   setup() {
     const authenticationError: Ref<boolean> = ref(false);
     const login: Ref<string> = ref(null);
@@ -26,7 +27,7 @@ export default defineComponent({
       try {
         const result = await axios.post('api/authenticate', data);
         const bearerToken = result.headers.authorization;
-        if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
+        if (bearerToken?.startsWith('Bearer ')) {
           const jwt = bearerToken.slice(7, bearerToken.length);
           if (rememberMe.value) {
             localStorage.setItem('jhi-authenticationToken', jwt);

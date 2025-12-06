@@ -1,23 +1,21 @@
 <template>
-  <div class="modal-body">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
+  <div class="d-flex justify-content-center">
+    <div class="row-md">
+      <div class="col-md-12">
         <b-alert
-          show
           data-cy="loginError"
           variant="danger"
-          v-if="authenticationError"
+          :model-value="authenticationError"
           v-html="t$('login.messages.error.authentication')"
         ></b-alert>
       </div>
-      <div class="col-md-8">
+      <div class="col-md-12">
         <b-form @submit.prevent="doLogin()">
           <b-form-group :label="t$('global.form[\'username.label\']')" label-for="username">
             <b-form-input
               id="username"
               type="text"
               name="username"
-              autofocus
               :placeholder="t$('global.form[\'username.placeholder\']')"
               v-model="login"
               data-cy="username"
@@ -36,27 +34,24 @@
             </b-form-input>
           </b-form-group>
           <b-form-checkbox id="rememberMe" name="rememberMe" v-model="rememberMe" checked>
-            <span v-text="t$('login.form.rememberme')"></span>
+            <span>{{ t$('login.form.rememberme') }}</span>
           </b-form-checkbox>
           <div>
-            <b-button data-cy="submit" type="submit" variant="primary" v-text="t$('login.form.button')"></b-button>
+            <b-button data-cy="submit" type="submit" variant="primary">{{ t$('login.form.button') }}</b-button>
           </div>
         </b-form>
         <p></p>
         <div>
-          <b-alert show variant="warning">
-            <b-link
-              :to="'/account/reset/request'"
-              class="alert-link"
-              v-text="t$('login.password.forgot')"
-              data-cy="forgetYourPasswordSelector"
-            ></b-link>
+          <b-alert :model-value="true" variant="warning">
+            <b-link :to="'/account/reset/request'" class="alert-link" data-cy="forgetYourPasswordSelector">{{
+              t$('login.password.forgot')
+            }}</b-link>
           </b-alert>
         </div>
         <div>
-          <b-alert show variant="warning">
-            <span v-text="t$('global.messages.info.register.noaccount')"></span>
-            <b-link :to="'/register'" class="alert-link" v-text="t$('global.messages.info.register.link')"></b-link>
+          <b-alert :model-value="true" variant="warning">
+            <span>{{ t$('global.messages.info.register.noaccount') }}</span>
+            <b-link :to="'/register'" class="alert-link">{{ t$('global.messages.info.register.link') }}</b-link>
           </b-alert>
         </div>
       </div>

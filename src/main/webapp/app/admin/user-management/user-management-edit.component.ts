@@ -1,12 +1,15 @@
 import { type Ref, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+
 import { useVuelidate } from '@vuelidate/core';
 import { email, maxLength, minLength, required } from '@vuelidate/validators';
-import { useRoute, useRouter } from 'vue-router';
-import UserManagementService from './user-management.service';
-import { type IUser, User } from '@/shared/model/user.model';
+
 import { useAlertService } from '@/shared/alert/alert.service';
 import languages from '@/shared/config/languages';
+import { type IUser, User } from '@/shared/model/user.model';
+
+import UserManagementService from './user-management.service';
 
 const loginValidator = (value: string) => {
   if (!value) {
@@ -38,7 +41,6 @@ const validations: any = {
 };
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'JhiUserManagementEdit',
   validations,
   setup() {

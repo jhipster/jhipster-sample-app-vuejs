@@ -1,16 +1,14 @@
 import { type Ref, computed, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-
 import { useRouter } from 'vue-router';
-import { useLoginModal } from '@/account/login-modal';
-import type AccountService from '@/account/account.service';
-import languages from '@/shared/config/languages';
-import EntitiesMenu from '@/entities/entities-menu.vue';
 
+import type AccountService from '@/account/account.service';
+import { useLoginModal } from '@/account/login-modal';
+import EntitiesMenu from '@/entities/entities-menu.vue';
+import languages from '@/shared/config/languages';
 import { useStore } from '@/store';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'JhiNavbar',
   components: {
     'entities-menu': EntitiesMenu,
@@ -38,7 +36,7 @@ export default defineComponent({
     const subIsActive = (input: string | string[]) => {
       const paths = Array.isArray(input) ? input : [input];
       return paths.some(path => {
-        return router.currentRoute.value.path.indexOf(path) === 0; // current path starts with this path string
+        return router.currentRoute.value.path.startsWith(path); // current path starts with this path string
       });
     };
 

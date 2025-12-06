@@ -1,13 +1,15 @@
 import { vitest } from 'vitest';
+import { type RouteLocation } from 'vue-router';
+
+import { createTestingPinia } from '@pinia/testing';
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
-import { type RouteLocation } from 'vue-router';
-import { createTestingPinia } from '@pinia/testing';
 
-import AccountService from '../account.service';
-import LoginForm from './login-form.vue';
 import { useStore } from '@/store';
+import AccountService from '../account.service';
+
+import LoginForm from './login-form.vue';
 
 type LoginFormComponentType = InstanceType<typeof LoginForm>;
 

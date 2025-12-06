@@ -1,12 +1,14 @@
 import { computed } from 'vue';
-import { shallowMount } from '@vue/test-utils';
+
 import { createTestingPinia } from '@pinia/testing';
+import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
 
-import Register from './register.vue';
-import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from '@/constants';
 import { useLoginModal } from '@/account/login-modal';
+import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from '@/constants';
+
+import Register from './register.vue';
 
 type RegisterComponentType = InstanceType<typeof Register>;
 

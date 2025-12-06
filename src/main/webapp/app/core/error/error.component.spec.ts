@@ -1,11 +1,13 @@
 import { vitest } from 'vitest';
 import { type Ref, ref } from 'vue';
-import { type ComponentMountingOptions, shallowMount } from '@vue/test-utils';
 import { type RouteLocation } from 'vue-router';
+
 import { createTestingPinia } from '@pinia/testing';
+import { type ComponentMountingOptions, shallowMount } from '@vue/test-utils';
+
+import { useLoginModal } from '@/account/login-modal';
 
 import Error from './error.vue';
-import { useLoginModal } from '@/account/login-modal';
 
 type ErrorComponentType = InstanceType<typeof Error>;
 

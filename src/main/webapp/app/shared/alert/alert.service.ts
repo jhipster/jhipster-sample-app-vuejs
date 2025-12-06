@@ -1,56 +1,52 @@
-import type { BvToast } from 'bootstrap-vue';
-import { getCurrentInstance } from 'vue';
 import { type Composer, useI18n } from 'vue-i18n';
 
+import { type BToastProps, useToast } from 'bootstrap-vue-next';
+
 export const useAlertService = () => {
-  const bvToast = getCurrentInstance().root.proxy._bv__toast;
-  if (!bvToast) {
+  const toast = useToast();
+  if (!toast) {
     throw new Error('BootstrapVue toast component was not found');
   }
   const i18n = useI18n();
   return new AlertService({
-    bvToast,
+    toast,
     i18n,
   });
 };
 
 export default class AlertService {
-  private bvToast: BvToast;
+  private toast: ReturnType<typeof useToast>;
   private i18n: Composer;
 
-  constructor({ bvToast, i18n }: { bvToast: BvToast; i18n: Composer }) {
-    this.bvToast = bvToast;
+  constructor({ toast, i18n }: { toast: ReturnType<typeof useToast>; i18n: Composer }) {
+    this.toast = toast;
     this.i18n = i18n;
   }
 
-  showInfo(toastMessage: string, toastOptions?: any) {
-    this.bvToast.toast(toastMessage, {
-      toaster: 'b-toaster-top-center',
-      title: 'Info',
-      variant: 'info',
-      solid: true,
-      autoHideDelay: 5000,
-      ...toastOptions,
+  showInfo(toastMessage: string, props: BToastProps = {}) {
+    this.toast.show!({
+      props: {
+        pos: 'top-center',
+        title: 'Info',
+        variant: 'info',
+        solid: true,
+        body: toastMessage,
+        ...props,
+      },
     });
   }
 
   showSuccess(toastMessage: string) {
-    this.bvToast.toast(toastMessage, {
-      toaster: 'b-toaster-top-center',
+    this.showInfo(toastMessage, {
       title: 'Success',
       variant: 'success',
-      solid: true,
-      autoHideDelay: 5000,
     });
   }
 
   showError(toastMessage: string) {
-    this.bvToast.toast(toastMessage, {
-      toaster: 'b-toaster-top-center',
+    this.showInfo(toastMessage, {
       title: 'Error',
       variant: 'danger',
-      solid: true,
-      autoHideDelay: 5000,
     });
   }
 

@@ -1,15 +1,16 @@
 import { vitest } from 'vitest';
-import { type MountingOptions, shallowMount } from '@vue/test-utils';
-import sinon, { type SinonStubbedInstance } from 'sinon';
 import { type RouteLocation } from 'vue-router';
 
+import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import dayjs from 'dayjs';
-import BankAccountMySuffixUpdate from './bank-account-my-suffix-update.vue';
-import BankAccountMySuffixService from './bank-account-my-suffix.service';
-import { DATE_TIME_LONG_FORMAT } from '@/shared/composables/date-format';
-import AlertService from '@/shared/alert/alert.service';
+import sinon, { type SinonStubbedInstance } from 'sinon';
 
 import UserService from '@/entities/user/user.service';
+import AlertService from '@/shared/alert/alert.service';
+import { DATE_TIME_LONG_FORMAT } from '@/shared/composables/date-format';
+
+import BankAccountMySuffixUpdate from './bank-account-my-suffix-update.vue';
+import BankAccountMySuffixService from './bank-account-my-suffix.service';
 
 type BankAccountMySuffixUpdateComponentType = InstanceType<typeof BankAccountMySuffixUpdate>;
 
@@ -38,8 +39,8 @@ describe('Component Tests', () => {
 
       alertService = new AlertService({
         i18n: { t: vitest.fn() } as any,
-        bvToast: {
-          toast: vitest.fn(),
+        toast: {
+          show: vitest.fn(),
         } as any,
       });
 

@@ -1,5 +1,6 @@
 import { type Ref, defineComponent, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+
 import { useVuelidate } from '@vuelidate/core';
 import { email, maxLength, minLength, required } from '@vuelidate/validators';
 import axios from 'axios';
@@ -20,7 +21,6 @@ interface ResetAccount {
 }
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'ResetPasswordInit',
   validations,
   setup() {

@@ -69,7 +69,7 @@ const useDataUtils = () => ({
   },
 
   endsWith(suffix, str) {
-    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    return str.endsWith(suffix);
   },
 
   paddingSize(value) {
@@ -91,9 +91,9 @@ const useDataUtils = () => ({
   },
 
   setFileData(event, entity, field, isImage) {
-    if (event && event.target.files && event.target.files[0]) {
+    if (event?.target.files?.[0]) {
       const file = event.target.files[0];
-      if (isImage && !/^image\//.test(file.type)) {
+      if (isImage && !file.type.startsWith('image/')) {
         return;
       }
       this.toBase64(file, base64Data => {
@@ -129,7 +129,7 @@ const useDataUtils = () => ({
   parseLinks(header) {
     const links = {};
 
-    if ((header?.indexOf(',') ?? -1) === -1) {
+    if (!header?.includes(',')) {
       return links;
     }
     // Split parts by comma
@@ -137,7 +137,7 @@ const useDataUtils = () => ({
 
     // Parse each part into a named link
     parts.forEach(p => {
-      if (p.indexOf('>;') === -1) {
+      if (!p.includes('>;')) {
         return;
       }
       const section = p.split('>;');

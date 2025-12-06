@@ -1,7 +1,7 @@
 import { URL, fileURLToPath } from 'node:url';
-import { defineConfig, normalizePath } from 'vite';
 
 import vue from '@vitejs/plugin-vue';
+import { defineConfig, normalizePath } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 const { getAbsoluteFSPath } = await import('swagger-ui-dist');
@@ -39,7 +39,7 @@ let config = defineConfig({
   },
   resolve: {
     alias: {
-      vue: '@vue/compat/dist/vue.esm-bundler.js',
+      vue: 'vue/dist/vue.esm-bundler.js',
       '@': fileURLToPath(new URL('./src/main/webapp/app/', import.meta.url)),
       '@content': fileURLToPath(new URL('./src/main/webapp/content/', import.meta.url)),
     },

@@ -1,4 +1,5 @@
 import { vitest } from 'vitest';
+
 import { shallowMount } from '@vue/test-utils';
 
 import HealthModal from './health-modal.vue';

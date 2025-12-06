@@ -1,11 +1,13 @@
 import { vitest } from 'vitest';
+import { type RouteLocation } from 'vue-router';
+
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import sinon, { type SinonStubbedInstance } from 'sinon';
-import { type RouteLocation } from 'vue-router';
+
+import AlertService from '@/shared/alert/alert.service';
 
 import LabelDetails from './label-details.vue';
 import LabelService from './label.service';
-import AlertService from '@/shared/alert/alert.service';
 
 type LabelDetailsComponentType = InstanceType<typeof LabelDetails>;
 
@@ -36,8 +38,8 @@ describe('Component Tests', () => {
 
       alertService = new AlertService({
         i18n: { t: vitest.fn() } as any,
-        bvToast: {
-          toast: vitest.fn(),
+        toast: {
+          show: vitest.fn(),
         } as any,
       });
 

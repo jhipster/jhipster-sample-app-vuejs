@@ -15,7 +15,7 @@ describe('BankAccount e2e test', () => {
   const bankAccountPageUrlPattern = new RegExp('/bank-account-my-suffix(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const bankAccountSample = { name: 'yippee mill', balance: 2485.39 };
+  const bankAccountSample = { name: 'govern geez', balance: 2686.52 };
 
   let bankAccount;
 
@@ -151,43 +151,43 @@ describe('BankAccount e2e test', () => {
 
   describe('new BankAccount page', () => {
     beforeEach(() => {
-      cy.visit(`${bankAccountPageUrl}`);
+      cy.visit(bankAccountPageUrl);
       cy.get(entityCreateButtonSelector).click();
       cy.getEntityCreateUpdateHeading('BankAccount');
     });
 
     it('should create an instance of BankAccount', () => {
-      cy.get(`[data-cy="name"]`).type('willfully');
-      cy.get(`[data-cy="name"]`).should('have.value', 'willfully');
+      cy.get(`[data-cy="name"]`).type('afore task across');
+      cy.get(`[data-cy="name"]`).should('have.value', 'afore task across');
 
-      cy.get(`[data-cy="bankNumber"]`).type('18132');
-      cy.get(`[data-cy="bankNumber"]`).should('have.value', '18132');
+      cy.get(`[data-cy="bankNumber"]`).type('2166');
+      cy.get(`[data-cy="bankNumber"]`).should('have.value', '2166');
 
-      cy.get(`[data-cy="agencyNumber"]`).type('18733');
-      cy.get(`[data-cy="agencyNumber"]`).should('have.value', '18733');
+      cy.get(`[data-cy="agencyNumber"]`).type('5890');
+      cy.get(`[data-cy="agencyNumber"]`).should('have.value', '5890');
 
-      cy.get(`[data-cy="lastOperationDuration"]`).type('16992.8');
-      cy.get(`[data-cy="lastOperationDuration"]`).should('have.value', '16992.8');
+      cy.get(`[data-cy="lastOperationDuration"]`).type('5774.95');
+      cy.get(`[data-cy="lastOperationDuration"]`).should('have.value', '5774.95');
 
-      cy.get(`[data-cy="meanOperationDuration"]`).type('217.3');
-      cy.get(`[data-cy="meanOperationDuration"]`).should('have.value', '217.3');
+      cy.get(`[data-cy="meanOperationDuration"]`).type('27458.61');
+      cy.get(`[data-cy="meanOperationDuration"]`).should('have.value', '27458.61');
 
-      cy.get(`[data-cy="balance"]`).type('27578.4');
-      cy.get(`[data-cy="balance"]`).should('have.value', '27578.4');
+      cy.get(`[data-cy="balance"]`).type('16655.1');
+      cy.get(`[data-cy="balance"]`).should('have.value', '16655.1');
 
-      cy.get(`[data-cy="openingDay"]`).type('2015-08-05');
+      cy.get(`[data-cy="openingDay"]`).type('2015-08-04');
       cy.get(`[data-cy="openingDay"]`).blur();
-      cy.get(`[data-cy="openingDay"]`).should('have.value', '2015-08-05');
+      cy.get(`[data-cy="openingDay"]`).should('have.value', '2015-08-04');
 
-      cy.get(`[data-cy="lastOperationDate"]`).type('2015-08-04T22:48');
+      cy.get(`[data-cy="lastOperationDate"]`).type('2015-08-04T15:25');
       cy.get(`[data-cy="lastOperationDate"]`).blur();
-      cy.get(`[data-cy="lastOperationDate"]`).should('have.value', '2015-08-04T22:48');
+      cy.get(`[data-cy="lastOperationDate"]`).should('have.value', '2015-08-04T15:25');
 
       cy.get(`[data-cy="active"]`).should('not.be.checked');
       cy.get(`[data-cy="active"]`).click();
       cy.get(`[data-cy="active"]`).should('be.checked');
 
-      cy.get(`[data-cy="accountType"]`).select('LOAN');
+      cy.get(`[data-cy="accountType"]`).select('SAVINGS');
 
       cy.setFieldImageAsBytesOfEntity('attachment', 'integration-test.png', 'image/png');
 

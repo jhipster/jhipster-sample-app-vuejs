@@ -1,9 +1,10 @@
 import { computed } from 'vue';
+
+import { createTestingPinia } from '@pinia/testing';
 import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
 
-import { createTestingPinia } from '@pinia/testing';
 import ChangePassword from './change-password.vue';
 
 type ChangePasswordComponentType = InstanceType<typeof ChangePassword>;
@@ -44,7 +45,7 @@ describe('ChangePassword Component', () => {
     expect(changePassword.success).toBeNull();
   });
 
-  it('should call Auth.changePassword when passwords match and  set success to OK upon success', async () => {
+  it('should call Auth.changePassword when passwords match and set success to OK upon success', async () => {
     // GIVEN
     changePassword.resetPassword = { currentPassword: 'password1', newPassword: 'password1', confirmPassword: 'password1' };
     axiosStub.post.resolves({});

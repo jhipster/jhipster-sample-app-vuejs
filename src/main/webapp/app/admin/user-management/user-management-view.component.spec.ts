@@ -1,19 +1,19 @@
 import { vitest } from 'vitest';
+import { type RouteLocation } from 'vue-router';
+
 import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
-import { type RouteLocation, type Router } from 'vue-router';
 
-import UserManagementView from './user-management-view.vue';
 import AlertService from '@/shared/alert/alert.service';
 import { Authority } from '@/shared/security/authority';
 
+import UserManagementView from './user-management-view.vue';
+
 let route: Partial<RouteLocation>;
-let router: Router;
 
 vitest.mock('vue-router', () => ({
   useRoute: () => route,
-  useRouter: () => router,
 }));
 
 const axiosStub = {
@@ -27,8 +27,8 @@ describe('UserManagementView Component', () => {
     route = {};
     alertService = new AlertService({
       i18n: { t: vitest.fn() } as any,
-      bvToast: {
-        toast: vitest.fn(),
+      toast: {
+        show: vitest.fn(),
       } as any,
     });
   });

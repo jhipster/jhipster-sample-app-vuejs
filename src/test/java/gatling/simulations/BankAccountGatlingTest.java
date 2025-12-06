@@ -20,7 +20,7 @@ import java.util.Optional;
 /**
  * Performance test for the BankAccount entity.
  *
- * @see <a href="https://github.com/jhipster/generator-jhipster/tree/v8.11.0/generators/gatling#logging-tips">Logging tips</a>
+ * @see <a href="https://github.com/jhipster/generator-jhipster/tree/v9.0.0-beta.0/generators/gatling#logging-tips">Logging tips</a>
  */
 public class BankAccountGatlingTest extends Simulation {
 
@@ -68,19 +68,19 @@ public class BankAccountGatlingTest extends Simulation {
                         .body(
                             StringBody(
                                 "{" +
-                                "\"name\": \"SAMPLE_TEXT\"" +
-                                ", \"bankNumber\": 0" +
-                                ", \"agencyNumber\": 0" +
-                                ", \"lastOperationDuration\": 0" +
-                                ", \"meanOperationDuration\": 0" +
-                                ", \"balance\": 0" +
-                                ", \"openingDay\": \"2020-01-01T00:00:00.000Z\"" +
-                                ", \"lastOperationDate\": \"2020-01-01T00:00:00.000Z\"" +
-                                ", \"active\": null" +
-                                ", \"accountType\": \"CHECKING\"" +
-                                ", \"attachment\": null" +
-                                ", \"description\": null" +
-                                "}"
+                                    "\"name\": \"SAMPLE_TEXT\"" +
+                                    ", \"bankNumber\": 0" +
+                                    ", \"agencyNumber\": 0" +
+                                    ", \"lastOperationDuration\": 0" +
+                                    ", \"meanOperationDuration\": 0" +
+                                    ", \"balance\": 0" +
+                                    ", \"openingDay\": \"2020-01-01T00:00:00.000Z\"" +
+                                    ", \"lastOperationDate\": \"2020-01-01T00:00:00.000Z\"" +
+                                    ", \"active\": null" +
+                                    ", \"accountType\": \"CHECKING\"" +
+                                    ", \"attachment\": null" +
+                                    ", \"description\": null" +
+                                    "}"
                             )
                         )
                         .asJson()

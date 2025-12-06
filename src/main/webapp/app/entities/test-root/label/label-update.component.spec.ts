@@ -1,13 +1,14 @@
 import { vitest } from 'vitest';
+import { type RouteLocation } from 'vue-router';
+
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import sinon, { type SinonStubbedInstance } from 'sinon';
-import { type RouteLocation } from 'vue-router';
+
+import OperationService from '@/entities/test-root/operation/operation.service';
+import AlertService from '@/shared/alert/alert.service';
 
 import LabelUpdate from './label-update.vue';
 import LabelService from './label.service';
-import AlertService from '@/shared/alert/alert.service';
-
-import OperationService from '@/entities/test-root/operation/operation.service';
 
 type LabelUpdateComponentType = InstanceType<typeof LabelUpdate>;
 
@@ -36,8 +37,8 @@ describe('Component Tests', () => {
 
       alertService = new AlertService({
         i18n: { t: vitest.fn() } as any,
-        bvToast: {
-          toast: vitest.fn(),
+        toast: {
+          show: vitest.fn(),
         } as any,
       });
 

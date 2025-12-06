@@ -1,23 +1,19 @@
 <template>
-  <div class="row justify-content-center">
+  <div class="d-flex justify-content-center">
     <div class="col-8">
       <form name="editForm" novalidate @submit.prevent="save()">
-        <h2
-          id="jhipsterSampleApplicationVueApp.testRootBankAccount.home.createOrEditLabel"
-          data-cy="BankAccountCreateUpdateHeading"
-          v-text="t$('jhipsterSampleApplicationVueApp.testRootBankAccount.home.createOrEditLabel')"
-        ></h2>
+        <h2 id="jhipsterSampleApplicationVueApp.testRootBankAccount.home.createOrEditLabel" data-cy="BankAccountCreateUpdateHeading">
+          {{ t$('jhipsterSampleApplicationVueApp.testRootBankAccount.home.createOrEditLabel') }}
+        </h2>
         <div>
-          <div class="form-group" v-if="bankAccount.id">
-            <label for="id" v-text="t$('global.field.id')"></label>
+          <div class="mb-3" v-if="bankAccount.id">
+            <label for="id">{{ t$('global.field.id') }}</label>
             <input type="text" class="form-control" id="id" name="id" v-model="bankAccount.id" readonly />
           </div>
-          <div class="form-group">
-            <label
-              class="form-control-label"
-              v-text="t$('jhipsterSampleApplicationVueApp.testRootBankAccount.name')"
-              for="bank-account-my-suffix-name"
-            ></label>
+          <div class="mb-3">
+            <label class="form-control-label" for="bank-account-my-suffix">{{
+              t$('jhipsterSampleApplicationVueApp.testRootBankAccount.name')
+            }}</label>
             <input
               type="text"
               class="form-control"
@@ -32,12 +28,10 @@
               <small class="form-text text-danger" v-for="error of v$.name.$errors" :key="error.$uid">{{ error.$message }}</small>
             </div>
           </div>
-          <div class="form-group">
-            <label
-              class="form-control-label"
-              v-text="t$('jhipsterSampleApplicationVueApp.testRootBankAccount.bankNumber')"
-              for="bank-account-my-suffix-bankNumber"
-            ></label>
+          <div class="mb-3">
+            <label class="form-control-label" for="bank-account-my-suffix">{{
+              t$('jhipsterSampleApplicationVueApp.testRootBankAccount.bankNumber')
+            }}</label>
             <input
               type="number"
               class="form-control"
@@ -48,12 +42,10 @@
               v-model.number="v$.bankNumber.$model"
             />
           </div>
-          <div class="form-group">
-            <label
-              class="form-control-label"
-              v-text="t$('jhipsterSampleApplicationVueApp.testRootBankAccount.agencyNumber')"
-              for="bank-account-my-suffix-agencyNumber"
-            ></label>
+          <div class="mb-3">
+            <label class="form-control-label" for="bank-account-my-suffix">{{
+              t$('jhipsterSampleApplicationVueApp.testRootBankAccount.agencyNumber')
+            }}</label>
             <input
               type="number"
               class="form-control"
@@ -64,12 +56,10 @@
               v-model.number="v$.agencyNumber.$model"
             />
           </div>
-          <div class="form-group">
-            <label
-              class="form-control-label"
-              v-text="t$('jhipsterSampleApplicationVueApp.testRootBankAccount.lastOperationDuration')"
-              for="bank-account-my-suffix-lastOperationDuration"
-            ></label>
+          <div class="mb-3">
+            <label class="form-control-label" for="bank-account-my-suffix">{{
+              t$('jhipsterSampleApplicationVueApp.testRootBankAccount.lastOperationDuration')
+            }}</label>
             <input
               type="number"
               class="form-control"
@@ -80,12 +70,10 @@
               v-model.number="v$.lastOperationDuration.$model"
             />
           </div>
-          <div class="form-group">
-            <label
-              class="form-control-label"
-              v-text="t$('jhipsterSampleApplicationVueApp.testRootBankAccount.meanOperationDuration')"
-              for="bank-account-my-suffix-meanOperationDuration"
-            ></label>
+          <div class="mb-3">
+            <label class="form-control-label" for="bank-account-my-suffix">{{
+              t$('jhipsterSampleApplicationVueApp.testRootBankAccount.meanOperationDuration')
+            }}</label>
             <input
               type="number"
               class="form-control"
@@ -96,12 +84,10 @@
               v-model.number="v$.meanOperationDuration.$model"
             />
           </div>
-          <div class="form-group">
-            <label
-              class="form-control-label"
-              v-text="t$('jhipsterSampleApplicationVueApp.testRootBankAccount.balance')"
-              for="bank-account-my-suffix-balance"
-            ></label>
+          <div class="mb-3">
+            <label class="form-control-label" for="bank-account-my-suffix">{{
+              t$('jhipsterSampleApplicationVueApp.testRootBankAccount.balance')
+            }}</label>
             <input
               type="number"
               class="form-control"
@@ -116,12 +102,10 @@
               <small class="form-text text-danger" v-for="error of v$.balance.$errors" :key="error.$uid">{{ error.$message }}</small>
             </div>
           </div>
-          <div class="form-group">
-            <label
-              class="form-control-label"
-              v-text="t$('jhipsterSampleApplicationVueApp.testRootBankAccount.openingDay')"
-              for="bank-account-my-suffix-openingDay"
-            ></label>
+          <div class="mb-3">
+            <label class="form-control-label" for="bank-account-my-suffix">{{
+              t$('jhipsterSampleApplicationVueApp.testRootBankAccount.openingDay')
+            }}</label>
             <b-input-group class="mb-3">
               <b-input-group-prepend>
                 <b-form-datepicker
@@ -148,12 +132,10 @@
               />
             </b-input-group>
           </div>
-          <div class="form-group">
-            <label
-              class="form-control-label"
-              v-text="t$('jhipsterSampleApplicationVueApp.testRootBankAccount.lastOperationDate')"
-              for="bank-account-my-suffix-lastOperationDate"
-            ></label>
+          <div class="mb-3">
+            <label class="form-control-label" for="bank-account-my-suffix">{{
+              t$('jhipsterSampleApplicationVueApp.testRootBankAccount.lastOperationDate')
+            }}</label>
             <div class="d-flex">
               <input
                 id="bank-account-my-suffix-lastOperationDate"
@@ -167,12 +149,10 @@
               />
             </div>
           </div>
-          <div class="form-group">
-            <label
-              class="form-control-label"
-              v-text="t$('jhipsterSampleApplicationVueApp.testRootBankAccount.active')"
-              for="bank-account-my-suffix-active"
-            ></label>
+          <div class="mb-3">
+            <label class="form-control-label" for="bank-account-my-suffix">{{
+              t$('jhipsterSampleApplicationVueApp.testRootBankAccount.active')
+            }}</label>
             <input
               type="checkbox"
               class="form-check"
@@ -183,12 +163,10 @@
               v-model="v$.active.$model"
             />
           </div>
-          <div class="form-group">
-            <label
-              class="form-control-label"
-              v-text="t$('jhipsterSampleApplicationVueApp.testRootBankAccount.accountType')"
-              for="bank-account-my-suffix-accountType"
-            ></label>
+          <div class="mb-3">
+            <label class="form-control-label" for="bank-account-my-suffix">{{
+              t$('jhipsterSampleApplicationVueApp.testRootBankAccount.accountType')
+            }}</label>
             <select
               class="form-control"
               name="accountType"
@@ -207,33 +185,29 @@
               </option>
             </select>
           </div>
-          <div class="form-group">
-            <label
-              class="form-control-label"
-              v-text="t$('jhipsterSampleApplicationVueApp.testRootBankAccount.attachment')"
-              for="bank-account-my-suffix-attachment"
-            ></label>
+          <div class="mb-3">
+            <label class="form-control-label" for="bank-account-my-suffix">{{
+              t$('jhipsterSampleApplicationVueApp.testRootBankAccount.attachment')
+            }}</label>
             <div>
               <div v-if="bankAccount.attachment" class="form-text text-danger clearfix">
-                <a
-                  class="pull-left"
-                  @click="openFile(bankAccount.attachmentContentType, bankAccount.attachment)"
-                  v-text="t$('entity.action.open')"
-                ></a
+                <a class="pull-start" @click="openFile(bankAccount.attachmentContentType, bankAccount.attachment)">{{
+                  t$('entity.action.open')
+                }}</a
                 ><br />
-                <span class="pull-left">{{ bankAccount.attachmentContentType }}, {{ byteSize(bankAccount.attachment) }}</span>
+                <span class="pull-start">{{ bankAccount.attachmentContentType }}, {{ byteSize(bankAccount.attachment) }}</span>
                 <button
                   type="button"
                   @click="
                     bankAccount.attachment = null;
                     bankAccount.attachmentContentType = null;
                   "
-                  class="btn btn-secondary btn-xs pull-right"
+                  class="btn btn-secondary btn-xs pull-end"
                 >
                   <font-awesome-icon icon="times"></font-awesome-icon>
                 </button>
               </div>
-              <label for="file_attachment" v-text="t$('entity.action.addblob')" class="btn btn-primary pull-right"></label>
+              <label for="file_attachment" class="btn btn-primary pull-end">{{ t$('entity.action.addblob') }}</label>
               <input
                 type="file"
                 ref="file_attachment"
@@ -260,12 +234,10 @@
               v-model="bankAccount.attachmentContentType"
             />
           </div>
-          <div class="form-group">
-            <label
-              class="form-control-label"
-              v-text="t$('jhipsterSampleApplicationVueApp.testRootBankAccount.description')"
-              for="bank-account-my-suffix-description"
-            ></label>
+          <div class="mb-3">
+            <label class="form-control-label" for="bank-account-my-suffix">{{
+              t$('jhipsterSampleApplicationVueApp.testRootBankAccount.description')
+            }}</label>
             <textarea
               class="form-control"
               name="description"
@@ -275,12 +247,10 @@
               v-model="v$.description.$model"
             ></textarea>
           </div>
-          <div class="form-group">
-            <label
-              class="form-control-label"
-              v-text="t$('jhipsterSampleApplicationVueApp.testRootBankAccount.user')"
-              for="bank-account-my-suffix-user"
-            ></label>
+          <div class="mb-3">
+            <label class="form-control-label" for="bank-account-my-suffix">{{
+              t$('jhipsterSampleApplicationVueApp.testRootBankAccount.user')
+            }}</label>
             <select class="form-control" id="bank-account-my-suffix-user" data-cy="user" name="user" v-model="bankAccount.user">
               <option :value="null"></option>
               <option
@@ -295,7 +265,7 @@
         </div>
         <div>
           <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" @click="previousState()">
-            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.cancel')"></span>
+            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span>{{ t$('entity.action.cancel') }}</span>
           </button>
           <button
             type="submit"
@@ -304,7 +274,7 @@
             :disabled="v$.$invalid || isSaving"
             class="btn btn-primary"
           >
-            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.save')"></span>
+            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>{{ t$('entity.action.save') }}</span>
           </button>
         </div>
       </form>

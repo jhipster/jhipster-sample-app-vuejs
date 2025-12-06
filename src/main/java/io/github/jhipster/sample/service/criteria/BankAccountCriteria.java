@@ -1,6 +1,7 @@
 package io.github.jhipster.sample.service.criteria;
 
 import io.github.jhipster.sample.domain.enumeration.BankAccountType;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,6 +39,7 @@ public class BankAccountCriteria implements Serializable, Criteria {
         }
     }
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private LongFilter id;

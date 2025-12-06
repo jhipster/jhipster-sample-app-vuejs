@@ -1,16 +1,17 @@
 import { vitest } from 'vitest';
-import { type MountingOptions, shallowMount } from '@vue/test-utils';
-import sinon, { type SinonStubbedInstance } from 'sinon';
 import { type RouteLocation } from 'vue-router';
 
+import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import dayjs from 'dayjs';
-import OperationUpdate from './operation-update.vue';
-import OperationService from './operation.service';
-import { DATE_TIME_LONG_FORMAT } from '@/shared/composables/date-format';
-import AlertService from '@/shared/alert/alert.service';
+import sinon, { type SinonStubbedInstance } from 'sinon';
 
 import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
 import LabelService from '@/entities/test-root/label/label.service';
+import AlertService from '@/shared/alert/alert.service';
+import { DATE_TIME_LONG_FORMAT } from '@/shared/composables/date-format';
+
+import OperationUpdate from './operation-update.vue';
+import OperationService from './operation.service';
 
 type OperationUpdateComponentType = InstanceType<typeof OperationUpdate>;
 
@@ -39,8 +40,8 @@ describe('Component Tests', () => {
 
       alertService = new AlertService({
         i18n: { t: vitest.fn() } as any,
-        bvToast: {
-          toast: vitest.fn(),
+        toast: {
+          show: vitest.fn(),
         } as any,
       });
 

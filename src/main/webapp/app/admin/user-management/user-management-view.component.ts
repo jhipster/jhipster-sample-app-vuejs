@@ -2,12 +2,12 @@ import { type Ref, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
-import UserManagementService from './user-management.service';
-import { useDateFormat } from '@/shared/composables';
 import { useAlertService } from '@/shared/alert/alert.service';
+import { useDateFormat } from '@/shared/composables';
+
+import UserManagementService from './user-management.service';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'JhiUserManagementView',
   setup() {
     const route = useRoute();

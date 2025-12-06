@@ -1,11 +1,12 @@
 import { type Ref, defineComponent, inject, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
-import ActivateService from './activate.service';
+
 import { useLoginModal } from '@/account/login-modal';
 
+import ActivateService from './activate.service';
+
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   setup() {
     const activateService = inject('activateService', () => new ActivateService(), true);
     const { showLogin } = useLoginModal();

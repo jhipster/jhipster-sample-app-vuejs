@@ -1,27 +1,27 @@
 <template>
   <div>
-    <div class="row justify-content-center">
+    <div class="d-flex justify-content-center">
       <div class="col-md-8">
-        <h1 v-text="t$('reset.request.title')"></h1>
+        <h1>{{ t$('reset.request.title') }}</h1>
 
         <div class="alert alert-warning" v-if="!success">
-          <p v-text="t$('reset.request.messages.info')"></p>
+          <p>{{ t$('reset.request.messages.info') }}</p>
         </div>
 
         <div class="alert alert-success" v-if="success">
-          <p v-text="t$('reset.request.messages.success')"></p>
+          <p>{{ t$('reset.request.messages.success') }}</p>
         </div>
 
         <form v-if="!success" name="form" @submit.prevent="requestReset()">
-          <div class="form-group">
-            <label class="form-control-label" for="email" v-text="t$('global.form[\'email.label\']')"></label>
+          <div class="mb-3">
+            <label class="form-control-label" for="email">{{ t$("global.form['email.label']") }}</label>
             <input
               type="email"
               class="form-control"
               id="email"
               name="email"
               :placeholder="t$('global.form[\'email.placeholder\']')"
-              :class="{ valid: !v$.resetAccount.email.$invalid, invalid: v$.resetAccount.email.$invalid }"
+              :class="{ 'is-valid': !v$.resetAccount.email.$invalid, 'is-invalid': v$.resetAccount.email.$invalid }"
               v-model="v$.resetAccount.email.$model"
               minlength="5"
               maxlength="254"
@@ -30,35 +30,23 @@
               data-cy="emailResetPassword"
             />
             <div v-if="v$.resetAccount.email.$anyDirty && v$.resetAccount.email.$invalid">
-              <small
-                class="form-text text-danger"
-                v-if="!v$.resetAccount.email.required"
-                v-text="t$('global.messages.validate.email.required')"
-              ></small>
-              <small
-                class="form-text text-danger"
-                v-if="!v$.resetAccount.email.email"
-                v-text="t$('global.messages.validate.email.invalid')"
-              ></small>
-              <small
-                class="form-text text-danger"
-                v-if="!v$.resetAccount.email.minLength"
-                v-text="t$('global.messages.validate.email.minlength')"
-              ></small>
-              <small
-                class="form-text text-danger"
-                v-if="!v$.resetAccount.email.maxLength"
-                v-text="t$('global.messages.validate.email.maxlength')"
-              ></small>
+              <small class="form-text text-danger" v-if="v$.resetAccount.email.required.$invalid">{{
+                t$('global.messages.validate.email.required')
+              }}</small>
+              <small class="form-text text-danger" v-if="v$.resetAccount.email.email.$invalid">{{
+                t$('global.messages.validate.email.invalid')
+              }}</small>
+              <small class="form-text text-danger" v-if="v$.resetAccount.email.minLength.$invalid">{{
+                t$('global.messages.validate.email.minlength')
+              }}</small>
+              <small class="form-text text-danger" v-if="v$.resetAccount.email.maxLength.$invalid">{{
+                t$('global.messages.validate.email.maxlength')
+              }}</small>
             </div>
           </div>
-          <button
-            type="submit"
-            :disabled="v$.resetAccount.$invalid"
-            class="btn btn-primary"
-            v-text="t$('reset.request.form.button')"
-            data-cy="submit"
-          ></button>
+          <button type="submit" :disabled="v$.resetAccount.$invalid" class="btn btn-primary" data-cy="submit">
+            {{ t$('reset.request.form.button') }}
+          </button>
         </form>
       </div>
     </div>

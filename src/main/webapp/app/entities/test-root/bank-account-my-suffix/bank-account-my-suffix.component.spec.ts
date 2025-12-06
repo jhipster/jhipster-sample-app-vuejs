@@ -1,10 +1,12 @@
 import { vitest } from 'vitest';
+
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import sinon, { type SinonStubbedInstance } from 'sinon';
 
-import BankAccountMySuffix from './bank-account-my-suffix.vue';
-import BankAccountMySuffixService from './bank-account-my-suffix.service';
 import AlertService from '@/shared/alert/alert.service';
+
+import BankAccountMySuffixService from './bank-account-my-suffix.service';
+import BankAccountMySuffix from './bank-account-my-suffix.vue';
 
 type BankAccountMySuffixComponentType = InstanceType<typeof BankAccountMySuffix>;
 
@@ -29,8 +31,8 @@ describe('Component Tests', () => {
 
       alertService = new AlertService({
         i18n: { t: vitest.fn() } as any,
-        bvToast: {
-          toast: vitest.fn(),
+        toast: {
+          show: vitest.fn(),
         } as any,
       });
 

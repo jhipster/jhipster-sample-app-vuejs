@@ -1,10 +1,12 @@
 import { type ComputedRef, type Ref, computed, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+
 import { useVuelidate } from '@vuelidate/core';
 import { email, maxLength, minLength, required } from '@vuelidate/validators';
 import axios from 'axios';
-import languages from '@/shared/config/languages';
+
 import { EMAIL_ALREADY_USED_TYPE } from '@/constants';
+import languages from '@/shared/config/languages';
 import { useStore } from '@/store';
 
 const validations = {
@@ -29,7 +31,6 @@ const validations = {
 };
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'Settings',
   validations,
   setup() {

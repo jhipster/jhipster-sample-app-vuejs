@@ -1,4 +1,5 @@
 import { vitest } from 'vitest';
+
 import useDataUtils from './data-utils.service';
 
 describe('Formatter i18n', () => {

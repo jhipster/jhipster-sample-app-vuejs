@@ -1,9 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ref } from 'vue';
-import { shallowMount } from '@vue/test-utils';
+
 import { createTestingPinia } from '@pinia/testing';
-import Home from './home.vue';
+import { shallowMount } from '@vue/test-utils';
+
 import { useLoginModal } from '@/account/login-modal';
+
+import Home from './home.vue';
 
 type HomeComponentType = InstanceType<typeof Home>;
 

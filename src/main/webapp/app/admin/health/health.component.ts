@@ -1,11 +1,10 @@
 import { type Ref, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import HealthService from './health.service';
 import JhiHealthModal from './health-modal.vue';
+import HealthService from './health.service';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'JhiHealth',
   components: {
     'health-modal': JhiHealthModal,
@@ -34,9 +33,9 @@ export default defineComponent({
     },
     getBadgeClass(statusState: any): string {
       if (statusState === 'UP') {
-        return 'badge-success';
+        return 'bg-success';
       }
-      return 'badge-danger';
+      return 'bg-danger';
     },
     refresh(): void {
       this.updatingHealth = true;

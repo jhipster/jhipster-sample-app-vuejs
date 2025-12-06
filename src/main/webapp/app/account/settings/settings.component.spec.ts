@@ -1,11 +1,12 @@
+import { createTestingPinia } from '@pinia/testing';
 import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
-import { createTestingPinia } from '@pinia/testing';
+
+import { EMAIL_ALREADY_USED_TYPE } from '@/constants';
+import { useStore } from '@/store';
 
 import Settings from './settings.vue';
-import { useStore } from '@/store';
-import { EMAIL_ALREADY_USED_TYPE } from '@/constants';
 
 type SettingsComponentType = InstanceType<typeof Settings>;
 

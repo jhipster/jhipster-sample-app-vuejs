@@ -1,23 +1,17 @@
 <template>
-  <div class="row justify-content-center">
+  <div class="d-flex justify-content-center">
     <div class="col-8">
       <form name="editForm" novalidate @submit.prevent="save()">
-        <h2
-          id="jhipsterSampleApplicationVueApp.testRootLabel.home.createOrEditLabel"
-          data-cy="LabelCreateUpdateHeading"
-          v-text="t$('jhipsterSampleApplicationVueApp.testRootLabel.home.createOrEditLabel')"
-        ></h2>
+        <h2 id="jhipsterSampleApplicationVueApp.testRootLabel.home.createOrEditLabel" data-cy="LabelCreateUpdateHeading">
+          {{ t$('jhipsterSampleApplicationVueApp.testRootLabel.home.createOrEditLabel') }}
+        </h2>
         <div>
-          <div class="form-group" v-if="label.id">
-            <label for="id" v-text="t$('global.field.id')"></label>
+          <div class="mb-3" v-if="label.id">
+            <label for="id">{{ t$('global.field.id') }}</label>
             <input type="text" class="form-control" id="id" name="id" v-model="label.id" readonly />
           </div>
-          <div class="form-group">
-            <label
-              class="form-control-label"
-              v-text="t$('jhipsterSampleApplicationVueApp.testRootLabel.labelName')"
-              for="label-labelName"
-            ></label>
+          <div class="mb-3">
+            <label class="form-control-label" for="label">{{ t$('jhipsterSampleApplicationVueApp.testRootLabel.labelName') }}</label>
             <input
               type="text"
               class="form-control"
@@ -32,8 +26,8 @@
               <small class="form-text text-danger" v-for="error of v$.labelName.$errors" :key="error.$uid">{{ error.$message }}</small>
             </div>
           </div>
-          <div class="form-group">
-            <label v-text="t$('jhipsterSampleApplicationVueApp.testRootLabel.operation')" for="label-operation"></label>
+          <div class="mb-3">
+            <label for="label">{{ t$('jhipsterSampleApplicationVueApp.testRootLabel.operation') }}</label>
             <select
               class="form-control"
               id="label-operations"
@@ -55,7 +49,7 @@
         </div>
         <div>
           <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" @click="previousState()">
-            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.cancel')"></span>
+            <font-awesome-icon icon="ban"></font-awesome-icon>&nbsp;<span>{{ t$('entity.action.cancel') }}</span>
           </button>
           <button
             type="submit"
@@ -64,7 +58,7 @@
             :disabled="v$.$invalid || isSaving"
             class="btn btn-primary"
           >
-            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span v-text="t$('entity.action.save')"></span>
+            <font-awesome-icon icon="save"></font-awesome-icon>&nbsp;<span>{{ t$('entity.action.save') }}</span>
           </button>
         </div>
       </form>

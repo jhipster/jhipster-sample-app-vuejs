@@ -1,11 +1,11 @@
 import { type Ref, computed, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import LogsService from './logs.service';
 import { orderAndFilterBy } from '@/shared/computables';
 
+import LogsService from './logs.service';
+
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'JhiLogs',
   setup() {
     const logsService = inject('logsService', () => new LogsService(), true);

@@ -1,10 +1,12 @@
 import { vitest } from 'vitest';
+
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import sinon, { type SinonStubbedInstance } from 'sinon';
 
-import Label from './label.vue';
-import LabelService from './label.service';
 import AlertService from '@/shared/alert/alert.service';
+
+import LabelService from './label.service';
+import Label from './label.vue';
 
 type LabelComponentType = InstanceType<typeof Label>;
 
@@ -29,8 +31,8 @@ describe('Component Tests', () => {
 
       alertService = new AlertService({
         i18n: { t: vitest.fn() } as any,
-        bvToast: {
-          toast: vitest.fn(),
+        toast: {
+          show: vitest.fn(),
         } as any,
       });
 

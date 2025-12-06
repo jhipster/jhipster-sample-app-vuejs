@@ -2,13 +2,13 @@ import { type Ref, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
-import OperationService from './operation.service';
+import { useAlertService } from '@/shared/alert/alert.service';
 import { useDateFormat } from '@/shared/composables';
 import { type IOperation } from '@/shared/model/test-root/operation.model';
-import { useAlertService } from '@/shared/alert/alert.service';
+
+import OperationService from './operation.service';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'OperationDetails',
   setup() {
     const dateFormat = useDateFormat();

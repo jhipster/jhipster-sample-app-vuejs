@@ -1,10 +1,11 @@
 import axios from 'axios';
-import sinon from 'sinon';
 import dayjs from 'dayjs';
+import sinon from 'sinon';
 
-import BankAccountMySuffixService from './bank-account-my-suffix.service';
 import { DATE_FORMAT, DATE_TIME_FORMAT } from '@/shared/composables/date-format';
 import { BankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
+
+import BankAccountMySuffixService from './bank-account-my-suffix.service';
 
 const error = {
   response: {
@@ -139,10 +140,14 @@ describe('Service Tests', () => {
       it('should partial update a BankAccountMySuffix', async () => {
         const patchObject = {
           name: 'BBBBBB',
-          agencyNumber: 1,
-          meanOperationDuration: 1,
+          bankNumber: 1,
+          lastOperationDuration: 1,
           balance: 1,
           openingDay: dayjs(currentDate).format(DATE_FORMAT),
+          lastOperationDate: dayjs(currentDate).format(DATE_TIME_FORMAT),
+          active: true,
+          accountType: 'BBBBBB',
+          attachment: 'BBBBBB',
           description: 'BBBBBB',
           ...new BankAccountMySuffix(),
         };

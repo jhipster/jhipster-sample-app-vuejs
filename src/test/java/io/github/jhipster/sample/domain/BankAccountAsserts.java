@@ -66,7 +66,7 @@ public class BankAccountAsserts {
             .satisfies(a -> assertThat(a.getAccountType()).as("check accountType").isEqualTo(expected.getAccountType()))
             .satisfies(a -> assertThat(a.getAttachment()).as("check attachment").isEqualTo(expected.getAttachment()))
             .satisfies(a ->
-                assertThat(a.getAttachmentContentType()).as("check attachment contenty type").isEqualTo(expected.getAttachmentContentType())
+                assertThat(a.getAttachmentContentType()).as("check attachment content type").isEqualTo(expected.getAttachmentContentType())
             )
             .satisfies(a -> assertThat(a.getDescription()).as("check description").isEqualTo(expected.getDescription()));
     }

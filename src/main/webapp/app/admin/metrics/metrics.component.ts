@@ -1,13 +1,14 @@
 import { type Ref, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+
 import numeral from 'numeral';
+
+import { useDateFormat } from '@/shared/composables';
 
 import JhiMetricsModal from './metrics-modal.vue';
 import MetricsService from './metrics.service';
-import { useDateFormat } from '@/shared/composables';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'JhiMetrics',
   components: {
     'metrics-modal': JhiMetricsModal,
@@ -124,7 +125,7 @@ export default defineComponent({
       return time_string;
     },
     isObjectExisting(metrics: any, key: string): boolean {
-      return metrics && metrics[key];
+      return metrics?.[key];
     },
     isObjectExistingAndNotEmpty(metrics: any, key: string): boolean {
       return this.isObjectExisting(metrics, key) && JSON.stringify(metrics[key]) !== '{}';

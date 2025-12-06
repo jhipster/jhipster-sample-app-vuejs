@@ -16,7 +16,7 @@ export default class AccountService {
   async retrieveProfiles(): Promise<boolean> {
     try {
       const res = await axios.get<any>('management/info');
-      if (res.data && res.data.activeProfiles) {
+      if (res.data?.activeProfiles) {
         this.store.setRibbonOnProfiles(res.data['display-ribbon-on-profiles']);
         this.store.setActiveProfiles(res.data.activeProfiles);
       }
@@ -46,7 +46,7 @@ export default class AccountService {
     if (this.store.logon) {
       return this.store.logon;
     }
-    const token = localStorage.getItem('jhi-authenticationToken') || sessionStorage.getItem('jhi-authenticationToken');
+    const token = localStorage.getItem('jhi-authenticationToken') ?? sessionStorage.getItem('jhi-authenticationToken');
     if (this.authenticated && this.userAuthorities && token) {
       return;
     }

@@ -1,11 +1,13 @@
 import { vitest } from 'vitest';
 import { ref } from 'vue';
+
 import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
 
-import UserManagement from './user-management.vue';
 import AlertService from '@/shared/alert/alert.service';
+
+import UserManagement from './user-management.vue';
 
 type UserManagementComponentType = InstanceType<typeof UserManagement>;
 
@@ -26,8 +28,8 @@ describe('UserManagement Component', () => {
 
     alertService = new AlertService({
       i18n: { t: vitest.fn() } as any,
-      bvToast: {
-        toast: vitest.fn(),
+      toast: {
+        show: vitest.fn(),
       } as any,
     });
 

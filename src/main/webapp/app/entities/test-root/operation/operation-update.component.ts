@@ -1,20 +1,20 @@
 import { type Ref, computed, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+
 import { useVuelidate } from '@vuelidate/core';
 
-import OperationService from './operation.service';
-import { useDateFormat, useValidation } from '@/shared/composables';
-import { useAlertService } from '@/shared/alert/alert.service';
-
 import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
-import { type IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
 import LabelService from '@/entities/test-root/label/label.service';
+import { useAlertService } from '@/shared/alert/alert.service';
+import { useDateFormat, useValidation } from '@/shared/composables';
+import { type IBankAccountMySuffix } from '@/shared/model/test-root/bank-account-my-suffix.model';
 import { type ILabel } from '@/shared/model/test-root/label.model';
 import { type IOperation, Operation } from '@/shared/model/test-root/operation.model';
 
+import OperationService from './operation.service';
+
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'OperationUpdate',
   setup() {
     const operationService = inject('operationService', () => new OperationService());

@@ -1,8 +1,9 @@
 import axios from 'axios';
 import sinon from 'sinon';
 
-import LabelService from './label.service';
 import { Label } from '@/shared/model/test-root/label.model';
+
+import LabelService from './label.service';
 
 const error = {
   response: {

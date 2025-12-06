@@ -1,12 +1,15 @@
 import { defineComponent, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
+
 import HealthService from './health.service';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'JhiHealthModal',
   props: {
-    currentHealth: {},
+    currentHealth: {
+      type: Object,
+      default: () => ({}),
+    },
   },
   setup() {
     const healthService = inject('healthService', () => new HealthService(), true);

@@ -1,15 +1,16 @@
 import { type Ref, defineComponent, inject, onMounted, ref, watch, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
+
 import { useIntersectionObserver } from '@vueuse/core';
 
-import OperationService from './operation.service';
-import { type IOperation } from '@/shared/model/test-root/operation.model';
-import useDataUtils from '@/shared/data/data-utils.service';
-import { useDateFormat } from '@/shared/composables';
 import { useAlertService } from '@/shared/alert/alert.service';
+import { useDateFormat } from '@/shared/composables';
+import useDataUtils from '@/shared/data/data-utils.service';
+import { type IOperation } from '@/shared/model/test-root/operation.model';
+
+import OperationService from './operation.service';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'Operation',
   setup() {
     const { t: t$ } = useI18n();

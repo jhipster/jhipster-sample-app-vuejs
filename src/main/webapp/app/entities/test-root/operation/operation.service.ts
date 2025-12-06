@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-import buildPaginationQueryOpts from '@/shared/sort/sorts';
-
 import { type IOperation } from '@/shared/model/test-root/operation.model';
+import buildPaginationQueryOpts from '@/shared/sort/sorts';
 
 const baseApiUrl = 'api/operations';
 
@@ -49,7 +48,7 @@ export default class OperationService {
   create(entity: IOperation): Promise<IOperation> {
     return new Promise<IOperation>((resolve, reject) => {
       axios
-        .post(`${baseApiUrl}`, entity)
+        .post(baseApiUrl, entity)
         .then(res => {
           resolve(res.data);
         })

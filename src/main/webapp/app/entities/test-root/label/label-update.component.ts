@@ -1,18 +1,18 @@
 import { type Ref, computed, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+
 import { useVuelidate } from '@vuelidate/core';
 
-import LabelService from './label.service';
-import { useValidation } from '@/shared/composables';
-import { useAlertService } from '@/shared/alert/alert.service';
-
 import OperationService from '@/entities/test-root/operation/operation.service';
-import { type IOperation } from '@/shared/model/test-root/operation.model';
+import { useAlertService } from '@/shared/alert/alert.service';
+import { useValidation } from '@/shared/composables';
 import { type ILabel, Label } from '@/shared/model/test-root/label.model';
+import { type IOperation } from '@/shared/model/test-root/operation.model';
+
+import LabelService from './label.service';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'LabelUpdate',
   setup() {
     const labelService = inject('labelService', () => new LabelService());

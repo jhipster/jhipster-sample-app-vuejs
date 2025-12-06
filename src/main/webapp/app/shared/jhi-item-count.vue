@@ -1,6 +1,6 @@
 <template>
-  <div class="info jhi-item-count">
-    <span v-text="t$('global.item-count', { first, second, total })"></span>
+  <div class="info">
+    <span>{{ t$('global.item-count', { first, second, total }) }}</span>
   </div>
 </template>
 

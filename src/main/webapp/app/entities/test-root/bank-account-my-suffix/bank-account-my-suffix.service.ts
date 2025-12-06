@@ -47,7 +47,7 @@ export default class BankAccountMySuffixService {
   create(entity: IBankAccountMySuffix): Promise<IBankAccountMySuffix> {
     return new Promise<IBankAccountMySuffix>((resolve, reject) => {
       axios
-        .post(`${baseApiUrl}`, entity)
+        .post(baseApiUrl, entity)
         .then(res => {
           resolve(res.data);
         })

@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-import buildPaginationQueryOpts from '@/shared/sort/sorts';
-
 import { type ILabel } from '@/shared/model/test-root/label.model';
+import buildPaginationQueryOpts from '@/shared/sort/sorts';
 
 const baseApiUrl = 'api/labels';
 
@@ -49,7 +48,7 @@ export default class LabelService {
   create(entity: ILabel): Promise<ILabel> {
     return new Promise<ILabel>((resolve, reject) => {
       axios
-        .post(`${baseApiUrl}`, entity)
+        .post(baseApiUrl, entity)
         .then(res => {
           resolve(res.data);
         })

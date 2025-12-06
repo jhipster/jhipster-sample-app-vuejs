@@ -2,12 +2,12 @@ import { type Ref, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
-import LabelService from './label.service';
-import { type ILabel } from '@/shared/model/test-root/label.model';
 import { useAlertService } from '@/shared/alert/alert.service';
+import { type ILabel } from '@/shared/model/test-root/label.model';
+
+import LabelService from './label.service';
 
 export default defineComponent({
-  compatConfig: { MODE: 3 },
   name: 'LabelDetails',
   setup() {
     const labelService = inject('labelService', () => new LabelService());
