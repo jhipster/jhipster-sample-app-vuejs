@@ -7,6 +7,7 @@ import { email, maxLength, minLength, required } from '@vuelidate/validators';
 
 import { useAlertService } from '@/shared/alert/alert.service';
 import languages from '@/shared/config/languages';
+import { getMessageFromHeaders } from '@/shared/jhipster/headers';
 import { type IUser, User } from '@/shared/model/user.model';
 
 import UserManagementService from './user-management.service';
@@ -117,9 +118,8 @@ export default defineComponent({
     },
 
     getToastMessageFromHeader(res: any): string {
-      return this.t$(res.headers['x-jhipstersampleapplicationvueapp-alert'], {
-        param: decodeURIComponent(res.headers['x-jhipstersampleapplicationvueapp-params'].replace(/\+/g, ' ')),
-      }).toString();
+      const message = getMessageFromHeaders(res.headers);
+      return message.alertKey ? this.t$(message.alertKey, { param: message.param }) : message.alertMessage;
     },
   },
 });

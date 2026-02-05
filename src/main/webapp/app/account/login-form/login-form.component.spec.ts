@@ -1,4 +1,4 @@
-import { vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vitest } from 'vitest';
 import { type RouteLocation } from 'vue-router';
 
 import { createTestingPinia } from '@pinia/testing';

@@ -1,4 +1,6 @@
-import { vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vitest } from 'vitest';
+
+import { endsWith, paddingSize } from '@/shared/jhipster/data-utils';
 
 import useDataUtils from './data-utils.service';
 
@@ -48,25 +50,25 @@ describe('Formatter i18n', () => {
   });
 
   it('should check text ends with suffix', () => {
-    const result = dataUtilsService.endsWith('rocky', 'JHipster rocks!');
+    const result = endsWith('rocky', 'JHipster rocks!');
 
     expect(result).toBe(false);
   });
 
   it('should paddingSize to 0', () => {
-    const result = dataUtilsService.paddingSize('toto');
+    const result = paddingSize('toto');
 
     expect(result).toBe(0);
   });
 
   it('should paddingSize to 1', () => {
-    const result = dataUtilsService.paddingSize('toto=');
+    const result = paddingSize('toto=');
 
     expect(result).toBe(1);
   });
 
   it('should paddingSize to 2', () => {
-    const result = dataUtilsService.paddingSize('toto==');
+    const result = paddingSize('toto==');
 
     expect(result).toBe(2);
   });

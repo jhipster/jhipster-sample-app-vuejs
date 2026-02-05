@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { computed } from 'vue';
 
 import { createTestingPinia } from '@pinia/testing';

@@ -1,4 +1,4 @@
-import { Authority } from '@/shared/security/authority';
+import { Authority } from '@/shared/jhipster/constants';
 
 const Register = () => import('@/account/register/register.vue');
 const Activate = () => import('@/account/activate/activate.vue');

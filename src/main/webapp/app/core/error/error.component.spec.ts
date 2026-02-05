@@ -1,4 +1,4 @@
-import { vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vitest } from 'vitest';
 import { type Ref, ref } from 'vue';
 import { type RouteLocation } from 'vue-router';
 

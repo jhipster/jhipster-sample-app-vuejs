@@ -1,4 +1,6 @@
-import { beforeEach, describe, expect, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vitest } from 'vitest';
+
+import { MESSAGE_ERROR_HEADER_NAME, MESSAGE_PARAM_HEADER_NAME } from '@/shared/jhipster/constants';
 
 import AlertService from './alert.service';
 
@@ -67,8 +69,8 @@ describe('Alert Service test suite', () => {
     const httpErrorResponse = {
       status: 400,
       headers: {
-        'x-jhipsterapp-error': translationKey,
-        'x-jhipsterapp-params': 'dummyEntity',
+        [MESSAGE_ERROR_HEADER_NAME]: translationKey,
+        [MESSAGE_PARAM_HEADER_NAME]: 'dummyEntity',
       },
     };
     // GIVEN
@@ -105,8 +107,8 @@ describe('Alert Service test suite', () => {
     const httpErrorResponse = {
       status: 400,
       headers: {
-        'x-jhipsterapp-error400': 'error',
-        'x-jhipsterapp-params400': 'dummyEntity',
+        [`${MESSAGE_ERROR_HEADER_NAME}400`]: 'error',
+        [`${MESSAGE_PARAM_HEADER_NAME}400`]: 'dummyEntity',
       },
       data: {
         message,
@@ -117,6 +119,7 @@ describe('Alert Service test suite', () => {
     };
 
     // GIVEN
+    translationStub.mockReturnValueOnce('DummyEntity');
     translationStub.mockReturnValueOnce(message);
 
     // WHEN

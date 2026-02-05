@@ -1,5 +1,7 @@
+import { byteSize, openFile, toBase64 } from '@/shared/jhipster/data-utils';
+
 /**
- * An composable utility for data.
+ * A composable utility for data.
  */
 const useDataUtils = () => ({
   /**
@@ -16,39 +18,14 @@ const useDataUtils = () => ({
    * Method to find the byte size of the string provides
    */
   byteSize(base64String) {
-    return this.formatAsBytes(this.size(base64String));
+    return byteSize(base64String);
   },
 
   /**
    * Method to open file
    */
   openFile(contentType, data) {
-    const byteCharacters = atob(data);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], {
-      type: contentType,
-    });
-    const objectURL = URL.createObjectURL(blob);
-    const win = window.open(objectURL);
-    if (win) {
-      win.onload = () => URL.revokeObjectURL(objectURL);
-    }
-  },
-
-  /**
-   * Method to convert the file to base64
-   */
-  toBase64(file, cb) {
-    const fileReader = new FileReader();
-    fileReader.readAsDataURL(file);
-    fileReader.onload = (e: any) => {
-      const base64Data = e.target.result.substring(e.target.result.indexOf('base64,') + 'base64,'.length);
-      cb(base64Data);
-    };
+    openFile(data, contentType);
   },
 
   /**
@@ -68,35 +45,13 @@ const useDataUtils = () => ({
     }
   },
 
-  endsWith(suffix, str) {
-    return str.endsWith(suffix);
-  },
-
-  paddingSize(value) {
-    if (this.endsWith('==', value)) {
-      return 2;
-    }
-    if (this.endsWith('=', value)) {
-      return 1;
-    }
-    return 0;
-  },
-
-  size(value) {
-    return (value.length / 4) * 3 - this.paddingSize(value);
-  },
-
-  formatAsBytes(size) {
-    return `${size.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} bytes`;
-  },
-
   setFileData(event, entity, field, isImage) {
     if (event?.target.files?.[0]) {
       const file = event.target.files[0];
       if (isImage && !file.type.startsWith('image/')) {
         return;
       }
-      this.toBase64(file, base64Data => {
+      toBase64(file, base64Data => {
         entity[field] = base64Data;
         entity[`${field}ContentType`] = file.type;
       });

@@ -1,4 +1,4 @@
-import { Authority } from '@/shared/security/authority';
+import { Authority } from '@/shared/jhipster/constants';
 
 const JhiUserManagementComponent = () => import('@/admin/user-management/user-management.vue');
 const JhiUserManagementViewComponent = () => import('@/admin/user-management/user-management-view.vue');

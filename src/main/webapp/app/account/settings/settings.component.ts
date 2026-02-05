@@ -5,8 +5,8 @@ import { useVuelidate } from '@vuelidate/core';
 import { email, maxLength, minLength, required } from '@vuelidate/validators';
 import axios from 'axios';
 
-import { EMAIL_ALREADY_USED_TYPE } from '@/constants';
 import languages from '@/shared/config/languages';
+import { EMAIL_ALREADY_USED_TYPE } from '@/shared/jhipster/error.constants';
 import { useStore } from '@/store';
 
 const validations = {

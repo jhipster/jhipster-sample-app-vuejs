@@ -1,4 +1,4 @@
-import { vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vitest } from 'vitest';
 import { type RouteLocation } from 'vue-router';
 
 import { shallowMount } from '@vue/test-utils';
@@ -6,7 +6,7 @@ import axios from 'axios';
 import sinon from 'sinon';
 
 import AlertService from '@/shared/alert/alert.service';
-import { Authority } from '@/shared/security/authority';
+import { Authority } from '@/shared/jhipster/constants';
 
 import UserManagementView from './user-management-view.vue';
 

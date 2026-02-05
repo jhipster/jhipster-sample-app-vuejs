@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { computed } from 'vue';
 
 import { createTestingPinia } from '@pinia/testing';
@@ -6,7 +7,7 @@ import axios from 'axios';
 import sinon from 'sinon';
 
 import { useLoginModal } from '@/account/login-modal';
-import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from '@/constants';
+import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from '@/shared/jhipster/error.constants';
 
 import Register from './register.vue';
 

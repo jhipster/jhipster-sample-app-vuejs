@@ -3,6 +3,7 @@ package io.github.jhipster.sample.service;
 import io.github.jhipster.sample.domain.Label;
 import io.github.jhipster.sample.repository.LabelRepository;
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -59,9 +60,7 @@ public class LabelService {
         return labelRepository
             .findById(label.getId())
             .map(existingLabel -> {
-                if (label.getLabelName() != null) {
-                    existingLabel.setLabelName(label.getLabelName());
-                }
+                updateIfPresent(existingLabel::setLabelName, label.getLabelName());
 
                 return existingLabel;
             })
@@ -100,5 +99,11 @@ public class LabelService {
     public void delete(Long id) {
         LOG.debug("Request to delete Label : {}", id);
         labelRepository.deleteById(id);
+    }
+
+    private <T> void updateIfPresent(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 }

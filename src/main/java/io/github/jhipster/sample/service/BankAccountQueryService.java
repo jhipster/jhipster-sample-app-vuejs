@@ -70,7 +70,7 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
         if (criteria != null) {
             // This has to be called first, because the distinct method returns null
             specification = Specification.allOf(
-                Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : null,
+                Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : Specification.unrestricted(),
                 buildRangeSpecification(criteria.getId(), BankAccount_.id),
                 buildStringSpecification(criteria.getName(), BankAccount_.name),
                 buildRangeSpecification(criteria.getBankNumber(), BankAccount_.bankNumber),

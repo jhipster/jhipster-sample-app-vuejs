@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { createTestingPinia } from '@pinia/testing';
 import axios from 'axios';
 import sinon from 'sinon';

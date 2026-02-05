@@ -1,4 +1,4 @@
-import { vitest } from 'vitest';
+import { afterAll, beforeEach, describe, expect, it, vitest } from 'vitest';
 
 import { createTestingPinia } from '@pinia/testing';
 import { type ComponentMountingOptions, shallowMount } from '@vue/test-utils';
@@ -39,7 +39,7 @@ describe('Activate Component', () => {
   it('should display error when activation fails', async () => {
     axiosStub.get.rejects({});
 
-    const wrapper = shallowMount(Activate as any, mountOptions);
+    const wrapper = shallowMount(Activate, mountOptions);
     activate = wrapper.vm;
     await activate.$nextTick();
 
@@ -50,7 +50,7 @@ describe('Activate Component', () => {
   it('should display success when activation succeeds', async () => {
     axiosStub.get.resolves({});
 
-    const wrapper = shallowMount(Activate as any, mountOptions);
+    const wrapper = shallowMount(Activate, mountOptions);
     activate = wrapper.vm;
     await activate.$nextTick();
 

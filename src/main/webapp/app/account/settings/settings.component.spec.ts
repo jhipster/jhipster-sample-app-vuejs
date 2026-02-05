@@ -1,9 +1,11 @@
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { createTestingPinia } from '@pinia/testing';
 import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import sinon from 'sinon';
 
-import { EMAIL_ALREADY_USED_TYPE } from '@/constants';
+import { EMAIL_ALREADY_USED_TYPE } from '@/shared/jhipster/error.constants';
 import { useStore } from '@/store';
 
 import Settings from './settings.vue';

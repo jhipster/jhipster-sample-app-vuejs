@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -128,15 +129,9 @@ public class OperationResource {
         Optional<Operation> result = operationRepository
             .findById(operation.getId())
             .map(existingOperation -> {
-                if (operation.getDate() != null) {
-                    existingOperation.setDate(operation.getDate());
-                }
-                if (operation.getDescription() != null) {
-                    existingOperation.setDescription(operation.getDescription());
-                }
-                if (operation.getAmount() != null) {
-                    existingOperation.setAmount(operation.getAmount());
-                }
+                updateIfPresent(existingOperation::setDate, operation.getDate());
+                updateIfPresent(existingOperation::setDescription, operation.getDescription());
+                updateIfPresent(existingOperation::setAmount, operation.getAmount());
 
                 return existingOperation;
             })
@@ -197,5 +192,11 @@ public class OperationResource {
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    private <T> void updateIfPresent(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 }

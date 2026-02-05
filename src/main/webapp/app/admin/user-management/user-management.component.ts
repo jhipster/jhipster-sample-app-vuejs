@@ -3,6 +3,7 @@ import { useI18n } from 'vue-i18n';
 
 import { useAlertService } from '@/shared/alert/alert.service';
 import { useDateFormat } from '@/shared/composables';
+import { getMessageFromHeaders } from '@/shared/jhipster/headers';
 
 import UserManagementService from './user-management.service';
 
@@ -113,12 +114,10 @@ export default defineComponent({
       this.userManagementService
         .remove(this.removeId)
         .then(res => {
-          this.alertService.showInfo(
-            this.t$(res.headers['x-jhipstersampleapplicationvueapp-alert'].toString(), {
-              param: decodeURIComponent(res.headers['x-jhipstersampleapplicationvueapp-params'].replace(/\+/g, ' ')),
-            }),
-            { variant: 'danger' },
-          );
+          const message = getMessageFromHeaders(res.headers);
+          this.alertService.showInfo(message.alertKey ? this.t$(message.alertKey, { param: message.param }) : message.alertMessage, {
+            variant: 'danger',
+          });
           this.removeId = null;
           this.loadAll();
           this.closeDialog();

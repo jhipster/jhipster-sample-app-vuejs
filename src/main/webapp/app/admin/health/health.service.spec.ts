@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import HealthService from './health.service';
 
 describe('Health Service', () => {

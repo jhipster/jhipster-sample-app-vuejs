@@ -1,4 +1,4 @@
-import { vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vitest } from 'vitest';
 import { type RouteLocation } from 'vue-router';
 
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
@@ -6,6 +6,7 @@ import axios from 'axios';
 import sinon from 'sinon';
 
 import AlertService from '@/shared/alert/alert.service';
+import { MESSAGE_ALERT_HEADER_NAME, MESSAGE_PARAM_HEADER_NAME } from '@/shared/jhipster/constants';
 
 import UserManagementEdit from './user-management-edit.vue';
 
@@ -95,8 +96,8 @@ describe('UserManagementEdit Component', () => {
       // GIVEN
       axiosStub.put.resolves({
         headers: {
-          'x-jhipstersampleapplicationvueapp-alert': '',
-          'x-jhipstersampleapplicationvueapp-params': '',
+          [MESSAGE_ALERT_HEADER_NAME]: '',
+          [MESSAGE_PARAM_HEADER_NAME]: '',
         },
       });
       axiosStub.get.withArgs(`api/admin/users/${123}`).resolves({
@@ -125,8 +126,8 @@ describe('UserManagementEdit Component', () => {
       // GIVEN
       axiosStub.post.resolves({
         headers: {
-          'x-jhipstersampleapplicationvueapp-alert': '',
-          'x-jhipstersampleapplicationvueapp-params': '',
+          [MESSAGE_ALERT_HEADER_NAME]: '',
+          [MESSAGE_PARAM_HEADER_NAME]: '',
         },
       });
       axiosStub.get.resolves({});

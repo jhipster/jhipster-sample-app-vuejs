@@ -1,3 +1,5 @@
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { shallowMount } from '@vue/test-utils';
 
 import MetricsModal from './metrics-modal.vue';
