@@ -9,3 +9,23 @@ id;name;bank_number;agency_number;last_operation_duration;mean_operation_duratio
 8;crystallize paltry;19113;3493;22441.86;20940.08;13349.45;2015-08-04;2015-08-04T18:53:22;true;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
 9;conversation;1282;29638;27394.77;18373.68;32563.45;2015-08-04;2015-08-04T15:05:17;false;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
 10;gym twine;18670;28950;5550.45;22483.18;29486.32;2015-08-05;2015-08-04T22:01:13;true;LOAN;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+11;now absent wordy;23113;19184;25421.94;4651.25;9488.65;2015-08-04;2015-08-04T16:35:39;false;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+12;regarding boo aw;29776;32214;2203.84;25463.21;23161.88;2015-08-05;2015-08-05T02:57:49;true;LOAN;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+13;whenever furthermore across;19365;224;13869.35;21480.39;3362.62;2015-08-05;2015-08-04T14:48:24;false;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+14;despite striking;1971;11266;20633.71;28514.26;27913.62;2015-08-04;2015-08-04T22:51:31;false;SAVINGS;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+15;continually;40;14024;27845.94;8457.4;15908.07;2015-08-04;2015-08-05T09:44:23;false;SAVINGS;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+16;blaring squid;11851;28714;27793.42;20154.3;30779.58;2015-08-04;2015-08-05T00:51:58;false;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+17;napkin cappelletti;25555;7569;28121.28;31493.75;4403.03;2015-08-05;2015-08-04T22:45:04;true;LOAN;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+18;as;3991;30412;22428.44;17837.99;19800.97;2015-08-05;2015-08-05T09:16:47;true;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+19;yippee scientific;9319;13430;27151.25;805.39;24889.4;2015-08-05;2015-08-05T05:10:21;true;LOAN;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+20;intrigue entry;23079;23016;1008.6;28722.32;21035.62;2015-08-05;2015-08-04T15:49:49;false;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+21;birth monocle and;12581;3328;32303.91;27518.45;12404.74;2015-08-05;2015-08-04T22:56:09;true;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+22;huzzah;7438;9946;2011.89;24770.35;19998.48;2015-08-05;2015-08-05T06:13:04;true;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+23;circa;25753;5479;32120.01;15968.21;15036.56;2015-08-04;2015-08-04T23:51:31;true;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+24;on meh sophisticated;30589;24090;21366.2;4898.38;28200.4;2015-08-04;2015-08-05T04:26:14;true;SAVINGS;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+25;hole stump square;29365;3159;26395.7;6679.46;27810.17;2015-08-05;2015-08-04T20:46:22;false;SAVINGS;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+26;married unlike duh;6810;23974;31960.78;28105.75;8792.45;2015-08-05;2015-08-04T22:47:31;false;LOAN;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+27;before;6571;23843;15100.29;21654.61;4963.78;2015-08-05;2015-08-04T22:38:53;true;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+28;lotion;12440;19140;11555.07;31493.16;31639.74;2015-08-04;2015-08-04T19:12:47;false;CHECKING;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+29;coaxingly wasabi draw;16237;1363;14251.89;23127.41;10847.79;2015-08-05;2015-08-04T13:55:54;true;LOAN;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt
+30;nor secret;24310;14391;4606.53;12093.37;25638.05;2015-08-04;2015-08-05T11:40:37;true;LOAN;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.txt

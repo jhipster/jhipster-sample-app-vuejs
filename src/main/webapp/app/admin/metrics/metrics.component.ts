@@ -1,8 +1,6 @@
 import { type Ref, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import numeral from 'numeral';
-
 import { useDateFormat } from '@/shared/composables';
 
 import JhiMetricsModal from './metrics-modal.vue';
@@ -95,10 +93,10 @@ export default defineComponent({
       return input;
     },
     formatNumber1(value: any): any {
-      return numeral(value).format('0,0');
+      return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value);
     },
     formatNumber2(value: any): any {
-      return numeral(value).format('0,00');
+      return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
     },
     convertMillisecondsToDuration(ms) {
       const times = {
@@ -110,13 +108,12 @@ export default defineComponent({
         second: 1000,
       };
       let time_string = '';
-      let plural = '';
+      const plural = '';
       for (const key in times) {
         if (Math.floor(ms / times[key]) > 0) {
+          let plural = '';
           if (Math.floor(ms / times[key]) > 1) {
             plural = 's';
-          } else {
-            plural = '';
           }
           time_string += `${Math.floor(ms / times[key])} ${key}${plural} `;
           ms = ms - times[key] * Math.floor(ms / times[key]);

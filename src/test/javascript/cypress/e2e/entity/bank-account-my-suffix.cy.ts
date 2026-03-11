@@ -13,11 +13,17 @@ import {
 describe('BankAccount e2e test', () => {
   const bankAccountPageUrl = '/bank-account-my-suffix';
   const bankAccountPageUrlPattern = new RegExp('/bank-account-my-suffix(\\?.*)?$');
-  const username = Cypress.env('E2E_USERNAME') ?? 'user';
-  const password = Cypress.env('E2E_PASSWORD') ?? 'user';
+  let username: string;
+  let password: string;
   const bankAccountSample = { name: 'govern geez', balance: 2686.52 };
 
   let bankAccount;
+
+  before(() => {
+    cy.credentials().then(credentials => {
+      ({ username, password } = credentials);
+    });
+  });
 
   beforeEach(() => {
     cy.login(username, password);

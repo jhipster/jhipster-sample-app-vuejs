@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>
-      <span id="user-management-page-heading" data-cy="userManagementPageHeading">{{ t$('userManagement.home.title') }}</span>
+      <span id="user-management-page-heading" data-cy="UserManagementHeading">{{ t$('userManagement.home.title') }}</span>
 
       <div class="d-flex justify-content-end">
         <button class="btn btn-info me-2" @click="handleSyncList" :disabled="isLoading">
@@ -55,7 +55,7 @@
           </tr>
         </thead>
         <tbody v-if="users">
-          <tr v-for="user in users" :key="user.id" :id="user.login">
+          <tr v-for="user in users" :key="user.id" :id="user.login" data-cy="entityTable">
             <td>
               <router-link :to="{ name: 'JhiUserView', params: { userId: user.login } }">{{ user.id }}</router-link>
             </td>
