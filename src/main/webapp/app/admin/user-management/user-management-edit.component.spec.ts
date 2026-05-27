@@ -1,9 +1,8 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type RouteLocation } from 'vue-router';
 
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import axios from 'axios';
-import sinon from 'sinon';
 
 import AlertService from '@/shared/alert/alert.service';
 import { MESSAGE_ALERT_HEADER_NAME, MESSAGE_PARAM_HEADER_NAME } from '@/shared/jhipster/constants';
@@ -13,18 +12,18 @@ import UserManagementEdit from './user-management-edit.vue';
 type UserManagementEditComponentType = InstanceType<typeof UserManagementEdit>;
 
 let route: Partial<RouteLocation>;
-const routerGoMock = vitest.fn();
+const routerGoMock = vi.fn();
 
-vitest.mock('vue-router', () => ({
+vi.mock('vue-router', () => ({
   useRoute: () => route,
   useRouter: () => ({ go: routerGoMock }),
 }));
 
 describe('UserManagementEdit Component', () => {
   const axiosStub = {
-    get: sinon.stub(axios, 'get'),
-    post: sinon.stub(axios, 'post'),
-    put: sinon.stub(axios, 'put'),
+    get: vi.spyOn(axios, 'get'),
+    post: vi.spyOn(axios, 'post'),
+    put: vi.spyOn(axios, 'put'),
   };
   let mountOptions: MountingOptions<UserManagementEditComponentType>['global'];
   let alertService: AlertService;
@@ -32,9 +31,9 @@ describe('UserManagementEdit Component', () => {
   beforeEach(() => {
     route = {};
     alertService = new AlertService({
-      i18n: { t: vitest.fn() } as any,
+      i18n: { t: vi.fn() } as any,
       toast: {
-        show: vitest.fn(),
+        show: vi.fn(),
       } as any,
     });
 
@@ -47,16 +46,19 @@ describe('UserManagementEdit Component', () => {
       },
     };
 
-    axiosStub.get.reset();
-    axiosStub.post.reset();
-    axiosStub.put.reset();
+    axiosStub.get.mockReset();
+    axiosStub.post.mockReset();
+    axiosStub.put.mockReset();
   });
 
   describe('init', () => {
     it('Should load user', async () => {
       // GIVEN
-      axiosStub.get.withArgs(`api/admin/users/${123}`).resolves({});
-      axiosStub.get.withArgs('api/authorities').resolves({ data: [] });
+      axiosStub.get.mockImplementation((url?: string) => {
+        if (url === `api/admin/users/${123}`) return Promise.resolve({});
+        if (url === 'api/authorities') return Promise.resolve({ data: [] });
+        return Promise.resolve({});
+      });
       route = {
         params: {
           userId: `${123}`,
@@ -69,13 +71,15 @@ describe('UserManagementEdit Component', () => {
       await userManagementEdit.$nextTick();
 
       // THEN
-      expect(axiosStub.get.calledWith('api/authorities')).toBeTruthy();
-      expect(axiosStub.get.calledWith(`api/admin/users/${123}`)).toBeTruthy();
+      expect(axiosStub.get).toHaveBeenCalledWith('api/authorities');
+      expect(axiosStub.get).toHaveBeenCalledWith(`api/admin/users/${123}`);
     });
     it('Should open create user', async () => {
       // GIVEN
-      axiosStub.get.resolves({});
-      axiosStub.get.withArgs('api/authorities').resolves({ data: [] });
+      axiosStub.get.mockImplementation((url?: string) => {
+        if (url === 'api/authorities') return Promise.resolve({ data: [] });
+        return Promise.resolve({});
+      });
       route = {
         params: {},
       };
@@ -86,24 +90,25 @@ describe('UserManagementEdit Component', () => {
       await userManagementEdit.$nextTick();
 
       // THEN
-      expect(axiosStub.get.calledWith('api/authorities')).toBeTruthy();
-      expect(axiosStub.get.callCount).toBe(1);
+      expect(axiosStub.get).toHaveBeenCalledWith('api/authorities');
+      expect(axiosStub.get).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('save', () => {
     it('Should call update service on save for existing user', async () => {
       // GIVEN
-      axiosStub.put.resolves({
+      axiosStub.put.mockResolvedValue({
         headers: {
           [MESSAGE_ALERT_HEADER_NAME]: '',
           [MESSAGE_PARAM_HEADER_NAME]: '',
         },
       });
-      axiosStub.get.withArgs(`api/admin/users/${123}`).resolves({
-        data: { id: 123, authorities: [] },
+      axiosStub.get.mockImplementation((url?: string) => {
+        if (url === `api/admin/users/${123}`) return Promise.resolve({ data: { id: 123, authorities: [] } });
+        if (url === 'api/authorities') return Promise.resolve({ data: [] });
+        return Promise.resolve({});
       });
-      axiosStub.get.withArgs('api/authorities').resolves({ data: [] });
       route = {
         params: {
           userId: `${123}`,
@@ -118,20 +123,22 @@ describe('UserManagementEdit Component', () => {
       await userManagementEdit.$nextTick();
 
       // THEN
-      expect(axiosStub.put.calledWith('api/admin/users', { id: 123, authorities: [] })).toBeTruthy();
+      expect(axiosStub.put).toHaveBeenCalledWith('api/admin/users', { id: 123, authorities: [] });
       expect(userManagementEdit.isSaving).toEqual(false);
     });
 
     it('Should call create service on save for new user', async () => {
       // GIVEN
-      axiosStub.post.resolves({
+      axiosStub.post.mockResolvedValue({
         headers: {
           [MESSAGE_ALERT_HEADER_NAME]: '',
           [MESSAGE_PARAM_HEADER_NAME]: '',
         },
       });
-      axiosStub.get.resolves({});
-      axiosStub.get.withArgs('api/authorities').resolves({ data: [] });
+      axiosStub.get.mockImplementation((url?: string) => {
+        if (url === 'api/authorities') return Promise.resolve({ data: [] });
+        return Promise.resolve({});
+      });
       route = {
         params: {},
       };
@@ -145,11 +152,9 @@ describe('UserManagementEdit Component', () => {
       await userManagementEdit.$nextTick();
 
       // THEN
-      expect(
-        axiosStub.post.calledWith('api/admin/users', {
-          authorities: [],
-        }),
-      ).toBeTruthy();
+      expect(axiosStub.post).toHaveBeenCalledWith('api/admin/users', {
+        authorities: [],
+      });
       expect(userManagementEdit.isSaving).toEqual(false);
     });
   });

@@ -1,24 +1,20 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type RouteLocation } from 'vue-router';
 
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import dayjs from 'dayjs';
-import sinon, { type SinonStubbedInstance } from 'sinon';
 
-import BankAccountMySuffixService from '@/entities/test-root/bank-account-my-suffix/bank-account-my-suffix.service';
-import LabelService from '@/entities/test-root/label/label.service';
 import AlertService from '@/shared/alert/alert.service';
 import { DATE_TIME_LONG_FORMAT } from '@/shared/composables/date-format';
 
 import OperationUpdate from './operation-update.vue';
-import OperationService from './operation.service';
 
 type OperationUpdateComponentType = InstanceType<typeof OperationUpdate>;
 
 let route: Partial<RouteLocation>;
-const routerGoMock = vitest.fn();
+const routerGoMock = vi.fn();
 
-vitest.mock('vue-router', () => ({
+vi.mock('vue-router', () => ({
   useRoute: () => route,
   useRouter: () => ({ go: routerGoMock }),
 }));
@@ -31,17 +27,22 @@ describe('Component Tests', () => {
 
   describe('Operation Management Update Component', () => {
     let comp: OperationUpdateComponentType;
-    let operationServiceStub: SinonStubbedInstance<OperationService>;
+    let operationServiceStub: any;
 
     beforeEach(() => {
       route = {};
-      operationServiceStub = sinon.createStubInstance<OperationService>(OperationService);
-      operationServiceStub.retrieve.onFirstCall().resolves(Promise.resolve([]));
+      operationServiceStub = {
+        retrieve: vi.fn(),
+        find: vi.fn(),
+        update: vi.fn(),
+        create: vi.fn(),
+      };
+      operationServiceStub.retrieve.mockResolvedValueOnce([]);
 
       alertService = new AlertService({
-        i18n: { t: vitest.fn() } as any,
+        i18n: { t: vi.fn() } as any,
         toast: {
-          show: vitest.fn(),
+          show: vi.fn(),
         } as any,
       });
 
@@ -56,20 +57,18 @@ describe('Component Tests', () => {
         provide: {
           alertService,
           operationService: () => operationServiceStub,
-          bankAccountService: () =>
-            sinon.createStubInstance<BankAccountMySuffixService>(BankAccountMySuffixService, {
-              retrieve: sinon.stub().resolves({}),
-            } as any),
-          labelService: () =>
-            sinon.createStubInstance<LabelService>(LabelService, {
-              retrieve: sinon.stub().resolves({}),
-            } as any),
+          bankAccountService: () => ({
+            retrieve: vi.fn().mockResolvedValue({}),
+          }),
+          labelService: () => ({
+            retrieve: vi.fn().mockResolvedValue({}),
+          }),
         },
       };
     });
 
     afterEach(() => {
-      vitest.resetAllMocks();
+      vi.resetAllMocks();
     });
 
     describe('load', () => {
@@ -99,21 +98,21 @@ describe('Component Tests', () => {
         const wrapper = shallowMount(OperationUpdate, { global: mountOptions });
         comp = wrapper.vm;
         comp.operation = operationSample;
-        operationServiceStub.update.resolves(operationSample);
+        operationServiceStub.update.mockResolvedValue(operationSample);
 
         // WHEN
         comp.save();
         await comp.$nextTick();
 
         // THEN
-        expect(operationServiceStub.update.calledWith(operationSample)).toBeTruthy();
+        expect(operationServiceStub.update).toHaveBeenCalledWith(operationSample);
         expect(comp.isSaving).toEqual(false);
       });
 
       it('Should call create service on save for new entity', async () => {
         // GIVEN
         const entity = {};
-        operationServiceStub.create.resolves(entity);
+        operationServiceStub.create.mockResolvedValue(entity);
         const wrapper = shallowMount(OperationUpdate, { global: mountOptions });
         comp = wrapper.vm;
         comp.operation = entity;
@@ -123,7 +122,7 @@ describe('Component Tests', () => {
         await comp.$nextTick();
 
         // THEN
-        expect(operationServiceStub.create.calledWith(entity)).toBeTruthy();
+        expect(operationServiceStub.create).toHaveBeenCalledWith(entity);
         expect(comp.isSaving).toEqual(false);
       });
     });
@@ -131,8 +130,8 @@ describe('Component Tests', () => {
     describe('Before route enter', () => {
       it('Should retrieve data', async () => {
         // GIVEN
-        operationServiceStub.find.resolves(operationSample);
-        operationServiceStub.retrieve.resolves([operationSample]);
+        operationServiceStub.find.mockResolvedValue(operationSample);
+        operationServiceStub.retrieve.mockResolvedValue([operationSample]);
 
         // WHEN
         route = {
@@ -151,7 +150,7 @@ describe('Component Tests', () => {
 
     describe('Previous state', () => {
       it('Should go previous state', async () => {
-        operationServiceStub.find.resolves(operationSample);
+        operationServiceStub.find.mockResolvedValue(operationSample);
         const wrapper = shallowMount(OperationUpdate, { global: mountOptions });
         comp = wrapper.vm;
         await comp.$nextTick();

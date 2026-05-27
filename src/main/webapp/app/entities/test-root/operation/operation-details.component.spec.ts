@@ -1,20 +1,18 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type RouteLocation } from 'vue-router';
 
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
-import sinon, { type SinonStubbedInstance } from 'sinon';
 
 import AlertService from '@/shared/alert/alert.service';
 
 import OperationDetails from './operation-details.vue';
-import OperationService from './operation.service';
 
 type OperationDetailsComponentType = InstanceType<typeof OperationDetails>;
 
 let route: Partial<RouteLocation>;
-const routerGoMock = vitest.fn();
+const routerGoMock = vi.fn();
 
-vitest.mock('vue-router', () => ({
+vi.mock('vue-router', () => ({
   useRoute: () => route,
   useRouter: () => ({ go: routerGoMock }),
 }));
@@ -25,21 +23,23 @@ describe('Component Tests', () => {
   let alertService: AlertService;
 
   afterEach(() => {
-    vitest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   describe('Operation Management Detail Component', () => {
-    let operationServiceStub: SinonStubbedInstance<OperationService>;
+    let operationServiceStub: any;
     let mountOptions: MountingOptions<OperationDetailsComponentType>['global'];
 
     beforeEach(() => {
       route = {};
-      operationServiceStub = sinon.createStubInstance<OperationService>(OperationService);
+      operationServiceStub = {
+        find: vi.fn(),
+      };
 
       alertService = new AlertService({
-        i18n: { t: vitest.fn() } as any,
+        i18n: { t: vi.fn() } as any,
         toast: {
-          show: vitest.fn(),
+          show: vi.fn(),
         } as any,
       });
 
@@ -58,7 +58,7 @@ describe('Component Tests', () => {
     describe('Navigate to details', () => {
       it('Should call load all on init', async () => {
         // GIVEN
-        operationServiceStub.find.resolves(operationSample);
+        operationServiceStub.find.mockResolvedValue(operationSample);
         route = {
           params: {
             operationId: `${123}`,
@@ -76,7 +76,7 @@ describe('Component Tests', () => {
 
     describe('Previous state', () => {
       it('Should go previous state', async () => {
-        operationServiceStub.find.resolves(operationSample);
+        operationServiceStub.find.mockResolvedValue(operationSample);
         const wrapper = shallowMount(OperationDetails, { global: mountOptions });
         const comp = wrapper.vm;
         await comp.$nextTick();

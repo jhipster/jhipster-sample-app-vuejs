@@ -1,11 +1,9 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
-import sinon, { type SinonStubbedInstance } from 'sinon';
 
 import AlertService from '@/shared/alert/alert.service';
 
-import OperationService from './operation.service';
 import Operation from './operation.vue';
 
 type OperationComponentType = InstanceType<typeof Operation>;
@@ -22,17 +20,20 @@ describe('Component Tests', () => {
   let alertService: AlertService;
 
   describe('Operation Management Component', () => {
-    let operationServiceStub: SinonStubbedInstance<OperationService>;
+    let operationServiceStub: any;
     let mountOptions: MountingOptions<OperationComponentType>['global'];
 
     beforeEach(() => {
-      operationServiceStub = sinon.createStubInstance<OperationService>(OperationService);
-      operationServiceStub.retrieve.resolves({ headers: {} });
+      operationServiceStub = {
+        retrieve: vi.fn(),
+        delete: vi.fn(),
+      };
+      operationServiceStub.retrieve.mockResolvedValue({ headers: {} });
 
       alertService = new AlertService({
-        i18n: { t: vitest.fn() } as any,
+        i18n: { t: vi.fn() } as any,
         toast: {
-          show: vitest.fn(),
+          show: vi.fn(),
         } as any,
       });
 
@@ -60,7 +61,7 @@ describe('Component Tests', () => {
     describe('Mount', () => {
       it('Should call load all on init', async () => {
         // GIVEN
-        operationServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
+        operationServiceStub.retrieve.mockResolvedValue({ headers: {}, data: [{ id: 123 }] });
 
         // WHEN
         const wrapper = shallowMount(Operation, { global: mountOptions });
@@ -68,7 +69,7 @@ describe('Component Tests', () => {
         await comp.$nextTick();
 
         // THEN
-        expect(operationServiceStub.retrieve.calledOnce).toBeTruthy();
+        expect(operationServiceStub.retrieve).toHaveBeenCalledOnce();
         expect(comp.operations[0]).toEqual(expect.objectContaining({ id: 123 }));
       });
 
@@ -79,7 +80,7 @@ describe('Component Tests', () => {
         await comp.$nextTick();
 
         // THEN
-        expect(operationServiceStub.retrieve.lastCall.firstArg).toMatchObject({
+        expect(operationServiceStub.retrieve.mock.lastCall?.[0]).toMatchObject({
           sort: ['id,asc'],
         });
       });
@@ -91,20 +92,20 @@ describe('Component Tests', () => {
         const wrapper = shallowMount(Operation, { global: mountOptions });
         comp = wrapper.vm;
         await comp.$nextTick();
-        operationServiceStub.retrieve.reset();
-        operationServiceStub.retrieve.resolves({ headers: {}, data: [] });
+        operationServiceStub.retrieve.mockReset();
+        operationServiceStub.retrieve.mockResolvedValue({ headers: {}, data: [] });
       });
 
       it('should load a page', async () => {
         // GIVEN
-        operationServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
+        operationServiceStub.retrieve.mockResolvedValue({ headers: {}, data: [{ id: 123 }] });
 
         // WHEN
         comp.page = 2;
         await comp.$nextTick();
 
         // THEN
-        expect(operationServiceStub.retrieve.called).toBeTruthy();
+        expect(operationServiceStub.retrieve).toHaveBeenCalled();
         expect(comp.operations[0]).toEqual(expect.objectContaining({ id: 123 }));
       });
 
@@ -112,8 +113,8 @@ describe('Component Tests', () => {
         // GIVEN
         comp.page = 2;
         await comp.$nextTick();
-        operationServiceStub.retrieve.reset();
-        operationServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
+        operationServiceStub.retrieve.mockReset();
+        operationServiceStub.retrieve.mockResolvedValue({ headers: {}, data: [{ id: 123 }] });
 
         // WHEN
         comp.clear();
@@ -121,7 +122,7 @@ describe('Component Tests', () => {
 
         // THEN
         expect(comp.page).toEqual(1);
-        expect(operationServiceStub.retrieve.callCount).toEqual(1);
+        expect(operationServiceStub.retrieve).toHaveBeenCalledTimes(1);
         expect(comp.operations[0]).toEqual(expect.objectContaining({ id: 123 }));
       });
 
@@ -131,14 +132,14 @@ describe('Component Tests', () => {
         await comp.$nextTick();
 
         // THEN
-        expect(operationServiceStub.retrieve.lastCall.firstArg).toMatchObject({
+        expect(operationServiceStub.retrieve.mock.lastCall?.[0]).toMatchObject({
           sort: ['name,asc', 'id'],
         });
       });
 
       it('Should call delete service on confirmDelete', async () => {
         // GIVEN
-        operationServiceStub.delete.resolves({});
+        operationServiceStub.delete.mockResolvedValue({});
 
         // WHEN
         comp.prepareRemove({ id: 123 });
@@ -147,11 +148,11 @@ describe('Component Tests', () => {
         await comp.$nextTick(); // clear components
 
         // THEN
-        expect(operationServiceStub.delete.called).toBeTruthy();
+        expect(operationServiceStub.delete).toHaveBeenCalled();
 
         // THEN
         await comp.$nextTick(); // handle component clear watch
-        expect(operationServiceStub.retrieve.callCount).toEqual(1);
+        expect(operationServiceStub.retrieve).toHaveBeenCalledTimes(1);
       });
     });
   });

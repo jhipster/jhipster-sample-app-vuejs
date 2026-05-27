@@ -6,6 +6,7 @@ import type AccountService from '@/account/account.service';
 import { useLoginModal } from '@/account/login-modal';
 import EntitiesMenu from '@/entities/entities-menu.vue';
 import languages from '@/shared/config/languages';
+import { AUTHENTICATION_TOKEN_KEY } from '@/shared/jhipster/constants';
 import { useStore } from '@/store';
 
 export default defineComponent({
@@ -41,8 +42,8 @@ export default defineComponent({
     };
 
     const logout = async () => {
-      localStorage.removeItem('jhi-authenticationToken');
-      sessionStorage.removeItem('jhi-authenticationToken');
+      localStorage.removeItem(AUTHENTICATION_TOKEN_KEY);
+      sessionStorage.removeItem(AUTHENTICATION_TOKEN_KEY);
       store.logout();
       if (router.currentRoute.value.path !== '/') {
         router.push('/');

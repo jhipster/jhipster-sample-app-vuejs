@@ -1,9 +1,9 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "baseUrl": "./",
     "sourceMap": false,
-    "outDir": "../../../../target/cypress/tsc",
     "target": "es2018",
     "types": ["cypress", "node"]
   },

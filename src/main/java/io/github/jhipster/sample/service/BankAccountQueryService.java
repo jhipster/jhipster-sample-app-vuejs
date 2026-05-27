@@ -67,23 +67,33 @@ public class BankAccountQueryService extends QueryService<BankAccount> {
      */
     protected Specification<BankAccount> createSpecification(BankAccountCriteria criteria) {
         Specification<BankAccount> specification = Specification.unrestricted();
+        specification = specification.and((root, query, builder) -> {
+            if (Long.class != query.getResultType()) {
+                root.fetch(BankAccount_.user, JoinType.LEFT);
+            }
+            return null;
+        });
         if (criteria != null) {
             // This has to be called first, because the distinct method returns null
-            specification = Specification.allOf(
-                Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : Specification.unrestricted(),
-                buildRangeSpecification(criteria.getId(), BankAccount_.id),
-                buildStringSpecification(criteria.getName(), BankAccount_.name),
-                buildRangeSpecification(criteria.getBankNumber(), BankAccount_.bankNumber),
-                buildRangeSpecification(criteria.getAgencyNumber(), BankAccount_.agencyNumber),
-                buildRangeSpecification(criteria.getLastOperationDuration(), BankAccount_.lastOperationDuration),
-                buildRangeSpecification(criteria.getMeanOperationDuration(), BankAccount_.meanOperationDuration),
-                buildRangeSpecification(criteria.getBalance(), BankAccount_.balance),
-                buildRangeSpecification(criteria.getOpeningDay(), BankAccount_.openingDay),
-                buildRangeSpecification(criteria.getLastOperationDate(), BankAccount_.lastOperationDate),
-                buildSpecification(criteria.getActive(), BankAccount_.active),
-                buildSpecification(criteria.getAccountType(), BankAccount_.accountType),
-                buildSpecification(criteria.getUserId(), root -> root.join(BankAccount_.user, JoinType.LEFT).get(User_.id)),
-                buildSpecification(criteria.getOperationId(), root -> root.join(BankAccount_.operations, JoinType.LEFT).get(Operation_.id))
+            specification = specification.and(
+                Specification.allOf(
+                    Boolean.TRUE.equals(criteria.getDistinct()) ? distinct(criteria.getDistinct()) : Specification.unrestricted(),
+                    buildRangeSpecification(criteria.getId(), BankAccount_.id),
+                    buildStringSpecification(criteria.getName(), BankAccount_.name),
+                    buildRangeSpecification(criteria.getBankNumber(), BankAccount_.bankNumber),
+                    buildRangeSpecification(criteria.getAgencyNumber(), BankAccount_.agencyNumber),
+                    buildRangeSpecification(criteria.getLastOperationDuration(), BankAccount_.lastOperationDuration),
+                    buildRangeSpecification(criteria.getMeanOperationDuration(), BankAccount_.meanOperationDuration),
+                    buildRangeSpecification(criteria.getBalance(), BankAccount_.balance),
+                    buildRangeSpecification(criteria.getOpeningDay(), BankAccount_.openingDay),
+                    buildRangeSpecification(criteria.getLastOperationDate(), BankAccount_.lastOperationDate),
+                    buildSpecification(criteria.getActive(), BankAccount_.active),
+                    buildSpecification(criteria.getAccountType(), BankAccount_.accountType),
+                    buildSpecification(criteria.getUserId(), root -> root.join(BankAccount_.user, JoinType.LEFT).get(User_.id)),
+                    buildSpecification(criteria.getOperationId(), root ->
+                        root.join(BankAccount_.operations, JoinType.LEFT).get(Operation_.id)
+                    )
+                )
             );
         }
         return specification;

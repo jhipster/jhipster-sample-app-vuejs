@@ -21,10 +21,10 @@ export default class ConfigurationService {
   async loadEnvConfiguration(): Promise<any> {
     const res = await axios.get<any>('management/env');
     const properties = {};
-    const propertySources = res.data.propertySources;
+    const { propertySources } = res.data;
 
     for (const propertyObject of propertySources) {
-      const name = propertyObject.name;
+      const { name } = propertyObject;
       const detailProperties = propertyObject.properties;
       const vals = [];
       for (const keyDetail in detailProperties) {

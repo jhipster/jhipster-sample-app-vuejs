@@ -1,20 +1,18 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type RouteLocation } from 'vue-router';
 
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
-import sinon, { type SinonStubbedInstance } from 'sinon';
 
 import AlertService from '@/shared/alert/alert.service';
 
 import BankAccountMySuffixDetails from './bank-account-my-suffix-details.vue';
-import BankAccountMySuffixService from './bank-account-my-suffix.service';
 
 type BankAccountMySuffixDetailsComponentType = InstanceType<typeof BankAccountMySuffixDetails>;
 
 let route: Partial<RouteLocation>;
-const routerGoMock = vitest.fn();
+const routerGoMock = vi.fn();
 
-vitest.mock('vue-router', () => ({
+vi.mock('vue-router', () => ({
   useRoute: () => route,
   useRouter: () => ({ go: routerGoMock }),
 }));
@@ -25,21 +23,23 @@ describe('Component Tests', () => {
   let alertService: AlertService;
 
   afterEach(() => {
-    vitest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   describe('BankAccountMySuffix Management Detail Component', () => {
-    let bankAccountServiceStub: SinonStubbedInstance<BankAccountMySuffixService>;
+    let bankAccountServiceStub: any;
     let mountOptions: MountingOptions<BankAccountMySuffixDetailsComponentType>['global'];
 
     beforeEach(() => {
       route = {};
-      bankAccountServiceStub = sinon.createStubInstance<BankAccountMySuffixService>(BankAccountMySuffixService);
+      bankAccountServiceStub = {
+        find: vi.fn(),
+      };
 
       alertService = new AlertService({
-        i18n: { t: vitest.fn() } as any,
+        i18n: { t: vi.fn() } as any,
         toast: {
-          show: vitest.fn(),
+          show: vi.fn(),
         } as any,
       });
 
@@ -58,7 +58,7 @@ describe('Component Tests', () => {
     describe('Navigate to details', () => {
       it('Should call load all on init', async () => {
         // GIVEN
-        bankAccountServiceStub.find.resolves(bankAccountSample);
+        bankAccountServiceStub.find.mockResolvedValue(bankAccountSample);
         route = {
           params: {
             bankAccountId: `${123}`,
@@ -76,7 +76,7 @@ describe('Component Tests', () => {
 
     describe('Previous state', () => {
       it('Should go previous state', async () => {
-        bankAccountServiceStub.find.resolves(bankAccountSample);
+        bankAccountServiceStub.find.mockResolvedValue(bankAccountSample);
         const wrapper = shallowMount(BankAccountMySuffixDetails, { global: mountOptions });
         const comp = wrapper.vm;
         await comp.$nextTick();

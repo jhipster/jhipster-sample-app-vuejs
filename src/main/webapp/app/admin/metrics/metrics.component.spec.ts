@@ -1,8 +1,7 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
-import sinon from 'sinon';
 
 import MetricsService from './metrics.service';
 import Metrics from './metrics.vue';
@@ -10,7 +9,7 @@ import Metrics from './metrics.vue';
 type MetricsComponentType = InstanceType<typeof Metrics>;
 
 const axiosStub = {
-  get: sinon.stub(axios, 'get'),
+  get: vi.spyOn(axios, 'get'),
 };
 
 describe('Metrics Component', () => {
@@ -217,7 +216,7 @@ describe('Metrics Component', () => {
   };
 
   beforeEach(() => {
-    axiosStub.get.resolves({ data: { timers: [], gauges: [] } });
+    axiosStub.get.mockResolvedValue({ data: { timers: [], gauges: [] } });
     const wrapper = shallowMount(Metrics, {
       global: {
         stubs: {
@@ -243,15 +242,15 @@ describe('Metrics Component', () => {
   describe('refresh', () => {
     it('should call refresh on init', async () => {
       // GIVEN
-      axiosStub.get.resolves({ data: response });
+      axiosStub.get.mockResolvedValue({ data: response });
 
       // WHEN
       await metricsComponent.refresh();
       await metricsComponent.$nextTick();
 
       // THEN
-      expect(axiosStub.get.calledWith('management/jhimetrics')).toBeTruthy();
-      expect(axiosStub.get.calledWith('management/threaddump')).toBeTruthy();
+      expect(axiosStub.get).toHaveBeenCalledWith('management/jhimetrics');
+      expect(axiosStub.get).toHaveBeenCalledWith('management/threaddump');
       expect(metricsComponent.metrics).toHaveProperty('jvm');
       expect(metricsComponent.metrics).toEqual(response);
       expect(metricsComponent.threadStats).toEqual({

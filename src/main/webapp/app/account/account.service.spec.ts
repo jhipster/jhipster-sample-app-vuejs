@@ -1,9 +1,9 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createTestingPinia } from '@pinia/testing';
 import axios from 'axios';
-import sinon from 'sinon';
 
+import { AUTHENTICATION_TOKEN_KEY } from '@/shared/jhipster/constants';
 import { type AccountStore, useStore } from '@/store';
 
 import AccountService from './account.service';
@@ -13,8 +13,8 @@ const resetStore = (store: AccountStore) => {
 };
 
 const axiosStub = {
-  get: sinon.stub(axios, 'get'),
-  post: sinon.stub(axios, 'post'),
+  get: vi.spyOn(axios, 'get'),
+  post: vi.spyOn(axios, 'post'),
 };
 
 createTestingPinia({ stubActions: false });
@@ -25,17 +25,19 @@ describe('Account Service test suite', () => {
 
   beforeEach(() => {
     localStorage.clear();
-    localStorage.setItem('jhi-authenticationToken', 'token');
+    localStorage.setItem(AUTHENTICATION_TOKEN_KEY, 'token');
 
-    axiosStub.get.reset();
+    axiosStub.get.mockReset();
     resetStore(store);
   });
 
   it('should init service and do not retrieve account', async () => {
-    axiosStub.get.resolves({});
-    axiosStub.get
-      .withArgs('management/info')
-      .resolves({ status: 200, data: { 'display-ribbon-on-profiles': 'dev', activeProfiles: ['dev', 'test'] } });
+    axiosStub.get.mockImplementation((...args: any[]) => {
+      if (args[0] === 'management/info') {
+        return Promise.resolve({ status: 200, data: { 'display-ribbon-on-profiles': 'dev', activeProfiles: ['dev', 'test'] } });
+      }
+      return Promise.resolve({});
+    });
 
     accountService = new AccountService(store);
     await accountService.update();
@@ -43,36 +45,38 @@ describe('Account Service test suite', () => {
     expect(store.logon).toBe(null);
     expect(accountService.authenticated).toBe(false);
     expect(store.account).toBe(null);
-    expect(axiosStub.get.calledWith('management/info')).toBeTruthy();
+    expect(axiosStub.get).toHaveBeenCalledWith('management/info');
     expect(store.activeProfiles[0]).toBe('dev');
     expect(store.activeProfiles[1]).toBe('test');
     expect(store.ribbonOnProfiles).toBe('dev');
   });
 
   it('should init service and retrieve profiles if already logged in before but no account found', async () => {
-    axiosStub.get.resolves({});
+    axiosStub.get.mockResolvedValue({});
     accountService = new AccountService(store);
     await accountService.update();
 
     expect(store.logon).toBe(null);
     expect(accountService.authenticated).toBe(false);
     expect(store.account).toBe(null);
-    expect(axiosStub.get.calledWith('management/info')).toBeTruthy();
+    expect(axiosStub.get).toHaveBeenCalledWith('management/info');
   });
 
   it('should init service and retrieve profiles if already logged in before but exception occurred and should be logged out', async () => {
-    axiosStub.get.resolves({});
-    axiosStub.get.withArgs('api/account').rejects();
+    axiosStub.get.mockImplementation((...args: any[]) => {
+      if (args[0] === 'api/account') return Promise.reject(new Error());
+      return Promise.resolve({});
+    });
     accountService = new AccountService(store);
     await accountService.update();
 
     expect(accountService.authenticated).toBe(false);
     expect(store.account).toBe(null);
-    expect(axiosStub.get.calledWith('management/info')).toBeTruthy();
+    expect(axiosStub.get).toHaveBeenCalledWith('management/info');
   });
 
   it('should init service and check for authority after retrieving account but getAccount failed', async () => {
-    axiosStub.get.rejects();
+    axiosStub.get.mockRejectedValue(new Error());
     accountService = new AccountService(store);
     await accountService.update();
 
@@ -82,7 +86,7 @@ describe('Account Service test suite', () => {
   });
 
   it('should init service and check for authority after retrieving account', async () => {
-    axiosStub.get.resolves({ status: 200, data: { authorities: ['USER'], langKey: 'en', login: 'ADMIN' } });
+    axiosStub.get.mockResolvedValue({ status: 200, data: { authorities: ['USER'], langKey: 'en', login: 'ADMIN' } });
     accountService = new AccountService(store);
     await accountService.update();
 
@@ -92,7 +96,7 @@ describe('Account Service test suite', () => {
   });
 
   it('should init service as not authenticated and not return any authorities admin and not retrieve account', async () => {
-    axiosStub.get.rejects();
+    axiosStub.get.mockRejectedValue(new Error());
     accountService = new AccountService(store);
     await accountService.update();
 
@@ -102,7 +106,7 @@ describe('Account Service test suite', () => {
   });
 
   it('should init service as not authenticated and return authority user', async () => {
-    axiosStub.get.rejects();
+    axiosStub.get.mockRejectedValue(new Error());
     accountService = new AccountService(store);
     await accountService.update();
 

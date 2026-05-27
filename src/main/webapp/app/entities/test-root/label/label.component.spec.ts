@@ -1,11 +1,9 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
-import sinon, { type SinonStubbedInstance } from 'sinon';
 
 import AlertService from '@/shared/alert/alert.service';
 
-import LabelService from './label.service';
 import Label from './label.vue';
 
 type LabelComponentType = InstanceType<typeof Label>;
@@ -22,17 +20,20 @@ describe('Component Tests', () => {
   let alertService: AlertService;
 
   describe('Label Management Component', () => {
-    let labelServiceStub: SinonStubbedInstance<LabelService>;
+    let labelServiceStub: any;
     let mountOptions: MountingOptions<LabelComponentType>['global'];
 
     beforeEach(() => {
-      labelServiceStub = sinon.createStubInstance<LabelService>(LabelService);
-      labelServiceStub.retrieve.resolves({ headers: {} });
+      labelServiceStub = {
+        retrieve: vi.fn(),
+        delete: vi.fn(),
+      };
+      labelServiceStub.retrieve.mockResolvedValue({ headers: {} });
 
       alertService = new AlertService({
-        i18n: { t: vitest.fn() } as any,
+        i18n: { t: vi.fn() } as any,
         toast: {
-          show: vitest.fn(),
+          show: vi.fn(),
         } as any,
       });
 
@@ -60,7 +61,7 @@ describe('Component Tests', () => {
     describe('Mount', () => {
       it('Should call load all on init', async () => {
         // GIVEN
-        labelServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
+        labelServiceStub.retrieve.mockResolvedValue({ headers: {}, data: [{ id: 123 }] });
 
         // WHEN
         const wrapper = shallowMount(Label, { global: mountOptions });
@@ -68,7 +69,7 @@ describe('Component Tests', () => {
         await comp.$nextTick();
 
         // THEN
-        expect(labelServiceStub.retrieve.calledOnce).toBeTruthy();
+        expect(labelServiceStub.retrieve).toHaveBeenCalledOnce();
         expect(comp.labels[0]).toEqual(expect.objectContaining({ id: 123 }));
       });
 
@@ -79,7 +80,7 @@ describe('Component Tests', () => {
         await comp.$nextTick();
 
         // THEN
-        expect(labelServiceStub.retrieve.lastCall.firstArg).toMatchObject({
+        expect(labelServiceStub.retrieve.mock.lastCall?.[0]).toMatchObject({
           sort: ['id,asc'],
         });
       });
@@ -91,20 +92,20 @@ describe('Component Tests', () => {
         const wrapper = shallowMount(Label, { global: mountOptions });
         comp = wrapper.vm;
         await comp.$nextTick();
-        labelServiceStub.retrieve.reset();
-        labelServiceStub.retrieve.resolves({ headers: {}, data: [] });
+        labelServiceStub.retrieve.mockReset();
+        labelServiceStub.retrieve.mockResolvedValue({ headers: {}, data: [] });
       });
 
       it('should load a page', async () => {
         // GIVEN
-        labelServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
+        labelServiceStub.retrieve.mockResolvedValue({ headers: {}, data: [{ id: 123 }] });
 
         // WHEN
         comp.page = 2;
         await comp.$nextTick();
 
         // THEN
-        expect(labelServiceStub.retrieve.called).toBeTruthy();
+        expect(labelServiceStub.retrieve).toHaveBeenCalled();
         expect(comp.labels[0]).toEqual(expect.objectContaining({ id: 123 }));
       });
 
@@ -113,15 +114,15 @@ describe('Component Tests', () => {
         comp.page = 1;
 
         // THEN
-        expect(labelServiceStub.retrieve.called).toBeFalsy();
+        expect(labelServiceStub.retrieve).not.toHaveBeenCalled();
       });
 
       it('should re-initialize the page', async () => {
         // GIVEN
         comp.page = 2;
         await comp.$nextTick();
-        labelServiceStub.retrieve.reset();
-        labelServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
+        labelServiceStub.retrieve.mockReset();
+        labelServiceStub.retrieve.mockResolvedValue({ headers: {}, data: [{ id: 123 }] });
 
         // WHEN
         comp.clear();
@@ -129,7 +130,7 @@ describe('Component Tests', () => {
 
         // THEN
         expect(comp.page).toEqual(1);
-        expect(labelServiceStub.retrieve.callCount).toEqual(1);
+        expect(labelServiceStub.retrieve).toHaveBeenCalledTimes(1);
         expect(comp.labels[0]).toEqual(expect.objectContaining({ id: 123 }));
       });
 
@@ -139,14 +140,14 @@ describe('Component Tests', () => {
         await comp.$nextTick();
 
         // THEN
-        expect(labelServiceStub.retrieve.lastCall.firstArg).toMatchObject({
+        expect(labelServiceStub.retrieve.mock.lastCall?.[0]).toMatchObject({
           sort: ['name,asc', 'id'],
         });
       });
 
       it('Should call delete service on confirmDelete', async () => {
         // GIVEN
-        labelServiceStub.delete.resolves({});
+        labelServiceStub.delete.mockResolvedValue({});
 
         // WHEN
         comp.prepareRemove({ id: 123 });
@@ -155,11 +156,11 @@ describe('Component Tests', () => {
         await comp.$nextTick(); // clear components
 
         // THEN
-        expect(labelServiceStub.delete.called).toBeTruthy();
+        expect(labelServiceStub.delete).toHaveBeenCalled();
 
         // THEN
         await comp.$nextTick(); // handle component clear watch
-        expect(labelServiceStub.retrieve.callCount).toEqual(1);
+        expect(labelServiceStub.retrieve).toHaveBeenCalledTimes(1);
       });
     });
   });

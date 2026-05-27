@@ -155,7 +155,7 @@
             }}</label>
             <input
               type="checkbox"
-              class="form-check"
+              class="form-control"
               name="active"
               id="bank-account-my-suffix-active"
               data-cy="active"

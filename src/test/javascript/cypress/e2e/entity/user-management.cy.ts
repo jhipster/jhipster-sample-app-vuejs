@@ -61,6 +61,11 @@ describe('UserManagement e2e test', () => {
   });
 
   describe('UserManagement page', () => {
+    it('should have translated page title', () => {
+      cy.visit(userManagementPageUrl);
+      cy.getEntityHeading('UserManagement').should('not.contain', 'userManagement.home.title');
+    });
+
     describe('create button click', () => {
       beforeEach(() => {
         cy.visit(userManagementPageUrl);
@@ -166,17 +171,17 @@ describe('UserManagement e2e test', () => {
     });
 
     it('should create an instance of UserManagement', () => {
-      cy.get(`[data-cy="login"]`).type('Tracy_Runte3');
-      cy.get(`[data-cy="login"]`).should('have.value', 'Tracy_Runte3');
+      cy.get(`[data-cy="login"]`).type('Trenton_Runte3');
+      cy.get(`[data-cy="login"]`).should('have.value', 'Trenton_Runte3');
 
-      cy.get(`[data-cy="firstName"]`).type('Kelsi');
-      cy.get(`[data-cy="firstName"]`).should('have.value', 'Kelsi');
+      cy.get(`[data-cy="firstName"]`).type('Keegan');
+      cy.get(`[data-cy="firstName"]`).should('have.value', 'Keegan');
 
       cy.get(`[data-cy="lastName"]`).type('Donnelly');
       cy.get(`[data-cy="lastName"]`).should('have.value', 'Donnelly');
 
-      cy.get(`[data-cy="email"]`).type('Jermain13@gmail.com');
-      cy.get(`[data-cy="email"]`).should('have.value', 'Jermain13@gmail.com');
+      cy.get(`[data-cy="email"]`).type('Jenifer13@gmail.com');
+      cy.get(`[data-cy="email"]`).should('have.value', 'Jenifer13@gmail.com');
 
       cy.get(`[data-cy="langKey"]`).select('en');
 

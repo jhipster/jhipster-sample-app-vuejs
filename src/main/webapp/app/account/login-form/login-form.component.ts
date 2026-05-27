@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 
 import { useLoginModal } from '@/account/login-modal';
+import { AUTHENTICATION_TOKEN_KEY } from '@/shared/jhipster/constants';
 import type AccountService from '../account.service';
 
 export default defineComponent({
@@ -30,11 +31,11 @@ export default defineComponent({
         if (bearerToken?.startsWith('Bearer ')) {
           const jwt = bearerToken.slice(7, bearerToken.length);
           if (rememberMe.value) {
-            localStorage.setItem('jhi-authenticationToken', jwt);
-            sessionStorage.removeItem('jhi-authenticationToken');
+            localStorage.setItem(AUTHENTICATION_TOKEN_KEY, jwt);
+            sessionStorage.removeItem(AUTHENTICATION_TOKEN_KEY);
           } else {
-            sessionStorage.setItem('jhi-authenticationToken', jwt);
-            localStorage.removeItem('jhi-authenticationToken');
+            sessionStorage.setItem(AUTHENTICATION_TOKEN_KEY, jwt);
+            localStorage.removeItem(AUTHENTICATION_TOKEN_KEY);
           }
         }
 

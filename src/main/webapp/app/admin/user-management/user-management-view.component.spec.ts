@@ -1,9 +1,8 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type RouteLocation } from 'vue-router';
 
 import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
-import sinon from 'sinon';
 
 import AlertService from '@/shared/alert/alert.service';
 import { Authority } from '@/shared/jhipster/constants';
@@ -12,12 +11,12 @@ import UserManagementView from './user-management-view.vue';
 
 let route: Partial<RouteLocation>;
 
-vitest.mock('vue-router', () => ({
+vi.mock('vue-router', () => ({
   useRoute: () => route,
 }));
 
 const axiosStub = {
-  get: sinon.stub(axios, 'get'),
+  get: vi.spyOn(axios, 'get'),
 };
 
 describe('UserManagementView Component', () => {
@@ -26,9 +25,9 @@ describe('UserManagementView Component', () => {
   beforeEach(() => {
     route = {};
     alertService = new AlertService({
-      i18n: { t: vitest.fn() } as any,
+      i18n: { t: vi.fn() } as any,
       toast: {
-        show: vitest.fn(),
+        show: vi.fn(),
       } as any,
     });
   });
@@ -51,7 +50,7 @@ describe('UserManagementView Component', () => {
         lastModifiedDate: null,
         password: null,
       };
-      axiosStub.get.resolves({ data: userData });
+      axiosStub.get.mockResolvedValue({ data: userData });
 
       route = {
         params: {
@@ -77,7 +76,7 @@ describe('UserManagementView Component', () => {
       await userManagementView.$nextTick();
 
       // THEN
-      expect(axiosStub.get.calledWith(`api/admin/users/${123}`)).toBeTruthy();
+      expect(axiosStub.get).toHaveBeenCalledWith(`api/admin/users/${123}`);
       expect(userManagementView.user).toEqual(userData);
     });
   });

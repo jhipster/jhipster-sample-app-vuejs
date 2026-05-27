@@ -61,6 +61,11 @@ describe('Operation e2e test', () => {
   });
 
   describe('Operation page', () => {
+    it('should have translated page title', () => {
+      cy.visit(operationPageUrl);
+      cy.getEntityHeading('Operation').should('not.contain', 'jhipsterSampleApplicationVueApp.testRootOperation.home.title');
+    });
+
     describe('create button click', () => {
       beforeEach(() => {
         cy.visit(operationPageUrl);

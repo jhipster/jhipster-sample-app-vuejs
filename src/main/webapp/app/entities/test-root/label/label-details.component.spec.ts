@@ -1,20 +1,18 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type RouteLocation } from 'vue-router';
 
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
-import sinon, { type SinonStubbedInstance } from 'sinon';
 
 import AlertService from '@/shared/alert/alert.service';
 
 import LabelDetails from './label-details.vue';
-import LabelService from './label.service';
 
 type LabelDetailsComponentType = InstanceType<typeof LabelDetails>;
 
 let route: Partial<RouteLocation>;
-const routerGoMock = vitest.fn();
+const routerGoMock = vi.fn();
 
-vitest.mock('vue-router', () => ({
+vi.mock('vue-router', () => ({
   useRoute: () => route,
   useRouter: () => ({ go: routerGoMock }),
 }));
@@ -25,21 +23,23 @@ describe('Component Tests', () => {
   let alertService: AlertService;
 
   afterEach(() => {
-    vitest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   describe('Label Management Detail Component', () => {
-    let labelServiceStub: SinonStubbedInstance<LabelService>;
+    let labelServiceStub: any;
     let mountOptions: MountingOptions<LabelDetailsComponentType>['global'];
 
     beforeEach(() => {
       route = {};
-      labelServiceStub = sinon.createStubInstance<LabelService>(LabelService);
+      labelServiceStub = {
+        find: vi.fn(),
+      };
 
       alertService = new AlertService({
-        i18n: { t: vitest.fn() } as any,
+        i18n: { t: vi.fn() } as any,
         toast: {
-          show: vitest.fn(),
+          show: vi.fn(),
         } as any,
       });
 
@@ -58,7 +58,7 @@ describe('Component Tests', () => {
     describe('Navigate to details', () => {
       it('Should call load all on init', async () => {
         // GIVEN
-        labelServiceStub.find.resolves(labelSample);
+        labelServiceStub.find.mockResolvedValue(labelSample);
         route = {
           params: {
             labelId: `${123}`,
@@ -76,7 +76,7 @@ describe('Component Tests', () => {
 
     describe('Previous state', () => {
       it('Should go previous state', async () => {
-        labelServiceStub.find.resolves(labelSample);
+        labelServiceStub.find.mockResolvedValue(labelSample);
         const wrapper = shallowMount(LabelDetails, { global: mountOptions });
         const comp = wrapper.vm;
         await comp.$nextTick();

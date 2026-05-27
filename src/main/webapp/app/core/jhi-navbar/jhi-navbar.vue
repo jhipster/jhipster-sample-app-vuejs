@@ -1,5 +1,5 @@
 <template>
-  <b-navbar data-cy="navbar" toggleable="md" variant="dark" data-bs-theme="dark">
+  <b-navbar data-cy="navbar" toggleable="md" variant="" data-bs-theme="dark">
     <b-navbar-brand class="logo" b-link to="/">
       <span class="logo-img"></span>
       <span class="navbar-title">{{ t$('global.title') }}</span> <span class="navbar-version">{{ version }}</span>
@@ -25,7 +25,7 @@
           </span>
         </b-nav-item>
         <b-nav-item-dropdown
-          no-size="true"
+          :no-size="true"
           end
           id="entity-menu"
           v-if="authenticated"

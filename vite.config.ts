@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { URL, fileURLToPath } from 'node:url';
 
 import vue from '@vitejs/plugin-vue';
@@ -6,6 +7,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 const { getAbsoluteFSPath } = await import('swagger-ui-dist');
 const swaggerUiPath = getAbsoluteFSPath();
+const webappDir = fileURLToPath(new URL('./src/main/webapp//', import.meta.url));
 
 // eslint-disable-next-line prefer-const
 let config = defineConfig({
@@ -21,6 +23,10 @@ let config = defineConfig({
             normalizePath(fileURLToPath(new URL('./src/main/webapp/swagger-ui/index.html', import.meta.url))),
           ],
           dest: 'swagger-ui',
+          rename: (name, ext, srcPath) => {
+            const rel = path.relative(webappDir, path.dirname(srcPath)).replace(/^(\.\.\/)+/, '');
+            return `${'../'.repeat(rel === '.' ? 0 : rel.split('/').length)}${name}.${ext}`;
+          },
         },
       ],
     }),
@@ -45,7 +51,6 @@ let config = defineConfig({
     },
   },
   define: {
-    I18N_HASH: '"generated_hash"',
     SERVER_API_URL: '"/"',
     APP_VERSION: `"${process.env.APP_VERSION ? process.env.APP_VERSION : 'DEV'}"`,
   },

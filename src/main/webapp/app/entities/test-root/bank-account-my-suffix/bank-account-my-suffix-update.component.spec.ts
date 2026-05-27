@@ -1,23 +1,20 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type RouteLocation } from 'vue-router';
 
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import dayjs from 'dayjs';
-import sinon, { type SinonStubbedInstance } from 'sinon';
 
-import UserService from '@/entities/user/user.service';
 import AlertService from '@/shared/alert/alert.service';
 import { DATE_TIME_LONG_FORMAT } from '@/shared/composables/date-format';
 
 import BankAccountMySuffixUpdate from './bank-account-my-suffix-update.vue';
-import BankAccountMySuffixService from './bank-account-my-suffix.service';
 
 type BankAccountMySuffixUpdateComponentType = InstanceType<typeof BankAccountMySuffixUpdate>;
 
 let route: Partial<RouteLocation>;
-const routerGoMock = vitest.fn();
+const routerGoMock = vi.fn();
 
-vitest.mock('vue-router', () => ({
+vi.mock('vue-router', () => ({
   useRoute: () => route,
   useRouter: () => ({ go: routerGoMock }),
 }));
@@ -30,17 +27,22 @@ describe('Component Tests', () => {
 
   describe('BankAccountMySuffix Management Update Component', () => {
     let comp: BankAccountMySuffixUpdateComponentType;
-    let bankAccountServiceStub: SinonStubbedInstance<BankAccountMySuffixService>;
+    let bankAccountServiceStub: any;
 
     beforeEach(() => {
       route = {};
-      bankAccountServiceStub = sinon.createStubInstance<BankAccountMySuffixService>(BankAccountMySuffixService);
-      bankAccountServiceStub.retrieve.onFirstCall().resolves(Promise.resolve([]));
+      bankAccountServiceStub = {
+        retrieve: vi.fn(),
+        find: vi.fn(),
+        update: vi.fn(),
+        create: vi.fn(),
+      };
+      bankAccountServiceStub.retrieve.mockResolvedValueOnce([]);
 
       alertService = new AlertService({
-        i18n: { t: vitest.fn() } as any,
+        i18n: { t: vi.fn() } as any,
         toast: {
-          show: vitest.fn(),
+          show: vi.fn(),
         } as any,
       });
 
@@ -56,16 +58,15 @@ describe('Component Tests', () => {
           alertService,
           bankAccountService: () => bankAccountServiceStub,
 
-          userService: () =>
-            sinon.createStubInstance<UserService>(UserService, {
-              retrieve: sinon.stub().resolves({}),
-            } as any),
+          userService: () => ({
+            retrieve: vi.fn().mockResolvedValue({}),
+          }),
         },
       };
     });
 
     afterEach(() => {
-      vitest.resetAllMocks();
+      vi.resetAllMocks();
     });
 
     describe('load', () => {
@@ -95,21 +96,21 @@ describe('Component Tests', () => {
         const wrapper = shallowMount(BankAccountMySuffixUpdate, { global: mountOptions });
         comp = wrapper.vm;
         comp.bankAccount = bankAccountSample;
-        bankAccountServiceStub.update.resolves(bankAccountSample);
+        bankAccountServiceStub.update.mockResolvedValue(bankAccountSample);
 
         // WHEN
         comp.save();
         await comp.$nextTick();
 
         // THEN
-        expect(bankAccountServiceStub.update.calledWith(bankAccountSample)).toBeTruthy();
+        expect(bankAccountServiceStub.update).toHaveBeenCalledWith(bankAccountSample);
         expect(comp.isSaving).toEqual(false);
       });
 
       it('Should call create service on save for new entity', async () => {
         // GIVEN
         const entity = {};
-        bankAccountServiceStub.create.resolves(entity);
+        bankAccountServiceStub.create.mockResolvedValue(entity);
         const wrapper = shallowMount(BankAccountMySuffixUpdate, { global: mountOptions });
         comp = wrapper.vm;
         comp.bankAccount = entity;
@@ -119,7 +120,7 @@ describe('Component Tests', () => {
         await comp.$nextTick();
 
         // THEN
-        expect(bankAccountServiceStub.create.calledWith(entity)).toBeTruthy();
+        expect(bankAccountServiceStub.create).toHaveBeenCalledWith(entity);
         expect(comp.isSaving).toEqual(false);
       });
     });
@@ -127,8 +128,8 @@ describe('Component Tests', () => {
     describe('Before route enter', () => {
       it('Should retrieve data', async () => {
         // GIVEN
-        bankAccountServiceStub.find.resolves(bankAccountSample);
-        bankAccountServiceStub.retrieve.resolves([bankAccountSample]);
+        bankAccountServiceStub.find.mockResolvedValue(bankAccountSample);
+        bankAccountServiceStub.retrieve.mockResolvedValue([bankAccountSample]);
 
         // WHEN
         route = {
@@ -147,7 +148,7 @@ describe('Component Tests', () => {
 
     describe('Previous state', () => {
       it('Should go previous state', async () => {
-        bankAccountServiceStub.find.resolves(bankAccountSample);
+        bankAccountServiceStub.find.mockResolvedValue(bankAccountSample);
         const wrapper = shallowMount(BankAccountMySuffixUpdate, { global: mountOptions });
         comp = wrapper.vm;
         await comp.$nextTick();

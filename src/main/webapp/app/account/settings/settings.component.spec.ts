@@ -1,9 +1,8 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createTestingPinia } from '@pinia/testing';
 import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
-import sinon from 'sinon';
 
 import { EMAIL_ALREADY_USED_TYPE } from '@/shared/jhipster/error.constants';
 import { useStore } from '@/store';
@@ -17,8 +16,8 @@ const pinia = createTestingPinia({ stubActions: false });
 const store = useStore();
 
 const axiosStub = {
-  get: sinon.stub(axios, 'get'),
-  post: sinon.stub(axios, 'post'),
+  get: vi.spyOn(axios, 'get'),
+  post: vi.spyOn(axios, 'post'),
 };
 
 describe('Settings Component', () => {
@@ -30,8 +29,8 @@ describe('Settings Component', () => {
   };
 
   beforeEach(() => {
-    axiosStub.get.resolves({});
-    axiosStub.post.reset();
+    axiosStub.get.mockResolvedValue({});
+    axiosStub.post.mockReset();
 
     store.setAuthentication(account);
     const wrapper = shallowMount(Settings, {
@@ -44,19 +43,19 @@ describe('Settings Component', () => {
 
   it('should send the current identity upon save', async () => {
     // GIVEN
-    axiosStub.post.resolves({});
+    axiosStub.post.mockResolvedValue({});
 
     // WHEN
     await settings.save();
     await settings.$nextTick();
 
     // THEN
-    expect(axiosStub.post.calledWith('api/account', account)).toBeTruthy();
+    expect(axiosStub.post).toHaveBeenCalledWith('api/account', account);
   });
 
   it('should notify of success upon successful save', async () => {
     // GIVEN
-    axiosStub.post.resolves(account);
+    axiosStub.post.mockResolvedValue(account);
 
     // WHEN
     await settings.save();
@@ -70,7 +69,7 @@ describe('Settings Component', () => {
   it('should notify of error upon failed save', async () => {
     // GIVEN
     const error = { response: { status: 417 } };
-    axiosStub.post.rejects(error);
+    axiosStub.post.mockRejectedValue(error);
 
     // WHEN
     await settings.save();
@@ -85,7 +84,7 @@ describe('Settings Component', () => {
   it('should notify of error upon error 400', async () => {
     // GIVEN
     const error = { response: { status: 400, data: {} } };
-    axiosStub.post.rejects(error);
+    axiosStub.post.mockRejectedValue(error);
 
     // WHEN
     await settings.save();
@@ -100,7 +99,7 @@ describe('Settings Component', () => {
   it('should notify of error upon email already used', async () => {
     // GIVEN
     const error = { response: { status: 400, data: { type: EMAIL_ALREADY_USED_TYPE } } };
-    axiosStub.post.rejects(error);
+    axiosStub.post.mockRejectedValue(error);
 
     // WHEN
     await settings.save();

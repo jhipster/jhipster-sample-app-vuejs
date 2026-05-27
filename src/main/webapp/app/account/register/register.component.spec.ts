@@ -1,10 +1,9 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { computed } from 'vue';
 
 import { createTestingPinia } from '@pinia/testing';
 import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
-import sinon from 'sinon';
 
 import { useLoginModal } from '@/account/login-modal';
 import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from '@/shared/jhipster/error.constants';
@@ -14,8 +13,8 @@ import Register from './register.vue';
 type RegisterComponentType = InstanceType<typeof Register>;
 
 const axiosStub = {
-  get: sinon.stub(axios, 'get'),
-  post: sinon.stub(axios, 'post'),
+  get: vi.spyOn(axios, 'get'),
+  post: vi.spyOn(axios, 'post'),
 };
 
 describe('Register Component', () => {
@@ -28,8 +27,8 @@ describe('Register Component', () => {
   };
 
   beforeEach(() => {
-    axiosStub.get.resolves({});
-    axiosStub.post.reset();
+    axiosStub.get.mockResolvedValue({});
+    axiosStub.post.mockReset();
 
     const wrapper = shallowMount(Register, {
       global: {
@@ -60,20 +59,18 @@ describe('Register Component', () => {
   });
 
   it('should register when password match', async () => {
-    axiosStub.post.resolves();
+    axiosStub.post.mockResolvedValue(undefined);
     register.registerAccount = filledRegisterAccount;
     register.confirmPassword = filledRegisterAccount.password;
     register.register();
     await register.$nextTick();
 
-    expect(
-      axiosStub.post.calledWith('api/register', {
-        email: 'jhi@pster.net',
-        langKey: 'en',
-        login: 'jhi',
-        password: 'jhipster',
-      }),
-    ).toBeTruthy();
+    expect(axiosStub.post).toHaveBeenCalledWith('api/register', {
+      email: 'jhi@pster.net',
+      langKey: 'en',
+      login: 'jhi',
+      password: 'jhipster',
+    });
     expect(register.success).toBe(true);
     expect(register.error).toBe(null);
     expect(register.errorEmailExists).toBe(null);
@@ -82,15 +79,18 @@ describe('Register Component', () => {
 
   it('should register when password match but throw error when login already exist', async () => {
     const error = { response: { status: 400, data: { type: LOGIN_ALREADY_USED_TYPE } } };
-    axiosStub.post.rejects(error);
+    axiosStub.post.mockRejectedValue(error);
     register.registerAccount = filledRegisterAccount;
     register.confirmPassword = filledRegisterAccount.password;
     register.register();
     await register.$nextTick();
 
-    expect(
-      axiosStub.post.calledWith('api/register', { email: 'jhi@pster.net', langKey: 'en', login: 'jhi', password: 'jhipster' }),
-    ).toBeTruthy();
+    expect(axiosStub.post).toHaveBeenCalledWith('api/register', {
+      email: 'jhi@pster.net',
+      langKey: 'en',
+      login: 'jhi',
+      password: 'jhipster',
+    });
     await register.$nextTick();
     expect(register.success).toBe(null);
     expect(register.error).toBe(null);
@@ -100,15 +100,18 @@ describe('Register Component', () => {
 
   it('should register when password match but throw error when email already used', async () => {
     const error = { response: { status: 400, data: { type: EMAIL_ALREADY_USED_TYPE } } };
-    axiosStub.post.rejects(error);
+    axiosStub.post.mockRejectedValue(error);
     register.registerAccount = filledRegisterAccount;
     register.confirmPassword = filledRegisterAccount.password;
     register.register();
     await register.$nextTick();
 
-    expect(
-      axiosStub.post.calledWith('api/register', { email: 'jhi@pster.net', langKey: 'en', login: 'jhi', password: 'jhipster' }),
-    ).toBeTruthy();
+    expect(axiosStub.post).toHaveBeenCalledWith('api/register', {
+      email: 'jhi@pster.net',
+      langKey: 'en',
+      login: 'jhi',
+      password: 'jhipster',
+    });
     await register.$nextTick();
     expect(register.success).toBe(null);
     expect(register.error).toBe(null);
@@ -118,15 +121,18 @@ describe('Register Component', () => {
 
   it('should register when password match but throw error', async () => {
     const error = { response: { status: 400, data: { type: 'unknown' } } };
-    axiosStub.post.rejects(error);
+    axiosStub.post.mockRejectedValue(error);
     register.registerAccount = filledRegisterAccount;
     register.confirmPassword = filledRegisterAccount.password;
     register.register();
     await register.$nextTick();
 
-    expect(
-      axiosStub.post.calledWith('api/register', { email: 'jhi@pster.net', langKey: 'en', login: 'jhi', password: 'jhipster' }),
-    ).toBeTruthy();
+    expect(axiosStub.post).toHaveBeenCalledWith('api/register', {
+      email: 'jhi@pster.net',
+      langKey: 'en',
+      login: 'jhi',
+      password: 'jhipster',
+    });
     await register.$nextTick();
     expect(register.success).toBe(null);
     expect(register.errorEmailExists).toBe(null);

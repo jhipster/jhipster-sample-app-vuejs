@@ -1,21 +1,18 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type RouteLocation } from 'vue-router';
 
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
-import sinon, { type SinonStubbedInstance } from 'sinon';
 
-import OperationService from '@/entities/test-root/operation/operation.service';
 import AlertService from '@/shared/alert/alert.service';
 
 import LabelUpdate from './label-update.vue';
-import LabelService from './label.service';
 
 type LabelUpdateComponentType = InstanceType<typeof LabelUpdate>;
 
 let route: Partial<RouteLocation>;
-const routerGoMock = vitest.fn();
+const routerGoMock = vi.fn();
 
-vitest.mock('vue-router', () => ({
+vi.mock('vue-router', () => ({
   useRoute: () => route,
   useRouter: () => ({ go: routerGoMock }),
 }));
@@ -28,17 +25,22 @@ describe('Component Tests', () => {
 
   describe('Label Management Update Component', () => {
     let comp: LabelUpdateComponentType;
-    let labelServiceStub: SinonStubbedInstance<LabelService>;
+    let labelServiceStub: any;
 
     beforeEach(() => {
       route = {};
-      labelServiceStub = sinon.createStubInstance<LabelService>(LabelService);
-      labelServiceStub.retrieve.onFirstCall().resolves(Promise.resolve([]));
+      labelServiceStub = {
+        retrieve: vi.fn(),
+        find: vi.fn(),
+        update: vi.fn(),
+        create: vi.fn(),
+      };
+      labelServiceStub.retrieve.mockResolvedValueOnce([]);
 
       alertService = new AlertService({
-        i18n: { t: vitest.fn() } as any,
+        i18n: { t: vi.fn() } as any,
         toast: {
-          show: vitest.fn(),
+          show: vi.fn(),
         } as any,
       });
 
@@ -53,16 +55,15 @@ describe('Component Tests', () => {
         provide: {
           alertService,
           labelService: () => labelServiceStub,
-          operationService: () =>
-            sinon.createStubInstance<OperationService>(OperationService, {
-              retrieve: sinon.stub().resolves({}),
-            } as any),
+          operationService: () => ({
+            retrieve: vi.fn().mockResolvedValue({}),
+          }),
         },
       };
     });
 
     afterEach(() => {
-      vitest.resetAllMocks();
+      vi.resetAllMocks();
     });
 
     describe('save', () => {
@@ -71,21 +72,21 @@ describe('Component Tests', () => {
         const wrapper = shallowMount(LabelUpdate, { global: mountOptions });
         comp = wrapper.vm;
         comp.label = labelSample;
-        labelServiceStub.update.resolves(labelSample);
+        labelServiceStub.update.mockResolvedValue(labelSample);
 
         // WHEN
         comp.save();
         await comp.$nextTick();
 
         // THEN
-        expect(labelServiceStub.update.calledWith(labelSample)).toBeTruthy();
+        expect(labelServiceStub.update).toHaveBeenCalledWith(labelSample);
         expect(comp.isSaving).toEqual(false);
       });
 
       it('Should call create service on save for new entity', async () => {
         // GIVEN
         const entity = {};
-        labelServiceStub.create.resolves(entity);
+        labelServiceStub.create.mockResolvedValue(entity);
         const wrapper = shallowMount(LabelUpdate, { global: mountOptions });
         comp = wrapper.vm;
         comp.label = entity;
@@ -95,7 +96,7 @@ describe('Component Tests', () => {
         await comp.$nextTick();
 
         // THEN
-        expect(labelServiceStub.create.calledWith(entity)).toBeTruthy();
+        expect(labelServiceStub.create).toHaveBeenCalledWith(entity);
         expect(comp.isSaving).toEqual(false);
       });
     });
@@ -103,8 +104,8 @@ describe('Component Tests', () => {
     describe('Before route enter', () => {
       it('Should retrieve data', async () => {
         // GIVEN
-        labelServiceStub.find.resolves(labelSample);
-        labelServiceStub.retrieve.resolves([labelSample]);
+        labelServiceStub.find.mockResolvedValue(labelSample);
+        labelServiceStub.retrieve.mockResolvedValue([labelSample]);
 
         // WHEN
         route = {
@@ -123,7 +124,7 @@ describe('Component Tests', () => {
 
     describe('Previous state', () => {
       it('Should go previous state', async () => {
-        labelServiceStub.find.resolves(labelSample);
+        labelServiceStub.find.mockResolvedValue(labelSample);
         const wrapper = shallowMount(LabelUpdate, { global: mountOptions });
         comp = wrapper.vm;
         await comp.$nextTick();

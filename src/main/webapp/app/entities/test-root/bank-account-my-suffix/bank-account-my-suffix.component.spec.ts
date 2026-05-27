@@ -1,11 +1,9 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
-import sinon, { type SinonStubbedInstance } from 'sinon';
 
 import AlertService from '@/shared/alert/alert.service';
 
-import BankAccountMySuffixService from './bank-account-my-suffix.service';
 import BankAccountMySuffix from './bank-account-my-suffix.vue';
 
 type BankAccountMySuffixComponentType = InstanceType<typeof BankAccountMySuffix>;
@@ -22,17 +20,20 @@ describe('Component Tests', () => {
   let alertService: AlertService;
 
   describe('BankAccountMySuffix Management Component', () => {
-    let bankAccountServiceStub: SinonStubbedInstance<BankAccountMySuffixService>;
+    let bankAccountServiceStub: any;
     let mountOptions: MountingOptions<BankAccountMySuffixComponentType>['global'];
 
     beforeEach(() => {
-      bankAccountServiceStub = sinon.createStubInstance<BankAccountMySuffixService>(BankAccountMySuffixService);
-      bankAccountServiceStub.retrieve.resolves({ headers: {} });
+      bankAccountServiceStub = {
+        retrieve: vi.fn(),
+        delete: vi.fn(),
+      };
+      bankAccountServiceStub.retrieve.mockResolvedValue({ headers: {} });
 
       alertService = new AlertService({
-        i18n: { t: vitest.fn() } as any,
+        i18n: { t: vi.fn() } as any,
         toast: {
-          show: vitest.fn(),
+          show: vi.fn(),
         } as any,
       });
 
@@ -57,7 +58,7 @@ describe('Component Tests', () => {
     describe('Mount', () => {
       it('Should call load all on init', async () => {
         // GIVEN
-        bankAccountServiceStub.retrieve.resolves({ headers: {}, data: [{ id: 123 }] });
+        bankAccountServiceStub.retrieve.mockResolvedValue({ headers: {}, data: [{ id: 123 }] });
 
         // WHEN
         const wrapper = shallowMount(BankAccountMySuffix, { global: mountOptions });
@@ -65,7 +66,7 @@ describe('Component Tests', () => {
         await comp.$nextTick();
 
         // THEN
-        expect(bankAccountServiceStub.retrieve.calledOnce).toBeTruthy();
+        expect(bankAccountServiceStub.retrieve).toHaveBeenCalledOnce();
         expect(comp.bankAccounts[0]).toEqual(expect.objectContaining({ id: 123 }));
       });
     });
@@ -76,13 +77,13 @@ describe('Component Tests', () => {
         const wrapper = shallowMount(BankAccountMySuffix, { global: mountOptions });
         comp = wrapper.vm;
         await comp.$nextTick();
-        bankAccountServiceStub.retrieve.reset();
-        bankAccountServiceStub.retrieve.resolves({ headers: {}, data: [] });
+        bankAccountServiceStub.retrieve.mockReset();
+        bankAccountServiceStub.retrieve.mockResolvedValue({ headers: {}, data: [] });
       });
 
       it('Should call delete service on confirmDelete', async () => {
         // GIVEN
-        bankAccountServiceStub.delete.resolves({});
+        bankAccountServiceStub.delete.mockResolvedValue({});
 
         // WHEN
         comp.prepareRemove({ id: 123 });
@@ -91,11 +92,11 @@ describe('Component Tests', () => {
         await comp.$nextTick(); // clear components
 
         // THEN
-        expect(bankAccountServiceStub.delete.called).toBeTruthy();
+        expect(bankAccountServiceStub.delete).toHaveBeenCalled();
 
         // THEN
         await comp.$nextTick(); // handle component clear watch
-        expect(bankAccountServiceStub.retrieve.callCount).toEqual(1);
+        expect(bankAccountServiceStub.retrieve).toHaveBeenCalledTimes(1);
       });
     });
   });

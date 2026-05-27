@@ -1,7 +1,7 @@
-import { defineComponent, provide } from 'vue';
+import { type Component, defineComponent, provide } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { BToastOrchestrator } from 'bootstrap-vue-next';
+import { BApp } from 'bootstrap-vue-next';
 import { storeToRefs } from 'pinia';
 
 import LoginForm from '@/account/login-form/login-form.vue';
@@ -15,7 +15,7 @@ import '@/shared/config/dayjs';
 export default defineComponent({
   name: 'App',
   components: {
-    BToastOrchestrator,
+    BApp: BApp as Component,
     Ribbon,
     JhiNavbar,
     LoginForm,

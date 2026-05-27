@@ -3,6 +3,7 @@
   "include": ["vite.config.*", "vitest.config.*"],
   "compilerOptions": {
     "composite": true,
+    "lib": ["ES2025"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "types": ["node"]

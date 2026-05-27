@@ -12,6 +12,7 @@ import { setupAxiosInterceptors } from '@/shared/config/axios-interceptor';
 import { initFortAwesome, initI18N } from '@/shared/config/config';
 import { initBootstrapVue } from '@/shared/config/config-bootstrap-vue';
 import JhiItemCount from '@/shared/jhi-item-count.vue';
+import { AUTHENTICATION_TOKEN_KEY } from '@/shared/jhipster/constants';
 import JhiSortIndicator from '@/shared/sort/jhi-sort-indicator.vue';
 import { useStore, useTranslationStore } from '@/store';
 
@@ -95,6 +96,8 @@ const app = createApp({
         const status = error.status || error.response?.status;
         if (status === 401) {
           // Store logged out state.
+          sessionStorage.removeItem(AUTHENTICATION_TOKEN_KEY);
+          localStorage.removeItem(AUTHENTICATION_TOKEN_KEY);
           store.logout();
           if (!url.endsWith('api/account') && !url.endsWith('api/authenticate')) {
             // Ask for a new authentication

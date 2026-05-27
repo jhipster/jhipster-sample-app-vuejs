@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import { AUTHENTICATION_TOKEN_KEY } from '@/shared/jhipster/constants';
 import { type AccountStore } from '@/store';
 
 export default class AccountService {
@@ -46,7 +47,7 @@ export default class AccountService {
     if (this.store.logon) {
       return this.store.logon;
     }
-    const token = localStorage.getItem('jhi-authenticationToken') ?? sessionStorage.getItem('jhi-authenticationToken');
+    const token = localStorage.getItem(AUTHENTICATION_TOKEN_KEY) ?? sessionStorage.getItem(AUTHENTICATION_TOKEN_KEY);
     if (this.authenticated && this.userAuthorities && token) {
       return;
     }

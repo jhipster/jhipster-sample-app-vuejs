@@ -1,11 +1,11 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type RouteLocation } from 'vue-router';
 
 import { createTestingPinia } from '@pinia/testing';
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
 import axios from 'axios';
-import sinon from 'sinon';
 
+import { AUTHENTICATION_TOKEN_KEY } from '@/shared/jhipster/constants';
 import { useStore } from '@/store';
 import AccountService from '../account.service';
 
@@ -14,15 +14,15 @@ import LoginForm from './login-form.vue';
 type LoginFormComponentType = InstanceType<typeof LoginForm>;
 
 let route: Partial<RouteLocation>;
-const routerGoMock = vitest.fn();
-vitest.mock('vue-router', () => ({
+const routerGoMock = vi.fn();
+vi.mock('vue-router', () => ({
   useRoute: () => route,
   useRouter: () => ({ go: routerGoMock }),
 }));
 
 const axiosStub = {
-  get: sinon.stub(axios, 'get'),
-  post: sinon.stub(axios, 'post'),
+  get: vi.spyOn(axios, 'get'),
+  post: vi.spyOn(axios, 'post'),
 };
 
 describe('LoginForm Component', () => {
@@ -30,8 +30,8 @@ describe('LoginForm Component', () => {
 
   beforeEach(() => {
     route = {};
-    axiosStub.get.resolves({});
-    axiosStub.post.reset();
+    axiosStub.get.mockResolvedValue({});
+    axiosStub.post.mockReset();
 
     const pinia = createTestingPinia();
     const store = useStore();
@@ -61,20 +61,18 @@ describe('LoginForm Component', () => {
     loginForm.login = 'login';
     loginForm.password = 'pwd';
     loginForm.rememberMe = true;
-    axiosStub.post.rejects();
+    axiosStub.post.mockRejectedValue(new Error());
 
     // WHEN
     loginForm.doLogin();
     await loginForm.$nextTick();
 
     // THEN
-    expect(
-      axiosStub.post.calledWith('api/authenticate', {
-        username: 'login',
-        password: 'pwd',
-        rememberMe: true,
-      }),
-    ).toBeTruthy();
+    expect(axiosStub.post).toHaveBeenCalledWith('api/authenticate', {
+      username: 'login',
+      password: 'pwd',
+      rememberMe: true,
+    });
     await loginForm.$nextTick();
     expect(loginForm.authenticationError).toBeTruthy();
   });
@@ -85,23 +83,21 @@ describe('LoginForm Component', () => {
     loginForm.password = 'pwd';
     loginForm.rememberMe = true;
     const jwtSecret = 'jwt-secret';
-    axiosStub.post.resolves({ headers: { authorization: `Bearer ${jwtSecret}` } });
+    axiosStub.post.mockResolvedValue({ headers: { authorization: `Bearer ${jwtSecret}` } });
 
     // WHEN
     loginForm.doLogin();
     await loginForm.$nextTick();
 
     // THEN
-    expect(
-      axiosStub.post.calledWith('api/authenticate', {
-        username: 'login',
-        password: 'pwd',
-        rememberMe: true,
-      }),
-    ).toBeTruthy();
+    expect(axiosStub.post).toHaveBeenCalledWith('api/authenticate', {
+      username: 'login',
+      password: 'pwd',
+      rememberMe: true,
+    });
 
     expect(loginForm.authenticationError).toBeFalsy();
-    expect(localStorage.getItem('jhi-authenticationToken')).toEqual(jwtSecret);
+    expect(localStorage.getItem(AUTHENTICATION_TOKEN_KEY)).toEqual(jwtSecret);
   });
 
   it('should store token if authentication is OK in session', async () => {
@@ -110,22 +106,20 @@ describe('LoginForm Component', () => {
     loginForm.password = 'pwd';
     loginForm.rememberMe = false;
     const jwtSecret = 'jwt-secret';
-    axiosStub.post.resolves({ headers: { authorization: `Bearer ${jwtSecret}` } });
+    axiosStub.post.mockResolvedValue({ headers: { authorization: `Bearer ${jwtSecret}` } });
 
     // WHEN
     loginForm.doLogin();
     await loginForm.$nextTick();
 
     // THEN
-    expect(
-      axiosStub.post.calledWith('api/authenticate', {
-        username: 'login',
-        password: 'pwd',
-        rememberMe: false,
-      }),
-    ).toBeTruthy();
+    expect(axiosStub.post).toHaveBeenCalledWith('api/authenticate', {
+      username: 'login',
+      password: 'pwd',
+      rememberMe: false,
+    });
 
     expect(loginForm.authenticationError).toBeFalsy();
-    expect(sessionStorage.getItem('jhi-authenticationToken')).toEqual(jwtSecret);
+    expect(sessionStorage.getItem(AUTHENTICATION_TOKEN_KEY)).toEqual(jwtSecret);
   });
 });
