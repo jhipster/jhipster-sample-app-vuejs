@@ -23,8 +23,6 @@ import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Random;
@@ -77,11 +75,11 @@ class BankAccountResourceIT {
     private static final BigDecimal SMALLER_BALANCE = new BigDecimal(1 - 1);
 
     private static final LocalDate DEFAULT_OPENING_DAY = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_OPENING_DAY = LocalDate.now(ZoneId.systemDefault());
+    private static final LocalDate UPDATED_OPENING_DAY = LocalDate.parse("2019-12-22");
     private static final LocalDate SMALLER_OPENING_DAY = LocalDate.ofEpochDay(-1L);
 
     private static final Instant DEFAULT_LAST_OPERATION_DATE = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_LAST_OPERATION_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final Instant UPDATED_LAST_OPERATION_DATE = Instant.ofEpochMilli(1577000884780L);
 
     private static final Boolean DEFAULT_ACTIVE = false;
     private static final Boolean UPDATED_ACTIVE = true;
@@ -101,7 +99,7 @@ class BankAccountResourceIT {
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
     private static final Random random = new Random();
-    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
+    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + 2L * Integer.MAX_VALUE);
 
     @Autowired
     private ObjectMapper om;

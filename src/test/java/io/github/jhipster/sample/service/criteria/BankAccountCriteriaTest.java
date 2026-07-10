@@ -32,9 +32,7 @@ class BankAccountCriteriaTest {
 
         assertThat(bankAccountCriteria).satisfies(
             criteria ->
-                assertThat(criteria).is(
-                    copyFiltersAre(copy, (a, b) -> (a == null || a instanceof Boolean) ? a == b : (a != b && a.equals(b)))
-                ),
+                assertThat(criteria).is(copyFiltersAre(copy, (a, b) -> a == null || a instanceof Boolean ? a == b : a != b && a.equals(b))),
             criteria -> assertThat(criteria).isEqualTo(copy),
             criteria -> assertThat(criteria).hasSameHashCodeAs(copy)
         );
@@ -54,9 +52,7 @@ class BankAccountCriteriaTest {
 
         assertThat(bankAccountCriteria).satisfies(
             criteria ->
-                assertThat(criteria).is(
-                    copyFiltersAre(copy, (a, b) -> (a == null || a instanceof Boolean) ? a == b : (a != b && a.equals(b)))
-                ),
+                assertThat(criteria).is(copyFiltersAre(copy, (a, b) -> a == null || a instanceof Boolean ? a == b : a != b && a.equals(b))),
             criteria -> assertThat(criteria).isEqualTo(copy),
             criteria -> assertThat(criteria).hasSameHashCodeAs(copy)
         );

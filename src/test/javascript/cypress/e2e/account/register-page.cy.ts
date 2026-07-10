@@ -20,7 +20,7 @@ describe('/register', () => {
   it('should be accessible through menu', () => {
     cy.visit('');
     cy.clickOnRegisterItem();
-    cy.url().should('match', /\/register$/);
+    cy.location('pathname').should('eq', '/register');
   });
 
   it('should load the register page', () => {

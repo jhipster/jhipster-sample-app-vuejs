@@ -149,19 +149,19 @@
               />
             </div>
           </div>
-          <div class="mb-3">
-            <label class="form-control-label" for="bank-account-my-suffix">{{
-              t$('jhipsterSampleApplicationVueApp.testRootBankAccount.active')
-            }}</label>
+          <div class="mb-3 form-check">
             <input
               type="checkbox"
-              class="form-control"
+              class="form-check-input"
               name="active"
               id="bank-account-my-suffix-active"
               data-cy="active"
               :class="{ valid: !v$.active.$invalid, invalid: v$.active.$invalid }"
               v-model="v$.active.$model"
             />
+            <label class="form-check-label" for="bank-account-my-suffix-active">{{
+              t$('jhipsterSampleApplicationVueApp.testRootBankAccount.active')
+            }}</label>
           </div>
           <div class="mb-3">
             <label class="form-control-label" for="bank-account-my-suffix">{{
