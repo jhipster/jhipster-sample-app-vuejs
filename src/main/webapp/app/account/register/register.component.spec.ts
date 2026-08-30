@@ -46,10 +46,10 @@ describe('Register Component', () => {
     expect(register.error).toBe('');
     expect(register.errorEmailExists).toBe('');
     expect(register.errorUserExists).toBe('');
-    expect(register.confirmPassword).toBe(null);
-    expect(register.registerAccount.login).toBe(undefined);
-    expect(register.registerAccount.password).toBe(undefined);
-    expect(register.registerAccount.email).toBe(undefined);
+    expect(register.confirmPassword).toBeNull();
+    expect(register.registerAccount.login).toBeUndefined();
+    expect(register.registerAccount.password).toBeUndefined();
+    expect(register.registerAccount.email).toBeUndefined();
   });
 
   it('should open login modal when asked to', () => {
@@ -72,9 +72,9 @@ describe('Register Component', () => {
       password: 'jhipster',
     });
     expect(register.success).toBe(true);
-    expect(register.error).toBe(null);
-    expect(register.errorEmailExists).toBe(null);
-    expect(register.errorUserExists).toBe(null);
+    expect(register.error).toBeNull();
+    expect(register.errorEmailExists).toBeNull();
+    expect(register.errorUserExists).toBeNull();
   });
 
   it('should register when password match but throw error when login already exist', async () => {
@@ -92,9 +92,9 @@ describe('Register Component', () => {
       password: 'jhipster',
     });
     await register.$nextTick();
-    expect(register.success).toBe(null);
-    expect(register.error).toBe(null);
-    expect(register.errorEmailExists).toBe(null);
+    expect(register.success).toBeNull();
+    expect(register.error).toBeNull();
+    expect(register.errorEmailExists).toBeNull();
     expect(register.errorUserExists).toBe('ERROR');
   });
 
@@ -113,10 +113,10 @@ describe('Register Component', () => {
       password: 'jhipster',
     });
     await register.$nextTick();
-    expect(register.success).toBe(null);
-    expect(register.error).toBe(null);
+    expect(register.success).toBeNull();
+    expect(register.error).toBeNull();
     expect(register.errorEmailExists).toBe('ERROR');
-    expect(register.errorUserExists).toBe(null);
+    expect(register.errorUserExists).toBeNull();
   });
 
   it('should register when password match but throw error', async () => {
@@ -134,9 +134,9 @@ describe('Register Component', () => {
       password: 'jhipster',
     });
     await register.$nextTick();
-    expect(register.success).toBe(null);
-    expect(register.errorEmailExists).toBe(null);
-    expect(register.errorUserExists).toBe(null);
+    expect(register.success).toBeNull();
+    expect(register.errorEmailExists).toBeNull();
+    expect(register.errorUserExists).toBeNull();
     expect(register.error).toBe('ERROR');
   });
 });

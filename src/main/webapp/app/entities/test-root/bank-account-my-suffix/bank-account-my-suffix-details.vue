@@ -3,7 +3,7 @@
     <div class="col-8">
       <div v-if="bankAccount">
         <h2 class="jh-entity-heading" data-cy="bankAccountDetailsHeading">
-          <span>{{ t$('jhipsterSampleApplicationVueApp.testRootBankAccount.detail.title') }}BankAccountMySuffix</span> {{ bankAccount.id }}
+          <span>{{ t$('jhipsterSampleApplicationVueApp.testRootBankAccount.detail.title') }}</span> {{ bankAccount.id }}
         </h2>
         <dl class="row-md jh-entity-details">
           <dt>

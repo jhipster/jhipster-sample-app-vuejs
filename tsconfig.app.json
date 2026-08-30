@@ -5,6 +5,7 @@
   "compilerOptions": {
     "composite": true,
     "outDir": "target/out-tsc/dist",
+    "types": ["vite/client"],
     "paths": {
       "@/*": ["./src/main/webapp/app/*"]
     }

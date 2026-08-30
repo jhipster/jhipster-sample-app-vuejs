@@ -1,10 +1,10 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { endsWith, paddingSize } from '@/shared/jhipster/data-utils';
 
 import useDataUtils from './data-utils.service';
 
-describe('Formatter i18n', () => {
+describe('DataUtils Service', () => {
   let dataUtilsService: ReturnType<typeof useDataUtils>;
 
   beforeEach(() => {
@@ -38,9 +38,9 @@ describe('Formatter i18n', () => {
   });
 
   it('should open file', () => {
-    window.open = vitest.fn().mockReturnValue({});
+    window.open = vi.fn().mockReturnValue({});
     const objectURL = 'blob:http://localhost:9000/xxx';
-    URL.createObjectURL = vitest.fn().mockImplementationOnce(() => {
+    URL.createObjectURL = vi.fn().mockImplementationOnce(() => {
       return objectURL;
     });
 

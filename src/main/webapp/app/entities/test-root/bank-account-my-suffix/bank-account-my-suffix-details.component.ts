@@ -39,7 +39,6 @@ export default defineComponent({
 
     return {
       ...dateFormat,
-      alertService,
       bankAccount,
 
       ...dataUtils,

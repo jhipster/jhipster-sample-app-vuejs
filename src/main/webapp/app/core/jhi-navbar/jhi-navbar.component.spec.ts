@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { computed } from 'vue';
 import { type Router } from 'vue-router';
 
@@ -19,8 +19,8 @@ const store = useStore();
 describe('JhiNavbar', () => {
   let jhiNavbar: JhiNavbarComponentType;
   let login: ReturnType<typeof useLoginModal>;
-  const accountService = { hasAnyAuthorityAndCheckAuth: vitest.fn().mockImplementation(() => Promise.resolve(true)) };
-  const changeLanguage = vitest.fn();
+  const accountService = { hasAnyAuthorityAndCheckAuth: vi.fn().mockImplementation(() => Promise.resolve(true)) };
+  const changeLanguage = vi.fn();
   let router: Router;
 
   beforeEach(() => {
@@ -81,7 +81,7 @@ describe('JhiNavbar', () => {
     expect(accountService.hasAnyAuthorityAndCheckAuth).toHaveBeenCalled();
   });
 
-  it('logout should clear credentials', async () => {
+  it('logout should clear credentials and return to the home page when no provider URL is returned', async () => {
     store.setAuthentication({ login: 'test' });
 
     await jhiNavbar.logout();

@@ -1,21 +1,21 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { type Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MESSAGE_ERROR_HEADER_NAME, MESSAGE_PARAM_HEADER_NAME } from '@/shared/jhipster/constants';
 
 import AlertService from './alert.service';
 
 describe('Alert Service test suite', () => {
-  let translationStub: vitest.Mock;
-  let toastStub: vitest.Mock;
+  let translationStub: Mock;
+  let toastStub: Mock;
   let alertService: AlertService;
 
   beforeEach(() => {
-    translationStub = vitest.fn();
-    toastStub = vitest.fn();
+    translationStub = vi.fn();
+    toastStub = vi.fn();
     alertService = new AlertService({
       i18n: { t: translationStub } as any,
       toast: {
-        show: toastStub,
+        create: toastStub,
       } as any,
     });
   });
@@ -28,13 +28,12 @@ describe('Alert Service test suite', () => {
 
     // THEN
     expect(toastStub).toHaveBeenCalledExactlyOnceWith({
-      props: {
-        body: message,
-        pos: 'top-center',
-        title: 'Error',
-        variant: 'danger',
-        solid: true,
-      },
+      body: message,
+      modelValue: 5000,
+      position: 'top-end',
+      title: 'Error',
+      variant: 'danger',
+      solid: true,
     });
   });
 
@@ -53,13 +52,12 @@ describe('Alert Service test suite', () => {
     // THEN
     expect(translationStub).toHaveBeenCalledExactlyOnceWith(translationKey);
     expect(toastStub).toHaveBeenCalledExactlyOnceWith({
-      props: {
-        body: expect.any(String),
-        pos: 'top-center',
-        solid: true,
-        title: 'Error',
-        variant: 'danger',
-      },
+      body: expect.any(String),
+      modelValue: 5000,
+      position: 'top-end',
+      solid: true,
+      title: 'Error',
+      variant: 'danger',
     });
   });
 
@@ -92,13 +90,12 @@ describe('Alert Service test suite', () => {
     expect(translationStub).toHaveBeenCalledWith(translationKey, { entityName: 'DummyEntity' });
     expect(translationStub).toHaveBeenCalledWith('global.menu.entities.dummyEntity');
     expect(toastStub).toHaveBeenCalledWith({
-      props: {
-        body: expect.any(String),
-        pos: 'top-center',
-        solid: true,
-        title: 'Error',
-        variant: 'danger',
-      },
+      body: expect.any(String),
+      modelValue: 5000,
+      position: 'top-end',
+      solid: true,
+      title: 'Error',
+      variant: 'danger',
     });
   });
 
@@ -128,13 +125,12 @@ describe('Alert Service test suite', () => {
     // THEN
     expect(translationStub).toHaveBeenCalledExactlyOnceWith(message);
     expect(toastStub).toHaveBeenCalledExactlyOnceWith({
-      props: {
-        body: expect.any(String),
-        pos: 'top-center',
-        solid: true,
-        title: 'Error',
-        variant: 'danger',
-      },
+      body: expect.any(String),
+      modelValue: 5000,
+      position: 'top-end',
+      solid: true,
+      title: 'Error',
+      variant: 'danger',
     });
   });
 
@@ -154,13 +150,12 @@ describe('Alert Service test suite', () => {
     // THEN
     expect(translationStub).toHaveBeenCalledExactlyOnceWith(translationKey);
     expect(toastStub).toHaveBeenCalledExactlyOnceWith({
-      props: {
-        body: expect.any(String),
-        pos: 'top-center',
-        solid: true,
-        title: 'Error',
-        variant: 'danger',
-      },
+      body: expect.any(String),
+      modelValue: 5000,
+      position: 'top-end',
+      solid: true,
+      title: 'Error',
+      variant: 'danger',
     });
   });
 
@@ -182,13 +177,12 @@ describe('Alert Service test suite', () => {
     // THEN
     expect(translationStub).toHaveBeenCalledExactlyOnceWith(message);
     expect(toastStub).toHaveBeenCalledExactlyOnceWith({
-      props: {
-        body: expect.any(String),
-        pos: 'top-center',
-        solid: true,
-        title: 'Error',
-        variant: 'danger',
-      },
+      body: expect.any(String),
+      modelValue: 5000,
+      position: 'top-end',
+      solid: true,
+      title: 'Error',
+      variant: 'danger',
     });
   });
 });

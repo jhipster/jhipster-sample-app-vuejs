@@ -26,15 +26,14 @@ export default class AlertService {
   }
 
   showInfo(toastMessage: string, props: BToastProps = {}) {
-    this.toast.show!({
-      props: {
-        pos: 'top-center',
-        title: 'Info',
-        variant: 'info',
-        solid: true,
-        body: toastMessage,
-        ...props,
-      },
+    this.toast.create({
+      modelValue: 5000,
+      position: 'top-end',
+      title: 'Info',
+      variant: 'info',
+      solid: true,
+      body: toastMessage,
+      ...props,
     });
   }
 
@@ -62,9 +61,9 @@ export default class AlertService {
       case 400: {
         const message = getMessageFromHeaders(headers);
         if (message.errorKey && message.param) {
-          errorMessage = this.i18n.t(message.errorKey!, { entityName: this.i18n.t(`global.menu.entities.${message.param!}`) }).toString();
+          errorMessage = this.i18n.t(message.errorKey, { entityName: this.i18n.t(`global.menu.entities.${message.param}`) }).toString();
         } else if (message.errorKey) {
-          errorMessage = this.i18n.t(message.errorKey!).toString();
+          errorMessage = this.i18n.t(message.errorKey).toString();
         } else if (message.errorMessage) {
           errorMessage = message.errorMessage;
         } else if (data.message) {

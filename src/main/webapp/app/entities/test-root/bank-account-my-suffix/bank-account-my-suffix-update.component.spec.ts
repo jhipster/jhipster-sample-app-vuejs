@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { type RouteLocation } from 'vue-router';
 
 import { type MountingOptions, shallowMount } from '@vue/test-utils';
@@ -42,7 +42,7 @@ describe('Component Tests', () => {
       alertService = new AlertService({
         i18n: { t: vi.fn() } as any,
         toast: {
-          show: vi.fn(),
+          create: vi.fn(),
         } as any,
       });
 

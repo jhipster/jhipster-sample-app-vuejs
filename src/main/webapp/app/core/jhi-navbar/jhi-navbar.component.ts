@@ -2,6 +2,8 @@ import { type Ref, computed, defineComponent, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
+import { storeToRefs } from 'pinia';
+
 import type AccountService from '@/account/account.service';
 import { useLoginModal } from '@/account/login-modal';
 import EntitiesMenu from '@/entities/entities-menu.vue';
@@ -20,25 +22,22 @@ export default defineComponent({
     const currentLanguage = inject('currentLanguage', () => computed(() => navigator.language ?? 'en'), true);
     const changeLanguage = inject<(string) => Promise<void>>('changeLanguage');
 
-    const isActiveLanguage = (key: string) => {
-      return key === currentLanguage.value;
-    };
+    const isActiveLanguage = (key: string) => key === currentLanguage.value;
 
     const router = useRouter();
     const store = useStore();
 
     const version = `v${APP_VERSION}`;
-    const hasAnyAuthorityValues: Ref<any> = ref({});
+    const hasAnyAuthorityValues: Ref = ref({});
 
     const openAPIEnabled = computed(() => store.activeProfiles.includes('api-docs'));
     const inProduction = computed(() => store.activeProfiles.includes('prod'));
-    const authenticated = computed(() => store.authenticated);
+    const { authenticated } = storeToRefs(store);
 
     const subIsActive = (input: string | string[]) => {
       const paths = Array.isArray(input) ? input : [input];
-      return paths.some(path => {
-        return router.currentRoute.value.path.startsWith(path); // current path starts with this path string
-      });
+      // current path starts with this path string
+      return paths.some(path => router.currentRoute.value.path.startsWith(path));
     };
 
     const logout = async () => {
@@ -46,7 +45,7 @@ export default defineComponent({
       sessionStorage.removeItem(AUTHENTICATION_TOKEN_KEY);
       store.logout();
       if (router.currentRoute.value.path !== '/') {
-        router.push('/');
+        await router.push('/');
       }
     };
 

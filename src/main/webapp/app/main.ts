@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.common with an alias.
 import { computed, createApp, onMounted, provide, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { START_LOCATION } from 'vue-router';
 
 import { createPinia, storeToRefs } from 'pinia';
 
@@ -39,7 +40,7 @@ const app = createApp({
     const translationService = new TranslationService(i18n);
 
     const changeLanguage = async (newLanguage: string) => {
-      if (i18n.locale.value !== newLanguage) {
+      if (newLanguage && i18n.locale.value !== newLanguage) {
         await translationService.refreshTranslation(newLanguage);
         translationStore.setCurrentLanguage(newLanguage);
       }
@@ -52,7 +53,7 @@ const app = createApp({
       () => store.account,
       async value => {
         if (!translationService.getLocalStoreLanguage()) {
-          await changeLanguage(value.langKey);
+          await changeLanguage(value?.langKey);
         }
       },
     );
@@ -71,23 +72,23 @@ const app = createApp({
       await changeLanguage(lang);
     });
 
-    router.beforeResolve(async (to, from, next) => {
-      // Make sure login modal is closed
-      hideLogin();
+    router.beforeResolve(async (to, from) => {
+      // Make sure login modal is closed when navigating.
+      // The initial navigation may resolve after the user opened the login modal, don't close it.
+      if (from !== START_LOCATION) {
+        hideLogin();
+      }
 
       if (!store.authenticated) {
         await accountService.update();
       }
       if (to.meta?.authorities && to.meta.authorities.length > 0) {
         const value = await accountService.hasAnyAuthorityAndCheckAuth(to.meta.authorities);
-        if (!value) {
-          if (from.path !== '/forbidden') {
-            next({ path: '/forbidden' });
-            return;
-          }
+        if (!value && from.path !== '/forbidden') {
+          return { path: '/forbidden' };
         }
       }
-      next();
+      return true;
     });
 
     setupAxiosInterceptors(
@@ -99,7 +100,7 @@ const app = createApp({
           sessionStorage.removeItem(AUTHENTICATION_TOKEN_KEY);
           localStorage.removeItem(AUTHENTICATION_TOKEN_KEY);
           store.logout();
-          if (!url.endsWith('api/account') && !url.endsWith('api/authenticate')) {
+          if (!url?.endsWith('api/account') && !url?.endsWith('api/authenticate')) {
             // Ask for a new authentication
             showLogin();
             return;
@@ -107,9 +108,7 @@ const app = createApp({
         }
         return Promise.reject(error);
       },
-      error => {
-        return Promise.reject(error);
-      },
+      error => Promise.reject(error),
     );
 
     const { authenticated } = storeToRefs(store);

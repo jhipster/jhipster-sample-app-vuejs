@@ -1,13 +1,12 @@
 <template>
   <b-navbar data-cy="navbar" toggleable="md" variant="" data-bs-theme="dark">
-    <b-navbar-brand class="logo" b-link to="/">
+    <b-navbar-brand class="logo" to="/">
       <span class="logo-img"></span>
       <span class="navbar-title">{{ t$('global.title') }}</span> <span class="navbar-version">{{ version }}</span>
     </b-navbar-brand>
     <b-navbar-toggle
       right
       class="jh-navbar-toggler d-lg-none"
-      href="javascript:void(0);"
       data-toggle="collapse"
       target="header-tabs"
       aria-expanded="false"
@@ -102,7 +101,6 @@
         </b-nav-item-dropdown>
         <b-nav-item-dropdown
           right
-          href="javascript:void(0);"
           id="account-menu"
           :class="{ 'router-link-active': subIsActive('/account') }"
           active-class="active"

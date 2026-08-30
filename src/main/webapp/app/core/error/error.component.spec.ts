@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type Ref, ref } from 'vue';
 import { type RouteLocation } from 'vue-router';
 
@@ -13,7 +13,7 @@ type ErrorComponentType = InstanceType<typeof Error>;
 
 let route: Partial<RouteLocation>;
 
-vitest.mock('vue-router', () => ({
+vi.mock('vue-router', () => ({
   useRoute: () => route,
 }));
 

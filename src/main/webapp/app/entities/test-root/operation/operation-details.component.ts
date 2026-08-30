@@ -36,7 +36,6 @@ export default defineComponent({
 
     return {
       ...dateFormat,
-      alertService,
       operation,
 
       previousState,

@@ -12,8 +12,8 @@ export default defineComponent({
   setup() {
     const healthService = inject('healthService', () => new HealthService(), true);
 
-    const healthData: Ref<any> = ref(null);
-    const currentHealth: Ref<any> = ref(null);
+    const healthData: Ref = ref(null);
+    const currentHealth: Ref = ref(null);
     const updatingHealth = ref(false);
 
     return {
@@ -54,7 +54,7 @@ export default defineComponent({
     },
     showHealth(health: any): void {
       this.currentHealth = health;
-      (<any>this.$refs.healthModal).show();
+      (this.$refs.healthModal as any).show();
     },
     subSystemName(name: string): string {
       return this.healthService.getSubSystemName(name);

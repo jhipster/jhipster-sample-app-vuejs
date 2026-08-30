@@ -9,7 +9,11 @@ import { type AccountStore, useStore } from '@/store';
 import AccountService from './account.service';
 
 const resetStore = (store: AccountStore) => {
-  store.$reset();
+  store.logout();
+  store.authenticate(null);
+  store.profilesLoaded = false;
+  store.activeProfiles = '';
+  store.ribbonOnProfiles = '';
 };
 
 const axiosStub = {
@@ -42,9 +46,9 @@ describe('Account Service test suite', () => {
     accountService = new AccountService(store);
     await accountService.update();
 
-    expect(store.logon).toBe(null);
+    expect(store.logon).toBeNull();
     expect(accountService.authenticated).toBe(false);
-    expect(store.account).toBe(null);
+    expect(store.account).toBeNull();
     expect(axiosStub.get).toHaveBeenCalledWith('management/info');
     expect(store.activeProfiles[0]).toBe('dev');
     expect(store.activeProfiles[1]).toBe('test');
@@ -56,9 +60,9 @@ describe('Account Service test suite', () => {
     accountService = new AccountService(store);
     await accountService.update();
 
-    expect(store.logon).toBe(null);
+    expect(store.logon).toBeNull();
     expect(accountService.authenticated).toBe(false);
-    expect(store.account).toBe(null);
+    expect(store.account).toBeNull();
     expect(axiosStub.get).toHaveBeenCalledWith('management/info');
   });
 
@@ -71,7 +75,7 @@ describe('Account Service test suite', () => {
     await accountService.update();
 
     expect(accountService.authenticated).toBe(false);
-    expect(store.account).toBe(null);
+    expect(store.account).toBeNull();
     expect(axiosStub.get).toHaveBeenCalledWith('management/info');
   });
 
@@ -105,7 +109,7 @@ describe('Account Service test suite', () => {
     });
   });
 
-  it('should init service as not authenticated and return authority user', async () => {
+  it('should init service as not authenticated and not return authority user', async () => {
     axiosStub.get.mockRejectedValue(new Error());
     accountService = new AccountService(store);
     await accountService.update();

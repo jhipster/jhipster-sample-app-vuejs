@@ -27,7 +27,7 @@ describe('UserManagementView Component', () => {
     alertService = new AlertService({
       i18n: { t: vi.fn() } as any,
       toast: {
-        show: vi.fn(),
+        create: vi.fn(),
       } as any,
     });
   });

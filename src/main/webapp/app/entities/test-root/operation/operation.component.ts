@@ -25,7 +25,7 @@ export default defineComponent({
     const propOrder = ref('id');
     const reverse = ref(false);
     const totalItems = ref(0);
-    const links: Ref<any> = ref({});
+    const links: Ref = ref({});
 
     const operations: Ref<IOperation[]> = ref([]);
 

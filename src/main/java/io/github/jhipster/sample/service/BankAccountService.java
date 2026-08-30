@@ -1,9 +1,8 @@
 package io.github.jhipster.sample.service;
 
 import io.github.jhipster.sample.service.dto.BankAccountDTO;
+import java.util.List;
 import java.util.Optional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 /**
  * Service Interface for managing {@link io.github.jhipster.sample.domain.BankAccount}.
@@ -36,10 +35,9 @@ public interface BankAccountService {
     /**
      * Get all the bankAccounts with eager load of many-to-many relationships.
      *
-     * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Page<BankAccountDTO> findAllWithEagerRelationships(Pageable pageable);
+    List<BankAccountDTO> findAllWithEagerRelationships();
 
     /**
      * Get the "id" bankAccount.

@@ -3,7 +3,7 @@
     <div class="col-8">
       <div v-if="label">
         <h2 class="jh-entity-heading" data-cy="labelDetailsHeading">
-          <span>{{ t$('jhipsterSampleApplicationVueApp.testRootLabel.detail.title') }}Label</span> {{ label.id }}
+          <span>{{ t$('jhipsterSampleApplicationVueApp.testRootLabel.detail.title') }}</span> {{ label.id }}
         </h2>
         <dl class="row-md jh-entity-details">
           <dt>

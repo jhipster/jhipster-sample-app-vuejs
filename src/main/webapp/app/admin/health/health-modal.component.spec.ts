@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { shallowMount } from '@vue/test-utils';
 
@@ -6,7 +6,7 @@ import HealthModal from './health-modal.vue';
 
 type HealthModalComponentType = InstanceType<typeof HealthModal>;
 
-const healthService = { getBaseName: vitest.fn(), getSubSystemName: vitest.fn() };
+const healthService = { getBaseName: vi.fn(), getSubSystemName: vi.fn() };
 
 describe('Health Modal Component', () => {
   let healthModal: HealthModalComponentType;
@@ -29,13 +29,13 @@ describe('Health Modal Component', () => {
   });
 
   describe('baseName and subSystemName', () => {
-    it('should use healthService', () => {
+    it('should use healthService to get base name', () => {
       healthModal.baseName('base');
 
       expect(healthService.getBaseName).toHaveBeenCalled();
     });
 
-    it('should use healthService', () => {
+    it('should use healthService to get sub system name', () => {
       healthModal.subSystemName('base');
 
       expect(healthService.getSubSystemName).toHaveBeenCalled();

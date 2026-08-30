@@ -13,7 +13,7 @@ const axiosStub = {
   post: vi.spyOn(axios, 'post'),
 };
 
-describe('Reset Component Finish', () => {
+describe('ResetPasswordFinish Component', () => {
   let resetPasswordFinish: ResetPasswordFinishComponentType;
 
   beforeEach(() => {

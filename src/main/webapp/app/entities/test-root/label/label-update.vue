@@ -11,7 +11,9 @@
             <input type="text" class="form-control" id="id" name="id" v-model="label.id" readonly />
           </div>
           <div class="mb-3">
-            <label class="form-control-label" for="label">{{ t$('jhipsterSampleApplicationVueApp.testRootLabel.labelName') }}</label>
+            <label class="form-control-label" for="label-labelName">{{
+              t$('jhipsterSampleApplicationVueApp.testRootLabel.labelName')
+            }}</label>
             <input
               type="text"
               class="form-control"

@@ -80,13 +80,7 @@
                     <span class="d-none d-md-inline">{{ t$('entity.action.edit') }}</span>
                   </button>
                 </router-link>
-                <b-button
-                  @click="prepareRemove(operation)"
-                  variant="danger"
-                  class="btn btn-sm"
-                  data-cy="entityDeleteButton"
-                  v-b-modal.removeEntity
-                >
+                <b-button @click="prepareRemove(operation)" variant="danger" class="btn btn-sm" data-cy="entityDeleteButton">
                   <font-awesome-icon icon="times"></font-awesome-icon>
                   <span class="d-none d-md-inline">{{ t$('entity.action.delete') }}</span>
                 </b-button>

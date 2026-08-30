@@ -11,7 +11,7 @@
             <input type="text" class="form-control" id="id" name="id" v-model="bankAccount.id" readonly />
           </div>
           <div class="mb-3">
-            <label class="form-control-label" for="bank-account-my-suffix">{{
+            <label class="form-control-label" for="bank-account-my-suffix-name">{{
               t$('jhipsterSampleApplicationVueApp.testRootBankAccount.name')
             }}</label>
             <input
@@ -29,7 +29,7 @@
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-control-label" for="bank-account-my-suffix">{{
+            <label class="form-control-label" for="bank-account-my-suffix-bankNumber">{{
               t$('jhipsterSampleApplicationVueApp.testRootBankAccount.bankNumber')
             }}</label>
             <input
@@ -43,7 +43,7 @@
             />
           </div>
           <div class="mb-3">
-            <label class="form-control-label" for="bank-account-my-suffix">{{
+            <label class="form-control-label" for="bank-account-my-suffix-agencyNumber">{{
               t$('jhipsterSampleApplicationVueApp.testRootBankAccount.agencyNumber')
             }}</label>
             <input
@@ -57,7 +57,7 @@
             />
           </div>
           <div class="mb-3">
-            <label class="form-control-label" for="bank-account-my-suffix">{{
+            <label class="form-control-label" for="bank-account-my-suffix-lastOperationDuration">{{
               t$('jhipsterSampleApplicationVueApp.testRootBankAccount.lastOperationDuration')
             }}</label>
             <input
@@ -71,7 +71,7 @@
             />
           </div>
           <div class="mb-3">
-            <label class="form-control-label" for="bank-account-my-suffix">{{
+            <label class="form-control-label" for="bank-account-my-suffix-meanOperationDuration">{{
               t$('jhipsterSampleApplicationVueApp.testRootBankAccount.meanOperationDuration')
             }}</label>
             <input
@@ -85,7 +85,7 @@
             />
           </div>
           <div class="mb-3">
-            <label class="form-control-label" for="bank-account-my-suffix">{{
+            <label class="form-control-label" for="bank-account-my-suffix-balance">{{
               t$('jhipsterSampleApplicationVueApp.testRootBankAccount.balance')
             }}</label>
             <input
@@ -103,7 +103,7 @@
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-control-label" for="bank-account-my-suffix">{{
+            <label class="form-control-label" for="bank-account-my-suffix-openingDay">{{
               t$('jhipsterSampleApplicationVueApp.testRootBankAccount.openingDay')
             }}</label>
             <b-input-group class="mb-3">
@@ -133,7 +133,7 @@
             </b-input-group>
           </div>
           <div class="mb-3">
-            <label class="form-control-label" for="bank-account-my-suffix">{{
+            <label class="form-control-label" for="bank-account-my-suffix-lastOperationDate">{{
               t$('jhipsterSampleApplicationVueApp.testRootBankAccount.lastOperationDate')
             }}</label>
             <div class="d-flex">
@@ -164,7 +164,7 @@
             }}</label>
           </div>
           <div class="mb-3">
-            <label class="form-control-label" for="bank-account-my-suffix">{{
+            <label class="form-control-label" for="bank-account-my-suffix-accountType">{{
               t$('jhipsterSampleApplicationVueApp.testRootBankAccount.accountType')
             }}</label>
             <select
@@ -186,7 +186,7 @@
             </select>
           </div>
           <div class="mb-3">
-            <label class="form-control-label" for="bank-account-my-suffix">{{
+            <label class="form-control-label" for="bank-account-my-suffix-attachment">{{
               t$('jhipsterSampleApplicationVueApp.testRootBankAccount.attachment')
             }}</label>
             <div>
@@ -235,7 +235,7 @@
             />
           </div>
           <div class="mb-3">
-            <label class="form-control-label" for="bank-account-my-suffix">{{
+            <label class="form-control-label" for="bank-account-my-suffix-description">{{
               t$('jhipsterSampleApplicationVueApp.testRootBankAccount.description')
             }}</label>
             <textarea

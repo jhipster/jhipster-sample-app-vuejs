@@ -1,11 +1,7 @@
 import axios, { type AxiosPromise } from 'axios';
 
 export default class HealthService {
-  separator: string;
-
-  constructor() {
-    this.separator = '.';
-  }
+  separator = '.';
 
   checkHealth(): AxiosPromise<any> {
     return axios.get('management/health');
@@ -48,11 +44,9 @@ export default class HealthService {
         const value = healthObject[key];
         if (key === 'status' || key === 'error') {
           healthData[key] = value;
-        } else {
-          if (!this.isHealthObject(value)) {
-            details[key] = value;
-            hasDetails = true;
-          }
+        } else if (!this.isHealthObject(value)) {
+          details[key] = value;
+          hasDetails = true;
         }
       }
     }
@@ -115,10 +109,8 @@ export default class HealthService {
     let result = false;
 
     for (const key in healthObject) {
-      if (Object.hasOwn(healthObject, key)) {
-        if (key === 'status') {
-          result = true;
-        }
+      if (Object.hasOwn(healthObject, key) && key === 'status') {
+        result = true;
       }
     }
     return result;

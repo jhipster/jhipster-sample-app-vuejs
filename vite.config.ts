@@ -7,10 +7,9 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 const { getAbsoluteFSPath } = await import('swagger-ui-dist');
 const swaggerUiPath = getAbsoluteFSPath();
-const webappDir = fileURLToPath(new URL('./src/main/webapp//', import.meta.url));
+const webappDir = fileURLToPath(new URL('./src/main/webapp/', import.meta.url));
 
-// eslint-disable-next-line prefer-const
-let config = defineConfig({
+const config = defineConfig({
   plugins: [
     vue(),
     viteStaticCopy({
@@ -34,6 +33,11 @@ let config = defineConfig({
   root: fileURLToPath(new URL('./src/main/webapp/', import.meta.url)),
   publicDir: fileURLToPath(new URL('./target/classes/static/public', import.meta.url)),
   cacheDir: fileURLToPath(new URL('./target/.vite-cache', import.meta.url)),
+  optimizeDeps: {
+    // Discover dependencies of lazily loaded modules (translations, ...) at startup,
+    // a dependency discovered at runtime triggers a re-optimization and a page reload.
+    entries: [fileURLToPath(new URL('./src/main/webapp/**/*.{ts,vue,js}', import.meta.url))],
+  },
   build: {
     emptyOutDir: true,
     outDir: fileURLToPath(new URL('./target/classes/static/', import.meta.url)),
@@ -44,10 +48,9 @@ let config = defineConfig({
     },
   },
   resolve: {
+    tsconfigPaths: true,
     alias: {
       vue: 'vue/dist/vue.esm-bundler.js',
-      '@': fileURLToPath(new URL('./src/main/webapp/app/', import.meta.url)),
-      '@content': fileURLToPath(new URL('./src/main/webapp/content/', import.meta.url)),
     },
   },
   define: {

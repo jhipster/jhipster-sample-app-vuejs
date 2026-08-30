@@ -37,12 +37,11 @@ export const createRouter = () =>
 
 const router = createRouter();
 
-router.beforeResolve(async (to, from, next) => {
+router.beforeResolve(async to => {
   if (!to.matched.length) {
-    next({ path: '/not-found' });
-    return;
+    return { path: '/not-found' };
   }
-  next();
+  return true;
 });
 
 export default router;

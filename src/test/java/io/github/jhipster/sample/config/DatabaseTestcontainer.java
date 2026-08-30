@@ -24,7 +24,7 @@ public class DatabaseTestcontainer implements SqlTestContainer, InitializingBean
     @Override
     public void afterPropertiesSet() {
         if (null == databaseContainer) {
-            databaseContainer = (MySQLContainer) new MySQLContainer<>("mysql:9.7.1")
+            databaseContainer = (MySQLContainer) new MySQLContainer<>("mysql:26.7.0")
                 .withDatabaseName("jhipsterSampleApplicationVue")
                 .withConfigurationOverride("conf/mysql")
                 .withLogConsumer(new Slf4jLogConsumer(LOG))

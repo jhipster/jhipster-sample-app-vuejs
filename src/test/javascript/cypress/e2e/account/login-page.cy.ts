@@ -19,6 +19,9 @@ describe('login page', () => {
   beforeEach(() => {
     cy.visit('');
     cy.clickOnLoginItem();
+    // The login modal moves focus to the username field once its enter transition ends;
+    // typing before that lands part of the input in the wrong field.
+    cy.get(usernameLoginSelector).should('have.focus');
   });
 
   beforeEach(() => {

@@ -11,7 +11,9 @@
             <input type="text" class="form-control" id="id" name="id" v-model="operation.id" readonly />
           </div>
           <div class="mb-3">
-            <label class="form-control-label" for="operation">{{ t$('jhipsterSampleApplicationVueApp.testRootOperation.date') }}</label>
+            <label class="form-control-label" for="operation-date">{{
+              t$('jhipsterSampleApplicationVueApp.testRootOperation.date')
+            }}</label>
             <div class="d-flex">
               <input
                 id="operation-date"
@@ -30,7 +32,7 @@
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-control-label" for="operation">{{
+            <label class="form-control-label" for="operation-description">{{
               t$('jhipsterSampleApplicationVueApp.testRootOperation.description')
             }}</label>
             <input
@@ -44,7 +46,9 @@
             />
           </div>
           <div class="mb-3">
-            <label class="form-control-label" for="operation">{{ t$('jhipsterSampleApplicationVueApp.testRootOperation.amount') }}</label>
+            <label class="form-control-label" for="operation-amount">{{
+              t$('jhipsterSampleApplicationVueApp.testRootOperation.amount')
+            }}</label>
             <input
               type="number"
               class="form-control"

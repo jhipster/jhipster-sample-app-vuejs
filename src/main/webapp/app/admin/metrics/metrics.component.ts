@@ -15,9 +15,9 @@ export default defineComponent({
     const { formatDate } = useDateFormat();
     const metricsService = inject('metricsService', () => new MetricsService(), true);
 
-    const metrics: Ref<any> = ref({});
-    const threadData: Ref<any> = ref(null);
-    const threadStats: Ref<any> = ref({});
+    const metrics: Ref = ref({});
+    const threadData: Ref = ref(null);
+    const threadStats: Ref = ref({});
     const updatingMetrics = ref(true);
 
     return {
@@ -82,8 +82,8 @@ export default defineComponent({
         });
     },
     openModal(): void {
-      if ((<any>this.$refs.metricsModal).show) {
-        (<any>this.$refs.metricsModal).show();
+      if ((this.$refs.metricsModal as any).show) {
+        (this.$refs.metricsModal as any).show();
       }
     },
     filterNaN(input: any): any {
