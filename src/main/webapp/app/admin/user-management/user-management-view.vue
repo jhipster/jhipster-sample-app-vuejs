@@ -12,7 +12,7 @@
           </dt>
           <dd>
             <span>{{ user.login }}</span>
-            <b-badge style="margin-left: 10px" :variant="user.activated ? 'success' : 'danger'">{{
+            <b-badge class="ms-2" :variant="user.activated ? 'success' : 'danger'">{{
               t$(user.activated ? 'userManagement.activated' : 'userManagement.deactivated')
             }}</b-badge>
           </dd>

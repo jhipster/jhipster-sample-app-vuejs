@@ -30,11 +30,11 @@
           <tr>
             <th scope="col" @click="changeOrder('id')">
               <span>{{ t$('global.field.id') }}</span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'id'"></jhi-sort-indicator>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" field-name="id"></jhi-sort-indicator>
             </th>
             <th scope="col" @click="changeOrder('labelName')">
               <span>{{ t$('jhipsterSampleApplicationVueApp.testRootLabel.labelName') }}</span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'labelName'"></jhi-sort-indicator>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" field-name="labelName"></jhi-sort-indicator>
             </th>
             <th scope="col"></th>
           </tr>

@@ -43,7 +43,7 @@
         <p></p>
         <div>
           <b-alert :model-value="true" variant="warning">
-            <b-link :to="'/account/reset/request'" class="alert-link" data-cy="forgetYourPasswordSelector">{{
+            <b-link to="/account/reset/request" class="alert-link" data-cy="forgetYourPasswordSelector">{{
               t$('login.password.forgot')
             }}</b-link>
           </b-alert>
@@ -51,7 +51,7 @@
         <div>
           <b-alert :model-value="true" variant="warning">
             <span>{{ t$('global.messages.info.register.noaccount') }}</span>
-            <b-link :to="'/register'" class="alert-link">{{ t$('global.messages.info.register.link') }}</b-link>
+            <b-link to="/register" class="alert-link">{{ t$('global.messages.info.register.link') }}</b-link>
           </b-alert>
         </div>
       </div>

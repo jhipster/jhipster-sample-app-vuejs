@@ -31,7 +31,7 @@
           <div class="mb-3">
             <label for="label">{{ t$('jhipsterSampleApplicationVueApp.testRootLabel.operation') }}</label>
             <select
-              class="form-control"
+              class="form-select"
               id="label-operations"
               data-cy="operation"
               multiple

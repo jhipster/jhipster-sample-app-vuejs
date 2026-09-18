@@ -1,5 +1,3 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.common with an alias.
 import { computed, createApp, onMounted, provide, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { START_LOCATION } from 'vue-router';

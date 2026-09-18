@@ -67,13 +67,7 @@
             <label class="form-control-label" for="operation">{{
               t$('jhipsterSampleApplicationVueApp.testRootOperation.bankAccount')
             }}</label>
-            <select
-              class="form-control"
-              id="operation-bankAccount"
-              data-cy="bankAccount"
-              name="bankAccount"
-              v-model="operation.bankAccount"
-            >
+            <select class="form-select" id="operation-bankAccount" data-cy="bankAccount" name="bankAccount" v-model="operation.bankAccount">
               <option :value="null"></option>
               <option
                 :value="
@@ -89,7 +83,7 @@
           <div class="mb-3">
             <label for="operation">{{ t$('jhipsterSampleApplicationVueApp.testRootOperation.label') }}</label>
             <select
-              class="form-control"
+              class="form-select"
               id="operation-labels"
               data-cy="label"
               multiple

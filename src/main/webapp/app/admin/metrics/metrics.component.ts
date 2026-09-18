@@ -108,7 +108,6 @@ export default defineComponent({
         second: 1000,
       };
       let time_string = '';
-      const plural = '';
       for (const key in times) {
         if (Math.floor(ms / times[key]) > 0) {
           let plural = '';

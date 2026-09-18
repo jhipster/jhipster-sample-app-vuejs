@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex justify-content-center">
-      <div class="col-md-8 toastify-container">
+      <div class="col-md-8">
         <h2 v-if="username" id="settings-title">
           <span v-html="t$('settings.title', { username })"></span>
         </h2>
@@ -98,7 +98,7 @@
           </div>
           <div class="mb-3" v-if="languages && Object.keys(languages).length > 1">
             <label for="langKey">{{ t$('settings.form.language') }}</label>
-            <select class="form-control" id="langKey" name="langKey" v-model="settingsAccount.langKey" data-cy="langKey">
+            <select class="form-select" id="langKey" name="langKey" v-model="settingsAccount.langKey" data-cy="langKey">
               <option v-for="(language, key) in languages" :value="key" :key="`lang-${key}`">{{ language.name }}</option>
             </select>
           </div>

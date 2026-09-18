@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { endsWith, paddingSize } from '@/shared/jhipster/data-utils';
+import { paddingSize } from '@/shared/jhipster/data-utils';
 
 import useDataUtils from './data-utils.service';
 
@@ -49,10 +49,31 @@ describe('DataUtils Service', () => {
     expect(window.open).toHaveBeenCalledWith(objectURL);
   });
 
-  it('should check text ends with suffix', () => {
-    const result = endsWith('rocky', 'JHipster rocks!');
+  it('should open an image blob in a new window', () => {
+    window.open = vi.fn().mockReturnValue({});
+    URL.createObjectURL = vi.fn().mockReturnValue('blob:http://localhost:9000/xxx');
 
-    expect(result).toBe(false);
+    dataUtilsService.openFile('image/png', 'data', 'image');
+
+    expect(URL.createObjectURL).toHaveBeenCalledWith(expect.objectContaining({ type: 'image/png' }));
+  });
+
+  it('should open an xml image blob as a download', () => {
+    window.open = vi.fn().mockReturnValue({});
+    URL.createObjectURL = vi.fn().mockReturnValue('blob:http://localhost:9000/xxx');
+
+    dataUtilsService.openFile('image/svg+xml', 'data', 'image');
+
+    expect(URL.createObjectURL).toHaveBeenCalledWith(expect.objectContaining({ type: 'application/octet-stream' }));
+  });
+
+  it('should open any blob as a download', () => {
+    window.open = vi.fn().mockReturnValue({});
+    URL.createObjectURL = vi.fn().mockReturnValue('blob:http://localhost:9000/xxx');
+
+    dataUtilsService.openFile('application/pdf', 'data');
+
+    expect(URL.createObjectURL).toHaveBeenCalledWith(expect.objectContaining({ type: 'application/octet-stream' }));
   });
 
   it('should paddingSize to 0', () => {

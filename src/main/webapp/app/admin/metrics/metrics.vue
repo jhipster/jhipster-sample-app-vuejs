@@ -74,22 +74,22 @@
 
         <span
           >Total: {{ threadStats.threadDumpAll }}
-          <a class="hand" v-b-modal.metricsModal data-toggle="modal" @click="openModal()" data-target="#threadDump">
+          <a class="hand" @click="openModal()">
             <font-awesome-icon icon="eye"></font-awesome-icon>
           </a>
         </span>
       </div>
       <div class="col-md-4">
         <h4>System</h4>
-        <div class="row" v-if="!updatingMetrics">
+        <div class="row">
           <div class="col-md-4">Uptime</div>
           <div class="col-md-8 text-end">{{ convertMillisecondsToDuration(metrics.processMetrics['process.uptime']) }}</div>
         </div>
-        <div class="row" v-if="!updatingMetrics">
+        <div class="row">
           <div class="col-md-4">Start time</div>
           <div class="col-md-8 text-end">{{ formatDate(metrics.processMetrics['process.start.time']) }}</div>
         </div>
-        <div class="row" v-if="!updatingMetrics">
+        <div class="row">
           <div class="col-md-9">Process CPU usage</div>
           <div class="col-md-3 text-end">{{ formatNumber2(100 * metrics.processMetrics['process.cpu.usage']) }} %</div>
         </div>
@@ -100,7 +100,7 @@
           >
           </b-progress-bar>
         </b-progress>
-        <div class="row" v-if="!updatingMetrics">
+        <div class="row">
           <div class="col-md-9">System CPU usage</div>
           <div class="col-md-3 text-end">{{ formatNumber2(100 * metrics.processMetrics['system.cpu.usage']) }} %</div>
         </div>
@@ -111,19 +111,19 @@
           >
           </b-progress-bar>
         </b-progress>
-        <div class="row" v-if="!updatingMetrics">
+        <div class="row">
           <div class="col-md-9">System CPU count</div>
           <div class="col-md-3 text-end">{{ metrics.processMetrics['system.cpu.count'] }}</div>
         </div>
-        <div class="row" v-if="!updatingMetrics">
+        <div class="row">
           <div class="col-md-9">System 1m Load average</div>
           <div class="col-md-3 text-end">{{ formatNumber2(metrics.processMetrics['system.load.average.1m']) }}</div>
         </div>
-        <div class="row" v-if="!updatingMetrics">
+        <div class="row">
           <div class="col-md-9">Process files max</div>
           <div class="col-md-3 text-end">{{ formatNumber1(metrics.processMetrics['process.files.max']) }}</div>
         </div>
-        <div class="row" v-if="!updatingMetrics">
+        <div class="row">
           <div class="col-md-9">Process files open</div>
           <div class="col-md-3 text-end">{{ formatNumber1(metrics.processMetrics['process.files.open']) }}</div>
         </div>
@@ -272,14 +272,14 @@
         <thead>
           <tr>
             <th scope="col">{{ t$('metrics.cache.cachename') }}</th>
-            <th scope="col" class="text-end" data-translate="metrics.cache.hits">Cache Hits</th>
-            <th scope="col" class="text-end" data-translate="metrics.cache.misses">Cache Misses</th>
-            <th scope="col" class="text-end" data-translate="metrics.cache.gets">Cache Gets</th>
-            <th scope="col" class="text-end" data-translate="metrics.cache.puts">Cache Puts</th>
-            <th scope="col" class="text-end" data-translate="metrics.cache.removals">Cache Removals</th>
-            <th scope="col" class="text-end" data-translate="metrics.cache.evictions">Cache Evictions</th>
-            <th scope="col" class="text-end" data-translate="metrics.cache.hitPercent">Cache Hit %</th>
-            <th scope="col" class="text-end" data-translate="metrics.cache.missPercent">Cache Miss %</th>
+            <th scope="col" class="text-end">{{ t$('metrics.cache.hits') }}</th>
+            <th scope="col" class="text-end">{{ t$('metrics.cache.misses') }}</th>
+            <th scope="col" class="text-end">{{ t$('metrics.cache.gets') }}</th>
+            <th scope="col" class="text-end">{{ t$('metrics.cache.puts') }}</th>
+            <th scope="col" class="text-end">{{ t$('metrics.cache.removals') }}</th>
+            <th scope="col" class="text-end">{{ t$('metrics.cache.evictions') }}</th>
+            <th scope="col" class="text-end">{{ t$('metrics.cache.hitPercent') }}</th>
+            <th scope="col" class="text-end">{{ t$('metrics.cache.missPercent') }}</th>
           </tr>
         </thead>
         <tbody>

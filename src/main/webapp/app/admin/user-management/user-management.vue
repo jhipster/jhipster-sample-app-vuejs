@@ -21,35 +21,35 @@
           <tr>
             <th scope="col" @click="changeOrder('id')">
               <span>{{ t$('global.field.id') }}</span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'id'"></jhi-sort-indicator>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" field-name="id"></jhi-sort-indicator>
             </th>
             <th scope="col" @click="changeOrder('login')">
               <span>{{ t$('userManagement.login') }}</span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'login'"></jhi-sort-indicator>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" field-name="login"></jhi-sort-indicator>
             </th>
             <th scope="col" @click="changeOrder('email')">
               <span>{{ t$('userManagement.email') }}</span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'email'"></jhi-sort-indicator>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" field-name="email"></jhi-sort-indicator>
             </th>
             <th scope="col"></th>
             <th scope="col" @click="changeOrder('langKey')">
               <span>{{ t$('userManagement.langKey') }}</span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'langKey'"></jhi-sort-indicator>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" field-name="langKey"></jhi-sort-indicator>
             </th>
             <th scope="col">
               <span>{{ t$('userManagement.profiles') }}</span>
             </th>
             <th scope="col" @click="changeOrder('createdDate')">
               <span>{{ t$('userManagement.createdDate') }}</span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'createdDate'"></jhi-sort-indicator>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" field-name="createdDate"></jhi-sort-indicator>
             </th>
             <th scope="col" @click="changeOrder('lastModifiedBy')">
               <span>{{ t$('userManagement.lastModifiedBy') }}</span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'lastModifiedBy'"></jhi-sort-indicator>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" field-name="lastModifiedBy"></jhi-sort-indicator>
             </th>
             <th scope="col" id="modified-date-sort" @click="changeOrder('lastModifiedDate')">
               <span>{{ t$('userManagement.lastModifiedDate') }}</span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'lastModifiedDate'"></jhi-sort-indicator>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" field-name="lastModifiedDate"></jhi-sort-indicator>
             </th>
             <th scope="col"></th>
           </tr>

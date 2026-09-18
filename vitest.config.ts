@@ -15,6 +15,7 @@ export default mergeConfig(
     test: {
       globals: true,
       environment: 'happy-dom', // happy-dom provides a better performance but doesn't have a default url.
+      pool: 'vmThreads',
       setupFiles: [fileURLToPath(new URL('./src/main/webapp/app/test-setup.ts', import.meta.url))],
       reporters: ['default', 'vitest-sonar-reporter'],
       outputFile: {

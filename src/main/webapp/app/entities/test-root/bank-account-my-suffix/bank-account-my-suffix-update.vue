@@ -168,7 +168,7 @@
               t$('jhipsterSampleApplicationVueApp.testRootBankAccount.accountType')
             }}</label>
             <select
-              class="form-control"
+              class="form-select"
               name="accountType"
               :class="{ valid: !v$.accountType.$invalid, invalid: v$.accountType.$invalid }"
               v-model="v$.accountType.$model"
@@ -251,7 +251,7 @@
             <label class="form-control-label" for="bank-account-my-suffix">{{
               t$('jhipsterSampleApplicationVueApp.testRootBankAccount.user')
             }}</label>
-            <select class="form-control" id="bank-account-my-suffix-user" data-cy="user" name="user" v-model="bankAccount.user">
+            <select class="form-select" id="bank-account-my-suffix-user" data-cy="user" name="user" v-model="bankAccount.user">
               <option :value="null"></option>
               <option
                 :value="bankAccount.user && userOption.id === bankAccount.user.id ? bankAccount.user : userOption"

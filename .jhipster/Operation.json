@@ -2,7 +2,6 @@
   "annotations": {
     "changelogDate": "20150805125054"
   },
-  "changelogDate": "20150805125054",
   "clientRootFolder": "test-root",
   "dto": "no",
   "entityTableName": "operation",

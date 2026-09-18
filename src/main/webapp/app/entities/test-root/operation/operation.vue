@@ -30,23 +30,23 @@
           <tr>
             <th scope="col" @click="changeOrder('id')">
               <span>{{ t$('global.field.id') }}</span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'id'"></jhi-sort-indicator>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" field-name="id"></jhi-sort-indicator>
             </th>
             <th scope="col" @click="changeOrder('date')">
               <span>{{ t$('jhipsterSampleApplicationVueApp.testRootOperation.date') }}</span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'date'"></jhi-sort-indicator>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" field-name="date"></jhi-sort-indicator>
             </th>
             <th scope="col" @click="changeOrder('description')">
               <span>{{ t$('jhipsterSampleApplicationVueApp.testRootOperation.description') }}</span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'description'"></jhi-sort-indicator>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" field-name="description"></jhi-sort-indicator>
             </th>
             <th scope="col" @click="changeOrder('amount')">
               <span>{{ t$('jhipsterSampleApplicationVueApp.testRootOperation.amount') }}</span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'amount'"></jhi-sort-indicator>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" field-name="amount"></jhi-sort-indicator>
             </th>
             <th scope="col" @click="changeOrder('bankAccount.name')">
               <span>{{ t$('jhipsterSampleApplicationVueApp.testRootOperation.bankAccount') }}</span>
-              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" :field-name="'bankAccount.name'"></jhi-sort-indicator>
+              <jhi-sort-indicator :current-order="propOrder" :reverse="reverse" field-name="bankAccount.name"></jhi-sort-indicator>
             </th>
             <th scope="col"></th>
           </tr>

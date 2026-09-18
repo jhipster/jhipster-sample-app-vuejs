@@ -992,7 +992,7 @@ class BankAccountResourceIT {
             bankAccountRepository.saveAndFlush(bankAccount);
             user = UserResourceIT.createEntity();
         } else {
-            user = TestUtil.findAll(em, User.class).get(0);
+            user = TestUtil.findAll(em, User.class).getFirst();
         }
         em.persist(user);
         em.flush();

@@ -4,14 +4,7 @@
       <span class="logo-img"></span>
       <span class="navbar-title">{{ t$('global.title') }}</span> <span class="navbar-version">{{ version }}</span>
     </b-navbar-brand>
-    <b-navbar-toggle
-      right
-      class="jh-navbar-toggler d-lg-none"
-      data-toggle="collapse"
-      target="header-tabs"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
+    <b-navbar-toggle class="jh-navbar-toggler d-lg-none" target="header-tabs" aria-expanded="false" aria-label="Toggle navigation">
       <font-awesome-icon icon="bars" />
     </b-navbar-toggle>
 
@@ -42,7 +35,6 @@
           <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
         </b-nav-item-dropdown>
         <b-nav-item-dropdown
-          right
           id="admin-menu"
           v-if="hasAnyAuthority('ROLE_ADMIN') && authenticated"
           :class="{ 'router-link-active': subIsActive('/admin') }"
@@ -100,7 +92,6 @@
           </b-dropdown-item>
         </b-nav-item-dropdown>
         <b-nav-item-dropdown
-          right
           id="account-menu"
           :class="{ 'router-link-active': subIsActive('/account') }"
           active-class="active"

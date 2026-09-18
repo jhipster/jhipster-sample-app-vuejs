@@ -1,4 +1,4 @@
-import { byteSize, openFile, toBase64 } from '@/shared/jhipster/data-utils';
+import { type BlobType, byteSize, openFile, toBase64 } from '@/shared/jhipster/data-utils';
 import { getPageNumberFromLinkHeader } from '@/shared/jhipster/link-header';
 
 /**
@@ -9,10 +9,13 @@ const useDataUtils = () => ({
    * Method to abbreviate the text given
    */
   abbreviate(text, append = '...') {
+    if (!text) {
+      return '';
+    }
     if (text.length < 30) {
       return text;
     }
-    return text ? text.substring(0, 15) + append + text.slice(-10) : '';
+    return text.substring(0, 15) + append + text.slice(-10);
   },
 
   /**
@@ -25,8 +28,8 @@ const useDataUtils = () => ({
   /**
    * Method to open file
    */
-  openFile(contentType, data) {
-    openFile(data, contentType);
+  openFile(contentType, data, blobType?: BlobType) {
+    openFile(data, contentType, blobType);
   },
 
   /**
